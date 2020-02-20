@@ -1,6 +1,7 @@
 import { h, createApp, VNode, defineComponent, getCurrentInstance } from 'vue'
 
 import { VueWrapper, createWrapper } from './vue-wrapper'
+import { createEmitMixin } from './emitMixin';
 
 type Slot = VNode | string
 
@@ -36,22 +37,8 @@ export function mount<P>(
     }
   })
 
-  const events: Record<string, unknown[]> = {}
-  const emitMixin = {
-    beforeCreate() {
-      const originalEmit = getCurrentInstance().emit
-      getCurrentInstance().emit = (event: string, ...args: unknown[]) => {
-        events[event] 
-          ? events[event] = [...events[event], [...args]]
-          : events[event] = [[...args]]
-
-        return originalEmit.call(getCurrentInstance(), event, ...args)
-      }
-
-    }
-  }
-
   const vm = createApp(Parent(options && options.props))
+  const { emitMixin, events } = createEmitMixin()
   vm.mixin(emitMixin)
   const app = vm.mount('#app')
 
