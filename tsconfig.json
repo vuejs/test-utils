@@ -1,0 +1,21 @@
+{
+  "compilerOptions": {
+    "target": "es5",
+    "outDir": "dist",
+    "module": "esnext",
+    "lib": ["DOM", "ES2015", "ES2017"],
+    "moduleResolution": "node",
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "baseUrl": ".",
+    "paths": {
+      "vue": [
+        "node_modules/vue/dist/vue.esm.js"
+      ]
+    }
+  },
+  "include": [
+    "tests",
+    "src"
+  ]
+}
