@@ -2,7 +2,7 @@
 
 The next iteration of Vue Test Utils. Based of the work in [vue-testing-framework](https://github.com/lmiller1990/vue-testing-framework).
 
-Basic functionality is documented in `docs/API.md`.
+Docs are located in [this repo](https://github.com/vuejs/vue-test-utils-next-docs). That's because running Vuepress alongside a repo with Vue 3 causes conflicts - Vuepress expects to be running against Vue 2. This seems like the most simple solution during development.
 
 ## Development
 
