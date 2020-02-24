@@ -2,9 +2,17 @@
   "name": "vue-test-utils-next",
   "version": "0.0.1",
   "license": "MIT",
+  "main": "dist/vue-test-utils.cjs.js",
+  "browser": "dist/vue-test-utils.esm.js",
+  "unpkg": "dist/vue-test-utils.js",
+  "module": "dist/vue-test-utils.esm-bundler.js",
   "dependencies": {
     "vue": "3.0.0-alpha.6"
   },
+  "files": [
+    "dist",
+    "README.md"
+  ],
   "devDependencies": {
     "@babel/preset-env": "^7.8.4",
     "@babel/types": "^7.8.3",
@@ -12,10 +20,13 @@
     "@types/estree": "^0.0.42",
     "@types/jest": "^24.9.1",
     "jest": "^25.1.0",
+    "rollup": "^1.31.1",
+    "rollup-plugin-typescript2": "^0.26.0",
     "ts-jest": "^25.0.0",
     "typescript": "^3.7.5"
   },
   "scripts": {
-    "test": "yarn jest"
+    "test": "yarn jest",
+    "build": "yarn rollup -c rollup.config.js"
   }
 }
