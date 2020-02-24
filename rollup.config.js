@@ -23,13 +23,16 @@ function createEntry(options) {
     plugins: [],
     output: {
       banner,
-      file: 'dist/vue-router.other.js',
+      file: 'dist/vue-test-utils.other.js',
       format
     }
   }
 
   if (format === 'es') {
     config.output.file = isBrowser ? pkg.browser : pkg.module 
+  }
+  if (format === 'cjs') {
+    config.output.file = pkg.main
   }
   console.log('file is', config.output.file)
 
@@ -39,7 +42,8 @@ function createEntry(options) {
       tsconfigOverride: {
         compilerOptions: {
           declaration: format === 'es' && isBrowser,
-          target: 'es6' // not sure what this should be?
+          target: 'es5', // not sure what this should be?
+          module: format === 'cjs' ? 'es2015' : 'esnext'
         },
         exclude: ['tests']
       }
@@ -52,4 +56,5 @@ function createEntry(options) {
 export default [
   createEntry({ format: 'es', input: 'src/index.ts', isBrowser: false }),
   createEntry({ format: 'es', input: 'src/index.ts', isBrowser: true }),
+  createEntry({ format: 'cjs', input: 'src/index.ts', isBrowser: false }),
 ]
