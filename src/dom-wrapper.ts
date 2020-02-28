@@ -40,10 +40,12 @@ export class DOMWrapper<ElementType extends Element> implements WrapperAPI {
   }
 
   async setChecked(checked: boolean = true) {
-    if (this.element.tagName === 'INPUT') {
-      (this.element as unknown as HTMLInputElement).checked = checked
-      return this.trigger('change')
+    if (this.element.tagName !== 'INPUT') {
+      throw Error(`You need to call setChecked on an input element. You called it on a ${this.element.tagName}`)
     }
+
+    (this.element as unknown as HTMLInputElement).checked = checked
+    return this.trigger('change')
   }
 
   async trigger(eventString: string) {
