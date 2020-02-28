@@ -30,6 +30,10 @@ export class ErrorWrapper {
     throw this.wrapperError('findAll')
   }
 
+  setChecked() {
+    throw this.wrapperError('setChecked')
+  }
+
   text() {
     throw this.wrapperError('text')
   }

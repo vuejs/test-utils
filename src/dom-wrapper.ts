@@ -39,6 +39,13 @@ export class DOMWrapper<ElementType extends Element> implements WrapperAPI {
     return Array.from(this.element.querySelectorAll<T>(selector)).map(x => new DOMWrapper(x))
   }
 
+  async setChecked(checked: boolean = true) {
+    if (this.element.tagName === 'INPUT') {
+      (this.element as unknown as HTMLInputElement).checked = checked
+      return this.trigger('change')
+    }
+  }
+
   async trigger(eventString: string) {
     const evt = document.createEvent('Event')
     evt.initEvent(eventString)
