@@ -1,6 +1,7 @@
 <template>
   <div>
-    <input type="checkbox" v-model="checkboxVal" />
+    {{ status }}
+    <input type="checkbox" v-model="checked" />
   </div>
 </template>
 
@@ -9,21 +10,15 @@ import { defineComponent, h, ref } from 'vue'
 
 export default defineComponent({
   name: 'component-with-input',
-  setup() {
+  data() {
     return {
-      checkboxVal: ref(false)
+      checked: false
+    }
+  },
+  computed: {
+    status() {
+      return this.checked ? 'checkbox checked' : 'checkbox not checked'
     }
   }
-  // data() {
-  //   return {
-  //     checkboxVal: undefined
-  //   }
-  // },
-
-  // watch: {
-  //   checkboxVal() {
-  //     this.counter++
-  //   }
-  // }
 })
 </script>

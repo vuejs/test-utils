@@ -30,7 +30,7 @@ export class VueWrapper implements WrapperAPI {
   }
 
   text() {
-    return this.vm.$el.textContent
+    return this.vm.$el.textContent?.trim()
   }
 
   find<T extends Element>(selector: string): DOMWrapper<T> | ErrorWrapper {

@@ -77,15 +77,15 @@ describe('setChecked', () => {
     expect(wrapper.find('input#bar').classes()).toContain('checked')
   })
 
-  xit('updates dom with checkbox v-model', async () => {
-    // this breaks atm
+  it('updates dom with checkbox v-model', async () => {
     const wrapper = mount(ComponentWithInput)
+    expect(wrapper.text()).toBe('checkbox not checked')
     const input = wrapper.find('input')
 
-    // await input.setChecked()
-    // expect(wrapper.text()).toContain('checkbox checked')
+    await input.setChecked()
+    expect(wrapper.text()).toBe('checkbox checked')
 
-    // await input.setChecked(false)
-    // expect(wrapper.text()).not.toContain('checkbox checked')
+    await input.setChecked(false)
+    expect(wrapper.text()).toBe('checkbox not checked')
   })
 })
