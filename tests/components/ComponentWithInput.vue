@@ -1,23 +1,67 @@
 <template>
   <div>
-    {{ status }}
-    <input type="checkbox" v-model="checked" />
+    <input type="checkbox" v-model="checkboxVal" />
+    <input
+      type="radio"
+      v-model="radioVal"
+      id="radioFoo"
+      value="radioFooResult"
+    />
+    <input
+      type="radio"
+      v-model="radioVal"
+      id="radioBar"
+      value="radioBarResult"
+    />
+    <input type="text" v-model="textVal" />
+    <textarea v-model="textareaVal"></textarea>
+    <select v-model="selectVal">
+      <option value="selectA"></option>
+      <option value="selectB"></option>
+      <option value="selectC"></option>
+    </select>
+    <select v-model="selectVal" class="with-optgroups">
+      <optgroup label="Group1">
+        <option value="selectA"></option>
+        <option value="selectB"></option>
+      </optgroup>
+      <optgroup label="Group2">
+        <option value="selectC"></option>
+      </optgroup>
+    </select>
+    <label id="label-el"></label>
+
+    <span class="checkboxResult" v-if="checkboxVal">checkbox checked</span>
+    <span class="counter">{{ counter }}</span>
+    {{ textVal }}
+    {{ selectVal }}
+    {{ radioVal }}
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, h, ref } from 'vue'
+import { defineComponent } from 'vue'
 
 export default defineComponent({
-  name: 'component-with-input',
+  name: 'ComponentWithInput',
+
   data() {
     return {
-      checked: false
+      checkboxVal: undefined,
+      textVal: undefined,
+      textareaVal: undefined,
+      radioVal: undefined,
+      selectVal: undefined,
+      counter: 0
     }
   },
-  computed: {
-    status() {
-      return this.checked ? 'checkbox checked' : 'checkbox not checked'
+
+  watch: {
+    checkboxVal() {
+      this.counter++
+    },
+    radioVal() {
+      this.counter++
     }
   }
 })

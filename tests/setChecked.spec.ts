@@ -1,91 +1,92 @@
-import { defineComponent, h, ref } from 'vue'
+import { defineComponent, h } from 'vue'
 
 import { mount } from '../src'
 import ComponentWithInput from './components/ComponentWithInput.vue'
 
 describe('setChecked', () => {
-  it('updates a controlled checkbox', async () => {
-    const checked = ref(false)
-    const Comp = defineComponent({
-      setup() {
-        return () => {
-          return h('div', [h('input', {
-            checked: checked.value,
-            onChange: () => checked.value = !checked.value,
-            type: 'checkbox',
-            class: checked.value ? 'checked' : 'not-checked'
-          })])
-        }
-      }
-    })
-    const wrapper = mount(Comp)
+  it('sets element checked true with no option passed', () => {
+    const wrapper = mount(ComponentWithInput)
+    const input = wrapper.find<HTMLInputElement>('input[type="checkbox"]')
+    input.setChecked()
 
-    await wrapper.find('input').setChecked(true)
-
-    expect(checked.value).toBe(true)
-    expect(wrapper.find<HTMLInputElement>('input').element.checked).toBe(true)
+    expect(input.element.checked).toBe(true)
   })
 
-  // <input
-  //     type="radio"
-  //     v-model="radioVal"
-  //     id="radioFoo"
-  //     value="radioFooResult"
-  //   />
-  //   <input
-  //     type="radio"
-  //     v-model="radioVal"
-  //     id="radioBar"
-  //     value="radioBarResult"
-  //   />
-  it('updates a controlled radio button', async () => {
-    const checked = ref('')
-    const Comp = defineComponent({
-      setup() {
-        return () => {
-          return h('div', 
-            [
-              h('input', {
-                checked: checked.value,
-                onChange: () => checked.value = 'foo',
-                type: 'radio',
-                id: 'foo',
-                class: checked.value === 'foo' ? 'checked' : 'not-checked'
-              }),
-              h('input', {
-                checked: checked.value,
-                onChange: () => checked.value = 'bar',
-                type: 'radio',
-                id: 'bar',
-                class: checked.value === 'bar' ? 'checked' : 'not-checked'
-              })
-            ]
-          )
-        }
-      }
-    })
-    const wrapper = mount(Comp)
+  it('sets element checked equal to param passed', () => {
+    const wrapper = mount(ComponentWithInput)
+    const input = wrapper.find<HTMLInputElement>('input[type="checkbox"]')
 
-    await wrapper.find('input#foo').setChecked(true)
-    expect(checked.value).toBe('foo')
-    expect(wrapper.find('input#foo').classes()).toContain('checked')
-    expect(wrapper.find('input#bar').classes()).not.toContain('checked')
+    input.setChecked(true)
+    expect(input.element.checked).toBe(true)
 
-    await wrapper.find('input#bar').setChecked(true)
-    expect(checked.value).toBe('bar')
-    expect(wrapper.find('input#foo').classes()).not.toContain('checked')
-    expect(wrapper.find('input#bar').classes()).toContain('checked')
+    input.setChecked(false)
+    expect(input.element.checked).toBe(false)
   })
 
   it('updates dom with checkbox v-model', async () => {
     const wrapper = mount(ComponentWithInput)
-    expect(wrapper.text()).toBe('checkbox not checked')
-    const input = wrapper.find('input')
+    const input = wrapper.find<HTMLInputElement>('input[type="checkbox"]')
 
     await input.setChecked()
-    expect(wrapper.text()).toBe('checkbox checked')
+    expect(wrapper.text()).toContain('checkbox checked')
 
     await input.setChecked(false)
-    expect(wrapper.text()).toBe('checkbox not checked')
+    expect(wrapper.text()).not.toContain('checkbox checked')
+  })
+
+  it('changes state the right amount of times with checkbox v-model', async () => {
+    const wrapper = mount(ComponentWithInput)
+    const input = wrapper.find<HTMLInputElement>('input[type="checkbox"]')
+
+    await input.setChecked()
+    await input.setChecked(false)
+    await input.setChecked(false)
+    await input.setChecked(true)
+    await input.setChecked(false)
+    await input.setChecked(false)
+
+    expect(wrapper.find<HTMLInputElement>('.counter').text()).toBe('4')
+  })
+
+  it('does not trigger a change event if the checkbox is already checked', async () => {
+    const listener = jest.fn()
+    const Comp = defineComponent({
+      setup() {
+        return () => h('input', {
+          onChange: listener,
+          type: 'checkbox',
+          checked: true
+        })
+      }
+    })
+
+    await mount(Comp).setChecked()
+
+    expect(listener).not.toHaveBeenCalled()
+  })
+
+  it('updates dom with radio v-model', async () => {
+    const wrapper = mount(ComponentWithInput)
+
+    await wrapper.find<HTMLInputElement>('#radioBar').setChecked()
+    expect(wrapper.text()).toContain('radioBarResult')
+
+    await wrapper.find<HTMLInputElement>('#radioFoo').setChecked()
+    expect(wrapper.text()).toContain('radioFooResult')
+  })
+
+  it('changes state the right amount of times with radio v-model', async () => {
+    const wrapper = mount(ComponentWithInput)
+    const radioBar = wrapper.find<HTMLInputElement>('#radioBar')
+    const radioFoo = wrapper.find<HTMLInputElement>('#radioFoo')
+
+    await radioBar.setChecked()
+    await radioBar.setChecked()
+    await radioFoo.setChecked()
+    await radioBar.setChecked()
+    await radioBar.setChecked()
+    await radioFoo.setChecked()
+    await radioFoo.setChecked()
+    expect(wrapper.find<HTMLInputElement>('.counter').text()).toBe('4')
   })
 })

@@ -1,4 +1,4 @@
-import { ComponentPublicInstance, getCurrentInstance } from 'vue'
+import { ComponentPublicInstance } from 'vue'
 
 import { DOMWrapper } from './dom-wrapper'
 import { WrapperAPI } from './types'
@@ -47,8 +47,13 @@ export class VueWrapper implements WrapperAPI {
     return Array.from(results).map(x => new DOMWrapper(x))
   }
 
+  async setChecked(checked: boolean = true) {
+    return new DOMWrapper(this.vm.$el).setChecked(checked)
+  }
+
+
   trigger(selector: string) { 
-    throw Error('TODO: Implement VueWrapper#trigger')
+    return new DOMWrapper(this.vm.$el).trigger(selector)
   }
 }
 
