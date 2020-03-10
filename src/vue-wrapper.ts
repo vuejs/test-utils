@@ -52,8 +52,9 @@ export class VueWrapper implements WrapperAPI {
   }
 
 
-  trigger(selector: string) { 
-    return new DOMWrapper(this.vm.$el).trigger(selector)
+  trigger(eventString: string) { 
+    const rootElementWrapper = new DOMWrapper(this.vm.$el)
+    return rootElementWrapper.trigger(eventString)
   }
 }
 

@@ -4,22 +4,34 @@ import { mount } from '../src'
 import ComponentWithInput from './components/ComponentWithInput.vue'
 
 describe('setChecked', () => {
-  it('sets element checked true with no option passed', () => {
+  it('works on the root element', async () => {
+    const Comp = defineComponent({
+      render() {
+        return h('input', { type: 'checkbox' })
+      }
+    })
+    const wrapper = mount(Comp)
+    await wrapper.setChecked()
+
+    expect(wrapper.vm.$el.checked).toBe(true)
+  })
+
+  it('sets element checked true with no option passed', async () => {
     const wrapper = mount(ComponentWithInput)
     const input = wrapper.find<HTMLInputElement>('input[type="checkbox"]')
-    input.setChecked()
+    await input.setChecked()
 
     expect(input.element.checked).toBe(true)
   })
 
-  it('sets element checked equal to param passed', () => {
+  it('sets element checked equal to param passed', async () => {
     const wrapper = mount(ComponentWithInput)
     const input = wrapper.find<HTMLInputElement>('input[type="checkbox"]')
 
-    input.setChecked(true)
+    await input.setChecked(true)
     expect(input.element.checked).toBe(true)
 
-    input.setChecked(false)
+    await input.setChecked(false)
     expect(input.element.checked).toBe(false)
   })
 
