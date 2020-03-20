@@ -13,7 +13,9 @@ describe('mounting options: provides', () => {
     }
 
     const wrapper = mount(Component, {
-      provides: [{ key: GreetingSymbol, value: 'Provided value' }]
+      provides: { 
+        [GreetingSymbol]: 'Provided value'
+      }
     })
 
     expect(wrapper.text()).toBe('Provided value')

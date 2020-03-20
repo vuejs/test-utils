@@ -13,7 +13,7 @@ interface MountingOptions<Props> {
   },
   plugins?: any[]
   mixins?: any[]
-  provides?: any // Record<any, any>
+  provides?: Record<any, any>
   stubs?: Record<string, any>
 }
 
@@ -60,8 +60,9 @@ export function mount<P>(
 
   // provide any values passed via provides mounting option
   if (options?.provides) {
-    for (const { key, value } of options.provides) {
-      vm.provide(key, value)
+    for (const key of Reflect.ownKeys(options.provides)) {
+      // @ts-ignore: https://github.com/microsoft/TypeScript/issues/1863
+      vm.provide(key, options.provides[key])
     }
   }
 
