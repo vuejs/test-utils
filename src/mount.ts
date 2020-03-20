@@ -11,6 +11,8 @@ interface MountingOptions<Props> {
     default?: Slot
     [key: string]: Slot
   },
+  plugins?: any[]
+  mixins?: any[]
   stubs?: Record<string, any>
 }
 
@@ -38,7 +40,18 @@ export function mount<P>(
   })
 
   const vm = createApp(Parent(options && options.props))
+
   const { emitMixin, events } = createEmitMixin()
+  if (options.plugins) {
+    for (const use of options.plugins)
+    vm.use(use)
+  }
+
+  if (options.mixins) {
+    for (const mixin of options.mixins)
+    vm.mixin(mixin)
+  }
+
   vm.mixin(emitMixin)
   const app = vm.mount('#app')
 
