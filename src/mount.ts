@@ -13,6 +13,7 @@ interface MountingOptions<Props> {
   },
   plugins?: any[]
   mixins?: any[]
+  provides?: any // Record<any, any>
   stubs?: Record<string, any>
 }
 
@@ -54,6 +55,14 @@ export function mount<P>(
   if (options?.mixins) {
     for (const mixin of options.mixins)
     vm.mixin(mixin)
+  }
+
+
+  // provide any values passed via provides mounting option
+  if (options?.provides) {
+    for (const { key, value } of options.provides) {
+      vm.provide(key, value)
+    }
   }
 
   // add tracking for emitted events
