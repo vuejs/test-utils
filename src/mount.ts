@@ -1,11 +1,13 @@
-import { h, createApp, VNode, defineComponent, getCurrentInstance } from 'vue'
+import { h, createApp, VNode, defineComponent } from 'vue'
 
 import { VueWrapper, createWrapper } from './vue-wrapper'
-import { createEmitMixin } from './emitMixin';
+import { createEmitMixin } from './emitMixin'
+import { createDataMixin } from './dataMixin'
 
 type Slot = VNode | string
 
 interface MountingOptions<Props> {
+  data?: () => Record<string, unknown>
   props?: Props
   slots?: {
     default?: Slot
@@ -16,7 +18,6 @@ interface MountingOptions<Props> {
 
 export function mount<P>(
   component: any,
-  // component: new () => ComponentPublicInstance<P>,
   options?: MountingOptions<P>
 ): VueWrapper {
 
@@ -38,8 +39,14 @@ export function mount<P>(
   })
 
   const vm = createApp(Parent(options && options.props))
+
   const { emitMixin, events } = createEmitMixin()
   vm.mixin(emitMixin)
+
+  if (options?.data) {
+    const dataMixin = createDataMixin(options.data())
+    vm.mixin(dataMixin)
+  }
   const app = vm.mount('#app')
 
   return createWrapper(app, events)
