@@ -35,6 +35,40 @@ test('props', () => {
 })
 ```
 
+### `data`
+
+Overrides a component's default `data`. Must be a function:
+
+```vue
+<template>
+  <div>Foo is {{ foo }}</div>
+</template>
+
+<script>
+export default {
+  data() {
+    return {
+      foo: 'foo'
+    }
+  }
+}
+</script>
+```
+
+```js
+test('overrides data', () => {
+  const wrapper = mount(Component, {
+    data() {
+      return {
+        foo: 'bar'
+      }
+    }
+  })
+
+  console.log(wrapper.html()) //=> '<div>Foo is bar</div>'
+})
+```
+
 ### `slots`
 
 ```vue
@@ -42,6 +76,10 @@ test('props', () => {
   <slot name="foo" />
   <slot />
 </template>
+
+<script>
+export default {}
+</script>
 ```
 
 ```ts
@@ -54,6 +92,116 @@ test('slots - default and named', () => {
   })
 
   console.log(wrapper.html()) //=> '<h1>Named Slot</h1>Default'
+})
+```
+
+### `provides`
+
+Provides data to be received in a `setup` function via `inject`.
+
+```vue
+<template>
+  <div>Theme is {{ theme }}</div>
+</template>
+
+<script>
+import { inject } from 'vue'
+
+export default {
+  setup() {
+    const theme = inject('Theme')
+    return {
+      theme
+    }
+  }
+}
+</script>
+```
+
+```js
+test('injects dark theme via provide mounting option', () => {
+  const wrapper = mount(Component, {
+    provides: {
+      'Theme': 'dark'
+    }
+  })
+
+  console.log(wrapper.html()) //=> <div>Theme is dark</div>
+})
+```
+
+Note: If you are using a ES6 `Symbol` for your provide key, you can use it as a dynamic key:
+
+```js
+const ThemeSymbol = Symbol()
+
+mount(Component, {
+  provides: {
+    [ThemeSymbol]: 'value'
+  }
+})
+```
+
+### `mixins`
+
+Applies mixins via `app.mixin(...)`.
+
+```vue
+<template>
+  <div />
+</template>
+
+<script>
+export default {}
+</script>
+```
+
+```js
+test('adds a lifecycle mixin', () => {
+  const mixin = {
+    created() {
+      console.log('Component was created!')
+    }
+  }
+
+  const wrapper = mount(Component, {
+    mixins: [mixin]
+  })
+
+  // 'Component was created!' will be logged
+})
+```
+
+### `plugins`
+
+Installs plugins on the component.
+
+```vue
+<template>
+  <div />
+</template>
+
+<script>
+export default {}
+</script>
+```
+
+```js
+test('installs a plugin via `plugins`', () => {
+  const installed = jest.fn()
+  class Plugin {
+    static install() {
+      installed()
+    }
+  }
+  const Component = {
+    render() { return h('div') }
+  }
+  mount(Component, {
+    plugins: [Plugin]
+  })
+
+  expect(installed).toHaveBeenCalled()
 })
 ```
 
