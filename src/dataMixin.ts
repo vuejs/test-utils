@@ -1,4 +1,3 @@
-
 import { getCurrentInstance } from 'vue'
 
 export const createDataMixin = (data: Record<string, unknown>) => {
