@@ -1,6 +1,6 @@
 import { defineComponent, h } from 'vue'
 
-import { mount } from '../src'
+import { mount } from '../../src'
 
 test('mounting options - passes props', () => {
   const Component = defineComponent({

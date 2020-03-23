@@ -1,6 +1,6 @@
 import { defineComponent, h } from 'vue'
 
-import { mount } from '../src'
+import { mount } from '../../src'
 
 test('slots - default', () => {
   const ItemWithSlots = defineComponent({
