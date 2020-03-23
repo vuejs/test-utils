@@ -2,10 +2,12 @@ import { h, createApp, VNode, defineComponent } from 'vue'
 
 import { VueWrapper, createWrapper } from './vue-wrapper'
 import { createEmitMixin } from './emitMixin'
+import { createDataMixin } from './dataMixin'
 
 type Slot = VNode | string
 
 interface MountingOptions<Props> {
+  data?: () => Record<string, unknown>
   props?: Props
   slots?: {
     default?: Slot
@@ -44,6 +46,12 @@ export function mount<P>(
 
   // create the vm
   const vm = createApp(Parent(options && options.props))
+
+  // override component data with mounting options data
+  if (options?.data) {
+    const dataMixin = createDataMixin(options.data())
+    vm.mixin(dataMixin)
+  }
 
   // use and plugins from mounting options
   if (options?.plugins) {
