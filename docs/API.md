@@ -23,7 +23,7 @@ export default {
 </script>
 ```
 
-```ts
+```js
 test('props', () => {
   const wrapper = mount(Component, {
     props: {
@@ -76,13 +76,9 @@ test('overrides data', () => {
   <slot name="foo" />
   <slot />
 </template>
-
-<script>
-export default {}
-</script>
 ```
 
-```ts
+```js
 test('slots - default and named', () => {
   const wrapper = mount(Component, {
     slots: {
@@ -95,7 +91,7 @@ test('slots - default and named', () => {
 })
 ```
 
-### `provides`
+## `provides`
 
 Provides data to be received in a `setup` function via `inject`.
 
@@ -212,6 +208,8 @@ When you use `mount`, a `VueWrapper` is returned with a number of useful methods
 
 ### `html`
 
+Returns the HTML (via `outerHTML`) of an element. Useful for debugging.
+
 ```vue
 <template>
   <div>
@@ -220,16 +218,18 @@ When you use `mount`, a `VueWrapper` is returned with a number of useful methods
 </template>
 ```
 
-```ts
+```js
 test('html', () => {
   const wrapper = mount(Component)
 
-  expect(wrapper.find('p').text()).toBe('Hello world')
+  console.log(wrapper.html()) //=> <div><p>Hello world</p></div>
 })
 ```
 
 ### `text`
 
+Find the text (via `textContent`) of an element.
+
 ```vue
 <template>
   <div>
@@ -238,7 +238,7 @@ test('html', () => {
 </template>
 ```
 
-```ts
+```js
 test('text', () => {
   const wrapper = mount(Component)
 
@@ -247,6 +247,8 @@ test('text', () => {
 ```
 
 ### `find`
+
+Finds an element and returns a `DOMWrapper` if one is found. You can use the same syntax `querySelector` implements - `find` is basically an alias for `querySelector`.
 
 ```vue
 <template>
@@ -257,7 +259,7 @@ test('text', () => {
 </template>
 ```
 
-```ts
+```js
 test('find', () => {
   const wrapper = mount(Component)
 
@@ -269,24 +271,33 @@ test('find', () => {
 
 ### `findAll`
 
+Similar to `find`, but instead returns an array of `DOMWrapper`.
+
 ```vue
 <template>
   <div>
-    <span>Span</span>
-    <span data-test="span">Span</span>
+    <span 
+      v-for="number in [1, 2, 3]"
+      :key="number"
+      data-test="number"
+    >
+      {{ number }}
+    </span>
   </div>
 </template>
 ```
 
-```ts
+```js
 test('findAll', () => {
   const wrapper = mount(Component)
 
-  wrapper.findAll('span') //=> found; returns array of DOMWrapper
+  wrapper.findAll('[data-test="number"]') //=> found; returns array of DOMWrapper
 })
 ```
 
 ### `trigger`
+
+Simulates an event, for example `click`, `submit` or `keyup`. Since events often cause a re-render, `trigger` returs `Vue.nextTick`. If you expect the event to trigger a re-render, you should use `await` when you call `trigger` to ensure that Vue updates the DOM before you make an assertion.
 
 ```vue
 <template>
@@ -307,7 +318,7 @@ export default {
 </script>
 ```
 
-```ts
+```js
 test('trigger', async () => {
   const wrapper = mount(Component)
 
@@ -319,6 +330,8 @@ test('trigger', async () => {
 
 ### `classes`
 
+Returns an array of classes on an element (via `classList`).
+
 ```vue
 <template>
   <div>
@@ -327,7 +340,7 @@ test('trigger', async () => {
 </template>
 ```
 
-```ts
+```js
 test('classes', () => {
   const wrapper = mount(Component)
 
@@ -337,6 +350,8 @@ test('classes', () => {
 
 ### `exists`
 
+Verify whether or not an element found via `find` exists or not.
+
 ```vue
 <template>
   <div>
@@ -345,7 +360,7 @@ test('classes', () => {
 </template>
 ```
 
-```ts
+```js
 test('exists', () => {
   const wrapper = mount(Component)
 
@@ -354,6 +369,8 @@ test('exists', () => {
 ```
 
 ### `emitted`
+
+Returns an object mapping events emitted from the `wrapper`. The arguments are stored in an array, so you can verify which arguments were emitted each time the event is emitted.
 
 ```vue
 <template>
@@ -364,15 +381,53 @@ test('exists', () => {
 export default {
   created() {
     this.$emit('greet', 'hello')
+    this.$emit('greet', 'goodbye')
   }
 }
 ```
 
-```ts
+```js
 test('emitted', () => {
   const wrapper = mount(Component)
 
-  console.log(wrapper.emitted()) //=> { greet: [ ['hello'] ] }
+  console.log(wrapper.emitted()) 
+  // { 
+  //   greet: [ ['hello'], ['goodbye'] ]
+  // }
+
   expect(wrapper.emitted().greet[0]).toEqual(['hello'])
+  expect(wrapper.emitted().greet[1]).toEqual(['goodbye'])
+})
+```
+
+### `setChecked`
+
+Set an input (either `type="checkbox" or `type="radio"`) to be checked or not checked. Since this will often result in a DOM re-render, `setChecked` returns `Vue.nextTick`, so you will often have to call this with `await` to ensure the DOM has been updated before making an assertion. 
+
+```vue
+<template>
+  <input type="checkbox" v-model="checked" />
+  <div v-if="checked">Checked</div>
+</template>
+
+<script>
+export default {
+  data() {
+    return {
+      checked: false
+    }
+  }
+}
+```
+
+```js
+test('checked', async () => {
+  const wrapper = mount(Component)
+
+  await wrapper.find('input').setChecked(true)
+  expect(wrapper.find('div')).toBeTruthy()
+
+  await wrapper.find('input').setChecked(false)
+  expect(wrapper.find('div')).toBeFalsy()
 })
 ```
