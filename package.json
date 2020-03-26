@@ -21,7 +21,10 @@
     "@lmiller1990/vue-jest-transformer": "^0.0.2",
     "@types/estree": "^0.0.42",
     "@types/jest": "^24.9.1",
+    "husky": "^4.2.3",
     "jest": "^25.1.0",
+    "lint-staged": "^10.0.9",
+    "prettier": "^2.0.2",
     "rollup": "^1.31.1",
     "rollup-plugin-typescript2": "^0.26.0",
     "ts-jest": "^25.0.0",
@@ -29,6 +32,19 @@
   },
   "scripts": {
     "test": "yarn jest --runInBand",
-    "build": "yarn rollup -c rollup.config.js"
+    "build": "yarn rollup -c rollup.config.js",
+    "lint": "prettier -c --parser typescript \"src/**/*.ts?(x)\"",
+    "lint:fix": "yarn lint --write"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "*.ts": [
+      "prettier --parser=typescript --write",
+      "git add"
+    ]
   }
 }
