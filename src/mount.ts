@@ -20,9 +20,11 @@ interface MountingOptions<Props> {
 }
 
 export function mount<P>(
-  component: any,
+  originalComponent: any,
   options?: MountingOptions<P>
 ): VueWrapper {
+  let component = { ...originalComponent }
+
   // Reset the document.body
   document.getElementsByTagName('html')[0].innerHTML = ''
   const el = document.createElement('div')
@@ -39,6 +41,11 @@ export function mount<P>(
       },
       {}
     )
+  // override component data with mounting options data
+  if (options?.data) {
+    const dataMixin = createDataMixin(options.data())
+    component.mixins = [...(component.mixins || []), dataMixin]
+  }
 
   // create the wrapper component
   const Parent = (props?: P) =>
@@ -50,12 +57,6 @@ export function mount<P>(
 
   // create the vm
   const vm = createApp(Parent(options && options.props))
-
-  // override component data with mounting options data
-  if (options?.data) {
-    const dataMixin = createDataMixin(options.data())
-    vm.mixin(dataMixin)
-  }
 
   // use and plugins from mounting options
   if (options?.plugins) {
