@@ -17,6 +17,10 @@ export class VueWrapper implements WrapperAPI {
     throw Error('TODO: Implement VueWrapper#classes')
   }
 
+  attributes(key?: string) {
+    return new DOMWrapper(this.vm.$el).attributes(key)
+  }
+
   exists() {
     return true
   }
