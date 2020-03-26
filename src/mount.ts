@@ -99,8 +99,9 @@ export function mount<P>(
         return args
       }
 
+      console.log(args)
       // it's a regular component - stub it out.
-      const name = instance.vnode.type['name'] || 'anonymous'
+      const name = args[0]['name'] || 'anonymous'
       return [`${name}-stub`]
     })
   }

@@ -21,7 +21,7 @@ describe('mounting options: shallow', () => {
       shallow: true
     })
 
-    expect(wrapper.html()).toBe('<div><p>hello</p><foo-stub></foo-stub></div>')
-    expect(wrapper.find('foo-stub').exists()).toBeTruthy()
+    expect(wrapper.html()).toBe('<div><p>hello</p><bar-stub></bar-stub></div>')
+    expect(wrapper.find('bar-stub').exists()).toBeTruthy()
   })
 })
