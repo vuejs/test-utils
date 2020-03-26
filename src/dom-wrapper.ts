@@ -36,7 +36,9 @@ export class DOMWrapper<ElementType extends Element> implements WrapperAPI {
   }
 
   findAll<T extends Element>(selector: string): DOMWrapper<T>[] {
-    return Array.from(this.element.querySelectorAll<T>(selector)).map(x => new DOMWrapper(x))
+    return Array.from(this.element.querySelectorAll<T>(selector)).map(
+      (x) => new DOMWrapper(x)
+    )
   }
 
   async setChecked(checked: boolean = true) {
@@ -44,10 +46,12 @@ export class DOMWrapper<ElementType extends Element> implements WrapperAPI {
     const element = (this.element as unknown) as HTMLInputElement
 
     if (element.tagName !== 'INPUT') {
-      throw Error(`You need to call setChecked on an input element. You called it on a ${this.element.tagName}`)
+      throw Error(
+        `You need to call setChecked on an input element. You called it on a ${this.element.tagName}`
+      )
     }
 
-    // we do not want to trigger an event if the user 
+    // we do not want to trigger an event if the user
     // attempting set the same value twice
     // this is beacuse in a browser setting checked = true when it is
     // already true is a no-op; no change event is triggered

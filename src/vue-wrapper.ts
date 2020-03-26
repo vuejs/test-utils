@@ -44,20 +44,22 @@ export class VueWrapper implements WrapperAPI {
 
   findAll<T extends Element>(selector: string): DOMWrapper<T>[] {
     const results = (this.vm.$el as Element).querySelectorAll<T>(selector)
-    return Array.from(results).map(x => new DOMWrapper(x))
+    return Array.from(results).map((x) => new DOMWrapper(x))
   }
 
   async setChecked(checked: boolean = true) {
     return new DOMWrapper(this.vm.$el).setChecked(checked)
   }
 
-
-  trigger(eventString: string) { 
+  trigger(eventString: string) {
     const rootElementWrapper = new DOMWrapper(this.vm.$el)
     return rootElementWrapper.trigger(eventString)
   }
 }
 
-export function createWrapper(vm: ComponentPublicInstance, events: Record<string, unknown[]>): VueWrapper {
+export function createWrapper(
+  vm: ComponentPublicInstance,
+  events: Record<string, unknown[]>
+): VueWrapper {
   return new VueWrapper(vm, events)
 }
