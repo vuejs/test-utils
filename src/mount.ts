@@ -1,4 +1,11 @@
-import { h, createApp, VNode, defineComponent } from 'vue'
+import {
+  h,
+  createApp,
+  VNode,
+  defineComponent,
+  transformVNodeArgs,
+  createVNode
+} from 'vue'
 
 import { VueWrapper, createWrapper } from './vue-wrapper'
 import { createEmitMixin } from './emitMixin'
@@ -8,6 +15,7 @@ type Slot = VNode | string
 
 interface MountingOptions<Props> {
   data?: () => Record<string, unknown>
+  shallow: boolean
   props?: Props
   slots?: {
     default?: Slot
@@ -41,8 +49,10 @@ export function mount<P>(
     )
 
   // create the wrapper component
+  const PARENT_NAME = 'VTU_PARENT'
   const Parent = (props?: P) =>
     defineComponent({
+      name: PARENT_NAME,
       render() {
         return h(component, props, slots)
       }
@@ -73,6 +83,26 @@ export function mount<P>(
       // @ts-ignore: https://github.com/microsoft/TypeScript/issues/1863
       vm.provide(key, options.provides[key])
     }
+  }
+
+  if (options?.shallow) {
+    transformVNodeArgs((args, instance) => {
+      // don't stub the parent! Or you get nothing.
+      if (instance && instance.vnode.type['name'] === PARENT_NAME) {
+        return args
+      }
+
+      // if the first arg is a string, it's a regular HTML element; 'div', 'p' etc
+      // also we need to check if instance is not null for some reason
+      // TODO: figure out why !instance is need to make shallow work.
+      if (!instance || typeof args[0] === 'string') {
+        return args
+      }
+
+      // it's a regular component - stub it out.
+      const name = instance.vnode.type['name'] || 'anonymous'
+      return [`${name}-stub`]
+    })
   }
 
   // add tracking for emitted events
