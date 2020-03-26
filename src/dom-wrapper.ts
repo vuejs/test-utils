@@ -10,8 +10,12 @@ export class DOMWrapper<ElementType extends Element> implements WrapperAPI {
     this.element = element
   }
 
-  classes() {
-    return Array.from(this.element.classList)
+  classes(className?) {
+    const classes = this.element.classList
+
+    if (className) return classes.contains(className)
+
+    return Array.from(classes)
   }
 
   exists() {
