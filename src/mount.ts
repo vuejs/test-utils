@@ -90,7 +90,7 @@ export function mount<P>(
   vm.mixin(emitMixin)
 
   // mount the app!
-  const app = vm.mount('#app')
+  const app = vm.mount(el)
 
   return createWrapper(app, events)
 }

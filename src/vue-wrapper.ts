@@ -1,16 +1,24 @@
-import { ComponentPublicInstance } from 'vue'
+import { ComponentPublicInstance, ComponentInternalInstance } from 'vue'
+import { ShapeFlags } from '@vue/shared'
 
 import { DOMWrapper } from './dom-wrapper'
 import { WrapperAPI } from './types'
 import { ErrorWrapper } from './error-wrapper'
 
 export class VueWrapper implements WrapperAPI {
-  vm: ComponentPublicInstance
+  rootVM: ComponentPublicInstance
+  componentVM: ComponentInternalInstance
   __emitted: Record<string, unknown[]> = {}
 
   constructor(vm: ComponentPublicInstance, events: Record<string, unknown[]>) {
-    this.vm = vm
+    this.rootVM = vm
+    this.componentVM = this.rootVM.$.subTree.component
     this.__emitted = events
+  }
+
+  get __hasMultipleRoots(): boolean {
+    // if the subtree is an array of children, we have multiple root nodes
+    return this.componentVM.subTree.shapeFlag === ShapeFlags.ARRAY_CHILDREN
   }
 
   classes(className?) {
@@ -30,15 +38,15 @@ export class VueWrapper implements WrapperAPI {
   }
 
   html() {
-    return this.vm.$el.outerHTML
+    return this.rootVM.$el.outerHTML
   }
 
   text() {
-    return this.vm.$el.textContent?.trim()
+    return this.rootVM.$el.textContent?.trim()
   }
 
   find<T extends Element>(selector: string): DOMWrapper<T> | ErrorWrapper {
-    const result = this.vm.$el.querySelector(selector) as T
+    const result = this.rootVM.$el.querySelector(selector) as T
     if (result) {
       return new DOMWrapper(result)
     }
@@ -47,16 +55,16 @@ export class VueWrapper implements WrapperAPI {
   }
 
   findAll<T extends Element>(selector: string): DOMWrapper<T>[] {
-    const results = (this.vm.$el as Element).querySelectorAll<T>(selector)
+    const results = (this.rootVM.$el as Element).querySelectorAll<T>(selector)
     return Array.from(results).map((x) => new DOMWrapper(x))
   }
 
   async setChecked(checked: boolean = true) {
-    return new DOMWrapper(this.vm.$el).setChecked(checked)
+    return new DOMWrapper(this.rootVM.$el).setChecked(checked)
   }
 
   trigger(eventString: string) {
-    const rootElementWrapper = new DOMWrapper(this.vm.$el)
+    const rootElementWrapper = new DOMWrapper(this.rootVM.$el)
     return rootElementWrapper.trigger(eventString)
   }
 }
