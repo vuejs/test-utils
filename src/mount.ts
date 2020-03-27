@@ -23,7 +23,7 @@ export function mount<P>(
   originalComponent: any,
   options?: MountingOptions<P>
 ): VueWrapper {
-  let component = { ...originalComponent }
+  const component = { ...originalComponent }
 
   // Reset the document.body
   document.getElementsByTagName('html')[0].innerHTML = ''
