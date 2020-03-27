@@ -1,4 +1,4 @@
-import { ComponentPublicInstance, ComponentInternalInstance } from 'vue'
+import { ComponentPublicInstance } from 'vue'
 import { ShapeFlags } from '@vue/shared'
 
 import { DOMWrapper } from './dom-wrapper'
@@ -7,18 +7,20 @@ import { ErrorWrapper } from './error-wrapper'
 
 export class VueWrapper implements WrapperAPI {
   rootVM: ComponentPublicInstance
-  componentVM: ComponentInternalInstance
+  componentVM: ComponentPublicInstance
   __emitted: Record<string, unknown[]> = {}
 
   constructor(vm: ComponentPublicInstance, events: Record<string, unknown[]>) {
     this.rootVM = vm
-    this.componentVM = this.rootVM.$.subTree.component
+    this.componentVM = this.rootVM.$refs[
+      'VTU_COMPONENT'
+    ] as ComponentPublicInstance
     this.__emitted = events
   }
 
   get __hasMultipleRoots(): boolean {
     // if the subtree is an array of children, we have multiple root nodes
-    return this.componentVM.subTree.shapeFlag === ShapeFlags.ARRAY_CHILDREN
+    return this.componentVM.$.subTree.shapeFlag === ShapeFlags.ARRAY_CHILDREN
   }
 
   classes(className?) {

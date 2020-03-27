@@ -60,7 +60,7 @@ export function mount<P>(
   const Parent = (props?: P) =>
     defineComponent({
       render() {
-        return h(component, props, slots)
+        return h(component, { ...props, ref: 'VTU_COMPONENT' }, slots)
       }
     })
 
