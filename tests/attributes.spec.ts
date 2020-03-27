@@ -2,7 +2,7 @@ import { h } from 'vue'
 import { mount } from '../src'
 
 describe('attributes', () => {
-  it('returns an object if wrapper contains attribute matching value', () => {
+  it('returns an object with attributes', () => {
     const value = 'value'
     const component = {
       render() {
