@@ -2,27 +2,56 @@ import { defineComponent, h } from 'vue'
 
 import { mount } from '../src'
 
-test('find', () => {
-  const Component = defineComponent({
-    render() {
-      return h('div', {}, [h('span', { id: 'my-span' })])
-    }
+describe('find', () => {
+  test('find using single root node', () => {
+    const Component = defineComponent({
+      render() {
+        return h('div', {}, [h('span', { id: 'my-span' })])
+      }
+    })
+
+    const wrapper = mount(Component)
+    expect(wrapper.find('#my-span')).toBeTruthy()
   })
 
-  const wrapper = mount(Component)
-  expect(wrapper.find('#my-span')).toBeTruthy()
+  it('find using multiple root nodes', () => {
+    const Component = defineComponent({
+      render() {
+        return [h('div', 'text'), h('span', { id: 'my-span' })]
+      }
+    })
+
+    const wrapper = mount(Component)
+    expect(wrapper.find('#my-span')).toBeTruthy()
+  })
 })
 
-test('findAll', () => {
-  const Component = defineComponent({
-    render() {
-      return h('div', {}, [
-        h('span', { className: 'span' }),
-        h('span', { className: 'span' })
-      ])
-    }
+describe('findAll', () => {
+  test('findAll using single root node', () => {
+    const Component = defineComponent({
+      render() {
+        return h('div', {}, [
+          h('span', { className: 'span' }),
+          h('span', { className: 'span' })
+        ])
+      }
+    })
+
+    const wrapper = mount(Component)
+    expect(wrapper.findAll('.span')).toHaveLength(2)
   })
 
-  const wrapper = mount(Component)
-  expect(wrapper.findAll('.span')).toHaveLength(2)
+  test('findAll using multiple root nodes', () => {
+    const Component = defineComponent({
+      render() {
+        return [
+          h('span', { className: 'span' }),
+          h('span', { className: 'span' })
+        ]
+      }
+    })
+
+    const wrapper = mount(Component)
+    expect(wrapper.findAll('.span')).toHaveLength(2)
+  })
 })

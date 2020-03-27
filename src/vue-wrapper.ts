@@ -23,12 +23,19 @@ export class VueWrapper implements WrapperAPI {
     return this.componentVM.$.subTree.shapeFlag === ShapeFlags.ARRAY_CHILDREN
   }
 
+  get element() {
+    return this.__hasMultipleRoots
+      ? // get the parent element of the current component
+        this.componentVM.$el.parentElement
+      : this.componentVM.$el
+  }
+
   classes(className?) {
-    return new DOMWrapper(this.vm.$el).classes(className)
+    return new DOMWrapper(this.element).classes(className)
   }
 
   attributes(key?: string) {
-    return new DOMWrapper(this.vm.$el).attributes(key)
+    return new DOMWrapper(this.element).attributes(key)
   }
 
   exists() {
@@ -40,15 +47,15 @@ export class VueWrapper implements WrapperAPI {
   }
 
   html() {
-    return this.rootVM.$el.outerHTML
+    return this.element.outerHTML
   }
 
   text() {
-    return this.rootVM.$el.textContent?.trim()
+    return this.element.textContent?.trim()
   }
 
   find<T extends Element>(selector: string): DOMWrapper<T> | ErrorWrapper {
-    const result = this.rootVM.$el.querySelector(selector) as T
+    const result = this.element.querySelector(selector) as T
     if (result) {
       return new DOMWrapper(result)
     }
@@ -57,16 +64,16 @@ export class VueWrapper implements WrapperAPI {
   }
 
   findAll<T extends Element>(selector: string): DOMWrapper<T>[] {
-    const results = (this.rootVM.$el as Element).querySelectorAll<T>(selector)
+    const results = (this.element as Element).querySelectorAll<T>(selector)
     return Array.from(results).map((x) => new DOMWrapper(x))
   }
 
   async setChecked(checked: boolean = true) {
-    return new DOMWrapper(this.rootVM.$el).setChecked(checked)
+    return new DOMWrapper(this.element).setChecked(checked)
   }
 
   trigger(eventString: string) {
-    const rootElementWrapper = new DOMWrapper(this.rootVM.$el)
+    const rootElementWrapper = new DOMWrapper(this.element)
     return rootElementWrapper.trigger(eventString)
   }
 }
