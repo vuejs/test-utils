@@ -3,8 +3,10 @@ import {
   createApp,
   VNode,
   defineComponent,
-  Plugin,
-  ComponentOptions
+  VNodeNormalizedChildren,
+  VNodeProps,
+  ComponentOptions,
+  Plugin
 } from 'vue'
 
 import { VueWrapper, createWrapper } from './vue-wrapper'
@@ -41,15 +43,12 @@ export function mount<P>(
   document.body.appendChild(el)
 
   // handle any slots passed via mounting options
-  const slots =
+  const slots: VNodeNormalizedChildren =
     options?.slots &&
-    Object.entries(options.slots).reduce<Record<string, () => VNode | string>>(
-      (acc, [name, fn]) => {
-        acc[name] = () => fn
-        return acc
-      },
-      {}
-    )
+    Object.entries(options.slots).reduce((acc, [name, fn]) => {
+      acc[name] = () => fn
+      return acc
+    }, {})
   // override component data with mounting options data
   if (options?.data) {
     const dataMixin = createDataMixin(options.data())
@@ -57,7 +56,7 @@ export function mount<P>(
   }
 
   // create the wrapper component
-  const Parent = (props?: P) =>
+  const Parent = (props?: VNodeProps) =>
     defineComponent({
       render() {
         return h(component, { ...props, ref: 'VTU_COMPONENT' }, slots)
