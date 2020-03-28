@@ -13,8 +13,8 @@ export class VueWrapper implements WrapperAPI {
     this.__emitted = events
   }
 
-  classes(): string[] {
-    throw Error('TODO: Implement VueWrapper#classes')
+  classes(className?) {
+    return new DOMWrapper(this.vm.$el).classes(className)
   }
 
   attributes(key?: string) {
