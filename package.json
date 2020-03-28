@@ -11,10 +11,10 @@
     "README.md"
   ],
   "devDependencies": {
+    "@vue/compiler-sfc": "3.0.0-alpha.10",
     "@babel/core": "^7.9.0",
     "@babel/preset-env": "^7.8.4",
     "@babel/types": "^7.8.3",
-    "@lmiller1990/vue-jest-transformer": "^0.0.2",
     "@types/estree": "^0.0.42",
     "@types/jest": "^24.9.1",
     "babel-jest": "^25.2.3",
@@ -26,10 +26,7 @@
     "rollup": "^1.31.1",
     "rollup-plugin-typescript2": "^0.26.0",
     "ts-jest": "^25.0.0",
-    "typescript": "^3.7.5"
-  },
-  "peerDependencies": {
-    "@vue/compiler-sfc": "3.0.0-alpha.10",
+    "typescript": "^3.7.5",
     "vue": "3.0.0-alpha.10",
     "vue-jest": "vuejs/vue-jest#next"
   },
