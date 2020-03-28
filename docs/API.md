@@ -137,8 +137,10 @@ mount(Component, {
   }
 })
 ```
-
-### `mixins`
+### Global
+You can provide properties to the App instance using the properties under the `global` mount property
+ 
+### `global.mixins`
 
 Applies mixins via `app.mixin(...)`.
 
@@ -161,14 +163,16 @@ test('adds a lifecycle mixin', () => {
   }
 
   const wrapper = mount(Component, {
-    mixins: [mixin]
+    global: {
+      mixins: [mixin]
+    }
   })
 
   // 'Component was created!' will be logged
 })
 ```
 
-### `plugins`
+### `global.plugins`
 
 Installs plugins on the component.
 
@@ -194,7 +198,9 @@ test('installs a plugin via `plugins`', () => {
     render() { return h('div') }
   }
   mount(Component, {
-    plugins: [Plugin]
+    global: {
+      plugins: [Plugin]
+    }
   })
 
   expect(installed).toHaveBeenCalled()
