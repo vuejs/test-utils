@@ -17,6 +17,10 @@ export class VueWrapper implements WrapperAPI {
     return new DOMWrapper(this.vm.$el).classes(className)
   }
 
+  attributes(key?: string) {
+    return new DOMWrapper(this.vm.$el).attributes(key)
+  }
+
   exists() {
     return true
   }
