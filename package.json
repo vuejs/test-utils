@@ -6,10 +6,6 @@
   "browser": "dist/vue-test-utils.esm.js",
   "unpkg": "dist/vue-test-utils.js",
   "module": "dist/vue-test-utils.esm-bundler.js",
-  "dependencies": {
-    "@vue/compiler-sfc": "3.0.0-alpha.10",
-    "vue": "3.0.0-alpha.10"
-  },
   "files": [
     "dist",
     "README.md"
@@ -21,6 +17,7 @@
     "@lmiller1990/vue-jest-transformer": "^0.0.2",
     "@types/estree": "^0.0.42",
     "@types/jest": "^24.9.1",
+    "babel-jest": "^25.2.3",
     "babel-preset-jest": "^25.2.1",
     "husky": "^4.2.3",
     "jest": "^25.1.0",
@@ -30,6 +27,11 @@
     "rollup-plugin-typescript2": "^0.26.0",
     "ts-jest": "^25.0.0",
     "typescript": "^3.7.5"
+  },
+  "peerDependencies": {
+    "@vue/compiler-sfc": "3.0.0-alpha.10",
+    "vue": "3.0.0-alpha.10",
+    "vue-jest": "vuejs/vue-jest#next"
   },
   "scripts": {
     "test": "yarn jest --runInBand",
