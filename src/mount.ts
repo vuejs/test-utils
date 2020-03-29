@@ -1,4 +1,11 @@
-import { h, createApp, VNode, defineComponent } from 'vue'
+import {
+  h,
+  createApp,
+  VNode,
+  defineComponent,
+  Plugin,
+  ComponentOptions
+} from 'vue'
 
 import { VueWrapper, createWrapper } from './vue-wrapper'
 import { createEmitMixin } from './emitMixin'
@@ -13,8 +20,10 @@ interface MountingOptions<Props> {
     default?: Slot
     [key: string]: Slot
   }
-  plugins?: any[]
-  mixins?: any[]
+  global?: {
+    plugins?: Plugin[]
+    mixins?: ComponentOptions[]
+  }
   provides?: Record<any, any>
   stubs?: Record<string, any>
 }
@@ -59,13 +68,13 @@ export function mount<P>(
   const vm = createApp(Parent(options && options.props))
 
   // use and plugins from mounting options
-  if (options?.plugins) {
-    for (const use of options.plugins) vm.use(use)
+  if (options?.global?.plugins) {
+    for (const use of options?.global?.plugins) vm.use(use)
   }
 
   // use any mixins from mounting options
-  if (options?.mixins) {
-    for (const mixin of options.mixins) vm.mixin(mixin)
+  if (options?.global?.mixins) {
+    for (const mixin of options?.global?.mixins) vm.mixin(mixin)
   }
 
   // provide any values passed via provides mounting option
