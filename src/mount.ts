@@ -25,8 +25,8 @@ interface MountingOptions<Props> {
   global?: {
     plugins?: Plugin[]
     mixins?: ComponentOptions[]
+    provide?: Record<any, any>
   }
-  provides?: Record<any, any>
   stubs?: Record<string, any>
 }
 
@@ -77,10 +77,10 @@ export function mount<P>(
   }
 
   // provide any values passed via provides mounting option
-  if (options?.provides) {
-    for (const key of Reflect.ownKeys(options.provides)) {
+  if (options?.global?.provide) {
+    for (const key of Reflect.ownKeys(options.global.provide)) {
       // @ts-ignore: https://github.com/microsoft/TypeScript/issues/1863
-      vm.provide(key, options.provides[key])
+      vm.provide(key, options.global.provide[key])
     }
   }
 
