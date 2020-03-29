@@ -13,8 +13,10 @@ describe('mounting options: provides', () => {
     }
 
     const wrapper = mount(Component, {
-      provides: { 
-        [GreetingSymbol]: 'Provided value'
+      global: {
+        provide: {
+          [GreetingSymbol]: 'Provided value'
+        }
       }
     })
 
