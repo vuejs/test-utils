@@ -3,7 +3,7 @@ import { defineComponent, h } from 'vue'
 import { mount } from '../src'
 
 describe('find', () => {
-  test('find using single root node', () => {
+  it('find using single root node', () => {
     const Component = defineComponent({
       render() {
         return h('div', {}, [h('span', { id: 'my-span' })])
@@ -23,6 +23,17 @@ describe('find', () => {
 
     const wrapper = mount(Component)
     expect(wrapper.find('#my-span')).toBeTruthy()
+  })
+
+  it('returns the root element in single root element', () => {
+    const Component = defineComponent({
+      render() {
+        return h('div', { class: 'foo' }, 'text')
+      }
+    })
+
+    const wrapper = mount(Component)
+    expect(wrapper.find('.foo')).toBeTruthy()
   })
 })
 
