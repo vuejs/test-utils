@@ -18,13 +18,13 @@ export class VueWrapper implements WrapperAPI {
     this.__emitted = events
   }
 
-  get __hasMultipleRoots(): boolean {
+  private get hasMultipleRoots(): boolean {
     // if the subtree is an array of children, we have multiple root nodes
     return this.componentVM.$.subTree.shapeFlag === ShapeFlags.ARRAY_CHILDREN
   }
 
   get element() {
-    return this.__hasMultipleRoots
+    return this.hasMultipleRoots
       ? // get the parent element of the current component
         this.componentVM.$el.parentElement
       : this.componentVM.$el
@@ -47,7 +47,9 @@ export class VueWrapper implements WrapperAPI {
   }
 
   html() {
-    return this.element.outerHTML
+    return this.hasMultipleRoots
+      ? this.element.innerHTML
+      : this.element.outerHTML
   }
 
   text() {
