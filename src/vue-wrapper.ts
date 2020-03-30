@@ -30,7 +30,7 @@ export class VueWrapper implements WrapperAPI {
       : this.componentVM.$el
   }
 
-  classes(className?) {
+  classes(className?: string) {
     return new DOMWrapper(this.element).classes(className)
   }
 
