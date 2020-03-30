@@ -102,4 +102,13 @@ describe('setChecked', () => {
     await radioFoo.setChecked()
     expect(wrapper.find<HTMLInputElement>('.counter').text()).toBe('4')
   })
+
+  it('throws error if element is radio and checked is false', async () => {
+    const message = `wrapper.setChecked() cannot be called with parameter false on a '<input type="radio" /> element`
+    const wrapper = mount(ComponentWithInput)
+    const radioFoo = wrapper.find<HTMLInputElement>('#radioFoo')
+
+    const fn = radioFoo.setChecked(false)
+    await expect(fn).rejects.toThrowError(message)
+  })
 })
