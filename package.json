@@ -43,8 +43,7 @@
   },
   "lint-staged": {
     "*.ts": [
-      "prettier --parser=typescript --write",
-      "git add"
+      "prettier --parser=typescript --write"
     ]
   }
 }
