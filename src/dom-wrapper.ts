@@ -59,10 +59,17 @@ export class DOMWrapper<ElementType extends Element> implements WrapperAPI {
   async setChecked(checked: boolean = true) {
     // typecast so we get typesafety
     const element = (this.element as unknown) as HTMLInputElement
+    const type = this.attributes().type
 
     if (element.tagName !== 'INPUT') {
       throw Error(
         `You need to call setChecked on an input element. You called it on a ${this.element.tagName}`
+      )
+    }
+
+    if (type === 'radio' && !checked) {
+      throw Error(
+        `wrapper.setChecked() cannot be called with parameter false on a '<input type="radio" /> element.`
       )
     }
 
@@ -76,6 +83,70 @@ export class DOMWrapper<ElementType extends Element> implements WrapperAPI {
 
     element.checked = checked
     return this.trigger('change')
+  }
+
+  setValue(value?: any) {
+    const element = (this.element as unknown) as HTMLInputElement
+    const tagName = element.tagName
+    const type = this.attributes().type
+
+    if (tagName === 'OPTION') {
+      return this.setSelected()
+    } else if (tagName === 'INPUT' && type === 'checkbox') {
+      return this.setChecked()
+    } else if (tagName === 'INPUT' && type === 'radio') {
+      return this.setChecked()
+    } else if (
+      tagName === 'INPUT' ||
+      tagName === 'TEXTAREA' ||
+      tagName === 'SELECT'
+    ) {
+      element.value = value
+
+      if (tagName === 'SELECT') {
+        return this.trigger('change')
+      }
+      this.trigger('input')
+
+      // for v-model.lazy, we need to trigger a change event, too.
+      // $FlowIgnore
+      // if (
+      //   (tagName === 'INPUT' || tagName === 'TEXTAREA') && element._vModifiers && element._vModifiers.lazy
+      // ) {
+      //   return this.trigger('change')
+      // }
+      return nextTick
+    } else {
+      throw Error(`wrapper.setValue() cannot be called on this element`)
+    }
+  }
+
+  setSelected() {
+    const element = (this.element as unknown) as HTMLOptionElement
+    const tagName = element.tagName
+
+    if (tagName === 'SELECT') {
+      throw Error(
+        `wrapper.setSelected() cannot be called on select. Call it on one of its options`
+      )
+    }
+
+    if (tagName === 'OPTION') {
+      if (element.selected) {
+        return
+      }
+
+      element.selected = true
+      let parentElement = element.parentElement
+
+      if (parentElement.tagName === 'OPTGROUP') {
+        parentElement = parentElement.parentElement
+      }
+
+      return new DOMWrapper(parentElement).trigger('change')
+    }
+
+    throw Error(`wrapper.setSelected() cannot be called on this element`)
   }
 
   async trigger(eventString: string) {

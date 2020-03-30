@@ -14,6 +14,10 @@ export class ErrorWrapper {
     return Error(`Cannot call ${method} on an empty wrapper.`)
   }
 
+  attributes() {
+    throw this.wrapperError('attributes')
+  }
+
   classes() {
     throw this.wrapperError('classes')
   }
@@ -32,6 +36,10 @@ export class ErrorWrapper {
 
   setChecked() {
     throw this.wrapperError('setChecked')
+  }
+
+  setValue() {
+    throw this.wrapperError('setValue')
   }
 
   text() {
