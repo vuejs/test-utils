@@ -6,11 +6,9 @@ describe('emitted', () => {
   it('captures events emitted via this.$emit', () => {
     const Component = defineComponent({
       render() {
-        return h(
-          'div', [
+        return h('div', [
           h('button', { onClick: () => this.$emit('hello', 'foo', 'bar') })
-        ]
-        )
+        ])
       }
     })
     const wrapper = mount(Component)
@@ -32,12 +30,10 @@ describe('emitted', () => {
       name: 'ContextEmit',
 
       setup(props, ctx) {
-        return () => 
-          h(
-            'div', [
+        return () =>
+          h('div', [
             h('button', { onClick: () => ctx.emit('hello', 'foo', 'bar') })
-          ]
-        )
+          ])
       }
     })
     const wrapper = mount(Component)

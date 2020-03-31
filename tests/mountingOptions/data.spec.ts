@@ -1,5 +1,5 @@
 import { h } from 'vue'
-  
+
 import { mount } from '../../src'
 
 describe('mounting options: data', () => {
@@ -8,10 +8,12 @@ describe('mounting options: data', () => {
       data() {
         return {
           foo: 'foo',
-          bar: 'bar',
+          bar: 'bar'
         }
       },
-      render() { return h('div', `Foo is ${this.foo} bar is ${this.bar}`) }
+      render() {
+        return h('div', `Foo is ${this.foo} bar is ${this.bar}`)
+      }
     }
 
     const wrapper = mount(Comp, {
