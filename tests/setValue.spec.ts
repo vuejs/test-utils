@@ -5,27 +5,25 @@ import ComponentWithInput from './components/ComponentWithInput.vue'
 describe('setValue', () => {
   it('sets element of input value', async () => {
     const wrapper = mount(ComponentWithInput)
-    const input = wrapper.find('input[type="text"]')
+    const input = wrapper.find<HTMLInputElement>('input[type="text"]')
     await input.setValue('foo')
 
     expect(wrapper.text()).toContain('foo')
 
-    // @ts-ignore
     expect(input.element.value).toBe('foo')
   })
 
   it('sets element of textarea value', async () => {
     const wrapper = mount(ComponentWithInput)
-    const textarea = wrapper.find('textarea')
+    const textarea = wrapper.find<HTMLTextAreaElement>('textarea')
     await textarea.setValue('foo')
 
-    // @ts-ignore
     expect(textarea.element.value).toBe('foo')
   })
 
   it('updates dom with input v-model.lazy', async () => {
     const wrapper = mount(ComponentWithInput)
-    const input = wrapper.find('input#lazy')
+    const input = wrapper.find<HTMLInputElement>('input#lazy')
     await input.setValue('lazy')
 
     expect(wrapper.text()).toContain('lazy')
@@ -33,28 +31,27 @@ describe('setValue', () => {
 
   it('sets element of select value', async () => {
     const wrapper = mount(ComponentWithInput)
-    const select = wrapper.find('select')
+    const select = wrapper.find<HTMLSelectElement>('select')
     await select.setValue('selectB')
 
-    // @ts-ignore
     expect(select.element.value).toEqual('selectB')
     expect(wrapper.text()).toContain('selectB')
   })
 
   it('selects radio', async () => {
     const wrapper = mount(ComponentWithInput)
-    await wrapper.find('#radioBar').setValue()
+    await wrapper.find<HTMLInputElement>('#radioBar').setValue()
     expect(wrapper.text()).toContain('radioBarResult')
   })
 
   it('throws selects a checkbox', async () => {
     const wrapper = mount(ComponentWithInput)
-    await wrapper.find('input[type=checkbox]').setValue()
+    await wrapper.find<HTMLInputElement>('input[type=checkbox]').setValue()
     expect(wrapper.find('.checkboxResult').exists()).toBe(true)
   })
 
   it('throws error if element is not valid', () => {
-    const message = 'wrapper.setValue() cannot be called on this element'
+    const message = 'wrapper.setValue() cannot be called on LABEL'
     const wrapper = mount(ComponentWithInput)
     const input = wrapper.find('#label-el')
 
@@ -64,7 +61,7 @@ describe('setValue', () => {
 
   it('sets select > option', async () => {
     const wrapper = mount(ComponentWithInput)
-    const input = wrapper.find('option')
+    const input = wrapper.find<HTMLOptionElement>('option')
 
     await input.setValue()
     expect(wrapper.text()).toContain('selectA')
