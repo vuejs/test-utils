@@ -23,7 +23,7 @@ export class VueWrapper implements WrapperAPI {
     return this.componentVM.$.subTree.shapeFlag === ShapeFlags.ARRAY_CHILDREN
   }
 
-  get parentElement() {
+  private get parentElement() {
     return this.componentVM.$el.parentElement
   }
 
