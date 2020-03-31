@@ -19,6 +19,10 @@ export class VueWrapper implements WrapperAPI {
     this.__emitted = events
   }
 
+  private get appRootNode() {
+    return document.getElementById(MOUNT_ELEMENT_ID) as HTMLDivElement
+  }
+
   private get hasMultipleRoots(): boolean {
     // if the subtree is an array of children, we have multiple root nodes
     return this.componentVM.$.subTree.shapeFlag === ShapeFlags.ARRAY_CHILDREN
@@ -48,7 +52,7 @@ export class VueWrapper implements WrapperAPI {
   }
 
   html() {
-    return document.getElementById(MOUNT_ELEMENT_ID).innerHTML
+    return this.appRootNode.innerHTML
   }
 
   text() {
@@ -56,7 +60,7 @@ export class VueWrapper implements WrapperAPI {
   }
 
   find<T extends Element>(selector: string): DOMWrapper<T> | ErrorWrapper {
-    const result = this.element.querySelector(selector) as T
+    const result = this.appRootNode.querySelector(selector) as T
     if (result) {
       return new DOMWrapper(result)
     }
@@ -65,7 +69,7 @@ export class VueWrapper implements WrapperAPI {
   }
 
   findAll<T extends Element>(selector: string): DOMWrapper<T>[] {
-    const results = (this.element as Element).querySelectorAll<T>(selector)
+    const results = this.appRootNode.querySelectorAll<T>(selector)
     return Array.from(results).map((x) => new DOMWrapper(x))
   }
 

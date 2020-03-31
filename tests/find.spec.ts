@@ -26,7 +26,7 @@ describe('find', () => {
     expect(wrapper.find('#my-span')).toBeTruthy()
   })
 
-  it('works with suspense', async () => {
+  test('works with suspense', async () => {
     const wrapper = mount(SuspenseComponent)
 
     expect(wrapper.html()).toContain('Fallback content')
@@ -61,5 +61,12 @@ describe('findAll', () => {
 
     const wrapper = mount(Component)
     expect(wrapper.findAll('.span')).toHaveLength(2)
+  })
+
+  test('works with suspense', async () => {
+    const wrapper = mount(SuspenseComponent)
+
+    expect(wrapper.html()).toContain('Fallback content')
+    expect(wrapper.findAll('div')).toBeTruthy()
   })
 })
