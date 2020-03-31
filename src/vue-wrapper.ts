@@ -4,6 +4,7 @@ import { ShapeFlags } from '@vue/shared'
 import { DOMWrapper } from './dom-wrapper'
 import { WrapperAPI } from './types'
 import { ErrorWrapper } from './error-wrapper'
+import { MOUNT_ELEMENT_ID } from './constants'
 
 export class VueWrapper implements WrapperAPI {
   rootVM: ComponentPublicInstance
@@ -47,9 +48,7 @@ export class VueWrapper implements WrapperAPI {
   }
 
   html() {
-    return this.hasMultipleRoots
-      ? this.element.innerHTML
-      : this.element.outerHTML
+    return document.getElementById(MOUNT_ELEMENT_ID).innerHTML
   }
 
   text() {
