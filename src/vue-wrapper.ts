@@ -23,11 +23,13 @@ export class VueWrapper implements WrapperAPI {
     return this.componentVM.$.subTree.shapeFlag === ShapeFlags.ARRAY_CHILDREN
   }
 
+  private get parentElement() {
+    return this.componentVM.$el.parentElement
+  }
+
   get element() {
-    return this.hasMultipleRoots
-      ? // get the parent element of the current component
-        this.componentVM.$el.parentElement
-      : this.componentVM.$el
+    // if the component has multiple root elements, we use the parent's element
+    return this.hasMultipleRoots ? this.parentElement : this.componentVM.$el
   }
 
   classes(className?: string) {
@@ -57,7 +59,8 @@ export class VueWrapper implements WrapperAPI {
   }
 
   find<T extends Element>(selector: string): DOMWrapper<T> | ErrorWrapper {
-    const result = this.element.querySelector(selector) as T
+    // force using the parentElement to allow finding the root element
+    const result = this.parentElement.querySelector(selector) as T
     if (result) {
       return new DOMWrapper(result)
     }
