@@ -1,5 +1,8 @@
 <template>
-  <Suspense>
+  <div v-if="error">
+    {{ error }}
+  </div>
+  <Suspense v-else>
     <template #default>
       <DefaultContent />
     </template>
@@ -12,12 +15,11 @@
 <script lang="ts">
 import { h, onErrorCaptured, ref } from 'vue'
 
-const simulateDelay = () => new Promise(res => {
-  setTimeout(res, 100)
-})
+import { simulateDelay } from '../utils'
+
 const DefaultContent = {
   async setup() {
-    await simulateDelay()
+    await simulateDelay({ delayInMs: 100 })
     return {}
   },
   render() { return h('div', 'Default content') }
@@ -30,6 +32,17 @@ export default {
   components: {
     DefaultContent,
     FallbackContent
+  },
+
+  setup() {
+    const error = ref<string | null>(null)
+    onErrorCaptured((e) => {
+      const err = e as Error
+      error.value = err.message
+      return true
+    })
+
+    return { error }
   }
 }
 </script>

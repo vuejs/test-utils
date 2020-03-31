@@ -3,6 +3,15 @@ import flushPromises from 'flush-promises'
 import SuspenseComponent from '../components/Suspense.vue'
 import { mount } from '../../src'
 
+let mockShouldError = false
+jest.mock('../utils', () => ({
+  simulateDelay: () => {
+    if (mockShouldError) {
+      throw new Error('Error!')
+    }
+  }
+}))
+
 describe('suspense', () => {
   test('fallback state', () => {
     const wrapper = mount(SuspenseComponent)
@@ -13,10 +22,18 @@ describe('suspense', () => {
   test('default state', async (done) => {
     const wrapper = mount(SuspenseComponent)
 
-    console.log(wrapper.html())
     setTimeout(() => {
       expect(wrapper.html()).toContain('Default content')
       done()
     }, 150)
+  })
+
+  test('error state', async () => {
+    mockShouldError = true
+    const wrapper = mount(SuspenseComponent)
+
+    await flushPromises()
+
+    expect(wrapper.html()).toContain('Error!')
   })
 })
