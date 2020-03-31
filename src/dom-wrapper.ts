@@ -117,7 +117,7 @@ export class DOMWrapper<ElementType extends Element> implements WrapperAPI {
       // }
       return nextTick
     } else {
-      throw Error(`wrapper.setValue() cannot be called on this element`)
+      throw Error(`wrapper.setValue() cannot be called on ${tagName}`)
     }
   }
 
