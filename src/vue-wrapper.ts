@@ -28,7 +28,7 @@ export class VueWrapper implements WrapperAPI {
   }
 
   get element() {
-    // if the component has multiple root elements, we use the parent's element 
+    // if the component has multiple root elements, we use the parent's element
     return this.hasMultipleRoots ? this.parentElement : this.componentVM.$el
   }
 
