@@ -6,7 +6,9 @@ import {
   VNodeNormalizedChildren,
   VNodeProps,
   ComponentOptions,
-  Plugin
+  Plugin,
+  Directive,
+  Component
 } from 'vue'
 
 import { VueWrapper, createWrapper } from './vue-wrapper'
@@ -26,6 +28,8 @@ interface MountingOptions<Props> {
     plugins?: Plugin[]
     mixins?: ComponentOptions[]
     provide?: Record<any, any>
+    components?: Record<string, Component>
+    directives?: Record<string, Directive>
   }
   stubs?: Record<string, any>
 }
@@ -74,6 +78,16 @@ export function mount<P>(
   // use any mixins from mounting options
   if (options?.global?.mixins) {
     for (const mixin of options?.global?.mixins) vm.mixin(mixin)
+  }
+
+  if (options?.global?.components) {
+    for (const key of Object.keys(options?.global?.components))
+      vm.component(key, options.global.components[key])
+  }
+
+  if (options?.global?.directives) {
+    for (const key of Object.keys(options?.global?.directives))
+      vm.directive(key, options.global.directives[key])
   }
 
   // provide any values passed via provides mounting option
