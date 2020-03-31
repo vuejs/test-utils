@@ -1,4 +1,3 @@
-
 import { ref, defineComponent, h, Transition } from 'vue'
 
 export const WithTransition = defineComponent({
@@ -6,26 +5,29 @@ export const WithTransition = defineComponent({
 
   setup() {
     const show = ref(false)
-    const onClick = () => show.value = !show.value
+    const onClick = () => (show.value = !show.value)
 
     return () => {
       const btn = h(
-        'button', 
-        { 
+        'button',
+        {
           onClick: onClick
         },
         'Toggle Visible'
       )
 
       const message = h(
-        'div', {
+        'div',
+        {
           id: 'message',
-          key: 'k1',
-        }, 'This has a fade transition')
+          key: 'k1'
+        },
+        'This has a fade transition'
+      )
 
       return h('div', [
         btn,
-        h(Transition, { name: 'fade' }, () => show.value ? message : null)
+        h(Transition, { name: 'fade' }, () => (show.value ? message : null))
       ])
     }
   }
