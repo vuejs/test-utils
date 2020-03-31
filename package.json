@@ -33,7 +33,7 @@
   "scripts": {
     "test": "yarn jest --runInBand",
     "build": "yarn rollup -c rollup.config.js",
-    "lint": "prettier -c --parser typescript \"src/**/*.ts?(x)\"",
+    "lint": "prettier -c --parser typescript \"(src|tests)/**/*.ts?(x)\"",
     "lint:fix": "yarn lint --write"
   },
   "husky": {
