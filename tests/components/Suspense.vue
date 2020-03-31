@@ -22,7 +22,7 @@ const DefaultContent = {
     await simulateDelay({ delayInMs: 100 })
     return {}
   },
-  render() { return h('div', 'Default content') }
+  render() { return h('div', ['Default content', h('span', 'Nested default content')]) }
 }
 const FallbackContent = {
   render() { return h('div', 'Fallback content') }
