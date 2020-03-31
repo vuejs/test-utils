@@ -146,7 +146,7 @@ export class DOMWrapper<ElementType extends Element> implements WrapperAPI {
       return new DOMWrapper(parentElement).trigger('change')
     }
 
-    throw Error(`wrapper.setSelected() cannot be called on this element`)
+    throw Error(`wrapper.setSelected() cannot be called on ${tagName}`)
   }
 
   async trigger(eventString: string) {
