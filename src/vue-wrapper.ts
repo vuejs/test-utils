@@ -4,6 +4,7 @@ import { ShapeFlags } from '@vue/shared'
 import { DOMWrapper } from './dom-wrapper'
 import { WrapperAPI } from './types'
 import { ErrorWrapper } from './error-wrapper'
+import { MOUNT_ELEMENT_ID } from './constants'
 
 export class VueWrapper implements WrapperAPI {
   rootVM: ComponentPublicInstance
@@ -16,6 +17,10 @@ export class VueWrapper implements WrapperAPI {
       'VTU_COMPONENT'
     ] as ComponentPublicInstance
     this.__emitted = events
+  }
+
+  private get appRootNode() {
+    return document.getElementById(MOUNT_ELEMENT_ID) as HTMLDivElement
   }
 
   private get hasMultipleRoots(): boolean {
@@ -49,9 +54,7 @@ export class VueWrapper implements WrapperAPI {
   }
 
   html() {
-    return this.hasMultipleRoots
-      ? this.element.innerHTML
-      : this.element.outerHTML
+    return this.appRootNode.innerHTML
   }
 
   text() {
@@ -69,7 +72,7 @@ export class VueWrapper implements WrapperAPI {
   }
 
   findAll<T extends Element>(selector: string): DOMWrapper<T>[] {
-    const results = (this.element as Element).querySelectorAll<T>(selector)
+    const results = this.appRootNode.querySelectorAll<T>(selector)
     return Array.from(results).map((x) => new DOMWrapper(x))
   }
 

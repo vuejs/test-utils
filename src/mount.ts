@@ -14,6 +14,7 @@ import {
 import { VueWrapper, createWrapper } from './vue-wrapper'
 import { createEmitMixin } from './emitMixin'
 import { createDataMixin } from './dataMixin'
+import { MOUNT_ELEMENT_ID } from './constants'
 
 type Slot = VNode | string
 
@@ -43,7 +44,7 @@ export function mount<P>(
   // Reset the document.body
   document.getElementsByTagName('html')[0].innerHTML = ''
   const el = document.createElement('div')
-  el.id = 'app'
+  el.id = MOUNT_ELEMENT_ID
   document.body.appendChild(el)
 
   // handle any slots passed via mounting options

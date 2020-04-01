@@ -1,6 +1,7 @@
 import { defineComponent, h } from 'vue'
 
 import { mount } from '../src'
+import SuspenseComponent from './components/Suspense.vue'
 
 describe('find', () => {
   it('find using single root node', () => {
@@ -35,6 +36,13 @@ describe('find', () => {
     const wrapper = mount(Component)
     expect(wrapper.find('.foo').exists()).toBe(true)
   })
+
+  test('works with suspense', async () => {
+    const wrapper = mount(SuspenseComponent)
+
+    expect(wrapper.html()).toContain('Fallback content')
+    expect(wrapper.find('div').exists()).toBeTruthy()
+  })
 })
 
 describe('findAll', () => {
@@ -64,5 +72,12 @@ describe('findAll', () => {
 
     const wrapper = mount(Component)
     expect(wrapper.findAll('.span')).toHaveLength(2)
+  })
+
+  test('works with suspense', async () => {
+    const wrapper = mount(SuspenseComponent)
+
+    expect(wrapper.html()).toContain('Fallback content')
+    expect(wrapper.findAll('div')).toBeTruthy()
   })
 })
