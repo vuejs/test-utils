@@ -1,7 +1,6 @@
 {
   "name": "vue-test-utils-next",
   "version": "0.0.1",
-  "types": "dist/index.d.ts",
   "license": "MIT",
   "main": "dist/vue-test-utils.cjs.js",
   "browser": "dist/vue-test-utils.esm.js",
