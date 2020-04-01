@@ -1,20 +1,48 @@
 import { ComponentPublicInstance } from 'vue'
+import { ShapeFlags } from '@vue/shared'
 
 import { DOMWrapper } from './dom-wrapper'
 import { WrapperAPI } from './types'
 import { ErrorWrapper } from './error-wrapper'
+import { MOUNT_ELEMENT_ID } from './constants'
 
 export class VueWrapper implements WrapperAPI {
-  vm: ComponentPublicInstance
+  rootVM: ComponentPublicInstance
+  componentVM: ComponentPublicInstance
   __emitted: Record<string, unknown[]> = {}
 
   constructor(vm: ComponentPublicInstance, events: Record<string, unknown[]>) {
-    this.vm = vm
+    this.rootVM = vm
+    this.componentVM = this.rootVM.$refs[
+      'VTU_COMPONENT'
+    ] as ComponentPublicInstance
     this.__emitted = events
   }
 
-  classes(): string[] {
-    throw Error('TODO: Implement VueWrapper#classes')
+  private get appRootNode() {
+    return document.getElementById(MOUNT_ELEMENT_ID) as HTMLDivElement
+  }
+
+  private get hasMultipleRoots(): boolean {
+    // if the subtree is an array of children, we have multiple root nodes
+    return this.componentVM.$.subTree.shapeFlag === ShapeFlags.ARRAY_CHILDREN
+  }
+
+  private get parentElement() {
+    return this.componentVM.$el.parentElement
+  }
+
+  get element() {
+    // if the component has multiple root elements, we use the parent's element
+    return this.hasMultipleRoots ? this.parentElement : this.componentVM.$el
+  }
+
+  classes(className?: string) {
+    return new DOMWrapper(this.element).classes(className)
+  }
+
+  attributes(key?: string) {
+    return new DOMWrapper(this.element).attributes(key)
   }
 
   exists() {
@@ -26,15 +54,16 @@ export class VueWrapper implements WrapperAPI {
   }
 
   html() {
-    return this.vm.$el.outerHTML
+    return this.appRootNode.innerHTML
   }
 
   text() {
-    return this.vm.$el.textContent?.trim()
+    return this.element.textContent?.trim()
   }
 
   find<T extends Element>(selector: string): DOMWrapper<T> | ErrorWrapper {
-    const result = this.vm.$el.querySelector(selector) as T
+    // force using the parentElement to allow finding the root element
+    const result = this.parentElement.querySelector(selector) as T
     if (result) {
       return new DOMWrapper(result)
     }
@@ -43,16 +72,16 @@ export class VueWrapper implements WrapperAPI {
   }
 
   findAll<T extends Element>(selector: string): DOMWrapper<T>[] {
-    const results = (this.vm.$el as Element).querySelectorAll<T>(selector)
+    const results = this.appRootNode.querySelectorAll<T>(selector)
     return Array.from(results).map((x) => new DOMWrapper(x))
   }
 
   async setChecked(checked: boolean = true) {
-    return new DOMWrapper(this.vm.$el).setChecked(checked)
+    return new DOMWrapper(this.element).setChecked(checked)
   }
 
   trigger(eventString: string) {
-    const rootElementWrapper = new DOMWrapper(this.vm.$el)
+    const rootElementWrapper = new DOMWrapper(this.element)
     return rootElementWrapper.trigger(eventString)
   }
 }

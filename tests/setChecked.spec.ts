@@ -13,7 +13,7 @@ describe('setChecked', () => {
     const wrapper = mount(Comp)
     await wrapper.setChecked()
 
-    expect(wrapper.vm.$el.checked).toBe(true)
+    expect(wrapper.componentVM.$el.checked).toBe(true)
   })
 
   it('sets element checked true with no option passed', async () => {
@@ -64,11 +64,12 @@ describe('setChecked', () => {
     const listener = jest.fn()
     const Comp = defineComponent({
       setup() {
-        return () => h('input', {
-          onChange: listener,
-          type: 'checkbox',
-          checked: true
-        })
+        return () =>
+          h('input', {
+            onChange: listener,
+            type: 'checkbox',
+            checked: true
+          })
       }
     })
 

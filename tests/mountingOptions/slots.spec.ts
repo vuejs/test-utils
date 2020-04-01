@@ -52,5 +52,7 @@ test('slots - default and named', () => {
     }
   })
 
-  expect(wrapper.html()).toBe('<div><div><h1>Named Slot</h1></div><div>Default</div></div>')
+  expect(wrapper.html()).toBe(
+    '<div><div><h1>Named Slot</h1></div><div>Default</div></div>'
+  )
 })

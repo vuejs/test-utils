@@ -11,11 +11,15 @@ describe('mounting options: mixins', () => {
       }
     }
     const Component = {
-      render() { return h('div') }
+      render() {
+        return h('div')
+      }
     }
 
     mount(Component, {
-      mixins: [mixin]
+      global: {
+        mixins: [mixin]
+      }
     })
 
     expect(createdHook).toHaveBeenCalled()

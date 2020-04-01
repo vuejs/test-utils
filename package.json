@@ -5,11 +5,8 @@
   "main": "dist/vue-test-utils.cjs.js",
   "browser": "dist/vue-test-utils.esm.js",
   "unpkg": "dist/vue-test-utils.js",
+  "types": "dist/index.d.ts",
   "module": "dist/vue-test-utils.esm-bundler.js",
-  "dependencies": {
-    "@vue/compiler-sfc": "3.0.0-alpha.10",
-    "vue": "3.0.0-alpha.10"
-  },
   "files": [
     "dist",
     "README.md"
@@ -18,10 +15,12 @@
     "@babel/core": "^7.9.0",
     "@babel/preset-env": "^7.8.4",
     "@babel/types": "^7.8.3",
-    "@lmiller1990/vue-jest-transformer": "^0.0.2",
     "@types/estree": "^0.0.42",
     "@types/jest": "^24.9.1",
+    "@vue/compiler-sfc": "3.0.0-alpha.10",
+    "babel-jest": "^25.2.3",
     "babel-preset-jest": "^25.2.1",
+    "flush-promises": "^1.0.2",
     "husky": "^4.2.3",
     "jest": "^25.1.0",
     "lint-staged": "^10.0.9",
@@ -29,12 +28,14 @@
     "rollup": "^1.31.1",
     "rollup-plugin-typescript2": "^0.26.0",
     "ts-jest": "^25.0.0",
-    "typescript": "^3.7.5"
+    "typescript": "^3.7.5",
+    "vue": "3.0.0-alpha.10",
+    "vue-jest": "vuejs/vue-jest#next"
   },
   "scripts": {
     "test": "yarn jest --runInBand",
     "build": "yarn rollup -c rollup.config.js",
-    "lint": "prettier -c --parser typescript \"src/**/*.ts?(x)\"",
+    "lint": "prettier -c --parser typescript \"(src|tests)/**/*.ts?(x)\"",
     "lint:fix": "yarn lint --write"
   },
   "husky": {
@@ -44,8 +45,11 @@
   },
   "lint-staged": {
     "*.ts": [
-      "prettier --parser=typescript --write",
-      "git add"
+      "prettier --parser=typescript --write"
     ]
+  },
+  "dependencies": {
+    "@types/lodash": "^4.14.149",
+    "lodash": "^4.17.15"
   }
 }

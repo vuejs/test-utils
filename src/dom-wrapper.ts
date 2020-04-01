@@ -10,8 +10,23 @@ export class DOMWrapper<ElementType extends Element> implements WrapperAPI {
     this.element = element
   }
 
-  classes() {
-    return Array.from(this.element.classList)
+  classes(className?) {
+    const classes = this.element.classList
+
+    if (className) return classes.contains(className)
+
+    return Array.from(classes)
+  }
+
+  attributes(key?: string) {
+    const attributes = this.element.attributes
+    const attributeMap = {}
+    for (let i = 0; i < attributes.length; i++) {
+      const att = attributes.item(i)
+      attributeMap[att.localName] = att.value
+    }
+
+    return key ? attributeMap[key] : attributeMap
   }
 
   exists() {

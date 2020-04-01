@@ -137,8 +137,10 @@ mount(Component, {
   }
 })
 ```
-
-### `mixins`
+### Global
+You can provide properties to the App instance using the properties under the `global` mount property
+ 
+### `global.mixins`
 
 Applies mixins via `app.mixin(...)`.
 
@@ -161,14 +163,16 @@ test('adds a lifecycle mixin', () => {
   }
 
   const wrapper = mount(Component, {
-    mixins: [mixin]
+    global: {
+      mixins: [mixin]
+    }
   })
 
   // 'Component was created!' will be logged
 })
 ```
 
-### `plugins`
+### `global.plugins`
 
 Installs plugins on the component.
 
@@ -194,10 +198,59 @@ test('installs a plugin via `plugins`', () => {
     render() { return h('div') }
   }
   mount(Component, {
-    plugins: [Plugin]
+    global: {
+      plugins: [Plugin]
+    }
   })
 
   expect(installed).toHaveBeenCalled()
+})
+```
+
+
+### `global.components`
+
+Registers components globally to all components
+
+```js
+test('installs a component globally', () => {
+  import GlobalComponent from '@/components/GlobalComponent'
+
+  const Component = {
+    template: '<div><global-component/></div>'
+  }
+  const wrapper = mount(Component, {
+    global: {
+      components: {
+        GlobalComponent
+      } 
+    }
+  })
+
+  expect(wrapper.find('.global-component').exists()).toBe(true)
+})
+```
+
+### `global.directives`
+
+Registers a directive globally to all components
+
+```js
+test('installs a directive globally', () => {
+  import Directive from '@/directives/Directive'
+
+  const Component = {
+    template: '<div v-bar>Foo</div>'
+  }
+  const wrapper = mount(Component, {
+    global: {
+      directives: {
+        Bar: Directive
+      } 
+    }
+  })
+
+  expect(wrapper.classes()).toContain('added-by-bar')
 })
 ```
 
