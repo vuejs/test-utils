@@ -1,6 +1,6 @@
 {
-  "name": "@lmiller1990/vue-test-utils-next",
-  "version": "0.0.6",
+  "name": "vue-test-utils-next",
+  "version": "0.0.1",
   "types": "dist/index.d.ts",
   "license": "MIT",
   "main": "dist/vue-test-utils.cjs.js",
