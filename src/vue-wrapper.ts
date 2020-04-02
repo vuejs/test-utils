@@ -5,6 +5,7 @@ import { DOMWrapper } from './dom-wrapper'
 import { WrapperAPI } from './types'
 import { ErrorWrapper } from './error-wrapper'
 import { MOUNT_ELEMENT_ID } from './constants'
+import { find } from './utils/find'
 
 export class VueWrapper<T extends ComponentPublicInstance>
   implements WrapperAPI {
@@ -87,6 +88,13 @@ export class VueWrapper<T extends ComponentPublicInstance>
     }
 
     return result
+  }
+
+  findByComponent(selector: { ref?: string; name?: string } | string): any {
+    if (typeof selector === 'object' && selector.ref) {
+      return this.componentVM.$refs[selector.ref]
+    }
+    return find(this.componentVM.$.subTree, selector)
   }
 
   findAll<T extends Element>(selector: string): DOMWrapper<T>[] {

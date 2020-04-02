@@ -2,6 +2,7 @@ import { defineComponent, h } from 'vue'
 
 import { mount } from '../src'
 import SuspenseComponent from './components/Suspense.vue'
+import Hello from './components/Hello.vue'
 
 describe('find', () => {
   it('find using single root node', () => {
@@ -42,6 +43,28 @@ describe('find', () => {
 
     expect(wrapper.html()).toContain('Fallback content')
     expect(wrapper.find('div').exists()).toBeTruthy()
+  })
+
+  it('finds deeply nested vue components', () => {
+    const compC = {
+      template: '<div class="C">C</div>'
+    }
+    const compB = {
+      template: '<div class="B">TextBefore<comp-c/>TextAfter<comp-c/></div>',
+      components: { compC }
+    }
+    const compA = {
+      template: '<div class="A"><comp-b/><hello ref="b"/></div>',
+      components: { compB, Hello }
+    }
+    const wrapper = mount(compA)
+    // find by ref
+    expect(wrapper.findByComponent({ ref: 'b' })).toBeTruthy()
+    // find by DOM selector
+    expect(wrapper.findByComponent('.C').el.textContent).toEqual('C')
+    expect(wrapper.findByComponent({ name: 'Hello' }).el.textContent).toBe(
+      'Hello world'
+    )
   })
 })
 
