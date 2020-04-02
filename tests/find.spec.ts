@@ -1,9 +1,10 @@
 import { defineComponent, h } from 'vue'
 
 import { mount } from '../src'
+import SuspenseComponent from './components/Suspense.vue'
 
 describe('find', () => {
-  test('find using single root node', () => {
+  it('find using single root node', () => {
     const Component = defineComponent({
       render() {
         return h('div', {}, [h('span', { id: 'my-span' })])
@@ -11,7 +12,7 @@ describe('find', () => {
     })
 
     const wrapper = mount(Component)
-    expect(wrapper.find('#my-span')).toBeTruthy()
+    expect(wrapper.find('#my-span').exists()).toBe(true)
   })
 
   it('find using multiple root nodes', () => {
@@ -22,7 +23,25 @@ describe('find', () => {
     })
 
     const wrapper = mount(Component)
-    expect(wrapper.find('#my-span')).toBeTruthy()
+    expect(wrapper.find('#my-span').exists()).toBe(true)
+  })
+
+  it('returns the root element in single root element', () => {
+    const Component = defineComponent({
+      render() {
+        return h('div', { class: 'foo' }, 'text')
+      }
+    })
+
+    const wrapper = mount(Component)
+    expect(wrapper.find('.foo').exists()).toBe(true)
+  })
+
+  test('works with suspense', async () => {
+    const wrapper = mount(SuspenseComponent)
+
+    expect(wrapper.html()).toContain('Fallback content')
+    expect(wrapper.find('div').exists()).toBeTruthy()
   })
 })
 
@@ -53,5 +72,12 @@ describe('findAll', () => {
 
     const wrapper = mount(Component)
     expect(wrapper.findAll('.span')).toHaveLength(2)
+  })
+
+  test('works with suspense', async () => {
+    const wrapper = mount(SuspenseComponent)
+
+    expect(wrapper.html()).toContain('Fallback content')
+    expect(wrapper.findAll('div')).toBeTruthy()
   })
 })

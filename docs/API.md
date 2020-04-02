@@ -207,6 +207,53 @@ test('installs a plugin via `plugins`', () => {
 })
 ```
 
+
+### `global.components`
+
+Registers components globally to all components
+
+```js
+test('installs a component globally', () => {
+  import GlobalComponent from '@/components/GlobalComponent'
+
+  const Component = {
+    template: '<div><global-component/></div>'
+  }
+  const wrapper = mount(Component, {
+    global: {
+      components: {
+        GlobalComponent
+      } 
+    }
+  })
+
+  expect(wrapper.find('.global-component').exists()).toBe(true)
+})
+```
+
+### `global.directives`
+
+Registers a directive globally to all components
+
+```js
+test('installs a directive globally', () => {
+  import Directive from '@/directives/Directive'
+
+  const Component = {
+    template: '<div v-bar>Foo</div>'
+  }
+  const wrapper = mount(Component, {
+    global: {
+      directives: {
+        Bar: Directive
+      } 
+    }
+  })
+
+  expect(wrapper.classes()).toContain('added-by-bar')
+})
+```
+
 ## Wrapper
 
 When you use `mount`, a `VueWrapper` is returned with a number of useful methods for testing. Methods like `find` return a `DOMWrapper`. Both implement the same API.

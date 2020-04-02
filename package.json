@@ -5,20 +5,22 @@
   "main": "dist/vue-test-utils.cjs.js",
   "browser": "dist/vue-test-utils.esm.js",
   "unpkg": "dist/vue-test-utils.js",
+  "types": "dist/index.d.ts",
   "module": "dist/vue-test-utils.esm-bundler.js",
   "files": [
     "dist",
     "README.md"
   ],
   "devDependencies": {
-    "@vue/compiler-sfc": "3.0.0-alpha.10",
     "@babel/core": "^7.9.0",
     "@babel/preset-env": "^7.8.4",
     "@babel/types": "^7.8.3",
     "@types/estree": "^0.0.42",
     "@types/jest": "^24.9.1",
+    "@vue/compiler-sfc": "3.0.0-alpha.10",
     "babel-jest": "^25.2.3",
     "babel-preset-jest": "^25.2.1",
+    "flush-promises": "^1.0.2",
     "husky": "^4.2.3",
     "jest": "^25.1.0",
     "lint-staged": "^10.0.9",
@@ -33,7 +35,7 @@
   "scripts": {
     "test": "yarn jest --runInBand",
     "build": "yarn rollup -c rollup.config.js",
-    "lint": "prettier -c --parser typescript \"src/**/*.ts?(x)\"",
+    "lint": "prettier -c --parser typescript \"(src|tests)/**/*.ts?(x)\"",
     "lint:fix": "yarn lint --write"
   },
   "husky": {
@@ -43,8 +45,7 @@
   },
   "lint-staged": {
     "*.ts": [
-      "prettier --parser=typescript --write",
-      "git add"
+      "prettier --parser=typescript --write"
     ]
   }
 }

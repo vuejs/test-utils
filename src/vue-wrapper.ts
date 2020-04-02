@@ -4,6 +4,7 @@ import { ShapeFlags } from '@vue/shared'
 import { DOMWrapper } from './dom-wrapper'
 import { WrapperAPI } from './types'
 import { ErrorWrapper } from './error-wrapper'
+import { MOUNT_ELEMENT_ID } from './constants'
 
 export class VueWrapper implements WrapperAPI {
   rootVM: ComponentPublicInstance
@@ -18,19 +19,25 @@ export class VueWrapper implements WrapperAPI {
     this.__emitted = events
   }
 
+  private get appRootNode() {
+    return document.getElementById(MOUNT_ELEMENT_ID) as HTMLDivElement
+  }
+
   private get hasMultipleRoots(): boolean {
     // if the subtree is an array of children, we have multiple root nodes
     return this.componentVM.$.subTree.shapeFlag === ShapeFlags.ARRAY_CHILDREN
   }
 
-  get element() {
-    return this.hasMultipleRoots
-      ? // get the parent element of the current component
-        this.componentVM.$el.parentElement
-      : this.componentVM.$el
+  private get parentElement() {
+    return this.componentVM.$el.parentElement
   }
 
-  classes(className?) {
+  get element() {
+    // if the component has multiple root elements, we use the parent's element
+    return this.hasMultipleRoots ? this.parentElement : this.componentVM.$el
+  }
+
+  classes(className?: string) {
     return new DOMWrapper(this.element).classes(className)
   }
 
@@ -47,9 +54,7 @@ export class VueWrapper implements WrapperAPI {
   }
 
   html() {
-    return this.hasMultipleRoots
-      ? this.element.innerHTML
-      : this.element.outerHTML
+    return this.appRootNode.innerHTML
   }
 
   text() {
@@ -57,7 +62,8 @@ export class VueWrapper implements WrapperAPI {
   }
 
   find<T extends Element>(selector: string): DOMWrapper<T> | ErrorWrapper {
-    const result = this.element.querySelector(selector) as T
+    // force using the parentElement to allow finding the root element
+    const result = this.parentElement.querySelector(selector) as T
     if (result) {
       return new DOMWrapper(result)
     }
@@ -66,7 +72,7 @@ export class VueWrapper implements WrapperAPI {
   }
 
   findAll<T extends Element>(selector: string): DOMWrapper<T>[] {
-    const results = (this.element as Element).querySelectorAll<T>(selector)
+    const results = this.appRootNode.querySelectorAll<T>(selector)
     return Array.from(results).map((x) => new DOMWrapper(x))
   }
 
