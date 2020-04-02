@@ -59,7 +59,7 @@ describe('setValue', () => {
       expect(wrapper.text()).toContain('selectA')
     })
 
-    it.skip('does not select an already selected element', async () => {
+    it('does not select an already selected element', async () => {
       const handle = jest.fn()
 
       const Component = {
@@ -73,7 +73,7 @@ describe('setValue', () => {
       }
 
       const wrapper = mount(Component)
-      const input = wrapper.find<HTMLOptionElement>('option')
+      const input = wrapper.findAll<HTMLOptionElement>('option')[1]
 
       await input.setValue()
       await input.setValue()
@@ -118,7 +118,7 @@ describe('setValue', () => {
       expect(wrapper.find<HTMLInputElement>('.counter').text()).toBe('4')
     })
 
-    it.skip('does not trigger a change event if the checkbox is already checked', async () => {
+    it('does not trigger a change event if the checkbox is already checked', async () => {
       const listener = jest.fn()
       const Comp = defineComponent({
         setup() {
