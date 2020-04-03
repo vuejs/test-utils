@@ -76,10 +76,6 @@ export class VueWrapper implements WrapperAPI {
     return Array.from(results).map((x) => new DOMWrapper(x))
   }
 
-  async setChecked(checked: boolean = true) {
-    return new DOMWrapper(this.element).setChecked(checked)
-  }
-
   trigger(eventString: string) {
     const rootElementWrapper = new DOMWrapper(this.element)
     return rootElementWrapper.trigger(eventString)

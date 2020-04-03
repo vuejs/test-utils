@@ -14,6 +14,7 @@
       value="radioBarResult"
     />
     <input type="text" v-model="textVal" />
+    <input id="lazy" type="text" v-model.lazy="lazy" />
     <textarea v-model="textareaVal"></textarea>
     <select v-model="selectVal">
       <option value="selectA"></option>
@@ -36,6 +37,7 @@
     {{ textVal }}
     {{ selectVal }}
     {{ radioVal }}
+    {{ lazy }}
   </div>
 </template>
 
@@ -49,6 +51,7 @@ export default defineComponent({
     return {
       checkboxVal: undefined,
       textVal: undefined,
+      lazy: undefined,
       textareaVal: undefined,
       radioVal: undefined,
       selectVal: undefined,
