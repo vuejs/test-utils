@@ -80,4 +80,20 @@ describe('findAll', () => {
     expect(wrapper.html()).toContain('Fallback content')
     expect(wrapper.findAll('div')).toBeTruthy()
   })
+
+  test('chaining finds compiles successfully', () => {
+    const Bar = {
+      render() {
+        return h('span', { id: 'bar' })
+      }
+    }
+    const Foo = {
+      render() {
+        return h('span', { id: 'foo' }, h(Bar))
+      }
+    }
+    const wrapper = mount(Foo)
+
+    expect(wrapper.find('#foo').find('#bar').exists()).toBe(true)
+  })
 })

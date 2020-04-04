@@ -26,11 +26,11 @@ export class ErrorWrapper {
     return false
   }
 
-  find() {
+  find(): never {
     throw this.wrapperError('find')
   }
 
-  findAll() {
+  findAll(): never {
     throw this.wrapperError('findAll')
   }
 
