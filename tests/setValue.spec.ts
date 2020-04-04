@@ -52,10 +52,10 @@ describe('setValue', () => {
     it('sets select with an option group', async () => {
       const wrapper = mount(ComponentWithInput)
       const options = wrapper.find('select.with-optgroups').findAll('option')
-      await options[1].setSelected()
+      await options[1].setValue()
       expect(wrapper.text()).toContain('selectB')
 
-      await options[0].setSelected()
+      await options[0].setValue()
       expect(wrapper.text()).toContain('selectA')
     })
 
