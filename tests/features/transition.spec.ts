@@ -1,7 +1,7 @@
 import { defineComponent, Transition, h } from 'vue'
 
-import { WithTransition } from './components/WithTransition'
-import { mount } from '../src'
+import { WithTransition } from '../components/WithTransition'
+import { mount } from '../../src'
 
 test('works with transitions', async () => {
   const wrapper = mount(WithTransition)

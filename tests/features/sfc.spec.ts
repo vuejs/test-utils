@@ -1,5 +1,5 @@
-import { mount } from '../src'
-import Hello from './components/Hello.vue'
+import { mount } from '../../src'
+import Hello from '../components/Hello.vue'
 
 describe('sfc', () => {
   it('mounts an sfc via vue-test-transformer', () => {
