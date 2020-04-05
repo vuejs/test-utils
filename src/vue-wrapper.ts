@@ -7,12 +7,12 @@ import { ErrorWrapper } from './error-wrapper'
 import { MOUNT_ELEMENT_ID } from './constants'
 
 export class VueWrapper implements WrapperAPI {
-  vm: ComponentPublicInstance
   private componentVM: ComponentPublicInstance
   private __emitted: Record<string, unknown[]> = {}
+  private __vm: ComponentPublicInstance
 
   constructor(vm: ComponentPublicInstance, events: Record<string, unknown[]>) {
-    this.vm = vm
+    this.__vm = vm
     this.componentVM = this.vm.$refs['VTU_COMPONENT'] as ComponentPublicInstance
     this.__emitted = events
   }
@@ -33,6 +33,10 @@ export class VueWrapper implements WrapperAPI {
   get element(): Element {
     // if the component has multiple root elements, we use the parent's element
     return this.hasMultipleRoots ? this.parentElement : this.componentVM.$el
+  }
+
+  get vm(): ComponentPublicInstance {
+    return this.__vm
   }
 
   classes(className?: string) {
