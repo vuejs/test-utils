@@ -131,7 +131,8 @@ export class DOMWrapper<ElementType extends Element> implements WrapperAPI {
 
     if (this.element) {
       this.element.dispatchEvent(evt)
-      return nextTick
     }
+
+    return nextTick
   }
 }
