@@ -26,4 +26,28 @@ describe('html', () => {
 
     expect(wrapper.html()).toBe('<div>foo</div><div>bar</div><div>baz</div>')
   })
+
+  it('returns the html when mounting a Suspense component', () => {
+    const Foo = {
+      template: '<div class="Foo">FOO</div>',
+      setup() {
+        return {}
+      }
+    }
+    const Component = {
+      template: `
+        <Suspense>
+          <template #default>
+            <Foo />
+          </template>
+
+          <template #fallback>
+            Fallback
+          </template>
+        </Suspense>`,
+      components: { Foo }
+    }
+    const wrapper = mount(Component)
+    expect(wrapper.html()).toEqual('<div class="Foo">FOO</div>')
+  })
 })
