@@ -17,7 +17,7 @@
     "@babel/types": "^7.8.3",
     "@types/estree": "^0.0.42",
     "@types/jest": "^24.9.1",
-    "@vue/compiler-sfc": "3.0.0-alpha.10",
+    "@vue/compiler-sfc": "3.0.0-alpha.11",
     "babel-jest": "^25.2.3",
     "babel-preset-jest": "^25.2.1",
     "flush-promises": "^1.0.2",
