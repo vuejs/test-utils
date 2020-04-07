@@ -16,7 +16,7 @@ import { createEmitMixin } from './emitMixin'
 import { createDataMixin } from './dataMixin'
 import { MOUNT_ELEMENT_ID } from './constants'
 
-type Slot = VNode | string
+type Slot = VNode | string | { render: Function }
 
 interface MountingOptions<Props> {
   data?: () => Record<string, unknown>
@@ -50,10 +50,17 @@ export function mount<P>(
   // handle any slots passed via mounting options
   const slots: VNodeNormalizedChildren =
     options?.slots &&
-    Object.entries(options.slots).reduce((acc, [name, fn]) => {
-      acc[name] = () => fn
+    Object.entries(options.slots).reduce((acc, [name, slot]) => {
+      // case of an SFC getting passed
+      if (typeof slot === 'object' && 'render' in slot) {
+        acc[name] = slot.render
+        return acc
+      }
+
+      acc[name] = () => slot
       return acc
     }, {})
+
   // override component data with mounting options data
   if (options?.data) {
     const dataMixin = createDataMixin(options.data())
