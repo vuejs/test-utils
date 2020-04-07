@@ -5067,6 +5067,11 @@ vue@3.0.0-alpha.11:
     "@vue/runtime-dom" "3.0.0-alpha.11"
     "@vue/shared" "3.0.0-alpha.11"
 
+vuex@^4.0.0-alpha.1:
+  version "4.0.0-alpha.1"
+  resolved "https://registry.yarnpkg.com/vuex/-/vuex-4.0.0-alpha.1.tgz#3e548b6d98f6b3da35eb554fdb3251760d52c302"
+  integrity sha512-J08Mtcjx2JOyTL+XnXQqqBDyyHpTRFSJvnjkB7FPj0FWFZSpT0atkv3Wp75UxkPAgw3+SCR2tLdr1mm0cBhGjA==
+
 w3c-hr-time@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/w3c-hr-time/-/w3c-hr-time-1.0.1.tgz#82ac2bff63d950ea9e3189a58a65625fedf19045"
