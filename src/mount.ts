@@ -22,7 +22,6 @@ type Slot = VNode | string | { render: Function }
 interface MountingOptions<Props> {
   data?: () => Record<string, unknown>
   props?: Props
-  mocks?: Record<string, any>
   slots?: {
     default?: Slot
     [key: string]: Slot
@@ -30,6 +29,7 @@ interface MountingOptions<Props> {
   global?: {
     plugins?: Plugin[]
     mixins?: ComponentOptions[]
+    mocks?: Record<string, any>
     provide?: Record<any, any>
     components?: Record<string, Component>
     directives?: Record<string, Directive>
@@ -79,10 +79,10 @@ export function mount<P>(
 
   // create the vm
   const vm = createApp(Parent(options && options.props))
-  if (options?.mocks) {
+  if (options?.global?.mocks) {
     const mixin = {
       beforeCreate() {
-        for (const [k, v] of Object.entries(options.mocks)) {
+        for (const [k, v] of Object.entries(options.global?.mocks)) {
           this[k] = v
         }
       }

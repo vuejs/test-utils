@@ -18,7 +18,9 @@ describe('mocks', () => {
     }
 
     const wrapper = mount(Foo, {
-      mocks: { $store }
+      global: {
+        mocks: { $store }
+      }
     })
 
     expect(wrapper.html()).toContain('count: 1')
