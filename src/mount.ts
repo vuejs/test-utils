@@ -79,6 +79,8 @@ export function mount<P>(
 
   // create the vm
   const vm = createApp(Parent(options && options.props))
+
+  // global mocks mixin
   if (options?.global?.mocks) {
     const mixin = {
       beforeCreate() {
