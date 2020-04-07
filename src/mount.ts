@@ -8,7 +8,8 @@ import {
   ComponentOptions,
   Plugin,
   Directive,
-  Component
+  Component,
+  getCurrentInstance
 } from 'vue'
 
 import { VueWrapper, createWrapper } from './vue-wrapper'
@@ -21,6 +22,7 @@ type Slot = VNode | string | { render: Function }
 interface MountingOptions<Props> {
   data?: () => Record<string, unknown>
   props?: Props
+  mocks?: Record<string, any>
   slots?: {
     default?: Slot
     [key: string]: Slot
@@ -77,6 +79,17 @@ export function mount<P>(
 
   // create the vm
   const vm = createApp(Parent(options && options.props))
+  if (options?.mocks) {
+    const mixin = {
+      beforeCreate() {
+        for (const [k, v] of Object.entries(options.mocks)) {
+          this[k] = v
+        }
+      }
+    }
+
+    vm.mixin(mixin)
+  }
 
   // use and plugins from mounting options
   if (options?.global?.plugins) {
