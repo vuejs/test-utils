@@ -30,6 +30,7 @@
     "ts-jest": "^25.0.0",
     "typescript": "^3.7.5",
     "vue": "3.0.0-alpha.11",
+    "vuex": "^4.0.0-alpha.1",
     "vue-jest": "vuejs/vue-jest#next"
   },
   "scripts": {
@@ -47,8 +48,5 @@
     "*.ts": [
       "prettier --parser=typescript --write"
     ]
-  },
-  "dependencies": {
-    "vuex": "^4.0.0-alpha.1"
   }
 }
