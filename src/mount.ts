@@ -8,7 +8,8 @@ import {
   ComponentOptions,
   Plugin,
   Directive,
-  Component
+  Component,
+  getCurrentInstance
 } from 'vue'
 
 import { VueWrapper, createWrapper } from './vue-wrapper'
@@ -28,8 +29,10 @@ interface MountingOptions<Props> {
   global?: {
     plugins?: Plugin[]
     mixins?: ComponentOptions[]
+    mocks?: Record<string, any>
     provide?: Record<any, any>
-    components?: Record<string, Component>
+    // TODO how to type `defineComponent`? Using `any` for now.
+    components?: Record<string, Component | object>
     directives?: Record<string, Directive>
   }
   stubs?: Record<string, any>
@@ -77,6 +80,19 @@ export function mount<P>(
 
   // create the vm
   const vm = createApp(Parent(options && options.props))
+
+  // global mocks mixin
+  if (options?.global?.mocks) {
+    const mixin = {
+      beforeCreate() {
+        for (const [k, v] of Object.entries(options.global?.mocks)) {
+          this[k] = v
+        }
+      }
+    }
+
+    vm.mixin(mixin)
+  }
 
   // use and plugins from mounting options
   if (options?.global?.plugins) {
