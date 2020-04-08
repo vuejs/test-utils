@@ -1,3 +1,8 @@
+/**
+ * This is the example app used in the documentation.
+ * If you want to run it, you will need to build the final bundle with
+ * yarn build. Then you can run this with `yarn test examples`
+ */
 import { mount } from '../dist/vue-test-utils.cjs.js'
 
 import TodoApp from './TodoApp.vue'

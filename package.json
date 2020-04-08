@@ -42,7 +42,7 @@
     "email": "lachlan.miller.1990@outlook.com"
   },
   "scripts": {
-    "test": "yarn jest --runInBand",
+    "test": "yarn jest --runInBand tests",
     "build": "yarn rollup -c rollup.config.js",
     "lint": "prettier -c --parser typescript \"(src|tests)/**/*.ts?(x)\"",
     "lint:fix": "yarn lint --write"
