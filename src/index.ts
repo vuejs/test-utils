@@ -1,3 +1,4 @@
 import { mount } from './mount'
+import { RouterLinkStub } from './components/RouterLinkStub'
 
-export { mount }
+export { mount, RouterLinkStub }
