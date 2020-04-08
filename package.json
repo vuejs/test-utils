@@ -1,6 +1,6 @@
 {
-  "name": "vue-test-utils-next",
-  "version": "0.0.1",
+  "name": "@vue/test-utils",
+  "version": "2.0.0-alpha.0",
   "license": "MIT",
   "main": "dist/vue-test-utils.cjs.js",
   "browser": "dist/vue-test-utils.esm.js",
@@ -32,6 +32,10 @@
     "vue": "3.0.0-alpha.11",
     "vuex": "^4.0.0-alpha.1",
     "vue-jest": "vuejs/vue-jest#next"
+  },
+  "author": { 
+    "name": "Lachlan Miller", 
+    "email": "lachlan.miller.1990@outlook.com"
   },
   "scripts": {
     "test": "yarn jest --runInBand",
