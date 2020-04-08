@@ -33,6 +33,10 @@
     "vuex": "^4.0.0-alpha.1",
     "vue-jest": "vuejs/vue-jest#next"
   },
+  "peerDependencies": {
+    "@vue/compiler-sfc": "3.0.0-alpha.11",
+    "vue": "3.0.0-alpha.11"
+  },
   "author": { 
     "name": "Lachlan Miller", 
     "email": "lachlan.miller.1990@outlook.com"
