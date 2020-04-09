@@ -39,8 +39,8 @@ This is table for those coming from VTU beta, comparing the two APIs. A lot of t
 - ❌ - not yet implemented
 - ⚰️ - will not be implemented (if you have a compelling use case, please open an issue)
 
-Q: Where is `shallowMount`?
-A: Still figuring out how to best implement it. There is an issue and a PR open.
+- Q: Where is `shallowMount`?
+- A: Coming soon. There is an issue and a PR open.
 
 ### Mounting Options
 
@@ -86,11 +86,11 @@ isVisible | ❌
 isVueInstance | ❌
 name | ⚰️ |
 props | ❌
-setChecked ⚰️| now part of `setValue` 
+setChecked | ⚰️| now part of `setValue` 
 setData | ❌ | 
 setMethods | ⚰️ | 
-setProps | ❌
-setSelected ⚰️ now part of `setValue` 
+setProps | ❌ |
+setSelected | ⚰️ | now part of `setValue` 
 setValue | ✅ | works for select, checkbox, radio button, input, textarea. Returns `nextTick`.
-text | ✅
+text | ✅ |
 trigger | ✅ | returns `nextTick`. You can do `await wrapper.find('button').trigger('click')`
