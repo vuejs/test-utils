@@ -44,7 +44,8 @@ A: Still figuring out how to best implement it. There is an issue and a PR open.
 
 ### Mounting Options
 
-| option | status | notes 
+| option | status | notes |
+|---------|-------|------|
 context | ⚰️ | different from Vue 2, may not make sense anymore.
 data | ✅
 slots | ✅ | has not been tested vigorously. Please try it out.
@@ -55,7 +56,7 @@ localVue | ⚰️ | may not make sense anymore since we do not mutate the global
 attachToDocument | ❌| will rename to `attachTo`. See [here](https://github.com/vuejs/vue-test-utils/pull/1492)
 attrs | ❌ |
 propsData | ✅ | now called `props`
-listeners | ⚰️ | no longer exists
+listeners | ⚰️ | no longer exists in Vue 3
 parentComponent | ⚰️ |
 provide | ✅ | nested in [`global`](https://vuejs.github.io/vue-test-utils-next-docs/api/#global)
 mixins | ✅ | (new!) nested in [`global`](https://vuejs.github.io/vue-test-utils-next-docs/api/#global)
