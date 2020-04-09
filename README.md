@@ -35,9 +35,9 @@ This is still very much alpha - if you want to add a feature, have a hack or pin
 
 This is table for those coming from VTU beta, comparing the two APIs. A lot of things are still a work in progress.
 
-✅ - implemented
-❌ - not yet implemented
-⚰️ - will not be implemented (if you have a compelling use case, please open an issue)
+- ✅ - implemented
+- ❌ - not yet implemented
+- ⚰️ - will not be implemented (if you have a compelling use case, please open an issue)
 
 Q: Where is `shallowMount`?
 A: Still figuring out how to best implement it. There is an issue and a PR open.
