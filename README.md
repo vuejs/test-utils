@@ -4,8 +4,8 @@ The next iteration of Vue Test Utils. It targets Vue 3.
 
 ## Installation and Usage
 
-yarn: `yarn add @vue/test-utils@next --dev`
-npm: `npm install @vue/test-utils@next --save-dev`
+- yarn: `yarn add @vue/test-utils@next --dev`
+- npm: `npm install @vue/test-utils@next --save-dev`
 
 ## Working with `.vue` files
 
@@ -25,7 +25,7 @@ There is a lot of work to do. See issues for some basic TODOs, or the table at t
 
 ## What works?
 
-See the [docs](https://vuejs.github.io/vue-test-utils-next-docs/guide/introduction.html). Most basic DOM interactions work. Advanced features like `shallowMount`, `stubs` and `mocks` are a work in progress.
+See the [docs](https://vuejs.github.io/vue-test-utils-next-docs/guide/introduction.html). Most basic DOM interactions work. Advanced features like `shallowMount` and `stubs` are a work in progress.
 
 ## Contributing
 
