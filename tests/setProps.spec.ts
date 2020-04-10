@@ -1,3 +1,5 @@
+import { defineComponent, h, computed } from 'vue'
+
 import { mount } from '../src'
 
 describe('setProps', () => {
@@ -73,5 +75,28 @@ describe('setProps', () => {
     await setProps({ foo: 'updated-bar' })
 
     expect(wrapper.html()).toContain('updated-bar')
+  })
+
+  it('works with composition API', async () => {
+    const Foo = defineComponent({
+      props: {
+        foo: { type: String }
+      },
+      setup(props) {
+        const foobar = computed(() => `${props.foo}-bar`)
+        return () =>
+          h('div', `Foo is: ${props.foo}. Foobar is: ${foobar.value}`)
+      }
+    })
+    const { wrapper, setProps } = mount(Foo, {
+      props: {
+        foo: 'foo'
+      }
+    })
+    expect(wrapper.html()).toContain('Foo is: foo. Foobar is: foo-bar')
+
+    await setProps({ foo: 'qux' })
+
+    expect(wrapper.html()).toContain('Foo is: qux. Foobar is: qux-bar')
   })
 })
