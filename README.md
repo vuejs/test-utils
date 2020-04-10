@@ -4,8 +4,8 @@ The next iteration of Vue Test Utils. It targets Vue 3.
 
 ## Installation and Usage
 
-yarn: `yarn add @vue/test-utils@next --dev`
-npm: `npm install @vue/test-utils@next --save-dev`
+- yarn: `yarn add @vue/test-utils@next --dev`
+- npm: `npm install @vue/test-utils@next --save-dev`
 
 ## Working with `.vue` files
 
@@ -25,7 +25,7 @@ There is a lot of work to do. See issues for some basic TODOs, or the table at t
 
 ## What works?
 
-See the [docs](https://vuejs.github.io/vue-test-utils-next-docs/guide/introduction.html). Most basic DOM interactions work. Advanced features like `shallowMount`, `stubs` and `mocks` are a work in progress.
+See the [docs](https://vuejs.github.io/vue-test-utils-next-docs/guide/introduction.html). Most basic DOM interactions work. Advanced features like `shallowMount` and `stubs` are a work in progress.
 
 ## Contributing
 
@@ -35,16 +35,17 @@ This is still very much alpha - if you want to add a feature, have a hack or pin
 
 This is table for those coming from VTU beta, comparing the two APIs. A lot of things are still a work in progress.
 
-✅ - implemented
-❌ - not yet implemented
-⚰️ - will not be implemented (if you have a compelling use case, please open an issue)
+- ✅ - implemented
+- ❌ - not yet implemented
+- ⚰️ - will not be implemented (if you have a compelling use case, please open an issue)
 
-Q: Where is `shallowMount`?
-A: Still figuring out how to best implement it. There is an issue and a PR open.
+- Q: Where is `shallowMount`?
+- A: Coming soon. There is an issue and a PR open.
 
 ### Mounting Options
 
-| option | status | notes 
+| option | status | notes |
+|---------|-------|------|
 context | ⚰️ | different from Vue 2, may not make sense anymore.
 data | ✅
 slots | ✅ | has not been tested vigorously. Please try it out.
@@ -55,7 +56,7 @@ localVue | ⚰️ | may not make sense anymore since we do not mutate the global
 attachToDocument | ❌| will rename to `attachTo`. See [here](https://github.com/vuejs/vue-test-utils/pull/1492)
 attrs | ❌ |
 propsData | ✅ | now called `props`
-listeners | ⚰️ | no longer exists
+listeners | ⚰️ | no longer exists in Vue 3
 parentComponent | ⚰️ |
 provide | ✅ | nested in [`global`](https://vuejs.github.io/vue-test-utils-next-docs/api/#global)
 mixins | ✅ | (new!) nested in [`global`](https://vuejs.github.io/vue-test-utils-next-docs/api/#global)
@@ -85,11 +86,11 @@ isVisible | ❌ | use matchers such as [this](https://github.com/testing-library
 isVueInstance | ⚰️ 
 name | ⚰️ |
 props | ❌
-setChecked ⚰️| now part of `setValue` 
+setChecked | ⚰️| now part of `setValue` 
 setData | ❌ | 
 setMethods | ⚰️ | 
-setProps | ❌
-setSelected ⚰️ now part of `setValue` 
+setProps | ❌ |
+setSelected | ⚰️ | now part of `setValue` 
 setValue | ✅ | works for select, checkbox, radio button, input, textarea. Returns `nextTick`.
-text | ✅
+text | ✅ |
 trigger | ✅ | returns `nextTick`. You can do `await wrapper.find('button').trigger('click')`
