@@ -9,7 +9,8 @@ import {
   Plugin,
   Directive,
   Component,
-  getCurrentInstance
+  getCurrentInstance,
+  reactive
 } from 'vue'
 
 import { VueWrapper, createWrapper } from './vue-wrapper'
@@ -38,10 +39,7 @@ interface MountingOptions<Props> {
   stubs?: Record<string, any>
 }
 
-export function mount<P>(
-  originalComponent: any,
-  options?: MountingOptions<P>
-): VueWrapper {
+export function mount<P>(originalComponent: any, options?: MountingOptions<P>) {
   const component = { ...originalComponent }
 
   // Reset the document.body
@@ -70,16 +68,22 @@ export function mount<P>(
     component.mixins = [...(component.mixins || []), dataMixin]
   }
 
+  // @ts-ignore
+  const theProps = reactive({ ...options?.props })
+
+  function setProps(props: any) {
+    theProps.foo = props.foo
+  }
+
   // create the wrapper component
-  const Parent = (props?: VNodeProps) =>
-    defineComponent({
-      render() {
-        return h(component, { ...props, ref: 'VTU_COMPONENT' }, slots)
-      }
-    })
+  const Parent = defineComponent({
+    render() {
+      return h(component, theProps, slots)
+    }
+  })
 
   // create the vm
-  const vm = createApp(Parent(options && options.props))
+  const vm = createApp(Parent)
 
   // global mocks mixin
   if (options?.global?.mocks) {
@@ -129,5 +133,8 @@ export function mount<P>(
   // mount the app!
   const app = vm.mount(el)
 
-  return createWrapper(app, events)
+  return {
+    wrapper: createWrapper(app, events),
+    setProps
+  }
 }
