@@ -69,20 +69,20 @@ directives | ✅ | (new!) nested in [`global`](https://vuejs.github.io/vue-test-
 | method | status | notes |
 |---------|-------|------|
 attributes | ✅
-classes | ✅
+classes | ✅  
 contains | ⚰️| use `find` 
 destroy | ❌
 emitted | ✅
-emittedByOrder | ⚰️| use `emitted`
+emittedByOrder | ⚰️ | use `emitted`
 exists | ✅
 find | ✅ | only `querySelector` syntax is supported. `find(Comp)` under discussion [here](https://github.com/vuejs/vue-test-utils/issues/1498)
 findAll | ✅ | see above. `.vm` is different to Vue 2. We are exploring options.
 get | ❌
 html | ✅
-is | ❌
-isEmpty | ❌
-isVisible | ❌
-isVueInstance | ❌
+is | ⚰️ 
+isEmpty | ⚰️ | use matchers such as [this](https://github.com/testing-library/jest-dom#tobeempty)
+isVisible | ❌ | use matchers such as [this](https://github.com/testing-library/jest-dom#tobeempty)
+isVueInstance | ⚰️ 
 name | ⚰️ |
 props | ❌
 setChecked ⚰️| now part of `setValue` 
