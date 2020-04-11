@@ -2,4 +2,6 @@ import { mount } from './mount'
 import { RouterLinkStub } from './components/RouterLinkStub'
 import { VueWrapper } from './vue-wrapper'
 
-export { mount, RouterLinkStub, VueWrapper }
+import { config } from './config'
+
+export { mount, RouterLinkStub, VueWrapper, config }

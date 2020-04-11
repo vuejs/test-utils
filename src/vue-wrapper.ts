@@ -1,5 +1,6 @@
 import { ComponentPublicInstance, nextTick } from 'vue'
 import { ShapeFlags } from '@vue/shared'
+import { config } from './config'
 
 import { DOMWrapper } from './dom-wrapper'
 import { WrapperAPI } from './types'
@@ -21,6 +22,13 @@ export class VueWrapper implements WrapperAPI {
     this.__setProps = setProps
     this.componentVM = this.vm.$refs['VTU_COMPONENT'] as ComponentPublicInstance
     this.__emitted = events
+
+    // plugins hook
+    Object.entries(config.plugins.VueWrapper).forEach(
+      ([name, handler]: [string, () => any]) => {
+        this[name] = handler.bind(this)
+      }
+    )
   }
 
   private get appRootNode() {
