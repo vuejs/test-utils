@@ -1,5 +1,6 @@
-import { ComponentPublicInstance } from 'vue'
+import { ComponentPublicInstance, nextTick } from 'vue'
 import { ShapeFlags } from '@vue/shared'
+import merge from 'lodash/merge'
 
 import { DOMWrapper } from './dom-wrapper'
 import { WrapperAPI } from './types'
@@ -76,6 +77,13 @@ export class VueWrapper implements WrapperAPI {
   findAll<T extends Element>(selector: string): DOMWrapper<T>[] {
     const results = this.appRootNode.querySelectorAll<T>(selector)
     return Array.from(results).map((x) => new DOMWrapper(x))
+  }
+
+  setData(data: Record<string, any>) {
+    // lodash.merge merges by *reference* so this will update
+    // any existing data with the newly passed data.
+    merge(this.componentVM.$data, data)
+    return nextTick()
   }
 
   trigger(eventString: string) {
