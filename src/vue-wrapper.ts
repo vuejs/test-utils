@@ -1,4 +1,4 @@
-import { ComponentPublicInstance } from 'vue'
+import { ComponentPublicInstance, nextTick } from 'vue'
 import { ShapeFlags } from '@vue/shared'
 
 import { DOMWrapper } from './dom-wrapper'
@@ -10,9 +10,15 @@ export class VueWrapper implements WrapperAPI {
   private componentVM: ComponentPublicInstance
   private __emitted: Record<string, unknown[]> = {}
   private __vm: ComponentPublicInstance
+  private __setProps: (props: Record<string, any>) => void
 
-  constructor(vm: ComponentPublicInstance, events: Record<string, unknown[]>) {
+  constructor(
+    vm: ComponentPublicInstance,
+    events: Record<string, unknown[]>,
+    setProps: (props: Record<string, any>) => void
+  ) {
     this.__vm = vm
+    this.__setProps = setProps
     this.componentVM = this.vm.$refs['VTU_COMPONENT'] as ComponentPublicInstance
     this.__emitted = events
   }
@@ -78,6 +84,11 @@ export class VueWrapper implements WrapperAPI {
     return Array.from(results).map((x) => new DOMWrapper(x))
   }
 
+  setProps(props: Record<string, any>) {
+    this.__setProps(props)
+    return nextTick()
+  }
+
   trigger(eventString: string) {
     const rootElementWrapper = new DOMWrapper(this.element)
     return rootElementWrapper.trigger(eventString)
@@ -86,7 +97,8 @@ export class VueWrapper implements WrapperAPI {
 
 export function createWrapper(
   vm: ComponentPublicInstance,
-  events: Record<string, unknown[]>
+  events: Record<string, unknown[]>,
+  setProps: (props: Record<string, any>) => void
 ): VueWrapper {
-  return new VueWrapper(vm, events)
+  return new VueWrapper(vm, events, setProps)
 }

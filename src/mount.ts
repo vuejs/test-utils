@@ -4,23 +4,23 @@ import {
   VNode,
   defineComponent,
   VNodeNormalizedChildren,
-  VNodeProps,
   ComponentOptions,
   Plugin,
   Directive,
-  Component
+  Component,
+  reactive
 } from 'vue'
 
-import { VueWrapper, createWrapper } from './vue-wrapper'
+import { createWrapper } from './vue-wrapper'
 import { createEmitMixin } from './emitMixin'
 import { createDataMixin } from './dataMixin'
 import { MOUNT_ELEMENT_ID } from './constants'
 
 type Slot = VNode | string | { render: Function }
 
-interface MountingOptions<Props> {
+interface MountingOptions {
   data?: () => Record<string, unknown>
-  props?: Props
+  props?: Record<string, any>
   slots?: {
     default?: Slot
     [key: string]: Slot
@@ -37,10 +37,7 @@ interface MountingOptions<Props> {
   stubs?: Record<string, any>
 }
 
-export function mount<P>(
-  originalComponent: any,
-  options?: MountingOptions<P>
-): VueWrapper {
+export function mount(originalComponent: any, options?: MountingOptions) {
   const component = { ...originalComponent }
 
   // Reset the document.body
@@ -69,16 +66,27 @@ export function mount<P>(
     component.mixins = [...(component.mixins || []), dataMixin]
   }
 
+  // we define props as reactive so that way when we update them with `setProps`
+  // Vue's reactivity system will cause a rerender.
+  const props = reactive({ ...options?.props, ref: 'VTU_COMPONENT' })
+
   // create the wrapper component
-  const Parent = (props?: VNodeProps) =>
-    defineComponent({
-      render() {
-        return h(component, { ...props, ref: 'VTU_COMPONENT' }, slots)
-      }
-    })
+  const Parent = defineComponent({
+    render() {
+      return h(component, props, slots)
+    }
+  })
+
+  const setProps = (newProps: Record<string, unknown>) => {
+    for (const [k, v] of Object.entries(newProps)) {
+      props[k] = v
+    }
+
+    return app.$nextTick()
+  }
 
   // create the vm
-  const vm = createApp(Parent(options && options.props))
+  const vm = createApp(Parent)
 
   // global mocks mixin
   if (options?.global?.mocks) {
@@ -128,5 +136,5 @@ export function mount<P>(
   // mount the app!
   const app = vm.mount(el)
 
-  return createWrapper(app, events)
+  return createWrapper(app, events, setProps)
 }
