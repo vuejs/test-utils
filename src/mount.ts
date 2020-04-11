@@ -8,8 +8,7 @@ import {
   Plugin,
   Directive,
   Component,
-  reactive,
-  nextTick
+  reactive
 } from 'vue'
 
 import { createWrapper } from './vue-wrapper'
