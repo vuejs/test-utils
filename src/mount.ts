@@ -12,7 +12,7 @@ import {
   nextTick
 } from 'vue'
 
-import { VueWrapper, createWrapper } from './vue-wrapper'
+import { createWrapper } from './vue-wrapper'
 import { createEmitMixin } from './emitMixin'
 import { createDataMixin } from './dataMixin'
 import { MOUNT_ELEMENT_ID } from './constants'
@@ -137,8 +137,5 @@ export function mount(originalComponent: any, options?: MountingOptions) {
   // mount the app!
   const app = vm.mount(el)
 
-  return {
-    wrapper: createWrapper(app, events),
-    setProps
-  }
+  return createWrapper(app, events, setProps)
 }

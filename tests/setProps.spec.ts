@@ -8,14 +8,14 @@ describe('setProps', () => {
       props: ['foo'],
       template: '<div>{{ foo }}</div>'
     }
-    const { wrapper, setProps } = mount(Foo, {
+    const wrapper = mount(Foo, {
       props: {
         foo: 'foo'
       }
     })
     expect(wrapper.html()).toContain('foo')
 
-    await setProps({ foo: 'qux' })
+    await wrapper.setProps({ foo: 'qux' })
     expect(wrapper.html()).toContain('qux')
   })
 
@@ -28,7 +28,7 @@ describe('setProps', () => {
         </div>
       `
     }
-    const { wrapper, setProps } = mount(Foo, {
+    const wrapper = mount(Foo, {
       props: {
         obj: {
           foo: () => true
@@ -37,7 +37,7 @@ describe('setProps', () => {
     })
     expect(wrapper.html()).toContain('foo')
 
-    await setProps({ obj: { foo: () => false } })
+    await wrapper.setProps({ obj: { foo: () => false } })
     expect(wrapper.html()).not.toContain('foo')
   })
 
@@ -46,10 +46,10 @@ describe('setProps', () => {
       props: ['foo'],
       template: `<div>{{ foo }}</div>`
     }
-    const { wrapper, setProps } = mount(Foo)
+    const wrapper = mount(Foo)
     expect(wrapper.html()).not.toContain('foo')
 
-    await setProps({ foo: 'foo' })
+    await wrapper.setProps({ foo: 'foo' })
 
     expect(wrapper.html()).toContain('foo')
   })
@@ -69,10 +69,10 @@ describe('setProps', () => {
       },
       template: `<div>{{ bar }}</div>`
     }
-    const { wrapper, setProps } = mount(Foo)
+    const wrapper = mount(Foo)
     expect(wrapper.html()).toContain('original-bar')
 
-    await setProps({ foo: 'updated-bar' })
+    await wrapper.setProps({ foo: 'updated-bar' })
 
     expect(wrapper.html()).toContain('updated-bar')
   })
@@ -88,14 +88,14 @@ describe('setProps', () => {
           h('div', `Foo is: ${props.foo}. Foobar is: ${foobar.value}`)
       }
     })
-    const { wrapper, setProps } = mount(Foo, {
+    const wrapper = mount(Foo, {
       props: {
         foo: 'foo'
       }
     })
     expect(wrapper.html()).toContain('Foo is: foo. Foobar is: foo-bar')
 
-    await setProps({ foo: 'qux' })
+    await wrapper.setProps({ foo: 'qux' })
 
     expect(wrapper.html()).toContain('Foo is: qux. Foobar is: qux-bar')
   })
