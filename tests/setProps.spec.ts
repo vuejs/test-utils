@@ -99,4 +99,23 @@ describe('setProps', () => {
 
     expect(wrapper.html()).toContain('Foo is: qux. Foobar is: qux-bar')
   })
+
+  it('non-existent props are rendered as attributes', async () => {
+    const Foo = {
+      props: ['foo'],
+      template: '<div>{{ foo }}</div>'
+    }
+    const wrapper = mount(Foo, {
+      props: {
+        foo: 'foo'
+      }
+    })
+    expect(wrapper.html()).toContain('foo')
+
+    const nonExistentProp = { bar: 'qux' }
+    await wrapper.setProps(nonExistentProp)
+
+    expect(wrapper.attributes()).toEqual(nonExistentProp)
+    expect(wrapper.html()).toBe('<div bar="qux">foo</div>')
+  })
 })
