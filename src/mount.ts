@@ -8,8 +8,7 @@ import {
   ComponentOptions,
   Plugin,
   Directive,
-  Component,
-  getCurrentInstance
+  Component
 } from 'vue'
 
 import { VueWrapper, createWrapper } from './vue-wrapper'
