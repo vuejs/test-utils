@@ -69,7 +69,7 @@ export function mount(originalComponent: any, options?: MountingOptions) {
 
   // we define props as reactive so that way when we update them with `setProps`
   // Vue's reactivity system will cause a rerender.
-  const props = reactive({ ...options?.props })
+  const props = reactive({ ...options?.props, ref: 'VTU_COMPONENT' })
 
   // create the wrapper component
   const Parent = defineComponent({
