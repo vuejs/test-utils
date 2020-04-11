@@ -37,6 +37,5 @@ function findAllVNodes(vnode: VNode, selector: any) {
 }
 
 export function find(root: VNode, selector: any) {
-  const result = findAllVNodes(root, selector)
-  return result.length ? result[0] : undefined
+  return findAllVNodes(root, selector)
 }

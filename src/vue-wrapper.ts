@@ -7,6 +7,17 @@ import { ErrorWrapper } from './error-wrapper'
 import { MOUNT_ELEMENT_ID } from './constants'
 import { find } from './utils/find'
 
+interface RefSelector {
+  ref: string
+}
+
+interface NameSelector {
+  name: string
+}
+
+type FindComponentSelector = RefSelector | NameSelector | string
+type FindAllComponentsSelector = NameSelector | string
+
 export class VueWrapper<T extends ComponentPublicInstance>
   implements WrapperAPI {
   private componentVM: T
@@ -90,10 +101,15 @@ export class VueWrapper<T extends ComponentPublicInstance>
     return result
   }
 
-  findByComponent(selector: { ref?: string; name?: string } | string): any {
-    if (typeof selector === 'object' && selector.ref) {
+  findComponent(selector: FindComponentSelector): any {
+    if (typeof selector === 'object' && 'ref' in selector) {
       return this.componentVM.$refs[selector.ref]
     }
+    const result = find(this.componentVM.$.subTree, selector)
+    return result.length ? result[0] : result
+  }
+
+  findAllComponents(selector: FindAllComponentsSelector): any[] {
     return find(this.componentVM.$.subTree, selector)
   }
 
