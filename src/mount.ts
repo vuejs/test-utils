@@ -37,9 +37,9 @@ interface MountingOptions {
     // TODO how to type `defineComponent`? Using `any` for now.
     components?: Record<string, Component | object>
     directives?: Record<string, Directive>
+    globalProperties?: Record<any, any>
   }
   stubs?: Record<string, any>
-  globalProperties?: Record<any, any>
 }
 
 export function mount<T extends any>(
@@ -146,8 +146,8 @@ export function mount<T extends ComponentPublicInstance>(
   }
 
   // mock globally available properties
-  if (options?.globalProperties) {
-    Object.entries(options.globalProperties).forEach(([key, value]) => {
+  if (options?.global?.globalProperties) {
+    Object.entries(options.global.globalProperties).forEach(([key, value]) => {
       vm.config.globalProperties[key] = value
     })
   }

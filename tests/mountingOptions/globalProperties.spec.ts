@@ -9,8 +9,10 @@ describe('globalProperties', () => {
       }
     }
     const wrapper = mount(Component, {
-      globalProperties: {
-        foo: 'bar'
+      global: {
+        globalProperties: {
+          foo: 'bar'
+        }
       }
     })
     expect(wrapper.html()).toEqual('<div>bar</div>')
