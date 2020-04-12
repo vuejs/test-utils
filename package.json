@@ -1,6 +1,6 @@
 {
   "name": "@vue/test-utils",
-  "version": "2.0.0-alpha.0",
+  "version": "2.0.0-alpha.1",
   "license": "MIT",
   "main": "dist/vue-test-utils.cjs.js",
   "browser": "dist/vue-test-utils.esm.js",
@@ -34,8 +34,8 @@
     "vuex": "^4.0.0-alpha.1"
   },
   "peerDependencies": {
-    "@vue/compiler-sfc": "3.0.0-alpha.11",
-    "vue": "3.0.0-alpha.11"
+    "@vue/compiler-sfc": "^3.0.0-alpha.11",
+    "vue": "^3.0.0-alpha.11"
   },
   "author": {
     "name": "Lachlan Miller",
