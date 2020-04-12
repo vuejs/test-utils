@@ -4,14 +4,13 @@ import {
   VNode,
   defineComponent,
   VNodeNormalizedChildren,
-  ComponentOptions,
   transformVNodeArgs,
-  Plugin,
-  Directive,
-  Component,
   reactive,
   ComponentPublicInstance
 } from 'vue'
+import { config } from './config'
+import { globalMountOptions } from './types'
+import { mergeGlobalProperties } from './utils'
 
 import { createWrapper, VueWrapper } from './vue-wrapper'
 import { createEmitMixin } from './emitMixin'
@@ -28,17 +27,7 @@ interface MountingOptions {
     default?: Slot
     [key: string]: Slot
   }
-  global?: {
-    plugins?: Plugin[]
-    mixins?: ComponentOptions[]
-    mocks?: Record<string, any>
-    stubs?: Record<any, any>
-    provide?: Record<any, any>
-    // TODO how to type `defineComponent`? Using `any` for now.
-    components?: Record<string, Component | object>
-    directives?: Record<string, Directive>
-    globalProperties?: Record<any, any>
-  }
+  global?: globalMountOptions
   stubs?: Record<string, any>
 }
 
@@ -104,11 +93,13 @@ export function mount<T extends ComponentPublicInstance>(
   // create the vm
   const vm = createApp(Parent)
 
+  const global = mergeGlobalProperties(config.global, options?.global)
+
   // global mocks mixin
-  if (options?.global?.mocks) {
+  if (global?.mocks) {
     const mixin = {
       beforeCreate() {
-        for (const [k, v] of Object.entries(options.global?.mocks)) {
+        for (const [k, v] of Object.entries(global.mocks)) {
           this[k] = v
         }
       }
@@ -118,36 +109,36 @@ export function mount<T extends ComponentPublicInstance>(
   }
 
   // use and plugins from mounting options
-  if (options?.global?.plugins) {
-    for (const use of options?.global?.plugins) vm.use(use)
+  if (global?.plugins) {
+    for (const use of global.plugins) vm.use(use)
   }
 
   // use any mixins from mounting options
-  if (options?.global?.mixins) {
-    for (const mixin of options?.global?.mixins) vm.mixin(mixin)
+  if (global?.mixins) {
+    for (const mixin of global.mixins) vm.mixin(mixin)
   }
 
-  if (options?.global?.components) {
-    for (const key of Object.keys(options?.global?.components))
-      vm.component(key, options.global.components[key])
+  if (global?.components) {
+    for (const key of Object.keys(global.components))
+      vm.component(key, global.components[key])
   }
 
-  if (options?.global?.directives) {
-    for (const key of Object.keys(options?.global?.directives))
-      vm.directive(key, options.global.directives[key])
+  if (global?.directives) {
+    for (const key of Object.keys(global.directives))
+      vm.directive(key, global.directives[key])
   }
 
   // provide any values passed via provides mounting option
-  if (options?.global?.provide) {
-    for (const key of Reflect.ownKeys(options.global.provide)) {
+  if (global?.provide) {
+    for (const key of Reflect.ownKeys(global.provide)) {
       // @ts-ignore: https://github.com/microsoft/TypeScript/issues/1863
-      vm.provide(key, options.global.provide[key])
+      vm.provide(key, global.provide[key])
     }
   }
 
   // mock globally available properties
-  if (options?.global?.globalProperties) {
-    Object.entries(options.global.globalProperties).forEach(([key, value]) => {
+  if (global?.globalProperties) {
+    Object.entries(global.globalProperties).forEach(([key, value]) => {
       vm.config.globalProperties[key] = value
     })
   }
