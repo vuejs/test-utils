@@ -87,7 +87,6 @@ setProps | ✅ |
 setData | ❌ | has PR
 destroy | ❌
 get | ❌
-isVisible | ❌ | use matchers such as [this](https://github.com/testing-library/jest-dom#tobeempty)
 props | ❌
 contains | ⚰️| use `find` 
 emittedByOrder | ⚰️ | use `emitted`
@@ -95,6 +94,7 @@ setSelected | ⚰️ | now part of `setValue`
 setChecked | ⚰️| now part of `setValue` 
 is | ⚰️ 
 isEmpty | ⚰️ | use matchers such as [this](https://github.com/testing-library/jest-dom#tobeempty)
+isVisible | ⚰️ | use matchers such as [this](https://github.com/testing-library/jest-dom#tobevisible)
 isVueInstance | ⚰️ 
 name | ⚰️ |
 setMethods | ⚰️ | 
