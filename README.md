@@ -46,23 +46,23 @@ This is table for those coming from VTU beta, comparing the two APIs. A lot of t
 
 | option | status | notes |
 |---------|-------|------|
-context | ⚰️ | different from Vue 2, may not make sense anymore.
 data | ✅
 slots | ✅ | has not been tested vigorously. Please try it out.
-scopedSlots | ⚰️ | scopedSlots are merged with slots in Vue 3
-stubs | ❌ 
 mocks | ✅ | nested in [`global`](https://vuejs.github.io/vue-test-utils-next-docs/api/#global)
-localVue | ⚰️ | may not make sense anymore since we do not mutate the global Vue instance in Vue 3.
-attachToDocument | ❌| will rename to `attachTo`. See [here](https://github.com/vuejs/vue-test-utils/pull/1492)
-attrs | ❌ |
 propsData | ✅ | now called `props`
-listeners | ⚰️ | no longer exists in Vue 3
-parentComponent | ⚰️ |
 provide | ✅ | nested in [`global`](https://vuejs.github.io/vue-test-utils-next-docs/api/#global)
 mixins | ✅ | (new!) nested in [`global`](https://vuejs.github.io/vue-test-utils-next-docs/api/#global)
 plugins | ✅ | (new!) nested in [`global`](https://vuejs.github.io/vue-test-utils-next-docs/api/#global)
 component | ✅ | (new!) nested in [`global`](https://vuejs.github.io/vue-test-utils-next-docs/api/#global)
 directives | ✅ | (new!) nested in [`global`](https://vuejs.github.io/vue-test-utils-next-docs/api/#global)
+stubs | ❌ 
+attachToDocument | ❌| will rename to `attachTo`. See [here](https://github.com/vuejs/vue-test-utils/pull/1492)
+attrs | ❌ |
+scopedSlots | ⚰️ | scopedSlots are merged with slots in Vue 3
+context | ⚰️ | different from Vue 2, may not make sense anymore.
+localVue | ⚰️ | may not make sense anymore since we do not mutate the global Vue instance in Vue 3.
+listeners | ⚰️ | no longer exists in Vue 3
+parentComponent | ⚰️ |
 
 
 ### Wrapper API (mount)
@@ -71,26 +71,26 @@ directives | ✅ | (new!) nested in [`global`](https://vuejs.github.io/vue-test-
 |---------|-------|------|
 attributes | ✅
 classes | ✅  
-contains | ⚰️| use `find` 
-destroy | ❌
-emitted | ✅
-emittedByOrder | ⚰️ | use `emitted`
 exists | ✅
 find | ✅ | only `querySelector` syntax is supported. `find(Comp)` under discussion [here](https://github.com/vuejs/vue-test-utils/issues/1498)
+emitted | ✅
 findAll | ✅ | see above. `.vm` is different to Vue 2. We are exploring options.
-get | ❌
 html | ✅
-is | ⚰️ 
-isEmpty | ⚰️ | use matchers such as [this](https://github.com/testing-library/jest-dom#tobeempty)
-isVisible | ❌ | use matchers such as [this](https://github.com/testing-library/jest-dom#tobeempty)
-isVueInstance | ⚰️ 
-name | ⚰️ |
-props | ❌
-setChecked | ⚰️| now part of `setValue` 
-setData | ❌ | 
-setMethods | ⚰️ | 
-setProps | ❌ |
-setSelected | ⚰️ | now part of `setValue` 
 setValue | ✅ | works for select, checkbox, radio button, input, textarea. Returns `nextTick`.
 text | ✅ |
 trigger | ✅ | returns `nextTick`. You can do `await wrapper.find('button').trigger('click')`
+setProps | ✅ |
+setData | ❌ | has PR
+destroy | ❌
+get | ❌
+isVisible | ❌ | use matchers such as [this](https://github.com/testing-library/jest-dom#tobeempty)
+props | ❌
+contains | ⚰️| use `find` 
+emittedByOrder | ⚰️ | use `emitted`
+setSelected | ⚰️ | now part of `setValue` 
+setChecked | ⚰️| now part of `setValue` 
+is | ⚰️ 
+isEmpty | ⚰️ | use matchers such as [this](https://github.com/testing-library/jest-dom#tobeempty)
+isVueInstance | ⚰️ 
+name | ⚰️ |
+setMethods | ⚰️ | 
