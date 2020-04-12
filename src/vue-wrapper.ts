@@ -75,7 +75,7 @@ export class VueWrapper<T extends ComponentPublicInstance>
   }
 
   html() {
-    return this.appRootNode.innerHTML
+    return this.parentElement.innerHTML
   }
 
   text() {
@@ -101,20 +101,22 @@ export class VueWrapper<T extends ComponentPublicInstance>
     return result
   }
 
-  findComponent(selector: FindComponentSelector): any {
+  findComponent(selector: FindComponentSelector): ComponentPublicInstance {
     if (typeof selector === 'object' && 'ref' in selector) {
-      return this.componentVM.$refs[selector.ref]
+      return this.componentVM.$refs[selector.ref] as ComponentPublicInstance
     }
     const result = find(this.componentVM.$.subTree, selector)
-    return result.length ? result[0] : result
+    return result.length ? result[0] : undefined
   }
 
-  findAllComponents(selector: FindAllComponentsSelector): any[] {
+  findAllComponents(
+    selector: FindAllComponentsSelector
+  ): ComponentPublicInstance[] {
     return find(this.componentVM.$.subTree, selector)
   }
 
   findAll<T extends Element>(selector: string): DOMWrapper<T>[] {
-    const results = this.appRootNode.querySelectorAll<T>(selector)
+    const results = this.parentElement.querySelectorAll<T>(selector)
     return Array.from(results).map((x) => new DOMWrapper(x))
   }
 

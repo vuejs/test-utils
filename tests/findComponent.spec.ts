@@ -19,10 +19,10 @@ describe('findComponent', () => {
     // find by ref
     expect(wrapper.findComponent({ ref: 'b' })).toBeTruthy()
     // find by DOM selector
-    expect(wrapper.findComponent('.C').type.name).toEqual('ComponentC')
-    expect(wrapper.findComponent({ name: 'Hello' }).el.textContent).toBe(
+    expect(wrapper.findComponent('.C').$options.name).toEqual('ComponentC')
+    expect(wrapper.findComponent({ name: 'Hello' }).$el.textContent).toBe(
       'Hello world'
     )
-    expect(wrapper.findComponent(Hello).el.textContent).toBe('Hello world')
+    expect(wrapper.findComponent(Hello).$el.textContent).toBe('Hello world')
   })
 })

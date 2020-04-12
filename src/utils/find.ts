@@ -1,4 +1,4 @@
-import { VNode } from 'vue/dist/vue'
+import { VNode, ComponentPublicInstance } from 'vue'
 
 function matches(node: VNode, selector): boolean {
   if (typeof selector === 'string') {
@@ -21,7 +21,7 @@ function aggregateChildren(nodes, children) {
   }
 }
 
-function findAllVNodes(vnode: VNode, selector: any) {
+function findAllVNodes(vnode: VNode, selector: any): VNode[] {
   const matchingNodes = []
   const nodes = [vnode]
   while (nodes.length) {
@@ -36,6 +36,8 @@ function findAllVNodes(vnode: VNode, selector: any) {
   return matchingNodes
 }
 
-export function find(root: VNode, selector: any) {
-  return findAllVNodes(root, selector)
+export function find(root: VNode, selector: any): ComponentPublicInstance[] {
+  return findAllVNodes(root, selector).map(
+    (vnode: VNode) => vnode.component.proxy
+  )
 }
