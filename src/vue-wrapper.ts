@@ -45,6 +45,12 @@ export class VueWrapper implements WrapperAPI {
     return this.__vm
   }
 
+  props(selector?: string) {
+    return selector
+      ? this.componentVM.$props[selector]
+      : this.componentVM.$props
+  }
+
   classes(className?: string) {
     return new DOMWrapper(this.element).classes(className)
   }
