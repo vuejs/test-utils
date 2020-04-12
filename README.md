@@ -7,11 +7,15 @@ The next iteration of Vue Test Utils. It targets Vue 3.
 - yarn: `yarn add @vue/test-utils@next --dev`
 - npm: `npm install @vue/test-utils@next --save-dev`
 
+## Coming from Vue 2 + Vue Test Utils beta?
+
+We are working on some documentation to help people migrate. At this point it will you will have better luck trying this out with a brand new Vue 3 app, as opposed to upgrading an existing Vue 2 app. Feedback and bug reports are welcome!
+
 ## Working with `.vue` files
 
 There is [`vue-jest`](https://github.com/vuejs/vue-jest) for loading `.vue` files into Jest. The `next` branch contains support for Vue 3. Install it with `yarn add vue-jest@next`. It lacks support for some things, namely JSX. 
 
-If you don't want to configure things, you can download a repository with Vue 3, `@vue/test-utils@next`, `vue-jest` and TypeScript configured [here](https://github.com/lmiller1990/vtu-next-demo).
+If you don't want to configure things, you can download a repository with Vue 3, `@vue/test-utils@next`, `vue-jest@next` and TypeScript configured [here](https://github.com/lmiller1990/vtu-next-demo).
 
 ## Docs
 
