@@ -1,4 +1,5 @@
 import ts from 'rollup-plugin-typescript2'
+import resolve from '@rollup/plugin-node-resolve'
 
 import pkg from './package.json'
 
@@ -19,8 +20,8 @@ function createEntry(options) {
 
   const config = {
     input,
-    external: ['vue'],
-    plugins: [],
+    external: ['vue', 'lodash/mergeWith'],
+    plugins: [resolve()],
     output: {
       banner,
       file: 'dist/vue-test-utils.other.js',
