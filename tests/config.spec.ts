@@ -13,6 +13,7 @@ describe('config', () => {
       provide: undefined
     }
   })
+
   describe('components', () => {
     const Component = {
       template: '<div>{{ msg }} <hello/></div>',
@@ -26,6 +27,7 @@ describe('config', () => {
       expect(wrapper1.text()).toEqual('Wrapper1 Hello world')
       expect(wrapper2.text()).toEqual('Wrapper2 Hello world')
     })
+
     it('allows overwriting globally set component config on a per mount instance', () => {
       config.global.components = { Hello }
       const HelloLocal = { template: '<div>Hello Overwritten</div>' }
@@ -52,6 +54,7 @@ describe('config', () => {
       expect(mount(Component).classes()).toContain('DirectiveAdded')
       expect(mount(Component).classes()).toContain('DirectiveAdded')
     })
+
     it('allows overwriting globally set directives', () => {
       config.global.directives = { Directive }
       const LocalDirective = {

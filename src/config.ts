@@ -1,5 +1,5 @@
-import { globalMountOptions } from './types'
+import { GlobalMountOptions } from './types'
 
-export const config: { global: globalMountOptions } = {
+export const config: { global: GlobalMountOptions } = {
   global: {}
 }

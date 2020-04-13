@@ -1,4 +1,5 @@
 import { Component, ComponentOptions, Directive, Plugin } from 'vue'
+
 import { DOMWrapper } from './dom-wrapper'
 import { ErrorWrapper } from './error-wrapper'
 
@@ -14,7 +15,7 @@ export interface WrapperAPI {
   trigger: (eventString: string) => Promise<(fn?: () => void) => Promise<void>>
 }
 
-export type globalMountOptions = {
+export type GlobalMountOptions = {
   plugins?: Plugin[]
   mixins?: ComponentOptions[]
   mocks?: Record<string, any>

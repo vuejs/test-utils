@@ -3,12 +3,16 @@ import upperFirst from 'lodash/upperFirst'
 import kebabCase from 'lodash/kebabCase'
 import flow from 'lodash/flow'
 import mergeWith from 'lodash/mergeWith'
+import { GlobalMountOptions } from './types'
 
 const pascalCase = flow(camelCase, upperFirst)
 
 export { kebabCase, pascalCase }
 
-export function mergeGlobalProperties(configGlobal = {}, mountGlobal = {}) {
+export function mergeGlobalProperties(
+  configGlobal = {},
+  mountGlobal = {}
+): GlobalMountOptions {
   return mergeWith({}, configGlobal, mountGlobal, (objValue, srcValue, key) => {
     switch (key) {
       case 'mocks':

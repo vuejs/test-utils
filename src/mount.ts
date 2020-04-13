@@ -8,10 +8,10 @@ import {
   reactive,
   ComponentPublicInstance
 } from 'vue'
-import { config } from './config'
-import { globalMountOptions } from './types'
-import { mergeGlobalProperties } from './utils'
 
+import { config } from './config'
+import { GlobalMountOptions } from './types'
+import { mergeGlobalProperties } from './utils'
 import { createWrapper, VueWrapper } from './vue-wrapper'
 import { createEmitMixin } from './emitMixin'
 import { createDataMixin } from './dataMixin'
@@ -27,7 +27,7 @@ interface MountingOptions {
     default?: Slot
     [key: string]: Slot
   }
-  global?: globalMountOptions
+  global?: GlobalMountOptions
   stubs?: Record<string, any>
 }
 
