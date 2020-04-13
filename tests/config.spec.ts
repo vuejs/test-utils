@@ -71,4 +71,27 @@ describe('config', () => {
       ).toContain('LocallyDirectiveAdded')
     })
   })
+
+  describe('mocks', () => {
+    it('sets mock everywhere', () => {
+      config.global.mocks = {
+        foo: 'bar'
+      }
+      const Component = { template: '<div>{{ foo }}</div>' }
+      expect(mount(Component).text()).toEqual('bar')
+      expect(mount(Component).text()).toEqual('bar')
+    })
+
+    it('allows overwriting a global mock', () => {
+      config.global.mocks = {
+        foo: 'bar'
+      }
+      const Component = { template: '<div>{{ foo }}</div>' }
+
+      expect(mount(Component).text()).toEqual('bar')
+      expect(
+        mount(Component, { global: { mocks: { foo: 'baz' } } }).text()
+      ).toEqual('baz')
+    })
+  })
 })
