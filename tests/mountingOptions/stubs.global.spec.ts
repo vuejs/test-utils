@@ -4,30 +4,6 @@ import { mount } from '../../src'
 import Hello from '../components/Hello.vue'
 
 describe('mounting options: stubs', () => {
-  it('stubs when a root node is present', () => {
-    const Foo = {
-      name: 'Foo',
-      render() {
-        return h('p')
-      }
-    }
-    const Component: ComponentOptions = {
-      render() {
-        return h('div', h(Foo))
-      }
-    }
-
-    const wrapper = mount(Component, {
-      global: {
-        stubs: {
-          Foo: true
-        }
-      }
-    })
-
-    expect(wrapper.html()).toBe('<div><foo-stub></foo-stub></div>')
-  })
-
   it('stubs in a fragment', () => {
     const Foo = {
       name: 'Foo',
@@ -69,7 +45,7 @@ describe('mounting options: stubs', () => {
       }
     }
 
-    mount(Comp, {
+    const wrapper = mount(Comp, {
       global: {
         stubs: {
           Foo: true
@@ -77,6 +53,7 @@ describe('mounting options: stubs', () => {
       }
     })
 
+    expect(wrapper.html()).toBe('<foo-stub></foo-stub>')
     expect(onBeforeMount).not.toHaveBeenCalled()
     expect(beforeCreate).not.toHaveBeenCalled()
   })
@@ -145,5 +122,42 @@ describe('mounting options: stubs', () => {
     expect(wrapper.html()).toBe(
       '<div id="root"><div id="msg">Hello world</div></div>'
     )
+  })
+
+  it('stubs using inline components', () => {
+    const Foo = {
+      name: 'Foo',
+      render() {
+        return h('p')
+      }
+    }
+    const Bar = {
+      name: 'Bar',
+      render() {
+        return h('p')
+      }
+    }
+    const Component: ComponentOptions = {
+      render() {
+        return h(() => [h(Foo), h(Bar)])
+      }
+    }
+
+    const wrapper = mount(Component, {
+      global: {
+        stubs: {
+          Foo: {
+            template: '<span />'
+          },
+          Bar: {
+            render() {
+              return h('div')
+            }
+          }
+        }
+      }
+    })
+
+    expect(wrapper.html()).toBe('<span></span><div></div>')
   })
 })
