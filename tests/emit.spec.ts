@@ -22,9 +22,6 @@ describe('emitted', () => {
     expect(wrapper.emitted().hello[1]).toEqual(['foo', 'bar'])
   })
 
-  // NOTE: This will fail until alpha 5.
-  // For now I am testing this by hacking node_modules/vue/dist/vue.esm.js with the following fix:
-  // https://github.com/vuejs/vue-next/commit/e308ad99e9f5bdfb0910a2d6959e746f558714c5
   it('captures events emitted via ctx.emit', () => {
     const Component = defineComponent({
       name: 'ContextEmit',
@@ -33,6 +30,28 @@ describe('emitted', () => {
         return () =>
           h('div', [
             h('button', { onClick: () => ctx.emit('hello', 'foo', 'bar') })
+          ])
+      }
+    })
+    const wrapper = mount(Component)
+    expect(wrapper.emitted()).toEqual({})
+    expect(wrapper.emitted().hello).toEqual(undefined)
+
+    wrapper.find('button').trigger('click')
+    expect(wrapper.emitted().hello[0]).toEqual(['foo', 'bar'])
+
+    wrapper.find('button').trigger('click')
+    expect(wrapper.emitted().hello[1]).toEqual(['foo', 'bar'])
+  })
+
+  it.only('captures events emitted via destructured emit', () => {
+    const Component = defineComponent({
+      name: 'ContextEmit',
+
+      setup(props, { emit }) {
+        return () =>
+          h('div', [
+            h('button', { onClick: () => emit('hello', 'foo', 'bar') })
           ])
       }
     })
