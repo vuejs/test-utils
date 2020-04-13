@@ -137,7 +137,8 @@ export function mount(originalComponent: any, options?: MountingOptions) {
   const { emitMixin, events } = createEmitMixin()
   vm.mixin(emitMixin)
 
-  transformVNodeArgs((args, instance) => {
+  // stubs
+  transformVNodeArgs((args) => {
     // regular HTML Element. Do not stubs these
     if (Array.isArray(args) && typeof args[0] === 'string') {
       return args
