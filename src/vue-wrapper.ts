@@ -79,6 +79,15 @@ export class VueWrapper implements WrapperAPI {
     return new ErrorWrapper({ selector })
   }
 
+  get<T extends Element>(selector: string): DOMWrapper<T> {
+    const result = this.find<T>(selector)
+    if (result instanceof ErrorWrapper) {
+      throw new Error(`Unable to find ${selector} within: ${this.html()}`)
+    }
+
+    return result
+  }
+
   findAll<T extends Element>(selector: string): DOMWrapper<T>[] {
     const results = this.appRootNode.querySelectorAll<T>(selector)
     return Array.from(results).map((x) => new DOMWrapper(x))
