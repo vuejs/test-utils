@@ -1,6 +1,7 @@
-import { h, ComponentOptions, onMounted, onBeforeMount } from 'vue'
+import { h, ComponentOptions } from 'vue'
 
 import { mount } from '../../src'
+import Hello from '../components/Hello.vue'
 
 describe('mounting options: stubs', () => {
   it('stubs when a root node is present', () => {
@@ -112,5 +113,37 @@ describe('mounting options: stubs', () => {
 
     expect(onBeforeMount).toHaveBeenCalled()
     expect(wrapper.html()).toBe('<div>foo stub</div>')
+  })
+
+  it('uses an sfc as a custom stub', () => {
+    const created = jest.fn()
+    const HelloComp = {
+      name: 'Hello',
+      created() {
+        created()
+      },
+      render() {
+        return h('span', 'real implementation')
+      }
+    }
+
+    const Comp = {
+      render() {
+        return h(HelloComp)
+      }
+    }
+
+    const wrapper = mount(Comp, {
+      global: {
+        stubs: {
+          Hello: Hello
+        }
+      }
+    })
+
+    expect(created).not.toHaveBeenCalled()
+    expect(wrapper.html()).toBe(
+      '<div id="root"><div id="msg">Hello world</div></div>'
+    )
   })
 })
