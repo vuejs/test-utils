@@ -5,6 +5,7 @@ import {
   defineComponent,
   VNodeNormalizedChildren,
   ComponentOptions,
+  transformVNodeArgs,
   Plugin,
   Directive,
   Component,
@@ -15,6 +16,7 @@ import { createWrapper } from './vue-wrapper'
 import { createEmitMixin } from './emitMixin'
 import { createDataMixin } from './dataMixin'
 import { MOUNT_ELEMENT_ID } from './constants'
+import { createStub } from './stub'
 
 type Slot = VNode | string | { render: Function }
 
@@ -29,6 +31,7 @@ interface MountingOptions {
     plugins?: Plugin[]
     mixins?: ComponentOptions[]
     mocks?: Record<string, any>
+    stubs?: Record<any, any>
     provide?: Record<any, any>
     // TODO how to type `defineComponent`? Using `any` for now.
     components?: Record<string, Component | object>
@@ -72,6 +75,7 @@ export function mount(originalComponent: any, options?: MountingOptions) {
 
   // create the wrapper component
   const Parent = defineComponent({
+    name: 'VTU_COMPONENT',
     render() {
       return h(component, props, slots)
     }
@@ -132,6 +136,32 @@ export function mount(originalComponent: any, options?: MountingOptions) {
   // add tracking for emitted events
   const { emitMixin, events } = createEmitMixin()
   vm.mixin(emitMixin)
+
+  transformVNodeArgs((args, instance) => {
+    // regular HTML Element. Do not stubs these
+    if (Array.isArray(args) && typeof args[0] === 'string') {
+      return args
+    }
+
+    // do not stub the VTU Parent component
+    if (typeof args[0] === 'object' && args[0]['name'] === 'VTU_COMPONENT') {
+      return args
+    }
+
+    // don't care about comments/fragments
+    if (typeof args[0] === 'symbol') {
+      return args
+    }
+
+    if (
+      typeof args[0] === 'object' &&
+      args[0]['name'] in options?.global?.stubs
+    ) {
+      return [createStub({ name: args[0]['name'] })]
+    }
+
+    return args
+  })
 
   // mount the app!
   const app = vm.mount(el)
