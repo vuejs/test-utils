@@ -79,4 +79,38 @@ describe('mounting options: stubs', () => {
     expect(onBeforeMount).not.toHaveBeenCalled()
     expect(beforeCreate).not.toHaveBeenCalled()
   })
+
+  it('uses a custom stub implementation', () => {
+    const onBeforeMount = jest.fn()
+    const FooStub = {
+      name: 'FooStub',
+      setup() {
+        onBeforeMount(onBeforeMount)
+        return () => h('div', 'foo stub')
+      }
+    }
+    const Foo = {
+      name: 'Foo',
+      render() {
+        return h('div', 'real foo')
+      }
+    }
+
+    const Comp = {
+      render() {
+        return h(Foo)
+      }
+    }
+
+    const wrapper = mount(Comp, {
+      global: {
+        stubs: {
+          Foo: FooStub
+        }
+      }
+    })
+
+    expect(onBeforeMount).toHaveBeenCalled()
+    expect(wrapper.html()).toBe('<div>foo stub</div>')
+  })
 })
