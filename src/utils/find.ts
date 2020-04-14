@@ -1,13 +1,15 @@
 import { VNode, ComponentPublicInstance } from 'vue'
+import { FindAllComponentsSelector } from '../types'
+import { matchName } from './matchName'
 
-function matches(node: VNode, selector): boolean {
+function matches(node: VNode, selector: FindAllComponentsSelector): boolean {
   if (typeof selector === 'string') {
     return node.el?.matches?.(selector)
   }
-  if (typeof selector === 'object') {
-    if (selector.name && typeof node.type === 'object') {
-      // @ts-ignore
-      return node.type.name === selector.name
+  if (typeof selector === 'object' && typeof node.type === 'object') {
+    if (selector.name && ('name' in node.type || 'displayName' in node.type)) {
+      // match normal component definitions or functional components
+      return matchName(selector.name, node.type.name || node.type.displayName)
     }
   }
   return false

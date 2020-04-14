@@ -2,21 +2,14 @@ import { ComponentPublicInstance, nextTick } from 'vue'
 import { ShapeFlags } from '@vue/shared'
 
 import { DOMWrapper } from './dom-wrapper'
-import { WrapperAPI } from './types'
+import {
+  FindAllComponentsSelector,
+  FindComponentSelector,
+  WrapperAPI
+} from './types'
 import { ErrorWrapper } from './error-wrapper'
 import { MOUNT_ELEMENT_ID } from './constants'
 import { find } from './utils/find'
-
-interface RefSelector {
-  ref: string
-}
-
-interface NameSelector {
-  name: string
-}
-
-type FindComponentSelector = RefSelector | NameSelector | string
-type FindAllComponentsSelector = NameSelector | string
 
 export class VueWrapper<T extends ComponentPublicInstance>
   implements WrapperAPI {
