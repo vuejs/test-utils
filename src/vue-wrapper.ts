@@ -6,8 +6,9 @@ import { WrapperAPI } from './types'
 import { ErrorWrapper } from './error-wrapper'
 import { MOUNT_ELEMENT_ID } from './constants'
 
-export class VueWrapper implements WrapperAPI {
-  private componentVM: ComponentPublicInstance
+export class VueWrapper<T extends ComponentPublicInstance>
+  implements WrapperAPI {
+  private componentVM: T
   private __emitted: Record<string, unknown[]> = {}
   private __vm: ComponentPublicInstance
   private __setProps: (props: Record<string, any>) => void
@@ -19,9 +20,7 @@ export class VueWrapper implements WrapperAPI {
   ) {
     this.__vm = vm
     this.__setProps = setProps
-    this.componentVM = this.__vm.$refs[
-      'VTU_COMPONENT'
-    ] as ComponentPublicInstance
+    this.componentVM = this.__vm.$refs['VTU_COMPONENT'] as T
     this.__emitted = events
   }
 
@@ -43,7 +42,7 @@ export class VueWrapper implements WrapperAPI {
     return this.hasMultipleRoots ? this.parentElement : this.componentVM.$el
   }
 
-  get vm(): ComponentPublicInstance {
+  get vm(): T {
     return this.componentVM
   }
 
@@ -106,10 +105,10 @@ export class VueWrapper implements WrapperAPI {
   }
 }
 
-export function createWrapper(
+export function createWrapper<T extends ComponentPublicInstance>(
   vm: ComponentPublicInstance,
   events: Record<string, unknown[]>,
   setProps: (props: Record<string, any>) => void
-): VueWrapper {
-  return new VueWrapper(vm, events, setProps)
+): VueWrapper<T> {
+  return new VueWrapper<T>(vm, events, setProps)
 }

@@ -9,13 +9,18 @@ describe('vm', () => {
       setup() {
         const msg = 'hello'
         const isEnabled = ref(true)
-        return { msg, isEnabled }
+        const toggle = () => (isEnabled.value = !isEnabled.value)
+        return { msg, isEnabled, toggle }
       }
     })
 
     const wrapper = mount(Component)
 
-    expect((wrapper.vm as any).msg).toBe('hello')
-    expect((wrapper.vm as any).isEnabled).toBe(true)
+    expect(wrapper.vm.msg).toBe('hello')
+    expect(wrapper.vm.isEnabled).toBe(true)
+
+    wrapper.vm.toggle()
+
+    expect(wrapper.vm.isEnabled).toBe(false)
   })
 })
