@@ -20,7 +20,14 @@ function createEntry(options) {
 
   const config = {
     input,
-    external: ['vue', 'lodash/mergeWith'],
+    external: [
+      'vue', 
+      'lodash/mergeWith',
+      'lodash/camelCase',
+      'lodash/upperFirst',
+      'lodash/kebabCase',
+      'lodash/flow'
+    ],
     plugins: [resolve()],
     output: {
       banner,

@@ -1,7 +1,6 @@
 import { transformVNodeArgs, h } from 'vue'
-import kebabCase from 'lodash/kebabCase'
 
-import { pascalCase } from './utils'
+import { pascalCase, kebabCase } from './utils'
 
 interface IStubOptions {
   name?: string
