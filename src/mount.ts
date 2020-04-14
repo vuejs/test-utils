@@ -16,7 +16,7 @@ import { createWrapper } from './vue-wrapper'
 import { createEmitMixin } from './emitMixin'
 import { createDataMixin } from './dataMixin'
 import { MOUNT_ELEMENT_ID } from './constants'
-import { createStub } from './stub'
+import { stubComponents } from './stubs'
 
 type Slot = VNode | string | { render: Function }
 
@@ -139,40 +139,7 @@ export function mount(originalComponent: any, options?: MountingOptions) {
 
   // stubs
   if (options?.global?.stubs) {
-    transformVNodeArgs((args) => {
-      // regular HTML Element. Do not stubs these
-      if (Array.isArray(args) && typeof args[0] === 'string') {
-        return args
-      }
-
-      // don't care about comments/fragments
-      if (typeof args[0] === 'symbol') {
-        return args
-      }
-
-      // do not stub the VTU Parent component
-      if (typeof args[0] === 'object' && args[0]['name'] === 'VTU_COMPONENT') {
-        return args
-      }
-
-      if (
-        typeof args[0] === 'object' &&
-        args[0]['name'] in options?.global?.stubs
-      ) {
-        const name = args[0]['name']
-        // default stub
-        if (options?.global?.stubs[name] === true) {
-          return [createStub({ name: args[0]['name'] })]
-        }
-
-        // custom stub implementation
-        if (typeof options?.global?.stubs[name] === 'object') {
-          return [options?.global?.stubs[name]]
-        }
-      }
-
-      return args
-    })
+    stubComponents(options.global.stubs)
   } else {
     transformVNodeArgs()
   }
