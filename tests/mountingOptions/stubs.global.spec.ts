@@ -179,4 +179,23 @@ describe('mounting options: stubs', () => {
 
     expect(wrapper.html()).toBe('<foo-bar-stub></foo-bar-stub>')
   })
+
+  it('stubs a component with a PascalCase name', () => {
+    const FooBar = {
+      name: 'FooBar',
+      render: () => h('span', 'real foobar')
+    }
+    const Comp = {
+      render: () => h(FooBar)
+    }
+    const wrapper = mount(Comp, {
+      global: {
+        stubs: {
+          'foo-bar': true
+        }
+      }
+    })
+
+    expect(wrapper.html()).toBe('<foobar-stub></foobar-stub>')
+  })
 })
