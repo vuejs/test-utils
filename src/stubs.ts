@@ -47,6 +47,10 @@ const isComponent = (args: VNodeArgs) => typeof args[0] === 'object'
 
 export function stubComponents(stubs: Record<any, any>) {
   transformVNodeArgs((args) => {
+    // args[0] can either be:
+    // 1. a HTML tag (div, span...)
+    // 2. An object of component options, such as { name: 'foo', render: [Function], props: {...} }
+    // Depending what it is, we do different things.
     if (isHTMLElement(args) || isCommentOrFragment(args) || isParent(args)) {
       return args
     }
