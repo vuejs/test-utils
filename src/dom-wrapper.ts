@@ -50,6 +50,15 @@ export class DOMWrapper<ElementType extends Element> implements WrapperAPI {
     return new ErrorWrapper({ selector })
   }
 
+  get<T extends Element>(selector: string): DOMWrapper<T> {
+    const result = this.find<T>(selector)
+    if (result instanceof ErrorWrapper) {
+      throw new Error(`Unable to find ${selector} within: ${this.html()}`)
+    }
+
+    return result
+  }
+
   findAll<T extends Element>(selector: string): DOMWrapper<T>[] {
     return Array.from(this.element.querySelectorAll<T>(selector)).map(
       (x) => new DOMWrapper(x)
@@ -57,7 +66,7 @@ export class DOMWrapper<ElementType extends Element> implements WrapperAPI {
   }
 
   private async setChecked(checked: boolean = true) {
-    // typecast so we get typesafety
+    // typecast so we get type safety
     const element = (this.element as unknown) as HTMLInputElement
     const type = this.attributes().type
 
@@ -69,7 +78,7 @@ export class DOMWrapper<ElementType extends Element> implements WrapperAPI {
 
     // we do not want to trigger an event if the user
     // attempting set the same value twice
-    // this is beacuse in a browser setting checked = true when it is
+    // this is because in a browser setting checked = true when it is
     // already true is a no-op; no change event is triggered
     if (checked === element.checked) {
       return
