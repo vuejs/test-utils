@@ -19,7 +19,9 @@ export class VueWrapper implements WrapperAPI {
   ) {
     this.__vm = vm
     this.__setProps = setProps
-    this.componentVM = this.vm.$refs['VTU_COMPONENT'] as ComponentPublicInstance
+    this.componentVM = this.__vm.$refs[
+      'VTU_COMPONENT'
+    ] as ComponentPublicInstance
     this.__emitted = events
   }
 
@@ -42,7 +44,7 @@ export class VueWrapper implements WrapperAPI {
   }
 
   get vm(): ComponentPublicInstance {
-    return this.__vm
+    return this.componentVM
   }
 
   classes(className?: string) {
