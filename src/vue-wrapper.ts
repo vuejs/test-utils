@@ -8,43 +8,36 @@ import {
   WrapperAPI
 } from './types'
 import { ErrorWrapper } from './error-wrapper'
-import { MOUNT_ELEMENT_ID } from './constants'
 import { find } from './utils/find'
 
 export class VueWrapper<T extends ComponentPublicInstance>
   implements WrapperAPI {
   private componentVM: T
-  private __emitted: Record<string, unknown[]> = {}
-  private __vm: ComponentPublicInstance
+  private rootVM: ComponentPublicInstance
   private __setProps: (props: Record<string, any>) => void
 
   constructor(
     vm: ComponentPublicInstance,
-    events: Record<string, unknown[]>,
-    setProps: (props: Record<string, any>) => void
+    setProps?: (props: Record<string, any>) => void
   ) {
-    this.__vm = vm
+    // TODO Remove cast after Vue releases the fix
+    this.rootVM = (vm.$root as any) as ComponentPublicInstance
+    this.componentVM = vm as T
     this.__setProps = setProps
-    this.componentVM = this.__vm.$refs['VTU_COMPONENT'] as T
-    this.__emitted = events
-  }
-
-  private get appRootNode() {
-    return document.getElementById(MOUNT_ELEMENT_ID) as HTMLDivElement
   }
 
   private get hasMultipleRoots(): boolean {
     // if the subtree is an array of children, we have multiple root nodes
-    return this.componentVM.$.subTree.shapeFlag === ShapeFlags.ARRAY_CHILDREN
+    return this.vm.$.subTree.shapeFlag === ShapeFlags.ARRAY_CHILDREN
   }
 
   private get parentElement(): Element {
-    return this.componentVM.$el.parentElement
+    return this.vm.$el.parentElement
   }
 
   get element(): Element {
     // if the component has multiple root elements, we use the parent's element
-    return this.hasMultipleRoots ? this.parentElement : this.componentVM.$el
+    return this.hasMultipleRoots ? this.parentElement : this.vm.$el
   }
 
   get vm(): T {
@@ -63,8 +56,10 @@ export class VueWrapper<T extends ComponentPublicInstance>
     return true
   }
 
-  emitted() {
-    return this.__emitted
+  emitted(): Record<string, unknown[]> {
+    // TODO Should we define this?
+    // @ts-ignore
+    return this.vm.__emitted
   }
 
   html() {
@@ -94,18 +89,19 @@ export class VueWrapper<T extends ComponentPublicInstance>
     return result
   }
 
-  findComponent(selector: FindComponentSelector): ComponentPublicInstance {
+  findComponent(selector: FindComponentSelector): VueWrapper | ErrorWrapper {
     if (typeof selector === 'object' && 'ref' in selector) {
-      return this.componentVM.$refs[selector.ref] as ComponentPublicInstance
+      return createWrapper(
+        this.vm.$refs[selector.ref] as ComponentPublicInstance
+      )
     }
-    const result = find(this.componentVM.$.subTree, selector)
-    return result.length ? result[0] : undefined
+    const result = find(this.vm.$.subTree, selector)
+    if (!result.length) return new ErrorWrapper({ selector })
+    return createWrapper(result[0])
   }
 
-  findAllComponents(
-    selector: FindAllComponentsSelector
-  ): ComponentPublicInstance[] {
-    return find(this.componentVM.$.subTree, selector)
+  findAllComponents(selector: FindAllComponentsSelector): VueWrapper[] {
+    return find(this.vm.$.subTree, selector).map((c) => createWrapper(c))
   }
 
   findAll<T extends Element>(selector: string): DOMWrapper<T>[] {
@@ -113,7 +109,12 @@ export class VueWrapper<T extends ComponentPublicInstance>
     return Array.from(results).map((x) => new DOMWrapper(x))
   }
 
-  setProps(props: Record<string, any>) {
+  setProps(props: Record<string, any>): Promise<void> {
+    // if this VM's parent is not the root, error out
+    // TODO: Remove ignore after Vue releases fix
+    // @ts-ignore
+    if (this.vm.$parent !== this.rootVM)
+      throw Error('You can only use setProps on your mounted component')
     this.__setProps(props)
     return nextTick()
   }
@@ -126,8 +127,7 @@ export class VueWrapper<T extends ComponentPublicInstance>
 
 export function createWrapper<T extends ComponentPublicInstance>(
   vm: ComponentPublicInstance,
-  events: Record<string, unknown[]>,
-  setProps: (props: Record<string, any>) => void
+  setProps?: (props: Record<string, any>) => void
 ): VueWrapper<T> {
-  return new VueWrapper<T>(vm, events, setProps)
+  return new VueWrapper<T>(vm, setProps)
 }

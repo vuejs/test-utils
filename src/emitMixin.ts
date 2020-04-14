@@ -1,10 +1,11 @@
-import { getCurrentInstance } from 'vue'
+import { getCurrentInstance, App } from 'vue'
 
-export const createEmitMixin = () => {
-  const events: Record<string, unknown[]> = {}
-
+export const attachEventListener = (vm: App) => {
   const emitMixin = {
     beforeCreate() {
+      let events: Record<string, unknown[]> = {}
+      this.__emitted = events
+
       getCurrentInstance().emit = (event: string, ...args: unknown[]) => {
         events[event]
           ? (events[event] = [...events[event], [...args]])
@@ -15,8 +16,5 @@ export const createEmitMixin = () => {
     }
   }
 
-  return {
-    events,
-    emitMixin
-  }
+  vm.mixin(emitMixin)
 }

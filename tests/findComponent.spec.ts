@@ -37,7 +37,7 @@ const compA = {
 describe('findComponent', () => {
   it('does not find plain dom elements', () => {
     const wrapper = mount(compA)
-    expect(wrapper.findComponent('.domElement')).toBeFalsy()
+    expect(wrapper.findComponent('.domElement').exists()).toBeFalsy()
   })
 
   it('finds component by ref', () => {
@@ -49,34 +49,39 @@ describe('findComponent', () => {
   it('finds component by dom selector', () => {
     const wrapper = mount(compA)
     // find by DOM selector
-    expect(wrapper.findComponent('.C').$options.name).toEqual('ComponentC')
+    expect(wrapper.findComponent('.C').vm).toHaveProperty(
+      '$options.name',
+      'ComponentC'
+    )
   })
 
   it('does allows using complicated DOM selector query', () => {
     const wrapper = mount(compA)
-    expect(wrapper.findComponent('.B > .C').$options.name).toEqual('ComponentC')
+    expect(wrapper.findComponent('.B > .C').vm).toHaveProperty(
+      '$options.name',
+      'ComponentC'
+    )
   })
 
   it('finds a component when root of mounted component', async () => {
     const wrapper = mount(compD)
     // make sure it finds the component, not its root
-    expect(wrapper.findComponent('.c-as-root-on-d').$options.name).toEqual(
+    expect(wrapper.findComponent('.c-as-root-on-d').vm).toHaveProperty(
+      '$options.name',
       'ComponentC'
     )
   })
 
   it('finds component by name', () => {
     const wrapper = mount(compA)
-    expect(wrapper.findComponent({ name: 'Hello' }).$el.textContent).toBe(
-      'Hello world'
-    )
-    expect(wrapper.findComponent({ name: 'ComponentB' })).toBeTruthy()
-    expect(wrapper.findComponent({ name: 'component-c' })).toBeTruthy()
+    expect(wrapper.findComponent({ name: 'Hello' }).text()).toBe('Hello world')
+    expect(wrapper.findComponent({ name: 'ComponentB' }).exists()).toBeTruthy()
+    expect(wrapper.findComponent({ name: 'component-c' }).exists()).toBeTruthy()
   })
 
   it('finds component by imported SFC file', () => {
     const wrapper = mount(compA)
-    expect(wrapper.findComponent(Hello).$el.textContent).toBe('Hello world')
-    expect(wrapper.findComponent(compC).$el.textContent).toBe('C')
+    expect(wrapper.findComponent(Hello).text()).toBe('Hello world')
+    expect(wrapper.findComponent(compC).text()).toBe('C')
   })
 })

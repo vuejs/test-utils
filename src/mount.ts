@@ -14,7 +14,7 @@ import {
 } from 'vue'
 
 import { createWrapper, VueWrapper } from './vue-wrapper'
-import { createEmitMixin } from './emitMixin'
+import { attachEventListener } from './emitMixin'
 import { createDataMixin } from './dataMixin'
 import { MOUNT_ELEMENT_ID } from './constants'
 import { stubComponents } from './stubs'
@@ -145,8 +145,7 @@ export function mount<T extends ComponentPublicInstance>(
   }
 
   // add tracking for emitted events
-  const { emitMixin, events } = createEmitMixin()
-  vm.mixin(emitMixin)
+  attachEventListener(vm)
 
   // stubs
   if (options?.global?.stubs) {
@@ -157,6 +156,6 @@ export function mount<T extends ComponentPublicInstance>(
 
   // mount the app!
   const app = vm.mount(el)
-
-  return createWrapper<T>(app, events, setProps)
+  const App = app.$refs['VTU_COMPONENT'] as ComponentPublicInstance
+  return createWrapper<T>(App, setProps)
 }

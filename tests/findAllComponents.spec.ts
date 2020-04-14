@@ -19,11 +19,9 @@ describe('findAllComponents', () => {
     const wrapper = mount(compA)
     // find by DOM selector
     expect(wrapper.findAllComponents('.C')).toHaveLength(2)
-    expect(
-      wrapper.findAllComponents({ name: 'Hello' })[0].$el.textContent
-    ).toBe('Hello world')
-    expect(wrapper.findAllComponents(Hello)[0].$el.textContent).toBe(
+    expect(wrapper.findAllComponents({ name: 'Hello' })[0].text()).toBe(
       'Hello world'
     )
+    expect(wrapper.findAllComponents(Hello)[0].text()).toBe('Hello world')
   })
 })
