@@ -198,4 +198,23 @@ describe('mounting options: stubs', () => {
 
     expect(wrapper.html()).toBe('<foobar-stub></foobar-stub>')
   })
+
+  it('stubs a component with registered with strange casing', () => {
+    const FooBar = {
+      name: 'fooBar',
+      render: () => h('span', 'real foobar')
+    }
+    const Comp = {
+      render: () => h(FooBar)
+    }
+    const wrapper = mount(Comp, {
+      global: {
+        stubs: {
+          fooBar: true
+        }
+      }
+    })
+
+    expect(wrapper.html()).toBe('<foobar-stub></foobar-stub>')
+  })
 })

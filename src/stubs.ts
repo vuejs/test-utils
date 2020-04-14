@@ -17,12 +17,19 @@ export const createStub = (options: IStubOptions) => {
   return { name: tag, render }
 }
 
-const resolveComponentStubByName = (name: string, stubs: Record<any, any>) => {
-  const pascal = pascalCase(name)
-  const kebab = kebabCase(name)
+const resolveComponentStubByName = (
+  componentName: string,
+  stubs: Record<any, any>
+) => {
+  const componentPascalName = pascalCase(componentName)
+  const componentKebabName = kebabCase(componentName)
 
-  for (const [key, value] of Object.entries(stubs)) {
-    if (name === pascal || name === kebab) {
+  for (const [stubKey, value] of Object.entries(stubs)) {
+    if (
+      stubKey === componentPascalName ||
+      stubKey === componentKebabName ||
+      stubKey === componentName
+    ) {
       return value
     }
   }
@@ -30,9 +37,12 @@ const resolveComponentStubByName = (name: string, stubs: Record<any, any>) => {
 
 const isHTMLElement = (args: VNodeArgs) =>
   Array.isArray(args) && typeof args[0] === 'string'
+
 const isCommentOrFragment = (args: VNodeArgs) => typeof args[0] === 'symbol'
+
 const isParent = (args: VNodeArgs) =>
   typeof args[0] === 'object' && args[0]['name'] === 'VTU_COMPONENT'
+
 const isComponent = (args: VNodeArgs) => typeof args[0] === 'object'
 
 export function stubComponents(stubs: Record<any, any>) {
@@ -48,15 +58,15 @@ export function stubComponents(stubs: Record<any, any>) {
       }
 
       const stub = resolveComponentStubByName(name, stubs)
+
       // we return a stub by matching Vue's `h` function
       // where the signature is h(Component, props)
-
-      // default stub
+      // case 1: default stub
       if (stub === true) {
         return [createStub({ name }), {}]
       }
 
-      // custom implementation
+      // case 2: custom implementation
       if (typeof stub === 'object') {
         return [stubs[name], {}]
       }
