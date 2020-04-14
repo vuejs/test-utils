@@ -1,4 +1,7 @@
 import { transformVNodeArgs, h } from 'vue'
+import kebabCase from 'lodash/kebabCase'
+
+import { pascalCase } from './utils'
 
 interface IStubOptions {
   name?: string
@@ -14,6 +17,17 @@ export const createStub = (options: IStubOptions) => {
   return { name: tag, render }
 }
 
+const resolveComponentStubByName = (name: string, stubs: Record<any, any>) => {
+  const pascal = pascalCase(name)
+  const kebab = kebabCase(name)
+
+  for (const [key, value] of Object.entries(stubs)) {
+    if (name === pascal || name === kebab) {
+      return value
+    }
+  }
+}
+
 const isHTMLElement = (args: VNodeArgs) =>
   Array.isArray(args) && typeof args[0] === 'string'
 const isCommentOrFragment = (args: VNodeArgs) => typeof args[0] === 'symbol'
@@ -27,17 +41,22 @@ export function stubComponents(stubs: Record<any, any>) {
       return args
     }
 
-    if (isComponent(args) && args[0]['name'] in stubs) {
-      // return a stub component by matching Vue's `h` function
-      // where the signature is h(Component, props, children)
+    if (isComponent(args)) {
       const name = args[0]['name']
-      const stub = stubs[name]
+      if (!name) {
+        return args
+      }
+
+      const stub = resolveComponentStubByName(name, stubs)
+      // we return a stub by matching Vue's `h` function
+      // where the signature is h(Component, props)
 
       // default stub
       if (stub === true) {
         return [createStub({ name }), {}]
       }
 
+      // custom implementation
       if (typeof stub === 'object') {
         return [stubs[name], {}]
       }
