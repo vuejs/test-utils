@@ -20,8 +20,7 @@ export class VueWrapper<T extends ComponentPublicInstance>
     vm: ComponentPublicInstance,
     setProps?: (props: Record<string, any>) => void
   ) {
-    // TODO Remove cast after Vue releases the fix
-    this.rootVM = (vm.$root as any) as ComponentPublicInstance
+    this.rootVM = vm.$root
     this.componentVM = vm as T
     this.__setProps = setProps
   }
@@ -111,10 +110,9 @@ export class VueWrapper<T extends ComponentPublicInstance>
 
   setProps(props: Record<string, any>): Promise<void> {
     // if this VM's parent is not the root, error out
-    // TODO: Remove ignore after Vue releases fix
-    // @ts-ignore
-    if (this.vm.$parent !== this.rootVM)
+    if (this.vm.$parent !== this.rootVM) {
       throw Error('You can only use setProps on your mounted component')
+    }
     this.__setProps(props)
     return nextTick()
   }
