@@ -9,10 +9,11 @@ import {
   Plugin,
   Directive,
   Component,
-  reactive
+  reactive,
+  ComponentPublicInstance
 } from 'vue'
 
-import { createWrapper } from './vue-wrapper'
+import { createWrapper, VueWrapper } from './vue-wrapper'
 import { createEmitMixin } from './emitMixin'
 import { createDataMixin } from './dataMixin'
 import { MOUNT_ELEMENT_ID } from './constants'
@@ -40,7 +41,14 @@ interface MountingOptions {
   stubs?: Record<string, any>
 }
 
-export function mount(originalComponent: any, options?: MountingOptions) {
+export function mount<T extends any>(
+  originalComponent: any,
+  options?: MountingOptions
+): VueWrapper<any>
+export function mount<T extends ComponentPublicInstance>(
+  originalComponent: new () => T,
+  options?: MountingOptions
+): VueWrapper<T> {
   const component = { ...originalComponent }
 
   // Reset the document.body
@@ -66,7 +74,10 @@ export function mount(originalComponent: any, options?: MountingOptions) {
   // override component data with mounting options data
   if (options?.data) {
     const dataMixin = createDataMixin(options.data())
-    component.mixins = [...(component.mixins || []), dataMixin]
+    ;(component as any).mixins = [
+      ...((component as any).mixins || []),
+      dataMixin
+    ]
   }
 
   // we define props as reactive so that way when we update them with `setProps`
@@ -147,5 +158,5 @@ export function mount(originalComponent: any, options?: MountingOptions) {
   // mount the app!
   const app = vm.mount(el)
 
-  return createWrapper(app, events, setProps)
+  return createWrapper<T>(app, events, setProps)
 }
