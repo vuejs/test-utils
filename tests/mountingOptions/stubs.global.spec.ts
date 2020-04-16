@@ -4,6 +4,27 @@ import { mount } from '../../src'
 import Hello from '../components/Hello.vue'
 
 describe('mounting options: stubs', () => {
+  it('handles Array syntax', () => {
+    const Foo = {
+      name: 'Foo',
+      render() {
+        return h('p')
+      }
+    }
+    const Component: ComponentOptions = {
+      render() {
+        return h(() => [h('div'), h(Foo)])
+      }
+    }
+
+    const wrapper = mount(Component, {
+      global: {
+        stubs: ['foo']
+      }
+    })
+
+    expect(wrapper.html()).toBe('<div></div><foo-stub></foo-stub>')
+  })
   it('stubs in a fragment', () => {
     const Foo = {
       name: 'Foo',
