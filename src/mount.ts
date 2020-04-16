@@ -4,24 +4,26 @@ import {
   VNode,
   defineComponent,
   VNodeNormalizedChildren,
-  VNodeProps,
   ComponentOptions,
+  transformVNodeArgs,
   Plugin,
   Directive,
   Component,
-  getCurrentInstance
+  reactive,
+  ComponentPublicInstance
 } from 'vue'
 
-import { VueWrapper, createWrapper } from './vue-wrapper'
+import { createWrapper, VueWrapper } from './vue-wrapper'
 import { createEmitMixin } from './emitMixin'
 import { createDataMixin } from './dataMixin'
 import { MOUNT_ELEMENT_ID } from './constants'
+import { stubComponents } from './stubs'
 
 type Slot = VNode | string | { render: Function }
 
-interface MountingOptions<Props> {
+interface MountingOptions {
   data?: () => Record<string, unknown>
-  props?: Props
+  props?: Record<string, any>
   slots?: {
     default?: Slot
     [key: string]: Slot
@@ -30,6 +32,7 @@ interface MountingOptions<Props> {
     plugins?: Plugin[]
     mixins?: ComponentOptions[]
     mocks?: Record<string, any>
+    stubs?: Record<any, any>
     provide?: Record<any, any>
     // TODO how to type `defineComponent`? Using `any` for now.
     components?: Record<string, Component | object>
@@ -38,10 +41,14 @@ interface MountingOptions<Props> {
   stubs?: Record<string, any>
 }
 
-export function mount<P>(
+export function mount<T extends any>(
   originalComponent: any,
-  options?: MountingOptions<P>
-): VueWrapper {
+  options?: MountingOptions
+): VueWrapper<any>
+export function mount<T extends ComponentPublicInstance>(
+  originalComponent: new () => T,
+  options?: MountingOptions
+): VueWrapper<T> {
   const component = { ...originalComponent }
 
   // Reset the document.body
@@ -67,19 +74,34 @@ export function mount<P>(
   // override component data with mounting options data
   if (options?.data) {
     const dataMixin = createDataMixin(options.data())
-    component.mixins = [...(component.mixins || []), dataMixin]
+    ;(component as any).mixins = [
+      ...((component as any).mixins || []),
+      dataMixin
+    ]
   }
 
+  // we define props as reactive so that way when we update them with `setProps`
+  // Vue's reactivity system will cause a rerender.
+  const props = reactive({ ...options?.props, ref: 'VTU_COMPONENT' })
+
   // create the wrapper component
-  const Parent = (props?: VNodeProps) =>
-    defineComponent({
-      render() {
-        return h(component, { ...props, ref: 'VTU_COMPONENT' }, slots)
-      }
-    })
+  const Parent = defineComponent({
+    name: 'VTU_COMPONENT',
+    render() {
+      return h(component, props, slots)
+    }
+  })
+
+  const setProps = (newProps: Record<string, unknown>) => {
+    for (const [k, v] of Object.entries(newProps)) {
+      props[k] = v
+    }
+
+    return app.$nextTick()
+  }
 
   // create the vm
-  const vm = createApp(Parent(options && options.props))
+  const vm = createApp(Parent)
 
   // global mocks mixin
   if (options?.global?.mocks) {
@@ -126,8 +148,15 @@ export function mount<P>(
   const { emitMixin, events } = createEmitMixin()
   vm.mixin(emitMixin)
 
+  // stubs
+  if (options?.global?.stubs) {
+    stubComponents(options.global.stubs)
+  } else {
+    transformVNodeArgs()
+  }
+
   // mount the app!
   const app = vm.mount(el)
 
-  return createWrapper(app, events)
+  return createWrapper<T>(app, events, setProps)
 }

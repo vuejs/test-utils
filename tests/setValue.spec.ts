@@ -1,4 +1,4 @@
-import { defineComponent, h, ref } from 'vue'
+import { defineComponent, h } from 'vue'
 import { mount } from '../src'
 import ComponentWithInput from './components/ComponentWithInput.vue'
 

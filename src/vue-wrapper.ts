@@ -7,14 +7,21 @@ import { WrapperAPI } from './types'
 import { ErrorWrapper } from './error-wrapper'
 import { MOUNT_ELEMENT_ID } from './constants'
 
-export class VueWrapper implements WrapperAPI {
-  private componentVM: ComponentPublicInstance
+export class VueWrapper<T extends ComponentPublicInstance>
+  implements WrapperAPI {
+  private componentVM: T
   private __emitted: Record<string, unknown[]> = {}
   private __vm: ComponentPublicInstance
+  private __setProps: (props: Record<string, any>) => void
 
-  constructor(vm: ComponentPublicInstance, events: Record<string, unknown[]>) {
+  constructor(
+    vm: ComponentPublicInstance,
+    events: Record<string, unknown[]>,
+    setProps: (props: Record<string, any>) => void
+  ) {
     this.__vm = vm
-    this.componentVM = this.vm.$refs['VTU_COMPONENT'] as ComponentPublicInstance
+    this.__setProps = setProps
+    this.componentVM = this.__vm.$refs['VTU_COMPONENT'] as T
     this.__emitted = events
   }
 
@@ -36,8 +43,8 @@ export class VueWrapper implements WrapperAPI {
     return this.hasMultipleRoots ? this.parentElement : this.componentVM.$el
   }
 
-  get vm(): ComponentPublicInstance {
-    return this.__vm
+  get vm(): T {
+    return this.componentVM
   }
 
   classes(className?: string) {
@@ -74,9 +81,23 @@ export class VueWrapper implements WrapperAPI {
     return new ErrorWrapper({ selector })
   }
 
+  get<T extends Element>(selector: string): DOMWrapper<T> {
+    const result = this.find<T>(selector)
+    if (result instanceof ErrorWrapper) {
+      throw new Error(`Unable to find ${selector} within: ${this.html()}`)
+    }
+
+    return result
+  }
+
   findAll<T extends Element>(selector: string): DOMWrapper<T>[] {
     const results = this.appRootNode.querySelectorAll<T>(selector)
     return Array.from(results).map((x) => new DOMWrapper(x))
+  }
+
+  setProps(props: Record<string, any>) {
+    this.__setProps(props)
+    return nextTick()
   }
 
   setData(data: Record<string, any>) {
@@ -92,9 +113,10 @@ export class VueWrapper implements WrapperAPI {
   }
 }
 
-export function createWrapper(
+export function createWrapper<T extends ComponentPublicInstance>(
   vm: ComponentPublicInstance,
-  events: Record<string, unknown[]>
-): VueWrapper {
-  return new VueWrapper(vm, events)
+  events: Record<string, unknown[]>,
+  setProps: (props: Record<string, any>) => void
+): VueWrapper<T> {
+  return new VueWrapper<T>(vm, events, setProps)
 }

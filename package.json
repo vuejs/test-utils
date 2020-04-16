@@ -1,6 +1,6 @@
 {
   "name": "@vue/test-utils",
-  "version": "2.0.0-alpha.0",
+  "version": "2.0.0-alpha.1",
   "license": "MIT",
   "main": "dist/vue-test-utils.cjs.js",
   "browser": "dist/vue-test-utils.esm.js",
@@ -11,13 +11,18 @@
     "dist",
     "README.md"
   ],
+  "dependencies": {
+    "lodash": "^4.17.15"
+  },
   "devDependencies": {
     "@babel/core": "^7.9.0",
     "@babel/preset-env": "^7.8.4",
     "@babel/types": "^7.8.3",
+    "@rollup/plugin-node-resolve": "^7.1.3",
     "@types/estree": "^0.0.42",
     "@types/jest": "^24.9.1",
-    "@vue/compiler-sfc": "^3.0.0-alpha.12",
+    "@types/lodash": "^4.14.149",
+    "@vue/compiler-sfc": "^3.0.0-alpha.13",
     "babel-jest": "^25.2.3",
     "babel-preset-jest": "^25.2.1",
     "flush-promises": "^1.0.2",
@@ -29,13 +34,13 @@
     "rollup-plugin-typescript2": "^0.26.0",
     "ts-jest": "^25.0.0",
     "typescript": "^3.7.5",
-    "vue": "^3.0.0-alpha.12",
+    "vue": "^3.0.0-alpha.13",
     "vue-jest": "vuejs/vue-jest#next",
     "vuex": "^4.0.0-alpha.1"
   },
   "peerDependencies": {
-    "@vue/compiler-sfc": "3.0.0-alpha.11",
-    "vue": "3.0.0-alpha.11"
+    "@vue/compiler-sfc": "^3.0.0-alpha.11",
+    "vue": "^3.0.0-alpha.11"
   },
   "author": {
     "name": "Lachlan Miller",

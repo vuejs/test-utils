@@ -1,5 +1,3 @@
-import { defineComponent, Transition, h } from 'vue'
-
 import { WithTransition } from '../components/WithTransition'
 import { mount } from '../../src'
 
