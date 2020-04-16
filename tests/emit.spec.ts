@@ -44,7 +44,7 @@ describe('emitted', () => {
     expect(wrapper.emitted().hello[1]).toEqual(['foo', 'bar'])
   })
 
-  it.skip('captures events emitted via destructured emit', () => {
+  it('captures events emitted via destructured emit', () => {
     const Component = defineComponent({
       name: 'ContextEmit',
 
