@@ -136,13 +136,6 @@ export function mount<T extends ComponentPublicInstance>(
     }
   }
 
-  // mock globally available properties
-  if (global?.globalProperties) {
-    Object.entries(global.globalProperties).forEach(([key, value]) => {
-      vm.config.globalProperties[key] = value
-    })
-  }
-
   // add tracking for emitted events
   const { emitMixin, events } = createEmitMixin()
   vm.mixin(emitMixin)

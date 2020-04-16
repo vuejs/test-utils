@@ -8,7 +8,6 @@ describe('config', () => {
       directives: undefined,
       mixins: undefined,
       plugins: undefined,
-      globalProperties: undefined,
       mocks: undefined,
       provide: undefined
     }

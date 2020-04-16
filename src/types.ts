@@ -20,9 +20,7 @@ export type GlobalMountOptions = {
   mixins?: ComponentOptions[]
   mocks?: Record<string, any>
   provide?: Record<any, any>
-  // TODO how to type `defineComponent`? Using `any` for now.
   components?: Record<string, Component | object>
   directives?: Record<string, Directive>
-  globalProperties?: Record<any, any>
   stubs?: Record<any, any>
 }
