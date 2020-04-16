@@ -24,4 +24,5 @@ export type GlobalMountOptions = {
   components?: Record<string, Component | object>
   directives?: Record<string, Directive>
   globalProperties?: Record<any, any>
+  stubs?: Record<any, any>
 }
