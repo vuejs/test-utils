@@ -1,18 +1,19 @@
 import { mount } from '../src'
 import Hello from './components/Hello.vue'
+import { defineComponent } from 'vue'
 
-const compC = {
+const compC = defineComponent({
   name: 'ComponentC',
   template: '<div class="C">C</div>'
-}
-const compB = {
+})
+const compB = defineComponent({
   template: '<div class="B">TextBefore<comp-c/>TextAfter<comp-c/></div>',
   components: { compC }
-}
-const compA = {
+})
+const compA = defineComponent({
   template: '<div class="A"><comp-b ref="b"/><hello ref="b"/></div>',
   components: { compB, Hello }
-}
+})
 
 describe('findAllComponents', () => {
   it('finds all deeply nested vue components', () => {
