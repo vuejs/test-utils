@@ -9,5 +9,15 @@ const App = defineComponent({
   template: ''
 })
 
-const wrapper = mount(App)
-expectType<any>(wrapper.vm.a) // should be string
+let wrapper = mount(App)
+expectType<string>(wrapper.vm.a)
+
+const AppWithoutDefine = {
+  props: {
+    a: String
+  },
+  template: ''
+}
+
+wrapper = mount(AppWithoutDefine)
+expectType<string>(wrapper.vm.a)
