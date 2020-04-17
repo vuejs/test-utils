@@ -10,5 +10,5 @@ export interface WrapperAPI {
   findAll<T extends Element>(selector: string): DOMWrapper<T>[]
   html: () => string
   text: () => string
-  trigger: (eventString: string) => Promise<(fn?: () => void) => Promise<void>>
+  trigger: (eventString: string, options?: Object) => Promise<(fn?: () => void) => Promise<void>>
 }

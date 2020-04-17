@@ -3,6 +3,8 @@ import { nextTick } from 'vue'
 import { WrapperAPI } from './types'
 import { ErrorWrapper } from './error-wrapper'
 
+import createDOMEvent from './create-dom-event'
+
 export class DOMWrapper<ElementType extends Element> implements WrapperAPI {
   element: ElementType
 
@@ -134,12 +136,10 @@ export class DOMWrapper<ElementType extends Element> implements WrapperAPI {
     return new DOMWrapper(parentElement).trigger('change')
   }
 
-  async trigger(eventString: string) {
-    const evt = document.createEvent('Event')
-    evt.initEvent(eventString)
-
+  async trigger(eventString: string, options: Object = {}) {
     if (this.element) {
-      this.element.dispatchEvent(evt)
+      const event = createDOMEvent(eventString, options)
+      this.element.dispatchEvent(event)
     }
 
     return nextTick
