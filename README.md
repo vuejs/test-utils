@@ -79,6 +79,7 @@ exists | ✅
 find | ✅ | only `querySelector` syntax is supported. `find(Comp)` under discussion [here](https://github.com/vuejs/vue-test-utils/issues/1498)
 emitted | ✅
 findAll | ✅ | see above. `.vm` is different to Vue 2. We are exploring options.
+get | ✅
 html | ✅
 setValue | ✅ | works for select, checkbox, radio button, input, textarea. Returns `nextTick`.
 text | ✅ |
@@ -86,7 +87,6 @@ trigger | ✅ | returns `nextTick`. You can do `await wrapper.find('button').tri
 setProps | ✅ |
 setData | ❌ | has PR
 destroy | ❌
-get | ❌
 props | ❌
 contains | ⚰️| use `find` 
 emittedByOrder | ⚰️ | use `emitted`
