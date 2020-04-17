@@ -3,7 +3,6 @@ import { defineComponent, h, ref } from 'vue'
 import { mount } from '../src'
 
 describe('trigger', () => {
-
   describe('on click', () => {
     it('works on the root element', async () => {
       const Component = defineComponent({
@@ -12,18 +11,22 @@ describe('trigger', () => {
             count: ref(0)
           }
         },
-  
+
         render() {
-          return h('div', { onClick: () => this.count++ }, `Count: ${this.count}`)
+          return h(
+            'div',
+            { onClick: () => this.count++ },
+            `Count: ${this.count}`
+          )
         }
       })
-  
+
       const wrapper = mount(Component)
       await wrapper.trigger('click')
-  
+
       expect(wrapper.text()).toBe('Count: 1')
     })
-  
+
     it('works on a nested element', async () => {
       const Component = defineComponent({
         setup() {
@@ -31,7 +34,7 @@ describe('trigger', () => {
             count: ref(0)
           }
         },
-  
+
         render() {
           return h('div', {}, [
             h('p', {}, `Count: ${this.count}`),
@@ -39,10 +42,10 @@ describe('trigger', () => {
           ])
         }
       })
-  
+
       const wrapper = mount(Component)
       await wrapper.find('button').trigger('click')
-  
+
       expect(wrapper.find('p').text()).toBe('Count: 1')
     })
 
@@ -55,14 +58,14 @@ describe('trigger', () => {
         },
 
         render() {
-          return h('div', { 
-            onClick: () => this.isActive = !this.isActive,
-            class: { active: this.isActive } 
+          return h('div', {
+            onClick: () => (this.isActive = !this.isActive),
+            class: { active: this.isActive }
           })
         }
       })
       const wrapper = mount(Component, {})
-      
+
       expect(wrapper.classes()).not.toContain('active')
       await wrapper.trigger('click')
       expect(wrapper.classes()).toContain('active')
@@ -76,21 +79,21 @@ describe('trigger', () => {
         template: '<input @keydown="keydownHandler" />',
         methods: {
           keydownHandler
-        },
+        }
       }
       const wrapper = mount(Component, {})
       await wrapper.trigger('keydown')
 
       expect(keydownHandler).toHaveBeenCalledTimes(1)
     })
-    
+
     it('causes keydown handler to fire when "keydown.enter" is triggered', async () => {
       const keydownHandler = jest.fn()
       const Component = {
         template: '<input @keydown.enter="keydownHandler" />',
         methods: {
           keydownHandler
-        },
+        }
       }
       const wrapper = mount(Component, {})
       await wrapper.trigger('keydown', { key: 'Enter' })
@@ -104,7 +107,7 @@ describe('trigger', () => {
         template: '<input @keydown="keydownHandler" />',
         methods: {
           keydownHandler
-        },
+        }
       }
       const wrapper = mount(Component, {})
       await wrapper.trigger('keydown', { keyCode: 65 })
@@ -138,7 +141,7 @@ describe('trigger', () => {
         template: '<input @keydown="keydownHandler" />',
         methods: {
           keydownHandler
-        },
+        }
       }
       const wrapper = mount(Component, {})
 
@@ -147,9 +150,8 @@ describe('trigger', () => {
         wrapper.trigger(`keydown.${keyName}`)
 
         const calls = keydownHandler.mock.calls
-        expect(calls[calls.length-1][0].keyCode).toEqual(keyCode)
+        expect(calls[calls.length - 1][0].keyCode).toEqual(keyCode)
       }
     })
   })
 })
- 

@@ -20,7 +20,11 @@ const keyCodesByKeyName = {
 
 function getEventProperties(eventParams) {
   const { modifier, meta, options } = eventParams
-  const keyCode = keyCodesByKeyName[modifier] || options.key || options.keyCode || options.code
+  const keyCode =
+    keyCodesByKeyName[modifier] ||
+    options.key ||
+    options.keyCode ||
+    options.code
 
   return {
     ...options, // What the user passed in as the second argument to #trigger
@@ -38,9 +42,7 @@ function createEvent(eventParams) {
   const metaEventInterface = window[meta.eventInterface]
 
   const SupportedEventInterface =
-    typeof metaEventInterface === 'function'
-      ? metaEventInterface
-      : window.Event
+    typeof metaEventInterface === 'function' ? metaEventInterface : window.Event
 
   const eventProperties = getEventProperties(eventParams)
 
@@ -64,21 +66,27 @@ function createEventForOldBrowsers(eventParams) {
   return event
 }
 
-export default function createDOMEvent(eventString: String, options: Object = {}) {
+export default function createDOMEvent(
+  eventString: String,
+  options: Object = {}
+) {
   const [eventType, modifier] = eventString.split('.')
-  const meta = eventTypes[eventType]
-    || { eventInterface: 'Event', cancelable: true, bubbles: true }
+  const meta = eventTypes[eventType] || {
+    eventInterface: 'Event',
+    cancelable: true,
+    bubbles: true
+  }
 
   const eventParams = { eventType, modifier, meta, options }
 
-  const event = 
+  const event =
     typeof window.Event === 'function'
       ? createEvent(eventParams)
       : createEventForOldBrowsers(eventParams) // Fallback for IE10,11 - https://stackoverflow.com/questions/26596123
 
   const eventPrototype = Object.getPrototypeOf(event)
 
-  Object.keys(options).forEach(key => {
+  Object.keys(options).forEach((key) => {
     const propertyDescriptor = Object.getOwnPropertyDescriptor(
       eventPrototype,
       key
@@ -88,7 +96,7 @@ export default function createDOMEvent(eventString: String, options: Object = {}
       propertyDescriptor && propertyDescriptor.set === undefined
     )
     if (canSetProperty) {
-     event[key] = options[key]
+      event[key] = options[key]
     }
   })
 
