@@ -15,6 +15,17 @@ export interface WrapperAPI {
   trigger: (eventString: string) => Promise<(fn?: () => void) => Promise<void>>
 }
 
+interface RefSelector {
+  ref: string
+}
+
+interface NameSelector {
+  name: string
+}
+
+export type FindComponentSelector = RefSelector | NameSelector | string
+export type FindAllComponentsSelector = NameSelector | string
+
 export type GlobalMountOptions = {
   plugins?: Plugin[]
   mixins?: ComponentOptions[]

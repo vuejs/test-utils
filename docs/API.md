@@ -348,6 +348,85 @@ test('findAll', () => {
 })
 ```
 
+### `findComponent`
+
+Finds a Vue Component instance and returns a `VueWrapper` if one is found, otherwise returns `ErrorWrapper`.
+
+**Supported syntax:**
+ 
+* **querySelector** - `findComponent('.component')` - Matches standard query selector.
+* **Name** - `findComponent({ name: 'myComponent' })` - matches PascalCase, snake-case, camelCase
+* **ref** - `findComponent({ ref: 'dropdown' })` - Can be used only on direct ref children of mounted component
+* **SFC** - `findComponent(ImportedComponent)` - Pass an imported component directly.
+
+```vue
+<template>
+  <div class="foo">
+    Foo
+  </div>
+</template>
+<script>
+export default { name: 'Foo' }
+</script>
+``` 
+ 
+```vue
+<template>
+  <div>
+    <span>Span</span>
+    <Foo data-test="foo" ref="foo"/>
+  </div>
+</template>
+```
+
+```js
+test('find', () => {
+  const wrapper = mount(Component)
+
+  wrapper.find('.foo') //=> found; returns VueWrapper
+  wrapper.find('[data-test="foo"]') //=> found; returns VueWrapper
+  wrapper.find({ name: 'Foo' }) //=> found; returns VueWrapper
+  wrapper.find({ name: 'foo' }) //=> found; returns VueWrapper
+  wrapper.find({ ref: 'foo' }) //=> found; returns VueWrapper
+  wrapper.find(Foo) //=> found; returns VueWrapper
+})
+```
+
+### `findAllComponents`
+
+Similar to `findComponent` but finds all Vue Component instances that match the query and returns an array of `VueWrapper`. 
+
+**Supported syntax:**
+ 
+ * **querySelector** - `findAllComponents('.component')`
+ * **Name** - `findAllComponents({ name: 'myComponent' })`
+ * **SFC** - `findAllComponents(ImportedComponent)`
+ 
+**Note** - `Ref` is not supported here.
+ 
+ 
+```vue
+<template>
+  <div>
+    <FooComponent 
+      v-for="number in [1, 2, 3]"
+      :key="number"
+      data-test="number"
+    >
+      {{ number }}
+    </FooComponent>
+  </div>
+</template>
+```
+
+```js
+test('findAllComponents', () => {
+  const wrapper = mount(Component)
+
+  wrapper.findAllComponents('[data-test="number"]') //=> found; returns array of VueWrapper
+})
+```
+
 ### `trigger`
 
 Simulates an event, for example `click`, `submit` or `keyup`. Since events often cause a re-render, `trigger` returs `Vue.nextTick`. If you expect the event to trigger a re-render, you should use `await` when you call `trigger` to ensure that Vue updates the DOM before you make an assertion.

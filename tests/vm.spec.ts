@@ -5,6 +5,7 @@ import { mount } from '../src'
 describe('vm', () => {
   it('returns the component vm', () => {
     const Component = defineComponent({
+      name: 'VTUComponent',
       template: '<div>{{ msg }}</div>',
       setup() {
         const msg = 'hello'
