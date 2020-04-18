@@ -28,7 +28,6 @@ interface MountingOptions {
     [key: string]: Slot
   }
   global?: GlobalMountOptions
-  stubs?: Record<string, any>
 }
 
 export function mount<TestedComponent extends ComponentPublicInstance>(
