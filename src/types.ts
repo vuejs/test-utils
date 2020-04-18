@@ -12,3 +12,14 @@ export interface WrapperAPI {
   text: () => string
   trigger: (eventString: string) => Promise<(fn?: () => void) => Promise<void>>
 }
+
+interface RefSelector {
+  ref: string
+}
+
+interface NameSelector {
+  name: string
+}
+
+export type FindComponentSelector = RefSelector | NameSelector | string
+export type FindAllComponentsSelector = NameSelector | string
