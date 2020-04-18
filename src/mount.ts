@@ -6,7 +6,8 @@ import {
   VNodeNormalizedChildren,
   transformVNodeArgs,
   reactive,
-  ComponentPublicInstance
+  ComponentPublicInstance,
+  Component
 } from 'vue'
 
 import { config } from './config'
