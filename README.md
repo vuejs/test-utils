@@ -86,7 +86,7 @@ text | ✅ |
 trigger | ✅ | returns `nextTick`. You can do `await wrapper.find('button').trigger('click')`
 setProps | ✅ |
 setData | ❌ | has PR
-destroy | ❌
+destroy | ✅ | renamed to `unmount` to match vue3 Lifecycle hook name.
 props | ❌
 contains | ⚰️| use `find` 
 emittedByOrder | ⚰️ | use `emitted`
