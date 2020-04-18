@@ -20,18 +20,13 @@ const keyCodesByKeyName = {
 
 function getEventProperties(eventParams) {
   const { modifier, meta, options } = eventParams
-  const keyCode =
-    keyCodesByKeyName[modifier] ||
-    options.key ||
-    options.keyCode ||
-    options.code
+  const keyCode = keyCodesByKeyName[modifier] || options.keyCode || options.code
 
   return {
     ...options, // What the user passed in as the second argument to #trigger
     bubbles: meta.bubbles,
     meta: meta.cancelable,
     // Any derived options should go here
-    key: keyCode,
     keyCode,
     code: keyCode
   }
@@ -95,6 +90,7 @@ export default function createDOMEvent(
     const canSetProperty = !(
       propertyDescriptor && propertyDescriptor.set === undefined
     )
+
     if (canSetProperty) {
       event[key] = options[key]
     }

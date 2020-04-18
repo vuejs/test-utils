@@ -137,7 +137,35 @@ export class DOMWrapper<ElementType extends Element> implements WrapperAPI {
   }
 
   async trigger(eventString: string, options: Object = {}) {
-    if (this.element) {
+    if (options['target']) {
+      throw Error(
+        `[vue-test-utils]: you cannot set the target value of an event. See the notes section ` +
+          `of the docs for more details—` +
+          `https://vue-test-utils.vuejs.org/api/wrapper/trigger.html`
+      )
+    }
+
+    const isDisabled = () => {
+      const validTagsToBeDisabled = [
+        'BUTTON',
+        'COMMAND',
+        'FIELDSET',
+        'KEYGEN',
+        'OPTGROUP',
+        'OPTION',
+        'SELECT',
+        'TEXTAREA',
+        'INPUT'
+      ]
+      const hasDisabledAttribute = this.attributes().disabled !== undefined
+      const elementCanBeDisabled = validTagsToBeDisabled.includes(
+        this.element.tagName
+      )
+
+      return hasDisabledAttribute && elementCanBeDisabled
+    }
+
+    if (this.element && !isDisabled()) {
       const event = createDOMEvent(eventString, options)
       this.element.dispatchEvent(event)
     }
