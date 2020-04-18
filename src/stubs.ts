@@ -23,6 +23,14 @@ const resolveComponentStubByName = (
   const componentPascalName = pascalCase(componentName)
   const componentKebabName = kebabCase(componentName)
 
+  if (Array.isArray(stubs) && stubs.length) {
+    // ['Foo', 'Bar'] => { Foo: true, Bar: true }
+    stubs = stubs.reduce((acc, current) => {
+      acc[current] = true
+      return acc
+    }, {})
+  }
+
   for (const [stubKey, value] of Object.entries(stubs)) {
     if (
       stubKey === componentPascalName ||

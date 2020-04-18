@@ -45,14 +45,18 @@ interface MountingOptions {
   stubs?: Record<string, any>
 }
 
-export function mount<T extends any>(
-  originalComponent: any,
+export function mount<TestedComponent extends ComponentPublicInstance>(
+  originalComponent: new () => TestedComponent,
+  options?: MountingOptions
+): VueWrapper<TestedComponent>
+export function mount(
+  originalComponent: Component,
   options?: MountingOptions
 ): VueWrapper<any>
-export function mount<T extends ComponentPublicInstance>(
-  originalComponent: new () => T,
+export function mount(
+  originalComponent: any,
   options?: MountingOptions
-): VueWrapper<T> {
+): VueWrapper<any> {
   const component = { ...originalComponent }
 
   // Reset the document.body
@@ -161,5 +165,5 @@ export function mount<T extends ComponentPublicInstance>(
   // mount the app!
   const app = vm.mount(el)
   const App = app.$refs[MOUNT_COMPONENT_REF] as T
-  return createWrapper<T>(App, setProps)
+  return createWrapper(App, setProps)
 }

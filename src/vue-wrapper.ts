@@ -43,6 +43,12 @@ export class VueWrapper<T extends ComponentPublicInstance>
     return this.componentVM
   }
 
+  props(selector?: string) {
+    return selector
+      ? this.componentVM.$props[selector]
+      : this.componentVM.$props
+  }
+
   classes(className?: string) {
     return new DOMWrapper(this.element).classes(className)
   }
