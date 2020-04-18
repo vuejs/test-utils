@@ -1,4 +1,4 @@
-import { ComponentPublicInstance, nextTick } from 'vue'
+import { ComponentPublicInstance, nextTick, App } from 'vue'
 import { ShapeFlags } from '@vue/shared'
 
 import { DOMWrapper } from './dom-wrapper'
@@ -9,15 +9,18 @@ import { MOUNT_ELEMENT_ID } from './constants'
 export class VueWrapper<T extends ComponentPublicInstance>
   implements WrapperAPI {
   private componentVM: T
+  private __app: App
   private __emitted: Record<string, unknown[]> = {}
   private __vm: ComponentPublicInstance
   private __setProps: (props: Record<string, any>) => void
 
   constructor(
+    app: App,
     vm: ComponentPublicInstance,
     events: Record<string, unknown[]>,
     setProps: (props: Record<string, any>) => void
   ) {
+    this.__app = app
     this.__vm = vm
     this.__setProps = setProps
     this.componentVM = this.__vm.$refs['VTU_COMPONENT'] as T
@@ -109,12 +112,20 @@ export class VueWrapper<T extends ComponentPublicInstance>
     const rootElementWrapper = new DOMWrapper(this.element)
     return rootElementWrapper.trigger(eventString)
   }
+
+  unmount() {
+    if (this.parentElement) {
+      this.parentElement.removeChild(this.element)
+    }
+    this.__app.unmount(this.element)
+  }
 }
 
 export function createWrapper<T extends ComponentPublicInstance>(
+  app: App,
   vm: ComponentPublicInstance,
   events: Record<string, unknown[]>,
   setProps: (props: Record<string, any>) => void
 ): VueWrapper<T> {
-  return new VueWrapper<T>(vm, events, setProps)
+  return new VueWrapper<T>(app, vm, events, setProps)
 }
