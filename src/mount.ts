@@ -164,6 +164,6 @@ export function mount(
 
   // mount the app!
   const app = vm.mount(el)
-  const App = app.$refs[MOUNT_COMPONENT_REF] as T
+  const App = app.$refs[MOUNT_COMPONENT_REF] as ComponentPublicInstance
   return createWrapper(App, setProps)
 }
