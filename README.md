@@ -59,7 +59,7 @@ mixins | ✅ | (new!) nested in [`global`](https://vuejs.github.io/vue-test-util
 plugins | ✅ | (new!) nested in [`global`](https://vuejs.github.io/vue-test-utils-next-docs/api/#global)
 component | ✅ | (new!) nested in [`global`](https://vuejs.github.io/vue-test-utils-next-docs/api/#global)
 directives | ✅ | (new!) nested in [`global`](https://vuejs.github.io/vue-test-utils-next-docs/api/#global)
-stubs | ❌ 
+stubs | ✅ 
 attachToDocument | ❌| will rename to `attachTo`. See [here](https://github.com/vuejs/vue-test-utils/pull/1492)
 attrs | ❌ |
 scopedSlots | ⚰️ | scopedSlots are merged with slots in Vue 3
@@ -79,15 +79,15 @@ exists | ✅
 find | ✅ | only `querySelector` syntax is supported. `find(Comp)` under discussion [here](https://github.com/vuejs/vue-test-utils/issues/1498)
 emitted | ✅
 findAll | ✅ | see above. `.vm` is different to Vue 2. We are exploring options.
+get | ✅
 html | ✅
 setValue | ✅ | works for select, checkbox, radio button, input, textarea. Returns `nextTick`.
 text | ✅ |
 trigger | ✅ | returns `nextTick`. You can do `await wrapper.find('button').trigger('click')`
 setProps | ✅ |
+props | ✅
 setData | ❌ | has PR
 destroy | ❌
-get | ❌
-props | ❌
 contains | ⚰️| use `find` 
 emittedByOrder | ⚰️ | use `emitted`
 setSelected | ⚰️ | now part of `setValue` 

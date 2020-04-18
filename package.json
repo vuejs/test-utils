@@ -9,7 +9,8 @@
   "module": "dist/vue-test-utils.esm-bundler.js",
   "files": [
     "dist",
-    "README.md"
+    "README.md",
+    "dist/index.d.ts"
   ],
   "dependencies": {
     "lodash": "^4.17.15"
@@ -21,8 +22,9 @@
     "@rollup/plugin-node-resolve": "^7.1.3",
     "@types/estree": "^0.0.42",
     "@types/jest": "^24.9.1",
+    "@types/node": "12.12.35",
     "@types/lodash": "^4.14.149",
-    "@vue/compiler-sfc": "^3.0.0-alpha.13",
+    "@vue/compiler-sfc": "^3.0.0-beta.2",
     "babel-jest": "^25.2.3",
     "babel-preset-jest": "^25.2.1",
     "flush-promises": "^1.0.2",
@@ -33,8 +35,9 @@
     "rollup": "^1.31.1",
     "rollup-plugin-typescript2": "^0.26.0",
     "ts-jest": "^25.0.0",
+    "tsd": "0.11.0",
     "typescript": "^3.7.5",
-    "vue": "^3.0.0-alpha.13",
+    "vue": "^3.0.0-beta.2",
     "vue-jest": "vuejs/vue-jest#next",
     "vuex": "^4.0.0-alpha.1"
   },
@@ -48,6 +51,7 @@
   },
   "scripts": {
     "test": "yarn jest --runInBand tests",
+    "tsd": "tsd",
     "build": "yarn rollup -c rollup.config.js",
     "lint": "prettier -c --parser typescript \"(src|tests)/**/*.ts?(x)\"",
     "lint:fix": "yarn lint --write"
@@ -61,5 +65,12 @@
     "*.ts": [
       "prettier --parser=typescript --write"
     ]
+  },
+  "tsd": {
+    "directory": "test-dts",
+    "compilerOptions": {
+      "strict": false,
+      "lib": ["esnext", "dom"]
+    }
   }
 }
