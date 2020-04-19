@@ -3,7 +3,7 @@ import { nextTick } from 'vue'
 import { WrapperAPI } from './types'
 import { ErrorWrapper } from './error-wrapper'
 
-import createDOMEvent from './create-dom-event'
+import { TriggerOptions, createDOMEvent } from './create-dom-event'
 
 export class DOMWrapper<ElementType extends Element> implements WrapperAPI {
   element: ElementType
@@ -136,8 +136,8 @@ export class DOMWrapper<ElementType extends Element> implements WrapperAPI {
     return new DOMWrapper(parentElement).trigger('change')
   }
 
-  async trigger(eventString: string, options: Object = {}) {
-    if (options['target']) {
+  async trigger(eventString: string, options?: TriggerOptions) {
+    if (options && options['target']) {
       throw Error(
         `[vue-test-utils]: you cannot set the target value of an event. See the notes section ` +
           `of the docs for more details—` +

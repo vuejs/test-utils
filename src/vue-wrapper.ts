@@ -5,6 +5,7 @@ import { DOMWrapper } from './dom-wrapper'
 import { WrapperAPI } from './types'
 import { ErrorWrapper } from './error-wrapper'
 import { MOUNT_ELEMENT_ID } from './constants'
+import { TriggerOptions } from './create-dom-event'
 
 export class VueWrapper<T extends ComponentPublicInstance>
   implements WrapperAPI {
@@ -105,7 +106,7 @@ export class VueWrapper<T extends ComponentPublicInstance>
     return nextTick()
   }
 
-  trigger(eventString: string, options: Object = {}) {
+  trigger(eventString: string, options?: TriggerOptions) {
     const rootElementWrapper = new DOMWrapper(this.element)
     return rootElementWrapper.trigger(eventString, options)
   }

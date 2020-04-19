@@ -1,5 +1,19 @@
 import eventTypes from 'dom-event-types'
 
+interface TriggerOptions {
+  code?: String
+  key?: String
+  keyCode?: Number
+  [custom: string]: any
+}
+
+interface EventParams {
+  eventType: string
+  modifier: string
+  meta: any
+  options?: TriggerOptions
+}
+
 const keyCodesByKeyName = {
   backspace: 8,
   tab: 9,
@@ -18,9 +32,11 @@ const keyCodesByKeyName = {
   delete: 46
 }
 
-function getEventProperties(eventParams) {
+function getEventProperties(eventParams: EventParams) {
   const { modifier, meta, options } = eventParams
-  const keyCode = keyCodesByKeyName[modifier] || options.keyCode || options.code
+  const keyCode =
+    keyCodesByKeyName[modifier] ||
+    (options && (options.keyCode || options.code))
 
   return {
     ...options, // What the user passed in as the second argument to #trigger
@@ -32,7 +48,7 @@ function getEventProperties(eventParams) {
   }
 }
 
-function createEvent(eventParams) {
+function createEvent(eventParams: EventParams) {
   const { eventType, meta } = eventParams
   const metaEventInterface = window[meta.eventInterface]
 
@@ -51,10 +67,7 @@ function createEvent(eventParams) {
   return event
 }
 
-export default function createDOMEvent(
-  eventString: String,
-  options: Object = {}
-) {
+function createDOMEvent(eventString: String, options?: TriggerOptions) {
   const [eventType, modifier] = eventString.split('.')
   const meta = eventTypes[eventType] || {
     eventInterface: 'Event',
@@ -62,26 +75,24 @@ export default function createDOMEvent(
     bubbles: true
   }
 
-  const eventParams = { eventType, modifier, meta, options }
-
-  const event = createEvent(eventParams)
-
+  const eventParams: EventParams = { eventType, modifier, meta, options }
+  const event: Event = createEvent(eventParams)
   const eventPrototype = Object.getPrototypeOf(event)
 
-  Object.keys(options).forEach((key) => {
-    const propertyDescriptor = Object.getOwnPropertyDescriptor(
-      eventPrototype,
-      key
-    )
-
-    const canSetProperty = !(
-      propertyDescriptor && propertyDescriptor.set === undefined
-    )
-
-    if (canSetProperty) {
-      event[key] = options[key]
-    }
-  })
-
+  options &&
+    Object.keys(options).forEach((key) => {
+      const propertyDescriptor = Object.getOwnPropertyDescriptor(
+        eventPrototype,
+        key
+      )
+      const canSetProperty = !(
+        propertyDescriptor && propertyDescriptor.set === undefined
+      )
+      if (canSetProperty) {
+        event[key] = options[key]
+      }
+    })
   return event
 }
+
+export { TriggerOptions, createDOMEvent }
