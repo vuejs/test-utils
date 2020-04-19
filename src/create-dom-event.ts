@@ -51,16 +51,6 @@ function createEvent(eventParams) {
   return event
 }
 
-function createEventForOldBrowsers(eventParams) {
-  const { eventType, modifier, meta } = eventParams
-  const { bubbles, cancelable } = meta
-
-  const event = document.createEvent('Event')
-  event.initEvent(eventType, bubbles, cancelable)
-  event['keyCode'] = keyCodesByKeyName[modifier]
-  return event
-}
-
 export default function createDOMEvent(
   eventString: String,
   options: Object = {}
@@ -74,10 +64,7 @@ export default function createDOMEvent(
 
   const eventParams = { eventType, modifier, meta, options }
 
-  const event =
-    typeof window.Event === 'function'
-      ? createEvent(eventParams)
-      : createEventForOldBrowsers(eventParams) // Fallback for IE10,11 - https://stackoverflow.com/questions/26596123
+  const event = createEvent(eventParams)
 
   const eventPrototype = Object.getPrototypeOf(event)
 
