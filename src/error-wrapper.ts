@@ -55,4 +55,8 @@ export class ErrorWrapper {
   trigger() {
     throw this.wrapperError('trigger')
   }
+
+  unmount() {
+    throw this.wrapperError('unmount')
+  }
 }

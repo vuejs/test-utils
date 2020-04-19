@@ -5,7 +5,8 @@ import {
   nextTick,
   onBeforeMount,
   onUnmounted,
-  onBeforeUnmount
+  onBeforeUnmount,
+  ref
 } from 'vue'
 
 import { mount } from '../src'
@@ -53,10 +54,19 @@ describe('lifecycles', () => {
     expect(onBeforeUnmountFn).not.toHaveBeenCalled()
     expect(onUnmountFn).not.toHaveBeenCalled()
 
+    const removeChildSpy = jest.spyOn(
+      wrapper.element.parentElement,
+      'removeChild'
+    )
+
+    const el = wrapper.element
+
     wrapper.unmount()
 
     expect(beforeUnmountFn).toHaveBeenCalled()
     expect(onBeforeUnmountFn).toHaveBeenCalled()
     expect(onUnmountFn).toHaveBeenCalled()
+
+    expect(removeChildSpy).toHaveBeenCalledWith(el)
   })
 })

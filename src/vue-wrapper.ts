@@ -1,4 +1,4 @@
-import { ComponentPublicInstance, nextTick, App } from 'vue'
+import { ComponentPublicInstance, nextTick, App, render } from 'vue'
 import { ShapeFlags } from '@vue/shared'
 
 import { DOMWrapper } from './dom-wrapper'
@@ -14,11 +14,11 @@ export class VueWrapper<T extends ComponentPublicInstance>
   implements WrapperAPI {
   private componentVM: T
   private rootVM: ComponentPublicInstance
-  private __app: App
+  private __app: App | null
   private __setProps: (props: Record<string, any>) => void
 
   constructor(
-    app: App,
+    app: App | null,
     vm: ComponentPublicInstance,
     setProps?: (props: Record<string, any>) => void
   ) {
@@ -99,15 +99,15 @@ export class VueWrapper<T extends ComponentPublicInstance>
 
   findComponent(selector: FindComponentSelector): VueWrapper<T> | ErrorWrapper {
     if (typeof selector === 'object' && 'ref' in selector) {
-      return createWrapper(this.vm.$refs[selector.ref] as T)
+      return createWrapper(null, this.vm.$refs[selector.ref] as T)
     }
     const result = find(this.vm.$.subTree, selector)
     if (!result.length) return new ErrorWrapper({ selector })
-    return createWrapper(result[0])
+    return createWrapper(null, result[0])
   }
 
   findAllComponents(selector: FindAllComponentsSelector): VueWrapper<T>[] {
-    return find(this.vm.$.subTree, selector).map((c) => createWrapper(c))
+    return find(this.vm.$.subTree, selector).map((c) => createWrapper(null, c))
   }
 
   findAll<T extends Element>(selector: string): DOMWrapper<T>[] {
@@ -130,6 +130,13 @@ export class VueWrapper<T extends ComponentPublicInstance>
   }
 
   unmount() {
+    // preventing dispose of child component
+    if (!this.__app) {
+      throw new Error(
+        `wrapper.unmount() can only be called by the root wrapper`
+      )
+    }
+
     if (this.parentElement) {
       this.parentElement.removeChild(this.element)
     }

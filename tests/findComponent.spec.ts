@@ -86,4 +86,9 @@ describe('findComponent', () => {
     expect(wrapper.findComponent(Hello).text()).toBe('Hello world')
     expect(wrapper.findComponent(compC).text()).toBe('C')
   })
+
+  it('throw error if trying to unmount component from find', () => {
+    const wrapper = mount(compA)
+    expect(wrapper.findComponent(Hello).unmount).toThrowError()
+  })
 })
