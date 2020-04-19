@@ -14,9 +14,13 @@ import {
 } from 'vue'
 
 import { createWrapper, VueWrapper } from './vue-wrapper'
-import { createEmitMixin } from './emitMixin'
+import { attachEmitListener } from './emitMixin'
 import { createDataMixin } from './dataMixin'
-import { MOUNT_ELEMENT_ID } from './constants'
+import {
+  MOUNT_COMPONENT_REF,
+  MOUNT_ELEMENT_ID,
+  MOUNT_PARENT_NAME
+} from './constants'
 import { stubComponents } from './stubs'
 
 type Slot = VNode | string | { render: Function }
@@ -86,11 +90,11 @@ export function mount(
 
   // we define props as reactive so that way when we update them with `setProps`
   // Vue's reactivity system will cause a rerender.
-  const props = reactive({ ...options?.props, ref: 'VTU_COMPONENT' })
+  const props = reactive({ ...options?.props, ref: MOUNT_COMPONENT_REF })
 
   // create the wrapper component
   const Parent = defineComponent({
-    name: 'VTU_COMPONENT',
+    name: MOUNT_PARENT_NAME,
     render() {
       return h(component, props, slots)
     }
@@ -149,8 +153,7 @@ export function mount(
   }
 
   // add tracking for emitted events
-  const { emitMixin, events } = createEmitMixin()
-  app.mixin(emitMixin)
+  app.mixin(attachEmitListener())
 
   // stubs
   if (options?.global?.stubs) {
@@ -162,5 +165,6 @@ export function mount(
   // mount the app!
   const vm = app.mount(el)
 
-  return createWrapper(app, vm, events, setProps)
+  const App = vm.$refs[MOUNT_COMPONENT_REF] as ComponentPublicInstance
+  return createWrapper(app, App, setProps)
 }
