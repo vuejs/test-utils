@@ -1,6 +1,6 @@
 import { transformVNodeArgs, h } from 'vue'
-
-import { pascalCase, kebabCase } from './utils'
+import { hyphenate } from '@vue/shared'
+import { matchName } from './utils/matchName'
 
 interface IStubOptions {
   name?: string
@@ -9,20 +9,18 @@ interface IStubOptions {
 // TODO: figure out how to type this
 type VNodeArgs = any[]
 
-export const createStub = (options: IStubOptions) => {
-  const tag = options.name ? `${options.name}-stub` : 'anonymous-stub'
+export const createStub = ({ name }: IStubOptions) => {
+  const anonName = 'anonymous-stub'
+  const tag = name ? `${hyphenate(name)}-stub` : anonName
   const render = () => h(tag)
 
-  return { name: tag, render }
+  return { name: name || anonName, render }
 }
 
 const resolveComponentStubByName = (
   componentName: string,
   stubs: Record<any, any>
 ) => {
-  const componentPascalName = pascalCase(componentName)
-  const componentKebabName = kebabCase(componentName)
-
   if (Array.isArray(stubs) && stubs.length) {
     // ['Foo', 'Bar'] => { Foo: true, Bar: true }
     stubs = stubs.reduce((acc, current) => {
@@ -32,28 +30,26 @@ const resolveComponentStubByName = (
   }
 
   for (const [stubKey, value] of Object.entries(stubs)) {
-    if (
-      stubKey === componentPascalName ||
-      stubKey === componentKebabName ||
-      stubKey === componentName
-    ) {
+    if (matchName(componentName, stubKey)) {
       return value
     }
   }
 }
 
-const isHTMLElement = (args: VNodeArgs) =>
-  Array.isArray(args) && typeof args[0] === 'string'
+const isHTMLElement = (args: VNodeArgs) => typeof args[0] === 'string'
 
 const isCommentOrFragment = (args: VNodeArgs) => typeof args[0] === 'symbol'
 
 const isParent = (args: VNodeArgs) =>
-  typeof args[0] === 'object' && args[0]['name'] === 'VTU_COMPONENT'
+  isComponent(args) && args[0]['name'] === 'VTU_COMPONENT'
 
 const isComponent = (args: VNodeArgs) => typeof args[0] === 'object'
 
+const isFunctionalComponent = ([type]: VNodeArgs) =>
+  typeof type === 'function' && ('name' in type || 'displayName' in type)
+
 export function stubComponents(stubs: Record<any, any>) {
-  transformVNodeArgs((args) => {
+  transformVNodeArgs((args, componentInstance) => {
     // args[0] can either be:
     // 1. a HTML tag (div, span...)
     // 2. An object of component options, such as { name: 'foo', render: [Function], props: {...} }
@@ -62,8 +58,9 @@ export function stubComponents(stubs: Record<any, any>) {
       return args
     }
 
-    if (isComponent(args)) {
-      const name = args[0]['name']
+    if (isComponent(args) || isFunctionalComponent(args)) {
+      const [type, props, children, patchFlag, dynamicProps] = args
+      const name = type['name'] || type['displayName']
       if (!name) {
         return args
       }
@@ -71,15 +68,16 @@ export function stubComponents(stubs: Record<any, any>) {
       const stub = resolveComponentStubByName(name, stubs)
 
       // we return a stub by matching Vue's `h` function
-      // where the signature is h(Component, props)
+      // where the signature is h(Component, props, slots)
       // case 1: default stub
       if (stub === true) {
-        return [createStub({ name }), {}]
+        return [createStub({ name }), props, {}, patchFlag, dynamicProps]
       }
 
       // case 2: custom implementation
       if (typeof stub === 'object') {
-        return [stubs[name], {}]
+        // pass the props and children, for advanced stubbing
+        return [stubs[name], props, children, patchFlag, dynamicProps]
       }
     }
 
