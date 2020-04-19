@@ -78,9 +78,16 @@ export class VueWrapper<T extends ComponentPublicInstance>
     return this.element.textContent?.trim()
   }
 
-  find<T extends Element>(selector: string): DOMWrapper<T> | ErrorWrapper {
+  find<K extends keyof HTMLElementTagNameMap>(
+    selector: K
+  ): DOMWrapper<HTMLElementTagNameMap[K]> | ErrorWrapper
+  find<K extends keyof SVGElementTagNameMap>(
+    selector: K
+  ): DOMWrapper<SVGElementTagNameMap[K]> | ErrorWrapper
+  find<T extends Element>(selector: string): DOMWrapper<T> | ErrorWrapper
+  find(selector: string): DOMWrapper<Element> | ErrorWrapper {
     // force using the parentElement to allow finding the root element
-    const result = this.parentElement.querySelector(selector) as T
+    const result = this.parentElement.querySelector(selector)
     if (result) {
       return new DOMWrapper(result)
     }
@@ -88,8 +95,15 @@ export class VueWrapper<T extends ComponentPublicInstance>
     return new ErrorWrapper({ selector })
   }
 
-  get<T extends Element>(selector: string): DOMWrapper<T> {
-    const result = this.find<T>(selector)
+  get<K extends keyof HTMLElementTagNameMap>(
+    selector: K
+  ): DOMWrapper<HTMLElementTagNameMap[K]>
+  get<K extends keyof SVGElementTagNameMap>(
+    selector: K
+  ): DOMWrapper<SVGElementTagNameMap[K]>
+  get<T extends Element>(selector: string): DOMWrapper<T>
+  get(selector: string): DOMWrapper<Element> {
+    const result = this.find(selector)
     if (result instanceof ErrorWrapper) {
       throw new Error(`Unable to find ${selector} within: ${this.html()}`)
     }
@@ -110,9 +124,16 @@ export class VueWrapper<T extends ComponentPublicInstance>
     return find(this.vm.$.subTree, selector).map((c) => createWrapper(null, c))
   }
 
-  findAll<T extends Element>(selector: string): DOMWrapper<T>[] {
-    const results = this.parentElement.querySelectorAll<T>(selector)
-    return Array.from(results).map((x) => new DOMWrapper(x))
+  findAll<K extends keyof HTMLElementTagNameMap>(
+    selector: K
+  ): DOMWrapper<HTMLElementTagNameMap[K]>[]
+  findAll<K extends keyof SVGElementTagNameMap>(
+    selector: K
+  ): DOMWrapper<SVGElementTagNameMap[K]>[]
+  findAll<T extends Element>(selector: string): DOMWrapper<T>[]
+  findAll(selector: string): DOMWrapper<Element>[] {
+    const results = this.parentElement.querySelectorAll(selector)
+    return Array.from(results).map((element) => new DOMWrapper(element))
   }
 
   setProps(props: Record<string, any>): Promise<void> {
