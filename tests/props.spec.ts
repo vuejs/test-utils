@@ -23,11 +23,15 @@ describe('props', () => {
     expect(wrapper.props()).toEqual({})
   })
 
-  it('returns empty props on a stubbed component with boolean', () => {
+  it('returns applied props on a stubbed component with boolean', () => {
     const Foo = {
       name: 'Foo',
       template: 'Foo',
-      props: ['foo', 'bar', 'object']
+      props: {
+        foo: String,
+        bar: Boolean,
+        object: Object
+      }
     }
     const Component = {
       data: () => ({ object: {} }),
@@ -39,7 +43,11 @@ describe('props', () => {
         stubs: ['Foo']
       }
     })
-    expect(wrapper.findComponent({ name: 'Foo' }).props()).toEqual({})
+    expect(wrapper.findComponent({ name: 'Foo' }).props()).toEqual({
+      bar: true,
+      foo: 'foo',
+      object: {}
+    })
   })
 
   it('returns props on a stubbed component with a custom implementation', () => {

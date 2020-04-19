@@ -4,17 +4,18 @@ import { matchName } from './utils/matchName'
 
 interface IStubOptions {
   name?: string
+  props: any
 }
 
 // TODO: figure out how to type this
 type VNodeArgs = any[]
 
-export const createStub = ({ name }: IStubOptions) => {
+export const createStub = ({ name, props }: IStubOptions) => {
   const anonName = 'anonymous-stub'
   const tag = name ? `${hyphenate(name)}-stub` : anonName
   const render = () => h(tag)
 
-  return { name: name || anonName, render }
+  return { name: name || anonName, render, props }
 }
 
 const resolveComponentStubByName = (
@@ -49,7 +50,7 @@ const isFunctionalComponent = ([type]: VNodeArgs) =>
   typeof type === 'function' && ('name' in type || 'displayName' in type)
 
 export function stubComponents(stubs: Record<any, any>) {
-  transformVNodeArgs((args, componentInstance) => {
+  transformVNodeArgs((args) => {
     // args[0] can either be:
     // 1. a HTML tag (div, span...)
     // 2. An object of component options, such as { name: 'foo', render: [Function], props: {...} }
@@ -71,7 +72,15 @@ export function stubComponents(stubs: Record<any, any>) {
       // where the signature is h(Component, props, slots)
       // case 1: default stub
       if (stub === true) {
-        return [createStub({ name }), props, {}, patchFlag, dynamicProps]
+        // @ts-ignore
+        const propsDeclaration = type?.props || {}
+        return [
+          createStub({ name, props: propsDeclaration }),
+          props,
+          {},
+          patchFlag,
+          dynamicProps
+        ]
       }
 
       // case 2: custom implementation
