@@ -5,4 +5,8 @@ import flow from 'lodash/flow'
 
 const pascalCase = flow(camelCase, upperFirst)
 
-export { kebabCase, pascalCase }
+function isString(val: unknown): val is String {
+  return typeof val === 'string'
+}
+
+export { kebabCase, pascalCase, isString }

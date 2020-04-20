@@ -26,6 +26,7 @@ import {
   MOUNT_PARENT_NAME
 } from './constants'
 import { stubComponents } from './stubs'
+import { isString } from './utils'
 
 type Slot = VNode | string | { render: Function }
 
@@ -47,6 +48,7 @@ interface MountingOptions<Props> {
     directives?: Record<string, Directive>
   }
   stubs?: Record<string, any>
+  attachTo?: HTMLElement | string
 }
 
 // Component declared with defineComponent
@@ -87,10 +89,21 @@ export function mount(
 ): VueWrapper<any> {
   const component = { ...originalComponent }
 
-  // Reset the document.body
-  document.getElementsByTagName('html')[0].innerHTML = ''
   const el = document.createElement('div')
   el.id = MOUNT_ELEMENT_ID
+
+  if (options?.attachTo) {
+    const to = isString(options.attachTo)
+      ? document.querySelector(options.attachTo)
+      : options.attachTo
+
+    el.appendChild(to)
+  }
+  if (el.children.length === 0) {
+    // Reset the document.body
+    document.getElementsByTagName('html')[0].innerHTML = ''
+  }
+
   document.body.appendChild(el)
 
   // handle any slots passed via mounting options

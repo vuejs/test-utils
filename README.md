@@ -61,6 +61,7 @@ component | ✅ | (new!) nested in [`global`](https://vuejs.github.io/vue-test-u
 directives | ✅ | (new!) nested in [`global`](https://vuejs.github.io/vue-test-utils-next-docs/api/#global)
 stubs | ✅ 
 attachToDocument | ❌| will rename to `attachTo`. See [here](https://github.com/vuejs/vue-test-utils/pull/1492)
+attachTo | ✅ 
 attrs | ❌ |
 scopedSlots | ⚰️ | scopedSlots are merged with slots in Vue 3
 context | ⚰️ | different from Vue 2, may not make sense anymore.
