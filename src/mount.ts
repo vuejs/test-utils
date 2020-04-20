@@ -7,7 +7,10 @@ import {
   transformVNodeArgs,
   reactive,
   ComponentPublicInstance,
-  Component
+  ComponentOptionsWithObjectProps,
+  ComponentOptionsWithArrayProps,
+  ComponentOptionsWithoutProps,
+  ExtractPropTypes
 } from 'vue'
 
 import { config } from './config'
@@ -25,9 +28,9 @@ import { stubComponents } from './stubs'
 
 type Slot = VNode | string | { render: Function }
 
-interface MountingOptions {
+interface MountingOptions<Props> {
   data?: () => Record<string, unknown>
-  props?: Record<string, any>
+  props?: Props
   slots?: {
     default?: Slot
     [key: string]: Slot
@@ -35,17 +38,41 @@ interface MountingOptions {
   global?: GlobalMountOptions
 }
 
-export function mount<TestedComponent extends ComponentPublicInstance>(
+// Component declared with defineComponent
+export function mount<
+  TestedComponent extends ComponentPublicInstance,
+  PublicProps extends TestedComponent['$props']
+>(
   originalComponent: new () => TestedComponent,
-  options?: MountingOptions
+  options?: MountingOptions<PublicProps>
 ): VueWrapper<TestedComponent>
-export function mount(
-  originalComponent: Component,
-  options?: MountingOptions
+// Component declared with { props: { ... } }
+export function mount<
+  TestedComponent extends ComponentOptionsWithObjectProps,
+  PublicProps extends ExtractPropTypes<TestedComponent['props']>
+>(
+  originalComponent: TestedComponent,
+  options?: MountingOptions<PublicProps>
+): VueWrapper<any>
+// Component declared with { props: [] }
+export function mount<
+  TestedComponent extends ComponentOptionsWithArrayProps,
+  PublicProps extends Record<string, any>
+>(
+  originalComponent: TestedComponent,
+  options?: MountingOptions<PublicProps>
+): VueWrapper<any>
+// Component declared with no props
+export function mount<
+  TestedComponent extends ComponentOptionsWithoutProps,
+  PublicProps extends Record<string, any>
+>(
+  originalComponent: TestedComponent,
+  options?: MountingOptions<PublicProps>
 ): VueWrapper<any>
 export function mount(
   originalComponent: any,
-  options?: MountingOptions
+  options?: MountingOptions<any>
 ): VueWrapper<any> {
   const component = { ...originalComponent }
 
@@ -95,11 +122,11 @@ export function mount(
       props[k] = v
     }
 
-    return app.$nextTick()
+    return vm.$nextTick()
   }
 
-  // create the vm
-  const vm = createApp(Parent)
+  // create the app
+  const app = createApp(Parent)
 
   const global = mergeGlobalProperties(config.global, options?.global)
 
@@ -113,39 +140,39 @@ export function mount(
       }
     }
 
-    vm.mixin(mixin)
+    app.mixin(mixin)
   }
 
   // use and plugins from mounting options
   if (global?.plugins) {
-    for (const use of global.plugins) vm.use(use)
+    for (const use of global.plugins) app.use(use)
   }
 
   // use any mixins from mounting options
   if (global?.mixins) {
-    for (const mixin of global.mixins) vm.mixin(mixin)
+    for (const mixin of global.mixins) app.mixin(mixin)
   }
 
   if (global?.components) {
     for (const key of Object.keys(global.components))
-      vm.component(key, global.components[key])
+      app.component(key, global.components[key])
   }
 
   if (global?.directives) {
     for (const key of Object.keys(global.directives))
-      vm.directive(key, global.directives[key])
+      app.directive(key, global.directives[key])
   }
 
   // provide any values passed via provides mounting option
   if (global?.provide) {
     for (const key of Reflect.ownKeys(global.provide)) {
       // @ts-ignore: https://github.com/microsoft/TypeScript/issues/1863
-      vm.provide(key, global.provide[key])
+      app.provide(key, global.provide[key])
     }
   }
 
   // add tracking for emitted events
-  vm.mixin(attachEmitListener())
+  app.mixin(attachEmitListener())
 
   // stubs
   if (options?.global?.stubs) {
@@ -155,7 +182,8 @@ export function mount(
   }
 
   // mount the app!
-  const app = vm.mount(el)
-  const App = app.$refs[MOUNT_COMPONENT_REF] as ComponentPublicInstance
-  return createWrapper(App, setProps)
+  const vm = app.mount(el)
+
+  const App = vm.$refs[MOUNT_COMPONENT_REF] as ComponentPublicInstance
+  return createWrapper(app, App, setProps)
 }

@@ -380,15 +380,15 @@ export default { name: 'Foo' }
 ```
 
 ```js
-test('find', () => {
+test('findComponent', () => {
   const wrapper = mount(Component)
 
-  wrapper.find('.foo') //=> found; returns VueWrapper
-  wrapper.find('[data-test="foo"]') //=> found; returns VueWrapper
-  wrapper.find({ name: 'Foo' }) //=> found; returns VueWrapper
-  wrapper.find({ name: 'foo' }) //=> found; returns VueWrapper
-  wrapper.find({ ref: 'foo' }) //=> found; returns VueWrapper
-  wrapper.find(Foo) //=> found; returns VueWrapper
+  wrapper.findComponent('.foo') //=> found; returns VueWrapper
+  wrapper.findComponent('[data-test="foo"]') //=> found; returns VueWrapper
+  wrapper.findComponent({ name: 'Foo' }) //=> found; returns VueWrapper
+  wrapper.findComponent({ name: 'foo' }) //=> found; returns VueWrapper
+  wrapper.findComponent({ ref: 'foo' }) //=> found; returns VueWrapper
+  wrapper.findComponent(Foo) //=> found; returns VueWrapper
 })
 ```
 
