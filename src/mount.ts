@@ -4,11 +4,7 @@ import {
   VNode,
   defineComponent,
   VNodeNormalizedChildren,
-  ComponentOptions,
   transformVNodeArgs,
-  Plugin,
-  Directive,
-  Component,
   reactive,
   ComponentPublicInstance,
   ComponentOptionsWithObjectProps,
@@ -17,6 +13,9 @@ import {
   ExtractPropTypes
 } from 'vue'
 
+import { config } from './config'
+import { GlobalMountOptions } from './types'
+import { mergeGlobalProperties } from './utils'
 import { createWrapper, VueWrapper } from './vue-wrapper'
 import { attachEmitListener } from './emitMixin'
 import { createDataMixin } from './dataMixin'
@@ -36,17 +35,7 @@ interface MountingOptions<Props> {
     default?: Slot
     [key: string]: Slot
   }
-  global?: {
-    plugins?: Plugin[]
-    mixins?: ComponentOptions[]
-    mocks?: Record<string, any>
-    stubs?: Record<any, any>
-    provide?: Record<any, any>
-    // TODO how to type `defineComponent`? Using `any` for now.
-    components?: Record<string, Component | object>
-    directives?: Record<string, Directive>
-  }
-  stubs?: Record<string, any>
+  global?: GlobalMountOptions
 }
 
 // Component declared with defineComponent
@@ -139,11 +128,13 @@ export function mount(
   // create the app
   const app = createApp(Parent)
 
+  const global = mergeGlobalProperties(config.global, options?.global)
+
   // global mocks mixin
-  if (options?.global?.mocks) {
+  if (global?.mocks) {
     const mixin = {
       beforeCreate() {
-        for (const [k, v] of Object.entries(options.global?.mocks)) {
+        for (const [k, v] of Object.entries(global.mocks)) {
           this[k] = v
         }
       }
@@ -153,30 +144,30 @@ export function mount(
   }
 
   // use and plugins from mounting options
-  if (options?.global?.plugins) {
-    for (const use of options?.global?.plugins) app.use(use)
+  if (global?.plugins) {
+    for (const use of global.plugins) app.use(use)
   }
 
   // use any mixins from mounting options
-  if (options?.global?.mixins) {
-    for (const mixin of options?.global?.mixins) app.mixin(mixin)
+  if (global?.mixins) {
+    for (const mixin of global.mixins) app.mixin(mixin)
   }
 
-  if (options?.global?.components) {
-    for (const key of Object.keys(options?.global?.components))
-      app.component(key, options.global.components[key])
+  if (global?.components) {
+    for (const key of Object.keys(global.components))
+      app.component(key, global.components[key])
   }
 
-  if (options?.global?.directives) {
-    for (const key of Object.keys(options?.global?.directives))
-      app.directive(key, options.global.directives[key])
+  if (global?.directives) {
+    for (const key of Object.keys(global.directives))
+      app.directive(key, global.directives[key])
   }
 
   // provide any values passed via provides mounting option
-  if (options?.global?.provide) {
-    for (const key of Reflect.ownKeys(options.global.provide)) {
+  if (global?.provide) {
+    for (const key of Reflect.ownKeys(global.provide)) {
       // @ts-ignore: https://github.com/microsoft/TypeScript/issues/1863
-      app.provide(key, options.global.provide[key])
+      app.provide(key, global.provide[key])
     }
   }
 
