@@ -10,7 +10,11 @@ import {
   Directive,
   Component,
   reactive,
-  ComponentPublicInstance
+  ComponentPublicInstance,
+  ComponentOptionsWithObjectProps,
+  ComponentOptionsWithArrayProps,
+  ComponentOptionsWithoutProps,
+  ExtractPropTypes
 } from 'vue'
 
 import { createWrapper, VueWrapper } from './vue-wrapper'
@@ -25,9 +29,9 @@ import { stubComponents } from './stubs'
 
 type Slot = VNode | string | { render: Function }
 
-interface MountingOptions {
+interface MountingOptions<Props> {
   data?: () => Record<string, unknown>
-  props?: Record<string, any>
+  props?: Props
   slots?: {
     default?: Slot
     [key: string]: Slot
@@ -45,17 +49,41 @@ interface MountingOptions {
   stubs?: Record<string, any>
 }
 
-export function mount<TestedComponent extends ComponentPublicInstance>(
+// Component declared with defineComponent
+export function mount<
+  TestedComponent extends ComponentPublicInstance,
+  PublicProps extends TestedComponent['$props']
+>(
   originalComponent: new () => TestedComponent,
-  options?: MountingOptions
+  options?: MountingOptions<PublicProps>
 ): VueWrapper<TestedComponent>
-export function mount(
-  originalComponent: Component,
-  options?: MountingOptions
+// Component declared with { props: { ... } }
+export function mount<
+  TestedComponent extends ComponentOptionsWithObjectProps,
+  PublicProps extends ExtractPropTypes<TestedComponent['props']>
+>(
+  originalComponent: TestedComponent,
+  options?: MountingOptions<PublicProps>
+): VueWrapper<any>
+// Component declared with { props: [] }
+export function mount<
+  TestedComponent extends ComponentOptionsWithArrayProps,
+  PublicProps extends Record<string, any>
+>(
+  originalComponent: TestedComponent,
+  options?: MountingOptions<PublicProps>
+): VueWrapper<any>
+// Component declared with no props
+export function mount<
+  TestedComponent extends ComponentOptionsWithoutProps,
+  PublicProps extends Record<string, any>
+>(
+  originalComponent: TestedComponent,
+  options?: MountingOptions<PublicProps>
 ): VueWrapper<any>
 export function mount(
   originalComponent: any,
-  options?: MountingOptions
+  options?: MountingOptions<any>
 ): VueWrapper<any> {
   const component = { ...originalComponent }
 
