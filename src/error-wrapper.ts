@@ -36,6 +36,10 @@ export class ErrorWrapper {
     throw this.wrapperError('find')
   }
 
+  get(): never {
+    throw this.wrapperError('get')
+  }
+
   findAll(): never {
     throw this.wrapperError('findAll')
   }
@@ -46,6 +50,10 @@ export class ErrorWrapper {
 
   setValue() {
     throw this.wrapperError('setValue')
+  }
+
+  props() {
+    throw this.wrapperError('props')
   }
 
   text() {

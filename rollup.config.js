@@ -21,13 +21,14 @@ function createEntry(options) {
   const config = {
     input,
     external: [
-      'vue', 
+      'vue',
       'lodash/mergeWith',
       'lodash/camelCase',
       'lodash/upperFirst',
       'lodash/kebabCase',
+      'lodash/flow',
       'lodash/isString',
-      'lodash/flow'
+      'dom-event-types'
     ],
     plugins: [resolve()],
     output: {
@@ -38,7 +39,7 @@ function createEntry(options) {
   }
 
   if (format === 'es') {
-    config.output.file = isBrowser ? pkg.browser : pkg.module 
+    config.output.file = isBrowser ? pkg.browser : pkg.module
   }
   if (format === 'cjs') {
     config.output.file = pkg.main

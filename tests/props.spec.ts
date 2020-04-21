@@ -22,4 +22,64 @@ describe('props', () => {
     const wrapper = mount(Hello)
     expect(wrapper.props()).toEqual({})
   })
+
+  it('returns applied props on a stubbed component with boolean', () => {
+    const Foo = {
+      name: 'Foo',
+      template: 'Foo',
+      props: {
+        foo: String,
+        bar: Boolean,
+        object: Object
+      }
+    }
+    const Component = {
+      data: () => ({ object: {} }),
+      template: '<div><foo foo="foo" bar :object="object" /></div>',
+      components: { Foo }
+    }
+    const wrapper = mount(Component, {
+      global: {
+        stubs: ['Foo']
+      }
+    })
+    expect(wrapper.findComponent({ name: 'Foo' }).props()).toEqual({
+      bar: true,
+      foo: 'foo',
+      object: {}
+    })
+  })
+
+  it('returns props on a stubbed component with a custom implementation', () => {
+    const Foo = {
+      name: 'Foo',
+      template: 'Foo',
+      props: ['foo', 'bar', 'object']
+    }
+    const FooStub = {
+      name: 'Foo',
+      template: 'FooStub',
+      props: {
+        foo: String,
+        bar: Boolean,
+        object: Object
+      }
+    }
+    const Component = {
+      data: () => ({ object: {} }),
+      template: '<div><foo foo="foo" bar :object="object" /></div>',
+      components: { Foo }
+    }
+
+    const wrapper = mount(Component, {
+      global: {
+        stubs: { Foo: FooStub }
+      }
+    })
+    expect(wrapper.findComponent({ name: 'Foo' }).props()).toEqual({
+      bar: true,
+      foo: 'foo',
+      object: {}
+    })
+  })
 })
