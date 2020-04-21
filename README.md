@@ -87,7 +87,8 @@ trigger | ✅ | returns `nextTick`. You can do `await wrapper.find('button').tri
 setProps | ✅ |
 props | ✅
 setData | ❌ | has PR
-destroy | ❌
+destroy | ✅ | renamed to `unmount` to match Vue 3 lifecycle hook name.
+props | ❌
 contains | ⚰️| use `find` 
 emittedByOrder | ⚰️ | use `emitted`
 setSelected | ⚰️ | now part of `setValue` 

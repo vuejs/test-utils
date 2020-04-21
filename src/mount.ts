@@ -4,15 +4,18 @@ import {
   VNode,
   defineComponent,
   VNodeNormalizedChildren,
-  ComponentOptions,
   transformVNodeArgs,
-  Plugin,
-  Directive,
-  Component,
   reactive,
-  ComponentPublicInstance
+  ComponentPublicInstance,
+  ComponentOptionsWithObjectProps,
+  ComponentOptionsWithArrayProps,
+  ComponentOptionsWithoutProps,
+  ExtractPropTypes
 } from 'vue'
 
+import { config } from './config'
+import { GlobalMountOptions } from './types'
+import { mergeGlobalProperties } from './utils'
 import { createWrapper, VueWrapper } from './vue-wrapper'
 import { attachEmitListener } from './emitMixin'
 import { createDataMixin } from './dataMixin'
@@ -25,37 +28,51 @@ import { stubComponents } from './stubs'
 
 type Slot = VNode | string | { render: Function }
 
-interface MountingOptions {
+interface MountingOptions<Props> {
   data?: () => Record<string, unknown>
-  props?: Record<string, any>
+  props?: Props
   slots?: {
     default?: Slot
     [key: string]: Slot
   }
-  global?: {
-    plugins?: Plugin[]
-    mixins?: ComponentOptions[]
-    mocks?: Record<string, any>
-    stubs?: Record<any, any>
-    provide?: Record<any, any>
-    // TODO how to type `defineComponent`? Using `any` for now.
-    components?: Record<string, Component | object>
-    directives?: Record<string, Directive>
-  }
-  stubs?: Record<string, any>
+  global?: GlobalMountOptions
 }
 
-export function mount<TestedComponent extends ComponentPublicInstance>(
+// Component declared with defineComponent
+export function mount<
+  TestedComponent extends ComponentPublicInstance,
+  PublicProps extends TestedComponent['$props']
+>(
   originalComponent: new () => TestedComponent,
-  options?: MountingOptions
+  options?: MountingOptions<PublicProps>
 ): VueWrapper<TestedComponent>
-export function mount(
-  originalComponent: Component,
-  options?: MountingOptions
+// Component declared with { props: { ... } }
+export function mount<
+  TestedComponent extends ComponentOptionsWithObjectProps,
+  PublicProps extends ExtractPropTypes<TestedComponent['props']>
+>(
+  originalComponent: TestedComponent,
+  options?: MountingOptions<PublicProps>
+): VueWrapper<any>
+// Component declared with { props: [] }
+export function mount<
+  TestedComponent extends ComponentOptionsWithArrayProps,
+  PublicProps extends Record<string, any>
+>(
+  originalComponent: TestedComponent,
+  options?: MountingOptions<PublicProps>
+): VueWrapper<any>
+// Component declared with no props
+export function mount<
+  TestedComponent extends ComponentOptionsWithoutProps,
+  PublicProps extends Record<string, any>
+>(
+  originalComponent: TestedComponent,
+  options?: MountingOptions<PublicProps>
 ): VueWrapper<any>
 export function mount(
   originalComponent: any,
-  options?: MountingOptions
+  options?: MountingOptions<any>
 ): VueWrapper<any> {
   const component = { ...originalComponent }
 
@@ -105,55 +122,57 @@ export function mount(
       props[k] = v
     }
 
-    return app.$nextTick()
+    return vm.$nextTick()
   }
 
-  // create the vm
-  const vm = createApp(Parent)
+  // create the app
+  const app = createApp(Parent)
+
+  const global = mergeGlobalProperties(config.global, options?.global)
 
   // global mocks mixin
-  if (options?.global?.mocks) {
+  if (global?.mocks) {
     const mixin = {
       beforeCreate() {
-        for (const [k, v] of Object.entries(options.global?.mocks)) {
+        for (const [k, v] of Object.entries(global.mocks)) {
           this[k] = v
         }
       }
     }
 
-    vm.mixin(mixin)
+    app.mixin(mixin)
   }
 
   // use and plugins from mounting options
-  if (options?.global?.plugins) {
-    for (const use of options?.global?.plugins) vm.use(use)
+  if (global?.plugins) {
+    for (const use of global.plugins) app.use(use)
   }
 
   // use any mixins from mounting options
-  if (options?.global?.mixins) {
-    for (const mixin of options?.global?.mixins) vm.mixin(mixin)
+  if (global?.mixins) {
+    for (const mixin of global.mixins) app.mixin(mixin)
   }
 
-  if (options?.global?.components) {
-    for (const key of Object.keys(options?.global?.components))
-      vm.component(key, options.global.components[key])
+  if (global?.components) {
+    for (const key of Object.keys(global.components))
+      app.component(key, global.components[key])
   }
 
-  if (options?.global?.directives) {
-    for (const key of Object.keys(options?.global?.directives))
-      vm.directive(key, options.global.directives[key])
+  if (global?.directives) {
+    for (const key of Object.keys(global.directives))
+      app.directive(key, global.directives[key])
   }
 
   // provide any values passed via provides mounting option
-  if (options?.global?.provide) {
-    for (const key of Reflect.ownKeys(options.global.provide)) {
+  if (global?.provide) {
+    for (const key of Reflect.ownKeys(global.provide)) {
       // @ts-ignore: https://github.com/microsoft/TypeScript/issues/1863
-      vm.provide(key, options.global.provide[key])
+      app.provide(key, global.provide[key])
     }
   }
 
   // add tracking for emitted events
-  vm.mixin(attachEmitListener())
+  app.mixin(attachEmitListener())
 
   // stubs
   if (options?.global?.stubs) {
@@ -163,7 +182,8 @@ export function mount(
   }
 
   // mount the app!
-  const app = vm.mount(el)
-  const App = app.$refs[MOUNT_COMPONENT_REF] as ComponentPublicInstance
-  return createWrapper(App, setProps)
+  const vm = app.mount(el)
+
+  const App = vm.$refs[MOUNT_COMPONENT_REF] as ComponentPublicInstance
+  return createWrapper(app, App, setProps)
 }

@@ -36,6 +36,10 @@ export class ErrorWrapper {
     throw this.wrapperError('find')
   }
 
+  get(): never {
+    throw this.wrapperError('get')
+  }
+
   findAll(): never {
     throw this.wrapperError('findAll')
   }
@@ -58,5 +62,9 @@ export class ErrorWrapper {
 
   trigger() {
     throw this.wrapperError('trigger')
+  }
+
+  unmount() {
+    throw this.wrapperError('unmount')
   }
 }

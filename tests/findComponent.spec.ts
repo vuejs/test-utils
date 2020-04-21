@@ -122,4 +122,9 @@ describe('findComponent', () => {
     })
     expect(wrapper.findComponent({ ref: 'hello' }).exists()).toBe(true)
   })
+
+  it('throw error if trying to unmount component from find', () => {
+    const wrapper = mount(compA)
+    expect(wrapper.findComponent(Hello).unmount).toThrowError()
+  })
 })
