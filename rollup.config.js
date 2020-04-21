@@ -26,6 +26,7 @@ function createEntry(options) {
       'lodash/camelCase',
       'lodash/upperFirst',
       'lodash/kebabCase',
+      'lodash/isString',
       'lodash/flow'
     ],
     plugins: [resolve()],
