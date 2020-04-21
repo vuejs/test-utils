@@ -1,6 +1,6 @@
 {
   "name": "@vue/test-utils",
-  "version": "2.0.0-alpha.1",
+  "version": "2.0.0-alpha.2",
   "license": "MIT",
   "main": "dist/vue-test-utils.cjs.js",
   "browser": "dist/vue-test-utils.esm.js",
@@ -13,6 +13,7 @@
     "dist/index.d.ts"
   ],
   "dependencies": {
+    "dom-event-types": "^1.0.0",
     "lodash": "^4.17.15"
   },
   "devDependencies": {

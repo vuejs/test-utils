@@ -1,4 +1,4 @@
-import { ComponentPublicInstance, nextTick } from 'vue'
+import { ComponentPublicInstance, nextTick, App, render } from 'vue'
 import { ShapeFlags } from '@vue/shared'
 
 import { DOMWrapper } from './dom-wrapper'
@@ -8,18 +8,22 @@ import {
   WrapperAPI
 } from './types'
 import { ErrorWrapper } from './error-wrapper'
+import { TriggerOptions } from './create-dom-event'
 import { find } from './utils/find'
 
 export class VueWrapper<T extends ComponentPublicInstance>
   implements WrapperAPI {
   private componentVM: T
   private rootVM: ComponentPublicInstance
+  private __app: App | null
   private __setProps: (props: Record<string, any>) => void
 
   constructor(
+    app: App | null,
     vm: ComponentPublicInstance,
     setProps?: (props: Record<string, any>) => void
   ) {
+    this.__app = app
     this.rootVM = vm.$root
     this.componentVM = vm as T
     this.__setProps = setProps
@@ -75,9 +79,16 @@ export class VueWrapper<T extends ComponentPublicInstance>
     return this.element.textContent?.trim()
   }
 
-  find<T extends Element>(selector: string): DOMWrapper<T> | ErrorWrapper {
+  find<K extends keyof HTMLElementTagNameMap>(
+    selector: K
+  ): DOMWrapper<HTMLElementTagNameMap[K]> | ErrorWrapper
+  find<K extends keyof SVGElementTagNameMap>(
+    selector: K
+  ): DOMWrapper<SVGElementTagNameMap[K]> | ErrorWrapper
+  find<T extends Element>(selector: string): DOMWrapper<T> | ErrorWrapper
+  find(selector: string): DOMWrapper<Element> | ErrorWrapper {
     // force using the parentElement to allow finding the root element
-    const result = this.parentElement.querySelector(selector) as T
+    const result = this.parentElement.querySelector(selector)
     if (result) {
       return new DOMWrapper(result)
     }
@@ -85,8 +96,15 @@ export class VueWrapper<T extends ComponentPublicInstance>
     return new ErrorWrapper({ selector })
   }
 
-  get<T extends Element>(selector: string): DOMWrapper<T> {
-    const result = this.find<T>(selector)
+  get<K extends keyof HTMLElementTagNameMap>(
+    selector: K
+  ): DOMWrapper<HTMLElementTagNameMap[K]>
+  get<K extends keyof SVGElementTagNameMap>(
+    selector: K
+  ): DOMWrapper<SVGElementTagNameMap[K]>
+  get<T extends Element>(selector: string): DOMWrapper<T>
+  get(selector: string): DOMWrapper<Element> {
+    const result = this.find(selector)
     if (result instanceof ErrorWrapper) {
       throw new Error(`Unable to find ${selector} within: ${this.html()}`)
     }
@@ -98,21 +116,29 @@ export class VueWrapper<T extends ComponentPublicInstance>
     if (typeof selector === 'object' && 'ref' in selector) {
       const result = this.vm.$refs[selector.ref]
       return result
-        ? createWrapper(result as T)
+        ? createWrapper(null, this.vm.$refs[selector.ref] as T)
         : new ErrorWrapper({ selector })
     }
+
     const result = find(this.vm.$.subTree, selector)
     if (!result.length) return new ErrorWrapper({ selector })
-    return createWrapper(result[0])
+    return createWrapper(null, result[0])
   }
 
   findAllComponents(selector: FindAllComponentsSelector): VueWrapper<T>[] {
-    return find(this.vm.$.subTree, selector).map((c) => createWrapper(c))
+    return find(this.vm.$.subTree, selector).map((c) => createWrapper(null, c))
   }
 
-  findAll<T extends Element>(selector: string): DOMWrapper<T>[] {
-    const results = this.parentElement.querySelectorAll<T>(selector)
-    return Array.from(results).map((x) => new DOMWrapper(x))
+  findAll<K extends keyof HTMLElementTagNameMap>(
+    selector: K
+  ): DOMWrapper<HTMLElementTagNameMap[K]>[]
+  findAll<K extends keyof SVGElementTagNameMap>(
+    selector: K
+  ): DOMWrapper<SVGElementTagNameMap[K]>[]
+  findAll<T extends Element>(selector: string): DOMWrapper<T>[]
+  findAll(selector: string): DOMWrapper<Element>[] {
+    const results = this.parentElement.querySelectorAll(selector)
+    return Array.from(results).map((element) => new DOMWrapper(element))
   }
 
   setProps(props: Record<string, any>): Promise<void> {
@@ -124,15 +150,30 @@ export class VueWrapper<T extends ComponentPublicInstance>
     return nextTick()
   }
 
-  trigger(eventString: string) {
+  trigger(eventString: string, options?: TriggerOptions) {
     const rootElementWrapper = new DOMWrapper(this.element)
-    return rootElementWrapper.trigger(eventString)
+    return rootElementWrapper.trigger(eventString, options)
+  }
+
+  unmount() {
+    // preventing dispose of child component
+    if (!this.__app) {
+      throw new Error(
+        `wrapper.unmount() can only be called by the root wrapper`
+      )
+    }
+
+    if (this.parentElement) {
+      this.parentElement.removeChild(this.element)
+    }
+    this.__app.unmount(this.element)
   }
 }
 
 export function createWrapper<T extends ComponentPublicInstance>(
+  app: App,
   vm: ComponentPublicInstance,
   setProps?: (props: Record<string, any>) => void
 ): VueWrapper<T> {
-  return new VueWrapper<T>(vm, setProps)
+  return new VueWrapper<T>(app, vm, setProps)
 }

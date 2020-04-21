@@ -3,6 +3,8 @@ import { nextTick } from 'vue'
 import { WrapperAPI } from './types'
 import { ErrorWrapper } from './error-wrapper'
 
+import { TriggerOptions, createDOMEvent } from './create-dom-event'
+
 export class DOMWrapper<ElementType extends Element> implements WrapperAPI {
   element: ElementType
 
@@ -41,17 +43,31 @@ export class DOMWrapper<ElementType extends Element> implements WrapperAPI {
     return this.element.outerHTML
   }
 
-  find<T extends Element>(selector: string): DOMWrapper<T> | ErrorWrapper {
-    const result = this.element.querySelector<T>(selector)
+  find<K extends keyof HTMLElementTagNameMap>(
+    selector: K
+  ): DOMWrapper<HTMLElementTagNameMap[K]> | ErrorWrapper
+  find<K extends keyof SVGElementTagNameMap>(
+    selector: K
+  ): DOMWrapper<SVGElementTagNameMap[K]> | ErrorWrapper
+  find<T extends Element>(selector: string): DOMWrapper<T> | ErrorWrapper
+  find(selector: string): DOMWrapper<Element> | ErrorWrapper {
+    const result = this.element.querySelector(selector)
     if (result) {
-      return new DOMWrapper<T>(result)
+      return new DOMWrapper(result)
     }
 
     return new ErrorWrapper({ selector })
   }
 
-  get<T extends Element>(selector: string): DOMWrapper<T> {
-    const result = this.find<T>(selector)
+  get<K extends keyof HTMLElementTagNameMap>(
+    selector: K
+  ): DOMWrapper<HTMLElementTagNameMap[K]>
+  get<K extends keyof SVGElementTagNameMap>(
+    selector: K
+  ): DOMWrapper<SVGElementTagNameMap[K]>
+  get<T extends Element>(selector: string): DOMWrapper<T>
+  get(selector: string): DOMWrapper<Element> {
+    const result = this.find(selector)
     if (result instanceof ErrorWrapper) {
       throw new Error(`Unable to find ${selector} within: ${this.html()}`)
     }
@@ -59,8 +75,15 @@ export class DOMWrapper<ElementType extends Element> implements WrapperAPI {
     return result
   }
 
-  findAll<T extends Element>(selector: string): DOMWrapper<T>[] {
-    return Array.from(this.element.querySelectorAll<T>(selector)).map(
+  findAll<K extends keyof HTMLElementTagNameMap>(
+    selector: K
+  ): DOMWrapper<HTMLElementTagNameMap[K]>[]
+  findAll<K extends keyof SVGElementTagNameMap>(
+    selector: K
+  ): DOMWrapper<SVGElementTagNameMap[K]>[]
+  findAll<T extends Element>(selector: string): DOMWrapper<T>[]
+  findAll(selector: string): DOMWrapper<Element>[] {
+    return Array.from(this.element.querySelectorAll(selector)).map(
       (x) => new DOMWrapper(x)
     )
   }
@@ -134,12 +157,38 @@ export class DOMWrapper<ElementType extends Element> implements WrapperAPI {
     return new DOMWrapper(parentElement).trigger('change')
   }
 
-  async trigger(eventString: string) {
-    const evt = document.createEvent('Event')
-    evt.initEvent(eventString)
+  async trigger(eventString: string, options?: TriggerOptions) {
+    if (options && options['target']) {
+      throw Error(
+        `[vue-test-utils]: you cannot set the target value of an event. See the notes section ` +
+          `of the docs for more details—` +
+          `https://vue-test-utils.vuejs.org/api/wrapper/trigger.html`
+      )
+    }
 
-    if (this.element) {
-      this.element.dispatchEvent(evt)
+    const isDisabled = () => {
+      const validTagsToBeDisabled = [
+        'BUTTON',
+        'COMMAND',
+        'FIELDSET',
+        'KEYGEN',
+        'OPTGROUP',
+        'OPTION',
+        'SELECT',
+        'TEXTAREA',
+        'INPUT'
+      ]
+      const hasDisabledAttribute = this.attributes().disabled !== undefined
+      const elementCanBeDisabled = validTagsToBeDisabled.includes(
+        this.element.tagName
+      )
+
+      return hasDisabledAttribute && elementCanBeDisabled
+    }
+
+    if (this.element && !isDisabled()) {
+      const event = createDOMEvent(eventString, options)
+      this.element.dispatchEvent(event)
     }
 
     return nextTick
