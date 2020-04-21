@@ -10,20 +10,24 @@ const pascalCase = flow(camelCase, upperFirst)
 export { kebabCase, pascalCase }
 
 export function mergeGlobalProperties(
-  configGlobal = {},
-  mountGlobal = {}
+  configGlobal: GlobalMountOptions = {},
+  mountGlobal: GlobalMountOptions = {}
 ): GlobalMountOptions {
-  return mergeWith({}, configGlobal, mountGlobal, (objValue, srcValue, key) => {
-    switch (key) {
-      case 'mocks':
-      case 'provide':
-      case 'components':
-      case 'directives':
-      case 'globalProperties':
-        return { ...objValue, ...srcValue }
-      case 'plugins':
-      case 'mixins':
-        return [...(objValue || []), ...(srcValue || [])].filter(Boolean)
+  return mergeWith(
+    {},
+    configGlobal,
+    mountGlobal,
+    (objValue, srcValue, key: keyof GlobalMountOptions) => {
+      switch (key) {
+        case 'mocks':
+        case 'provide':
+        case 'components':
+        case 'directives':
+          return { ...objValue, ...srcValue }
+        case 'plugins':
+        case 'mixins':
+          return [...(objValue || []), ...(srcValue || [])].filter(Boolean)
+      }
     }
-  })
+  )
 }
