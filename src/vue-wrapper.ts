@@ -8,6 +8,7 @@ import {
   WrapperAPI
 } from './types'
 import { ErrorWrapper } from './error-wrapper'
+import { TriggerOptions } from './create-dom-event'
 import { find } from './utils/find'
 
 export class VueWrapper<T extends ComponentPublicInstance>
@@ -145,9 +146,9 @@ export class VueWrapper<T extends ComponentPublicInstance>
     return nextTick()
   }
 
-  trigger(eventString: string) {
+  trigger(eventString: string, options?: TriggerOptions) {
     const rootElementWrapper = new DOMWrapper(this.element)
-    return rootElementWrapper.trigger(eventString)
+    return rootElementWrapper.trigger(eventString, options)
   }
 
   unmount() {

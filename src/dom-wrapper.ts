@@ -3,6 +3,8 @@ import { nextTick } from 'vue'
 import { WrapperAPI } from './types'
 import { ErrorWrapper } from './error-wrapper'
 
+import { TriggerOptions, createDOMEvent } from './create-dom-event'
+
 export class DOMWrapper<ElementType extends Element> implements WrapperAPI {
   element: ElementType
 
@@ -155,12 +157,38 @@ export class DOMWrapper<ElementType extends Element> implements WrapperAPI {
     return new DOMWrapper(parentElement).trigger('change')
   }
 
-  async trigger(eventString: string) {
-    const evt = document.createEvent('Event')
-    evt.initEvent(eventString)
+  async trigger(eventString: string, options?: TriggerOptions) {
+    if (options && options['target']) {
+      throw Error(
+        `[vue-test-utils]: you cannot set the target value of an event. See the notes section ` +
+          `of the docs for more details—` +
+          `https://vue-test-utils.vuejs.org/api/wrapper/trigger.html`
+      )
+    }
 
-    if (this.element) {
-      this.element.dispatchEvent(evt)
+    const isDisabled = () => {
+      const validTagsToBeDisabled = [
+        'BUTTON',
+        'COMMAND',
+        'FIELDSET',
+        'KEYGEN',
+        'OPTGROUP',
+        'OPTION',
+        'SELECT',
+        'TEXTAREA',
+        'INPUT'
+      ]
+      const hasDisabledAttribute = this.attributes().disabled !== undefined
+      const elementCanBeDisabled = validTagsToBeDisabled.includes(
+        this.element.tagName
+      )
+
+      return hasDisabledAttribute && elementCanBeDisabled
+    }
+
+    if (this.element && !isDisabled()) {
+      const event = createDOMEvent(eventString, options)
+      this.element.dispatchEvent(event)
     }
 
     return nextTick
