@@ -24,11 +24,7 @@ export class VueWrapper implements WrapperAPI {
     this.__emitted = events
 
     // plugins hook
-    Object.entries(config.plugins.VueWrapper).forEach(
-      ([name, handler]: [string, () => any]) => {
-        this[name] = handler.bind(this)
-      }
-    )
+    config.plugins.VueWrapper.extend(this)
   }
 
   private get appRootNode() {
@@ -100,6 +96,15 @@ export class VueWrapper implements WrapperAPI {
   trigger(eventString: string) {
     const rootElementWrapper = new DOMWrapper(this.element)
     return rootElementWrapper.trigger(eventString)
+  }
+
+  extend() {
+    // plugins hook
+    Object.entries(config.plugins.VueWrapper).forEach(
+      ([name, handler]: [string, () => any]) => {
+        this[name] = handler.bind(this)
+      }
+    )
   }
 }
 
