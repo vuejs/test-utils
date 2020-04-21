@@ -115,7 +115,7 @@ export class VueWrapper<T extends ComponentPublicInstance>
     if (typeof selector === 'object' && 'ref' in selector) {
       const result = this.vm.$refs[selector.ref]
       return result
-        ? createWrapper(result as T)
+        ? createWrapper(null, result as T)
         : new ErrorWrapper({ selector })
     }
     const result = find(this.vm.$.subTree, selector)
