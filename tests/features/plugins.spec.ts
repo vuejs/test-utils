@@ -4,6 +4,7 @@ declare module '../../src/vue-wrapper' {
   interface VueWrapper {
     width(): number
     $el: Element
+    myMethod(): void
   }
 }
 
@@ -33,6 +34,14 @@ describe('Plugin', () => {
       config.plugins.VueWrapper.install(plugin)
       const wrapper = mountComponent()
       expect(wrapper.$el.innerHTML).toEqual(textValue)
+    })
+
+    it('supports functions', () => {
+      const myMethod = jest.fn()
+      const plugin = () => ({ myMethod })
+      config.plugins.VueWrapper.install(plugin)
+      mountComponent().myMethod()
+      expect(myMethod).toHaveBeenCalledTimes(1)
     })
 
     describe('error states', () => {
