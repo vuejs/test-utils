@@ -97,15 +97,6 @@ export class VueWrapper implements WrapperAPI {
     const rootElementWrapper = new DOMWrapper(this.element)
     return rootElementWrapper.trigger(eventString)
   }
-
-  extend() {
-    // plugins hook
-    Object.entries(config.plugins.VueWrapper).forEach(
-      ([name, handler]: [string, () => any]) => {
-        this[name] = handler.bind(this)
-      }
-    )
-  }
 }
 
 export function createWrapper(
