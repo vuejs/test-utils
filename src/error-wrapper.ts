@@ -1,9 +1,11 @@
+import { FindComponentSelector } from './types'
+
 interface Options {
-  selector: string
+  selector: FindComponentSelector
 }
 
 export class ErrorWrapper {
-  selector: string
+  selector: FindComponentSelector
   element: null
 
   constructor({ selector }: Options) {
@@ -12,6 +14,10 @@ export class ErrorWrapper {
 
   wrapperError(method: string): Error {
     return Error(`Cannot call ${method} on an empty wrapper.`)
+  }
+
+  vm(): Error {
+    throw this.wrapperError('vm')
   }
 
   attributes() {
@@ -30,12 +36,16 @@ export class ErrorWrapper {
     throw this.wrapperError('find')
   }
 
+  get(): never {
+    throw this.wrapperError('get')
+  }
+
   findAll(): never {
     throw this.wrapperError('findAll')
   }
 
-  setChecked() {
-    throw this.wrapperError('setChecked')
+  setProps() {
+    throw this.wrapperError('setProps')
   }
 
   setValue() {
@@ -48,5 +58,9 @@ export class ErrorWrapper {
 
   trigger() {
     throw this.wrapperError('trigger')
+  }
+
+  unmount() {
+    throw this.wrapperError('unmount')
   }
 }

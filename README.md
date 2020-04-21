@@ -59,7 +59,7 @@ mixins | ✅ | (new!) nested in [`global`](https://vuejs.github.io/vue-test-util
 plugins | ✅ | (new!) nested in [`global`](https://vuejs.github.io/vue-test-utils-next-docs/api/#global)
 component | ✅ | (new!) nested in [`global`](https://vuejs.github.io/vue-test-utils-next-docs/api/#global)
 directives | ✅ | (new!) nested in [`global`](https://vuejs.github.io/vue-test-utils-next-docs/api/#global)
-stubs | ❌ 
+stubs | ✅ 
 attachToDocument | ❌| will rename to `attachTo`. See [here](https://github.com/vuejs/vue-test-utils/pull/1492)
 attrs | ❌ |
 scopedSlots | ⚰️ | scopedSlots are merged with slots in Vue 3
@@ -85,8 +85,9 @@ setValue | ✅ | works for select, checkbox, radio button, input, textarea. Retu
 text | ✅ |
 trigger | ✅ | returns `nextTick`. You can do `await wrapper.find('button').trigger('click')`
 setProps | ✅ |
+props | ✅
 setData | ❌ | has PR
-destroy | ❌
+destroy | ✅ | renamed to `unmount` to match Vue 3 lifecycle hook name.
 props | ❌
 contains | ⚰️| use `find` 
 emittedByOrder | ⚰️ | use `emitted`

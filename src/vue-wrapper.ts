@@ -1,46 +1,46 @@
-import { ComponentPublicInstance, nextTick } from 'vue'
+import { ComponentPublicInstance, nextTick, App, render } from 'vue'
 import { ShapeFlags } from '@vue/shared'
 
 import { DOMWrapper } from './dom-wrapper'
-import { WrapperAPI } from './types'
+import {
+  FindAllComponentsSelector,
+  FindComponentSelector,
+  WrapperAPI
+} from './types'
 import { ErrorWrapper } from './error-wrapper'
-import { MOUNT_ELEMENT_ID } from './constants'
 import { TriggerOptions } from './create-dom-event'
+import { find } from './utils/find'
 
 export class VueWrapper<T extends ComponentPublicInstance>
   implements WrapperAPI {
   private componentVM: T
-  private __emitted: Record<string, unknown[]> = {}
-  private __vm: ComponentPublicInstance
+  private rootVM: ComponentPublicInstance
+  private __app: App | null
   private __setProps: (props: Record<string, any>) => void
 
   constructor(
+    app: App | null,
     vm: ComponentPublicInstance,
-    events: Record<string, unknown[]>,
-    setProps: (props: Record<string, any>) => void
+    setProps?: (props: Record<string, any>) => void
   ) {
-    this.__vm = vm
+    this.__app = app
+    this.rootVM = vm.$root
+    this.componentVM = vm as T
     this.__setProps = setProps
-    this.componentVM = this.__vm.$refs['VTU_COMPONENT'] as T
-    this.__emitted = events
-  }
-
-  private get appRootNode() {
-    return document.getElementById(MOUNT_ELEMENT_ID) as HTMLDivElement
   }
 
   private get hasMultipleRoots(): boolean {
     // if the subtree is an array of children, we have multiple root nodes
-    return this.componentVM.$.subTree.shapeFlag === ShapeFlags.ARRAY_CHILDREN
+    return this.vm.$.subTree.shapeFlag === ShapeFlags.ARRAY_CHILDREN
   }
 
   private get parentElement(): Element {
-    return this.componentVM.$el.parentElement
+    return this.vm.$el.parentElement
   }
 
   get element(): Element {
     // if the component has multiple root elements, we use the parent's element
-    return this.hasMultipleRoots ? this.parentElement : this.componentVM.$el
+    return this.hasMultipleRoots ? this.parentElement : this.vm.$el
   }
 
   get vm(): T {
@@ -65,21 +65,30 @@ export class VueWrapper<T extends ComponentPublicInstance>
     return true
   }
 
-  emitted() {
-    return this.__emitted
+  emitted(): Record<string, unknown[]> {
+    // TODO Should we define this?
+    // @ts-ignore
+    return this.vm.__emitted
   }
 
   html() {
-    return this.appRootNode.innerHTML
+    return this.parentElement.innerHTML
   }
 
   text() {
     return this.element.textContent?.trim()
   }
 
-  find<T extends Element>(selector: string): DOMWrapper<T> | ErrorWrapper {
+  find<K extends keyof HTMLElementTagNameMap>(
+    selector: K
+  ): DOMWrapper<HTMLElementTagNameMap[K]> | ErrorWrapper
+  find<K extends keyof SVGElementTagNameMap>(
+    selector: K
+  ): DOMWrapper<SVGElementTagNameMap[K]> | ErrorWrapper
+  find<T extends Element>(selector: string): DOMWrapper<T> | ErrorWrapper
+  find(selector: string): DOMWrapper<Element> | ErrorWrapper {
     // force using the parentElement to allow finding the root element
-    const result = this.parentElement.querySelector(selector) as T
+    const result = this.parentElement.querySelector(selector)
     if (result) {
       return new DOMWrapper(result)
     }
@@ -87,8 +96,15 @@ export class VueWrapper<T extends ComponentPublicInstance>
     return new ErrorWrapper({ selector })
   }
 
-  get<T extends Element>(selector: string): DOMWrapper<T> {
-    const result = this.find<T>(selector)
+  get<K extends keyof HTMLElementTagNameMap>(
+    selector: K
+  ): DOMWrapper<HTMLElementTagNameMap[K]>
+  get<K extends keyof SVGElementTagNameMap>(
+    selector: K
+  ): DOMWrapper<SVGElementTagNameMap[K]>
+  get<T extends Element>(selector: string): DOMWrapper<T>
+  get(selector: string): DOMWrapper<Element> {
+    const result = this.find(selector)
     if (result instanceof ErrorWrapper) {
       throw new Error(`Unable to find ${selector} within: ${this.html()}`)
     }
@@ -96,12 +112,36 @@ export class VueWrapper<T extends ComponentPublicInstance>
     return result
   }
 
-  findAll<T extends Element>(selector: string): DOMWrapper<T>[] {
-    const results = this.appRootNode.querySelectorAll<T>(selector)
-    return Array.from(results).map((x) => new DOMWrapper(x))
+  findComponent(selector: FindComponentSelector): VueWrapper<T> | ErrorWrapper {
+    if (typeof selector === 'object' && 'ref' in selector) {
+      return createWrapper(null, this.vm.$refs[selector.ref] as T)
+    }
+    const result = find(this.vm.$.subTree, selector)
+    if (!result.length) return new ErrorWrapper({ selector })
+    return createWrapper(null, result[0])
   }
 
-  setProps(props: Record<string, any>) {
+  findAllComponents(selector: FindAllComponentsSelector): VueWrapper<T>[] {
+    return find(this.vm.$.subTree, selector).map((c) => createWrapper(null, c))
+  }
+
+  findAll<K extends keyof HTMLElementTagNameMap>(
+    selector: K
+  ): DOMWrapper<HTMLElementTagNameMap[K]>[]
+  findAll<K extends keyof SVGElementTagNameMap>(
+    selector: K
+  ): DOMWrapper<SVGElementTagNameMap[K]>[]
+  findAll<T extends Element>(selector: string): DOMWrapper<T>[]
+  findAll(selector: string): DOMWrapper<Element>[] {
+    const results = this.parentElement.querySelectorAll(selector)
+    return Array.from(results).map((element) => new DOMWrapper(element))
+  }
+
+  setProps(props: Record<string, any>): Promise<void> {
+    // if this VM's parent is not the root, error out
+    if (this.vm.$parent !== this.rootVM) {
+      throw Error('You can only use setProps on your mounted component')
+    }
     this.__setProps(props)
     return nextTick()
   }
@@ -110,12 +150,26 @@ export class VueWrapper<T extends ComponentPublicInstance>
     const rootElementWrapper = new DOMWrapper(this.element)
     return rootElementWrapper.trigger(eventString, options)
   }
+
+  unmount() {
+    // preventing dispose of child component
+    if (!this.__app) {
+      throw new Error(
+        `wrapper.unmount() can only be called by the root wrapper`
+      )
+    }
+
+    if (this.parentElement) {
+      this.parentElement.removeChild(this.element)
+    }
+    this.__app.unmount(this.element)
+  }
 }
 
 export function createWrapper<T extends ComponentPublicInstance>(
+  app: App,
   vm: ComponentPublicInstance,
-  events: Record<string, unknown[]>,
-  setProps: (props: Record<string, any>) => void
+  setProps?: (props: Record<string, any>) => void
 ): VueWrapper<T> {
-  return new VueWrapper<T>(vm, events, setProps)
+  return new VueWrapper<T>(app, vm, setProps)
 }

@@ -1,6 +1,7 @@
 import { defineComponent, h, ref } from 'vue'
 
 import { mount } from '../src'
+import { keyCodesByKeyName } from '../src/create-dom-event'
 
 describe('trigger', () => {
   describe('on click', () => {
@@ -141,24 +142,6 @@ describe('trigger', () => {
     it('causes keydown handler to fire converting keyName in an apropiate keyCode when wrapper.trigger("keydown.${keyName}") is fired', async () => {
       let keydownHandler = jest.fn()
 
-      const keyCodesByKeyName = {
-        backspace: 8,
-        tab: 9,
-        enter: 13,
-        esc: 27,
-        space: 32,
-        pageup: 33,
-        pagedown: 34,
-        end: 35,
-        home: 36,
-        left: 37,
-        up: 38,
-        right: 39,
-        down: 40,
-        insert: 45,
-        delete: 46
-      }
-
       const Component = {
         template: '<input @keydown="keydownHandler" />',
         methods: { keydownHandler }
@@ -172,9 +155,7 @@ describe('trigger', () => {
         const calls = keydownHandler.mock.calls
         const currentCall = calls[calls.length - 1][0]
 
-        // expect(currentCall.key).toBe('')
         expect(currentCall.keyCode).toBe(keyCode)
-        // expect(currentCall.code).toBe(keyCode.toString())
       }
     })
   })

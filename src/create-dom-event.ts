@@ -14,7 +14,7 @@ interface EventParams {
   options?: TriggerOptions
 }
 
-const keyCodesByKeyName = {
+export const keyCodesByKeyName = {
   backspace: 8,
   tab: 9,
   enter: 13,
