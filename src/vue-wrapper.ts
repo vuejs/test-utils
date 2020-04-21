@@ -114,8 +114,12 @@ export class VueWrapper<T extends ComponentPublicInstance>
 
   findComponent(selector: FindComponentSelector): VueWrapper<T> | ErrorWrapper {
     if (typeof selector === 'object' && 'ref' in selector) {
-      return createWrapper(null, this.vm.$refs[selector.ref] as T)
+      const result = this.vm.$refs[selector.ref]
+      return result
+        ? createWrapper(null, this.vm.$refs[selector.ref] as T)
+        : new ErrorWrapper({ selector })
     }
+
     const result = find(this.vm.$.subTree, selector)
     if (!result.length) return new ErrorWrapper({ selector })
     return createWrapper(null, result[0])

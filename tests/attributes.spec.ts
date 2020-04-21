@@ -1,5 +1,6 @@
 import { h } from 'vue'
 import { mount } from '../src'
+import Hello from './components/Hello.vue'
 
 describe('attributes', () => {
   it('returns an object with attributes', () => {
@@ -43,5 +44,24 @@ describe('attributes', () => {
     }
     const wrapper = mount(component)
     expect(wrapper.attributes('fake')).toEqual(undefined)
+  })
+
+  it('returns attributes on a stubbed component', () => {
+    const Component = {
+      template: '<hello class="hello-outside" data-testid="hello" disabled />',
+      components: { Hello }
+    }
+
+    const wrapper = mount(Component, {
+      global: {
+        stubs: ['Hello']
+      }
+    })
+
+    expect(wrapper.findComponent('.hello-outside').attributes()).toEqual({
+      class: 'hello-outside',
+      'data-testid': 'hello',
+      disabled: ''
+    })
   })
 })

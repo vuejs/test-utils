@@ -52,6 +52,10 @@ export class ErrorWrapper {
     throw this.wrapperError('setValue')
   }
 
+  props() {
+    throw this.wrapperError('props')
+  }
+
   text() {
     throw this.wrapperError('text')
   }

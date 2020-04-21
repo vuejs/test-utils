@@ -17,6 +17,8 @@ function matches(node: VNode, selector: FindAllComponentsSelector): boolean {
   }
 
   if (typeof selector === 'object' && typeof node.type === 'object') {
+    if (selector === node.type) return true
+
     if (selector.name && ('name' in node.type || 'displayName' in node.type)) {
       // match normal component definitions or functional components
       return matchName(selector.name, node.type.name || node.type.displayName)
