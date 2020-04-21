@@ -1,6 +1,8 @@
-import { mount, VueWrapper, config } from '../../src'
+import { mount, config } from '../../src'
+import { WrapperAPI } from '../../src/types'
 
 declare module '../../src/vue-wrapper' {
+  // @ts-ignore
   interface VueWrapper {
     width(): number
     $el: Element
@@ -26,13 +28,14 @@ describe('Plugin', () => {
     })
 
     it('receives the wrapper inside the plugin setup', () => {
-      const plugin = (wrapper) => {
+      const plugin = (wrapper: WrapperAPI) => {
         return {
           $el: wrapper.element // simple aliases
         }
       }
       config.plugins.VueWrapper.install(plugin)
       const wrapper = mountComponent()
+      // @ts-ignore
       expect(wrapper.$el.innerHTML).toEqual(textValue)
     })
 
@@ -40,6 +43,7 @@ describe('Plugin', () => {
       const myMethod = jest.fn()
       const plugin = () => ({ myMethod })
       config.plugins.VueWrapper.install(plugin)
+      // @ts-ignore
       mountComponent().myMethod()
       expect(myMethod).toHaveBeenCalledTimes(1)
     })
