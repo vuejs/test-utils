@@ -1,3 +1,13 @@
+import { GlobalMountOptions } from './types'
+
+interface GlobalConfigOptions {
+  global: GlobalMountOptions
+  plugins: {
+    VueWrapper: Pluggable
+    DOMWrapper: Pluggable
+  }
+}
+
 class Pluggable {
   installedPlugins: any
   constructor() {
@@ -32,7 +42,8 @@ class Pluggable {
   }
 }
 
-export const config = {
+export const config: GlobalConfigOptions = {
+  global: {},
   plugins: {
     VueWrapper: new Pluggable(),
     DOMWrapper: new Pluggable()

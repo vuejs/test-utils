@@ -41,23 +41,53 @@ export class DOMWrapper<ElementType extends Element> implements WrapperAPI {
     return this.element.outerHTML
   }
 
-  find<T extends Element>(selector: string): DOMWrapper<T> | ErrorWrapper {
-    const result = this.element.querySelector<T>(selector)
+  find<K extends keyof HTMLElementTagNameMap>(
+    selector: K
+  ): DOMWrapper<HTMLElementTagNameMap[K]> | ErrorWrapper
+  find<K extends keyof SVGElementTagNameMap>(
+    selector: K
+  ): DOMWrapper<SVGElementTagNameMap[K]> | ErrorWrapper
+  find<T extends Element>(selector: string): DOMWrapper<T> | ErrorWrapper
+  find(selector: string): DOMWrapper<Element> | ErrorWrapper {
+    const result = this.element.querySelector(selector)
     if (result) {
-      return new DOMWrapper<T>(result)
+      return new DOMWrapper(result)
     }
 
     return new ErrorWrapper({ selector })
   }
 
-  findAll<T extends Element>(selector: string): DOMWrapper<T>[] {
-    return Array.from(this.element.querySelectorAll<T>(selector)).map(
+  get<K extends keyof HTMLElementTagNameMap>(
+    selector: K
+  ): DOMWrapper<HTMLElementTagNameMap[K]>
+  get<K extends keyof SVGElementTagNameMap>(
+    selector: K
+  ): DOMWrapper<SVGElementTagNameMap[K]>
+  get<T extends Element>(selector: string): DOMWrapper<T>
+  get(selector: string): DOMWrapper<Element> {
+    const result = this.find(selector)
+    if (result instanceof ErrorWrapper) {
+      throw new Error(`Unable to find ${selector} within: ${this.html()}`)
+    }
+
+    return result
+  }
+
+  findAll<K extends keyof HTMLElementTagNameMap>(
+    selector: K
+  ): DOMWrapper<HTMLElementTagNameMap[K]>[]
+  findAll<K extends keyof SVGElementTagNameMap>(
+    selector: K
+  ): DOMWrapper<SVGElementTagNameMap[K]>[]
+  findAll<T extends Element>(selector: string): DOMWrapper<T>[]
+  findAll(selector: string): DOMWrapper<Element>[] {
+    return Array.from(this.element.querySelectorAll(selector)).map(
       (x) => new DOMWrapper(x)
     )
   }
 
   private async setChecked(checked: boolean = true) {
-    // typecast so we get typesafety
+    // typecast so we get type safety
     const element = (this.element as unknown) as HTMLInputElement
     const type = this.attributes().type
 
@@ -69,7 +99,7 @@ export class DOMWrapper<ElementType extends Element> implements WrapperAPI {
 
     // we do not want to trigger an event if the user
     // attempting set the same value twice
-    // this is beacuse in a browser setting checked = true when it is
+    // this is because in a browser setting checked = true when it is
     // already true is a no-op; no change event is triggered
     if (checked === element.checked) {
       return

@@ -1,4 +1,5 @@
 import ts from 'rollup-plugin-typescript2'
+import resolve from '@rollup/plugin-node-resolve'
 
 import pkg from './package.json'
 
@@ -19,8 +20,15 @@ function createEntry(options) {
 
   const config = {
     input,
-    external: ['vue'],
-    plugins: [],
+    external: [
+      'vue',
+      'lodash/mergeWith',
+      'lodash/camelCase',
+      'lodash/upperFirst',
+      'lodash/kebabCase',
+      'lodash/flow'
+    ],
+    plugins: [resolve()],
     output: {
       banner,
       file: 'dist/vue-test-utils.other.js',
@@ -29,7 +37,7 @@ function createEntry(options) {
   }
 
   if (format === 'es') {
-    config.output.file = isBrowser ? pkg.browser : pkg.module 
+    config.output.file = isBrowser ? pkg.browser : pkg.module
   }
   if (format === 'cjs') {
     config.output.file = pkg.main
