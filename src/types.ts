@@ -8,6 +8,7 @@ export interface WrapperAPI {
   classes: (className?: string) => string[] | boolean | ErrorWrapper
   readonly element: Element
   exists: () => boolean
+  get<T extends Element>(selector: string): DOMWrapper<T>
   find<T extends Element>(selector: string): DOMWrapper<T> | ErrorWrapper
   findAll<T extends Element>(selector: string): DOMWrapper<T>[]
   html: () => string
