@@ -26,7 +26,9 @@ function createEntry(options) {
       'lodash/camelCase',
       'lodash/upperFirst',
       'lodash/kebabCase',
-      'lodash/flow'
+      'lodash/flow',
+      'lodash/isString',
+      'dom-event-types'
     ],
     plugins: [resolve()],
     output: {

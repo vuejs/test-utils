@@ -133,6 +133,7 @@ describe('findComponent', () => {
         stubs: ['Hello']
       }
     })
+
     expect(wrapper.findComponent({ ref: 'hello' }).exists()).toBe(true)
   })
 

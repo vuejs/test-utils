@@ -65,4 +65,35 @@ describe('emitted', () => {
     wrapper.find('button').trigger('click')
     expect(wrapper.emitted().hello[1]).toEqual(['foo', 'bar'])
   })
+
+  it('should propagate the original event', () => {
+    const Component = defineComponent({
+      name: 'ContextEmit',
+
+      setup(props, { emit }) {
+        return () =>
+          h('div', [
+            h('button', { onClick: () => emit('hello', 'foo', 'bar') })
+          ])
+      }
+    })
+
+    const Parent = defineComponent({
+      name: 'Parent',
+
+      setup(props, { emit }) {
+        return () =>
+          h(Component, { onHello: (...events) => emit('parent', ...events) })
+      }
+    })
+    const wrapper = mount(Parent)
+    expect(wrapper.emitted()).toEqual({})
+    expect(wrapper.emitted().hello).toEqual(undefined)
+
+    wrapper.find('button').trigger('click')
+    expect(wrapper.emitted().parent[0]).toEqual(['foo', 'bar'])
+
+    wrapper.find('button').trigger('click')
+    expect(wrapper.emitted().parent[1]).toEqual(['foo', 'bar'])
+  })
 })

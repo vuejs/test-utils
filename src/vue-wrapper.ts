@@ -8,6 +8,7 @@ import {
   WrapperAPI
 } from './types'
 import { ErrorWrapper } from './error-wrapper'
+import { TriggerOptions } from './create-dom-event'
 import { find } from './utils/find'
 
 export class VueWrapper<T extends ComponentPublicInstance>
@@ -115,9 +116,10 @@ export class VueWrapper<T extends ComponentPublicInstance>
     if (typeof selector === 'object' && 'ref' in selector) {
       const result = this.vm.$refs[selector.ref]
       return result
-        ? createWrapper(null, result as T)
+        ? createWrapper(result as T)
         : new ErrorWrapper({ selector })
     }
+
     const result = find(this.vm.$.subTree, selector)
     if (!result.length) return new ErrorWrapper({ selector })
     return createWrapper(null, result[0])
@@ -148,9 +150,9 @@ export class VueWrapper<T extends ComponentPublicInstance>
     return nextTick()
   }
 
-  trigger(eventString: string) {
+  trigger(eventString: string, options?: TriggerOptions) {
     const rootElementWrapper = new DOMWrapper(this.element)
-    return rootElementWrapper.trigger(eventString)
+    return rootElementWrapper.trigger(eventString, options)
   }
 
   unmount() {

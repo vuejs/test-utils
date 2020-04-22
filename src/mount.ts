@@ -15,7 +15,7 @@ import {
 
 import { config } from './config'
 import { GlobalMountOptions } from './types'
-import { mergeGlobalProperties } from './utils'
+import { mergeGlobalProperties, isString } from './utils'
 import { createWrapper, VueWrapper } from './vue-wrapper'
 import { attachEmitListener } from './emitMixin'
 import { createDataMixin } from './dataMixin'
@@ -36,6 +36,7 @@ interface MountingOptions<Props> {
     [key: string]: Slot
   }
   global?: GlobalMountOptions
+  attachTo?: HTMLElement | string
 }
 
 // Component declared with defineComponent
@@ -76,10 +77,21 @@ export function mount(
 ): VueWrapper<any> {
   const component = { ...originalComponent }
 
-  // Reset the document.body
-  document.getElementsByTagName('html')[0].innerHTML = ''
   const el = document.createElement('div')
   el.id = MOUNT_ELEMENT_ID
+
+  if (options?.attachTo) {
+    const to = isString(options.attachTo)
+      ? document.querySelector(options.attachTo)
+      : options.attachTo
+
+    el.appendChild(to)
+  }
+  if (el.children.length === 0) {
+    // Reset the document.body
+    document.getElementsByTagName('html')[0].innerHTML = ''
+  }
+
   document.body.appendChild(el)
 
   // handle any slots passed via mounting options
