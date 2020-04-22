@@ -93,6 +93,19 @@ describe('findComponent', () => {
     expect(wrapper.findComponent(ComponentWithoutName).exists()).toBe(true)
   })
 
+  it.skip('finds a component without a name by its locally assigned name', () => {
+    const Component = {
+      template: '<div><component-without-name/></div>',
+      components: {
+        ComponentWithoutName
+      }
+    }
+    const wrapper = mount(Component)
+    expect(
+      wrapper.findComponent({ name: 'ComponentWithoutName' }).exists()
+    ).toBe(true)
+  })
+
   it('finds component by imported SFC file', () => {
     const wrapper = mount(compA)
     expect(wrapper.findComponent(Hello).text()).toBe('Hello world')

@@ -48,7 +48,7 @@ describe('mounting options: stubs', () => {
     )
   })
 
-  it('stubs a component without a name', () => {
+  it.skip('stubs a component without a name', () => {
     const Component = {
       template: '<div><foo/></div>',
       components: { Foo: ComponentWithoutName }
