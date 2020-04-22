@@ -1,5 +1,8 @@
 import { GlobalMountOptions } from './types'
 import mergeWith from 'lodash/mergeWith'
+import isString from 'lodash/isString'
+
+export { isString }
 
 export function mergeGlobalProperties(
   configGlobal: GlobalMountOptions = {},
