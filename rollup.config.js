@@ -47,6 +47,10 @@ function createEntry(options) {
     }
   }
 
+  if (['es', 'cjs'].includes(format)) {
+    config.external.push('dom-event-types')
+  }
+
   if (format === 'es') {
     config.output.file = isBrowser ? pkg.browser : pkg.module
   }
