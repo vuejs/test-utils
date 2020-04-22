@@ -1,5 +1,8 @@
 import ts from 'rollup-plugin-typescript2'
 import resolve from '@rollup/plugin-node-resolve'
+import replace from '@rollup/plugin-replace'
+import commonjs from '@rollup/plugin-commonjs'
+import json from '@rollup/plugin-json'
 
 import pkg from './package.json'
 
@@ -23,18 +26,24 @@ function createEntry(options) {
     external: [
       'vue',
       'lodash/mergeWith',
-      'lodash/camelCase',
-      'lodash/upperFirst',
-      'lodash/kebabCase',
-      'lodash/flow',
-      'lodash/isString',
-      'dom-event-types'
+      'lodash/isString'
     ],
-    plugins: [resolve()],
+    plugins: [
+      replace({
+        "process.env.NODE_ENV": true
+      }),
+      resolve(), commonjs(), json()
+    ],
     output: {
       banner,
-      file: 'dist/vue-test-utils.other.js',
-      format
+      name: 'VueTestUtils',
+      file: 'dist/vue-test-utils.browser.js',
+      format,
+      globals: {
+        vue: 'Vue',
+        'lodash/mergeWith': '_.mergeWith',
+        'lodash/isString': '_.isString',
+      }
     }
   }
 
@@ -66,5 +75,6 @@ function createEntry(options) {
 export default [
   createEntry({ format: 'es', input: 'src/index.ts', isBrowser: false }),
   createEntry({ format: 'es', input: 'src/index.ts', isBrowser: true }),
+  createEntry({ format: 'iife', input: 'src/index.ts', isBrowser: true }),
   createEntry({ format: 'cjs', input: 'src/index.ts', isBrowser: false }),
 ]
