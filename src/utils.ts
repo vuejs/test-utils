@@ -1,10 +1,9 @@
-import { GlobalMountOptions } from './types'
-import mergeWith from 'lodash/mergeWith'
 import isString from 'lodash/isString'
+import mergeWith from 'lodash/mergeWith'
 
-export { isString }
+import { GlobalMountOptions } from './types'
 
-export function mergeGlobalProperties(
+function mergeGlobalProperties(
   configGlobal: GlobalMountOptions = {},
   mountGlobal: GlobalMountOptions = {}
 ): GlobalMountOptions {
@@ -26,3 +25,5 @@ export function mergeGlobalProperties(
     }
   )
 }
+
+export { isString, mergeGlobalProperties }
