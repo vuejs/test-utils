@@ -13,7 +13,7 @@ type VNodeArgs = any[]
 export const createStub = ({ name, props }: IStubOptions) => {
   const anonName = 'anonymous-stub'
   const tag = name ? `${hyphenate(name)}-stub` : anonName
-  const render = () => h(tag)
+  const render = (ctx) => h(tag, {}, ctx.$slots)
 
   return { name: name || anonName, render, props }
 }
@@ -77,7 +77,7 @@ export function stubComponents(stubs: Record<any, any>) {
         return [
           createStub({ name, props: propsDeclaration }),
           props,
-          {},
+          children,
           patchFlag,
           dynamicProps
         ]
