@@ -102,6 +102,30 @@ describe('setProps', () => {
     expect(wrapper.html()).toContain('Foo is: qux. Foobar is: qux-bar')
   })
 
+  it('does not break reactivity', async () => {
+    const useFoobar = (foo) => computed(() => `${foo}-bar`)
+    const Foo = defineComponent({
+      props: {
+        foo: { type: String }
+      },
+      setup(props) {
+        const foobar = useFoobar(props.foo)
+        return () =>
+          h('div', `Foo is: ${props.foo}. Foobar is: ${foobar.value}`)
+      }
+    })
+    const wrapper = mount(Foo, {
+      props: {
+        foo: 'foo'
+      }
+    })
+    expect(wrapper.html()).toContain('Foo is: foo. Foobar is: foo-bar')
+
+    await wrapper.setProps({ foo: 'qux' })
+
+    expect(wrapper.html()).toContain('Foo is: qux. Foobar is: qux-bar')
+  })
+
   it('non-existent props are rendered as attributes', async () => {
     const Foo = {
       props: ['foo'],
