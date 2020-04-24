@@ -1,9 +1,10 @@
+import { ComponentPublicInstance } from 'vue'
+
 import { mount, config } from '../../src'
 import { WrapperAPI } from '../../src/types'
 
 declare module '../../src/vue-wrapper' {
-  // @ts-ignore
-  interface VueWrapper {
+  interface VueWrapper<T extends ComponentPublicInstance> {
     width(): number
     $el: Element
     myMethod(): void
@@ -35,7 +36,6 @@ describe('Plugin', () => {
       }
       config.plugins.VueWrapper.install(plugin)
       const wrapper = mountComponent()
-      // @ts-ignore
       expect(wrapper.$el.innerHTML).toEqual(textValue)
     })
 
@@ -43,7 +43,6 @@ describe('Plugin', () => {
       const myMethod = jest.fn()
       const plugin = () => ({ myMethod })
       config.plugins.VueWrapper.install(plugin)
-      // @ts-ignore
       mountComponent().myMethod()
       expect(myMethod).toHaveBeenCalledTimes(1)
     })
