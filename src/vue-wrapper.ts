@@ -1,5 +1,6 @@
-import { ComponentPublicInstance, nextTick, App, render } from 'vue'
+import { ComponentPublicInstance, nextTick, App } from 'vue'
 import { ShapeFlags } from '@vue/shared'
+import { config } from './config'
 
 import { DOMWrapper } from './dom-wrapper'
 import {
@@ -11,6 +12,7 @@ import { ErrorWrapper } from './error-wrapper'
 import { TriggerOptions } from './create-dom-event'
 import { find } from './utils/find'
 
+// @ts-ignore
 export class VueWrapper<T extends ComponentPublicInstance>
   implements WrapperAPI {
   private componentVM: T
@@ -27,6 +29,8 @@ export class VueWrapper<T extends ComponentPublicInstance>
     this.rootVM = vm.$root
     this.componentVM = vm as T
     this.__setProps = setProps
+    // plugins hook
+    config.plugins.VueWrapper.extend(this)
   }
 
   private get hasMultipleRoots(): boolean {

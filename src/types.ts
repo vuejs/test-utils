@@ -27,6 +27,14 @@ interface NameSelector {
   name: string
 }
 
+interface RefSelector {
+  ref: string
+}
+
+interface NameSelector {
+  name: string
+}
+
 export type FindComponentSelector = RefSelector | NameSelector | string
 export type FindAllComponentsSelector = NameSelector | string
 
