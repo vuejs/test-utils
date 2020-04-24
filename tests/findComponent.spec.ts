@@ -112,6 +112,27 @@ describe('findComponent', () => {
     expect(wrapper.findComponent(compC).text()).toBe('C')
   })
 
+  it('finds component in a portal', async () => {
+    const Foo = {
+      name: 'Foo',
+      template: '<div>Foo</div>'
+    }
+
+    const Comp = defineComponent({
+      components: { Foo },
+      template: `
+        <div id="dest"></div>
+        <Teleport to="#dest">
+          <Foo />
+        </Teleport>
+      `
+    })
+    const wrapper = mount(Comp)
+
+    expect(wrapper.find('#dest').text()).toContain('Foo')
+    expect(wrapper.findComponent({ name: 'Foo' }).text()).toContain('Foo')
+  })
+
   it('finds component in a Suspense', async () => {
     const AsyncComponent = defineComponent({
       template: '{{ result }}',
