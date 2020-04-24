@@ -110,13 +110,21 @@ export class VueWrapper<T extends ComponentPublicInstance>
   get(selector: string): DOMWrapper<Element> {
     const result = this.find(selector)
     if (result instanceof ErrorWrapper) {
-      throw new Error(`Unable to find ${selector} within: ${this.html()}`)
+      throw new Error(`Unable to get ${selector} within: ${this.html()}`)
     }
 
     return result
   }
 
-  findComponent(selector: FindComponentSelector): VueWrapper<T> | ErrorWrapper {
+  findComponent<T extends ComponentPublicInstance>(
+    selector: new () => T
+  ): VueWrapper<T> | ErrorWrapper
+  findComponent<T extends ComponentPublicInstance>(
+    selector: FindComponentSelector
+  ): VueWrapper<T> | ErrorWrapper
+  findComponent<T extends ComponentPublicInstance>(
+    selector: any
+  ): VueWrapper<T> | ErrorWrapper {
     if (typeof selector === 'object' && 'ref' in selector) {
       const result = this.vm.$refs[selector.ref]
       return result
@@ -127,6 +135,25 @@ export class VueWrapper<T extends ComponentPublicInstance>
     const result = find(this.vm.$.subTree, selector)
     if (!result.length) return new ErrorWrapper({ selector })
     return createWrapper(null, result[0])
+  }
+
+  getComponent<T extends ComponentPublicInstance>(
+    selector: new () => T
+  ): VueWrapper<T>
+  getComponent<T extends ComponentPublicInstance>(
+    selector: FindComponentSelector
+  ): VueWrapper<T>
+  getComponent<T extends ComponentPublicInstance>(
+    selector: any
+  ): VueWrapper<T> {
+    const result = this.findComponent(selector)
+    if (result instanceof ErrorWrapper) {
+      throw new Error(
+        `Unable to get component with selector ${selector} within: ${this.html()}`
+      )
+    }
+
+    return result as VueWrapper<T>
   }
 
   findAllComponents(selector: FindAllComponentsSelector): VueWrapper<T>[] {
