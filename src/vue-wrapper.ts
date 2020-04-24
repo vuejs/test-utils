@@ -106,7 +106,7 @@ export class VueWrapper<T extends ComponentPublicInstance>
   get(selector: string): DOMWrapper<Element> {
     const result = this.find(selector)
     if (result instanceof ErrorWrapper) {
-      throw new Error(`Unable to find ${selector} within: ${this.html()}`)
+      throw new Error(`Unable to get ${selector} within: ${this.html()}`)
     }
 
     return result
@@ -145,7 +145,7 @@ export class VueWrapper<T extends ComponentPublicInstance>
     const result = this.findComponent(selector)
     if (result instanceof ErrorWrapper) {
       throw new Error(
-        `Unable to find component with selector ${selector} within: ${this.html()}`
+        `Unable to get component with selector ${selector} within: ${this.html()}`
       )
     }
 

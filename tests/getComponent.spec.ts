@@ -17,7 +17,7 @@ describe('getComponent', () => {
   it('should throw if not found', () => {
     const wrapper = mount(compA)
     expect(() => wrapper.getComponent('.domElement')).toThrowError(
-      'Unable to find component with selector .domElement within: <div class="A"></div>'
+      'Unable to get component with selector .domElement within: <div class="A"></div>'
     )
   })
 })

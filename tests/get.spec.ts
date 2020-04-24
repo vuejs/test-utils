@@ -23,7 +23,7 @@ describe('get', () => {
 
     const wrapper = mount(Component)
     expect(() => wrapper.get('#other-span')).toThrowError(
-      'Unable to find #other-span within: <div><span id="my-span"></span></div>'
+      'Unable to get #other-span within: <div><span id="my-span"></span></div>'
     )
   })
 })
