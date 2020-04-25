@@ -46,8 +46,12 @@ function findAllVNodes(vnode: VNode, selector: any): VNode[] {
   const nodes = [vnode]
   while (nodes.length) {
     const node = nodes.shift()
+    // match direct children
     aggregateChildren(nodes, node.children)
+    // match children of the wrapping component
     aggregateChildren(nodes, node.component?.subTree.children)
+    // match children if component is Suspense
+    aggregateChildren(nodes, node.suspense?.subTree.children)
     if (matches(node, selector)) {
       matchingNodes.push(node)
     }
