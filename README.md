@@ -62,7 +62,7 @@ component | ✅ | (new!) nested in [`global`](https://vuejs.github.io/vue-test-u
 directives | ✅ | (new!) nested in [`global`](https://vuejs.github.io/vue-test-utils-next-docs/api/#global)
 stubs | ✅ 
 attachToDocument |✅| renamed `attachTo`. See [here](https://github.com/vuejs/vue-test-utils/pull/1492)
-attrs | ❌ |
+attrs | ⚰️ | use `props` instead, it assigns both attributes and props. 
 scopedSlots | ⚰️ | scopedSlots are merged with slots in Vue 3
 context | ⚰️ | different from Vue 2, does not make sense anymore.
 localVue | ⚰️ | may not make sense anymore since we do not mutate the global Vue instance in Vue 3.
