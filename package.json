@@ -57,6 +57,7 @@
   },
   "scripts": {
     "test": "yarn jest --runInBand tests",
+    "test:build": "yarn jest --runInBand tests --use-build",
     "tsd": "tsd",
     "build": "yarn rollup -c rollup.config.js",
     "lint": "prettier -c --parser typescript \"(src|tests)/**/*.ts?(x)\"",
