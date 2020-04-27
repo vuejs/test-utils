@@ -1,11 +1,11 @@
 import { nextTick } from 'vue'
 
-import { WrapperAPI } from './types'
+import { DOMWrapperAPI } from './types'
 import { ErrorWrapper } from './error-wrapper'
 
 import { TriggerOptions, createDOMEvent } from './create-dom-event'
 
-export class DOMWrapper<ElementType extends Element> implements WrapperAPI {
+export class DOMWrapper<ElementType extends Element> implements DOMWrapperAPI {
   element: ElementType
 
   constructor(element: ElementType) {

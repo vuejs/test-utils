@@ -3,7 +3,9 @@ import { Component, ComponentOptions, Directive, Plugin } from 'vue'
 import { DOMWrapper } from './dom-wrapper'
 import { ErrorWrapper } from './error-wrapper'
 
-export interface WrapperAPI {
+export interface VueWrapperAPI<T> {}
+
+export interface DOMWrapperAPI {
   attributes: (key?: string) => string | Record<string, string>
   classes: (className?: string) => string[] | boolean | ErrorWrapper
   readonly element: Element
@@ -13,6 +15,7 @@ export interface WrapperAPI {
   findAll<T extends Element>(selector: string): DOMWrapper<T>[]
   html: () => string
   text: () => string
+  setValue: (value?: any) => Promise<(fn?: () => void) => Promise<void>>
   trigger: (
     eventString: string,
     options?: Object

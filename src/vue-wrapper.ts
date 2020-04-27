@@ -1,20 +1,19 @@
 import { ComponentPublicInstance, nextTick, App } from 'vue'
 import { ShapeFlags } from '@vue/shared'
-import { config } from './config'
 
+import { config } from './config'
 import { DOMWrapper } from './dom-wrapper'
 import {
   FindAllComponentsSelector,
   FindComponentSelector,
-  WrapperAPI
+  VueWrapperAPI
 } from './types'
 import { ErrorWrapper } from './error-wrapper'
 import { TriggerOptions } from './create-dom-event'
 import { find } from './utils/find'
 
-// @ts-ignore
 export class VueWrapper<T extends ComponentPublicInstance>
-  implements WrapperAPI {
+  implements VueWrapperAPI<T> {
   private componentVM: T
   private rootVM: ComponentPublicInstance
   private __app: App | null
