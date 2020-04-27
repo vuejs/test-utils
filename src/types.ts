@@ -2,6 +2,7 @@ import { Component, ComponentOptions, Directive, Plugin } from 'vue'
 
 import { DOMWrapper } from './dom-wrapper'
 import { ErrorWrapper } from './error-wrapper'
+import { DOMErrorWrapper } from './dom-error-wrapper'
 
 export interface VueWrapperAPI<T> {}
 
@@ -11,7 +12,7 @@ export interface DOMWrapperAPI {
   readonly element: Element
   exists: () => boolean
   get<T extends Element>(selector: string): DOMWrapper<T>
-  find<T extends Element>(selector: string): DOMWrapper<T> | ErrorWrapper
+  find<T extends Element>(selector: string): DOMWrapper<T> | DOMErrorWrapper
   findAll<T extends Element>(selector: string): DOMWrapper<T>[]
   html: () => string
   text: () => string

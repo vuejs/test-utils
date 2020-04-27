@@ -1,9 +1,9 @@
 import { nextTick } from 'vue'
 
 import { DOMWrapperAPI } from './types'
-import { ErrorWrapper } from './error-wrapper'
 
 import { TriggerOptions, createDOMEvent } from './create-dom-event'
+import { DOMErrorWrapper } from './dom-error-wrapper'
 
 export class DOMWrapper<ElementType extends Element> implements DOMWrapperAPI {
   element: ElementType
@@ -45,18 +45,18 @@ export class DOMWrapper<ElementType extends Element> implements DOMWrapperAPI {
 
   find<K extends keyof HTMLElementTagNameMap>(
     selector: K
-  ): DOMWrapper<HTMLElementTagNameMap[K]> | ErrorWrapper
+  ): DOMWrapper<HTMLElementTagNameMap[K]> | DOMErrorWrapper
   find<K extends keyof SVGElementTagNameMap>(
     selector: K
-  ): DOMWrapper<SVGElementTagNameMap[K]> | ErrorWrapper
-  find<T extends Element>(selector: string): DOMWrapper<T> | ErrorWrapper
-  find(selector: string): DOMWrapper<Element> | ErrorWrapper {
+  ): DOMWrapper<SVGElementTagNameMap[K]> | DOMErrorWrapper
+  find<T extends Element>(selector: string): DOMWrapper<T> | DOMErrorWrapper
+  find(selector: string): DOMWrapper<Element> | DOMErrorWrapper {
     const result = this.element.querySelector(selector)
     if (result) {
       return new DOMWrapper(result)
     }
 
-    return new ErrorWrapper({ selector })
+    return new DOMErrorWrapper({ selector })
   }
 
   get<K extends keyof HTMLElementTagNameMap>(
@@ -68,7 +68,7 @@ export class DOMWrapper<ElementType extends Element> implements DOMWrapperAPI {
   get<T extends Element>(selector: string): DOMWrapper<T>
   get(selector: string): DOMWrapper<Element> {
     const result = this.find(selector)
-    if (result instanceof ErrorWrapper) {
+    if (result instanceof DOMErrorWrapper) {
       throw new Error(`Unable to find ${selector} within: ${this.html()}`)
     }
 
