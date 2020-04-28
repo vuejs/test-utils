@@ -4,7 +4,9 @@ import { DOMWrapper } from './dom-wrapper'
 import { ErrorWrapper } from './error-wrapper'
 import { DOMWrapperError } from './dom-wrapper-error'
 
-export interface VueWrapperAPI<T> {}
+export interface VueWrapperAPI<T> {
+  element: Element
+}
 
 export interface DOMWrapperAPI {
   attributes: (key?: string) => string | Record<string, string>

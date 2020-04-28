@@ -109,7 +109,7 @@ export class VueWrapper<T extends ComponentPublicInstance>
   get<T extends Element>(selector: string): DOMWrapper<T>
   get(selector: string): DOMWrapper<Element> | DOMWrapperError {
     const result = this.find(selector)
-    if (result instanceof ErrorWrapper) {
+    if (result instanceof DOMWrapperError) {
       throw new Error(`Unable to get ${selector} within: ${this.html()}`)
     }
 
