@@ -148,9 +148,18 @@ export class VueWrapper<T extends ComponentPublicInstance>
   ): VueWrapper<T> {
     const result = this.findComponent(selector)
     if (result instanceof ErrorWrapper) {
-      throw new Error(
-        `Unable to get component with selector ${selector} within: ${this.html()}`
-      )
+      let message = 'Unable to get '
+      if (typeof selector === 'string') {
+        message += `component with selector ${selector}`
+      } else if (selector.name) {
+        message += `component with name ${selector.name}`
+      } else if (selector.ref) {
+        message += `component with ref ${selector.ref}`
+      } else {
+        message += 'specified component'
+      }
+      message += ` within: ${this.html()}`
+      throw new Error(message)
     }
 
     return result as VueWrapper<T>
