@@ -11,6 +11,7 @@ import {
 import { ErrorWrapper } from './error-wrapper'
 import { TriggerOptions } from './create-dom-event'
 import { find } from './utils/find'
+import { DOMWrapperError } from './dom-wrapper-error'
 
 export class VueWrapper<T extends ComponentPublicInstance>
   implements VueWrapperAPI<T> {
@@ -84,19 +85,19 @@ export class VueWrapper<T extends ComponentPublicInstance>
 
   find<K extends keyof HTMLElementTagNameMap>(
     selector: K
-  ): DOMWrapper<HTMLElementTagNameMap[K]> | ErrorWrapper
+  ): DOMWrapper<HTMLElementTagNameMap[K]> | DOMWrapperError
   find<K extends keyof SVGElementTagNameMap>(
     selector: K
-  ): DOMWrapper<SVGElementTagNameMap[K]> | ErrorWrapper
-  find<T extends Element>(selector: string): DOMWrapper<T> | ErrorWrapper
-  find(selector: string): DOMWrapper<Element> | ErrorWrapper {
+  ): DOMWrapper<SVGElementTagNameMap[K]> | DOMWrapperError
+  find<T extends Element>(selector: string): DOMWrapper<T> | DOMWrapperError
+  find(selector: string): DOMWrapper<Element> | DOMWrapperError {
     // force using the parentElement to allow finding the root element
     const result = this.parentElement.querySelector(selector)
     if (result) {
       return new DOMWrapper(result)
     }
 
-    return new ErrorWrapper({ selector })
+    return new DOMWrapperError({ selector })
   }
 
   get<K extends keyof HTMLElementTagNameMap>(
@@ -106,7 +107,7 @@ export class VueWrapper<T extends ComponentPublicInstance>
     selector: K
   ): DOMWrapper<SVGElementTagNameMap[K]>
   get<T extends Element>(selector: string): DOMWrapper<T>
-  get(selector: string): DOMWrapper<Element> {
+  get(selector: string): DOMWrapper<Element> | DOMWrapperError {
     const result = this.find(selector)
     if (result instanceof ErrorWrapper) {
       throw new Error(`Unable to get ${selector} within: ${this.html()}`)
