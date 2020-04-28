@@ -85,14 +85,8 @@ export function mount(
       ? document.querySelector(options.attachTo)
       : options.attachTo
 
-    el.appendChild(to)
+    to.appendChild(el)
   }
-  if (el.children.length === 0) {
-    // Reset the document.body
-    document.getElementsByTagName('html')[0].innerHTML = ''
-  }
-
-  document.body.appendChild(el)
 
   // handle any slots passed via mounting options
   const slots: VNodeNormalizedChildren =
