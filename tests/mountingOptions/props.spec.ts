@@ -1,22 +1,23 @@
 import { defineComponent, h } from 'vue'
-import WithProps from '../components/WithProps.vue'
 import { mount } from '../../src'
 
 describe('mountingOptions.props', () => {
-  test('passes props', () => {
-    const Component = defineComponent({
-      props: {
-        message: {
-          type: String,
-          required: true
-        }
+  const Component = defineComponent({
+    props: {
+      message: {
+        type: String,
+        required: true
       },
-
-      render() {
-        return h('div', {}, `Message is ${this.message}`)
+      otherMessage: {
+        type: String
       }
-    })
+    },
 
+    render() {
+      return h('div', {}, `Message is ${this.message}`)
+    }
+  })
+  test('passes props', () => {
     const wrapper = mount(Component, {
       props: {
         message: 'Hello'
@@ -26,12 +27,14 @@ describe('mountingOptions.props', () => {
   })
 
   test('assigns extra attributes on components', () => {
-    const wrapper = mount(WithProps, {
+    const wrapper = mount(Component, {
       props: {
+        message: 'Hello World'
+      },
+      attrs: {
         class: 'HelloFromTheOtherSide',
         id: 'hello',
-        disabled: true,
-        msg: 'Hello World'
+        disabled: true
       }
     })
 
@@ -42,7 +45,7 @@ describe('mountingOptions.props', () => {
     })
 
     expect(wrapper.props()).toEqual({
-      msg: 'Hello World'
+      message: 'Hello World'
     })
   })
 

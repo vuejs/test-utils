@@ -32,6 +32,7 @@ type Slot = VNode | string | { render: Function }
 interface MountingOptions<Props> {
   data?: () => Record<string, unknown>
   props?: Props
+  attrs?: Record<string, unknown>
   slots?: {
     default?: Slot
     [key: string]: Slot
@@ -47,37 +48,27 @@ type ExtractComponent<T> = T extends { new (): infer PublicInstance }
   : any
 
 // Component declared with defineComponent
-export function mount<
-  TestedComponent extends ComponentPublicInstance,
-  PublicProps extends TestedComponent['$props']
->(
+export function mount<TestedComponent extends ComponentPublicInstance>(
   originalComponent: { new (): TestedComponent } & Component,
-  options?: MountingOptions<PublicProps>
+  options?: MountingOptions<TestedComponent['$props']>
 ): VueWrapper<TestedComponent>
 // Component declared with { props: { ... } }
-export function mount<
-  TestedComponent extends ComponentOptionsWithObjectProps,
-  PublicProps extends ExtractPropTypes<TestedComponent['props']>
->(
+export function mount<TestedComponent extends ComponentOptionsWithObjectProps>(
   originalComponent: TestedComponent,
-  options?: MountingOptions<PublicProps>
+  options?: MountingOptions<ExtractPropTypes<TestedComponent['props'], false>>
 ): VueWrapper<ExtractComponent<TestedComponent>>
 // Component declared with { props: [] }
-export function mount<
-  TestedComponent extends ComponentOptionsWithArrayProps,
-  PublicProps extends Record<string, any>
->(
+export function mount<TestedComponent extends ComponentOptionsWithArrayProps>(
   originalComponent: TestedComponent,
-  options?: MountingOptions<PublicProps>
+  options?: MountingOptions<Record<string, any>>
 ): VueWrapper<ExtractComponent<TestedComponent>>
 // Component declared with no props
 export function mount<
   TestedComponent extends ComponentOptionsWithoutProps,
-  ComponentT extends ComponentOptionsWithoutProps & {},
-  PublicProps extends Record<string, any>
+  ComponentT extends ComponentOptionsWithoutProps & {}
 >(
   originalComponent: ComponentT extends { new (): any } ? never : ComponentT,
-  options?: MountingOptions<PublicProps>
+  options?: MountingOptions<never>
 ): VueWrapper<ExtractComponent<TestedComponent>>
 export function mount(
   originalComponent: any,
@@ -121,7 +112,11 @@ export function mount(
 
   // we define props as reactive so that way when we update them with `setProps`
   // Vue's reactivity system will cause a rerender.
-  const props = reactive({ ...options?.props, ref: MOUNT_COMPONENT_REF })
+  const props = reactive({
+    ...options?.attrs,
+    ...options?.props,
+    ref: MOUNT_COMPONENT_REF
+  })
 
   // create the wrapper component
   const Parent = defineComponent({
