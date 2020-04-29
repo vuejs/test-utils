@@ -13,7 +13,7 @@ export class ErrorWrapper implements DOMWrapperAPI {
   }
 
   wrapperError(method: string): Error {
-    return Error(`Cannot call ${method} on an empty DOM wrapper.`)
+    return Error(`Cannot call ${method} on an empty dom wrapper.`)
   }
 
   vm(): Error {
