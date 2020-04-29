@@ -1,6 +1,8 @@
 import { DOMWrapperAPI } from './types'
 
 export class DOMWrapperError implements DOMWrapperAPI {
+  element: null
+
   wrapperError(method: string): Error {
     return Error(`Cannot call ${method} on an empty dom wrapper.`)
   }

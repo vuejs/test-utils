@@ -11,6 +11,7 @@ export interface VueWrapperAPI<T> {
 export interface DOMWrapperAPI {
   attributes: (key?: string) => string | Record<string, string>
   classes: (className?: string) => string[] | boolean | ErrorWrapper
+  readonly element: Element
   exists: () => boolean
 
   get<K extends keyof HTMLElementTagNameMap>(
