@@ -35,6 +35,10 @@ See the [docs](https://vuejs.github.io/vue-test-utils-next-docs/guide/introducti
 
 This is still very much alpha - if you want to add a feature, have a hack or ping someone in Discord to chat, or check out the issues and project board.
 
+## Where is shallowMount
+
+It's coming soon. We are working on it. Stay tuned!
+
 ## Comparsion with Vue Test Utils beta (targeting Vue 2)
 
 This is table for those coming from VTU beta, comparing the two APIs. A lot of things are still a work in progress.
@@ -42,9 +46,6 @@ This is table for those coming from VTU beta, comparing the two APIs. A lot of t
 - ✅ - implemented
 - ❌ - not yet implemented
 - ⚰️ - will not be implemented (if you have a compelling use case, please open an issue)
-
-- Q: Where is `shallowMount`?
-- A: Coming soon. There is an issue and a PR open.
 
 ### Mounting Options
 
@@ -59,11 +60,11 @@ mixins | ✅ | (new!) nested in [`global`](https://vuejs.github.io/vue-test-util
 plugins | ✅ | (new!) nested in [`global`](https://vuejs.github.io/vue-test-utils-next-docs/api/#global)
 component | ✅ | (new!) nested in [`global`](https://vuejs.github.io/vue-test-utils-next-docs/api/#global)
 directives | ✅ | (new!) nested in [`global`](https://vuejs.github.io/vue-test-utils-next-docs/api/#global)
-stubs | ❌ 
-attachToDocument | ❌| will rename to `attachTo`. See [here](https://github.com/vuejs/vue-test-utils/pull/1492)
-attrs | ❌ |
+stubs | ✅ 
+attachToDocument |✅| renamed `attachTo`. See [here](https://github.com/vuejs/vue-test-utils/pull/1492)
+attrs | ⚰️ | use `props` instead, it assigns both attributes and props. 
 scopedSlots | ⚰️ | scopedSlots are merged with slots in Vue 3
-context | ⚰️ | different from Vue 2, may not make sense anymore.
+context | ⚰️ | different from Vue 2, does not make sense anymore.
 localVue | ⚰️ | may not make sense anymore since we do not mutate the global Vue instance in Vue 3.
 listeners | ⚰️ | no longer exists in Vue 3
 parentComponent | ⚰️ |
@@ -79,15 +80,16 @@ exists | ✅
 find | ✅ | only `querySelector` syntax is supported. `find(Comp)` under discussion [here](https://github.com/vuejs/vue-test-utils/issues/1498)
 emitted | ✅
 findAll | ✅ | see above. `.vm` is different to Vue 2. We are exploring options.
+get | ✅
 html | ✅
 setValue | ✅ | works for select, checkbox, radio button, input, textarea. Returns `nextTick`.
 text | ✅ |
 trigger | ✅ | returns `nextTick`. You can do `await wrapper.find('button').trigger('click')`
 setProps | ✅ |
+props | ✅
 setData | ❌ | has PR
-destroy | ❌
-get | ❌
-props | ❌
+destroy | ✅ | renamed to `unmount` to match Vue 3 lifecycle hook name.
+props | ✅ 
 contains | ⚰️| use `find` 
 emittedByOrder | ⚰️ | use `emitted`
 setSelected | ⚰️ | now part of `setValue` 

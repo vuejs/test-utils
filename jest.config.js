@@ -1,6 +1,8 @@
 module.exports = {
   preset: 'ts-jest',
-  globals: {},
+  globals: {
+    __USE_BUILD__: process.argv.indexOf('-use-build') >= 0
+  },
   testEnvironment: 'jsdom',
   transform: {
     "^.+\\.vue$": "vue-jest",

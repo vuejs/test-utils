@@ -1,5 +1,8 @@
 import ts from 'rollup-plugin-typescript2'
 import resolve from '@rollup/plugin-node-resolve'
+import replace from '@rollup/plugin-replace'
+import commonjs from '@rollup/plugin-commonjs'
+import json from '@rollup/plugin-json'
 
 import pkg from './package.json'
 
@@ -21,23 +24,37 @@ function createEntry(options) {
   const config = {
     input,
     external: [
-      'vue', 
+      'vue',
       'lodash/mergeWith',
-      'lodash/camelCase',
-      'lodash/upperFirst',
-      'lodash/kebabCase',
-      'lodash/flow'
+      'lodash/isString',
+      'lodash/merge'
     ],
-    plugins: [resolve()],
+    plugins: [
+      replace({
+        "process.env.NODE_ENV": true
+      }),
+      resolve(), commonjs(), json()
+    ],
     output: {
       banner,
-      file: 'dist/vue-test-utils.other.js',
-      format
+      name: 'VueTestUtils',
+      file: 'dist/vue-test-utils.browser.js',
+      format,
+      globals: {
+        vue: 'Vue',
+        'lodash/mergeWith': '_.mergeWith',
+        'lodash/isString': '_.isString',
+        'lodash/merge': '_.merge',
+      }
     }
   }
 
+  if (['es', 'cjs'].includes(format)) {
+    config.external.push('dom-event-types')
+  }
+
   if (format === 'es') {
-    config.output.file = isBrowser ? pkg.browser : pkg.module 
+    config.output.file = isBrowser ? pkg.browser : pkg.module
   }
   if (format === 'cjs') {
     config.output.file = pkg.main
@@ -64,5 +81,6 @@ function createEntry(options) {
 export default [
   createEntry({ format: 'es', input: 'src/index.ts', isBrowser: false }),
   createEntry({ format: 'es', input: 'src/index.ts', isBrowser: true }),
+  createEntry({ format: 'iife', input: 'src/index.ts', isBrowser: true }),
   createEntry({ format: 'cjs', input: 'src/index.ts', isBrowser: false }),
 ]

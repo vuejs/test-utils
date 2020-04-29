@@ -2,6 +2,7 @@ import { defineComponent, h } from 'vue'
 
 import { mount } from '../src'
 import SuspenseComponent from './components/Suspense.vue'
+import Hello from './components/Hello.vue'
 
 describe('find', () => {
   it('find using single root node', () => {

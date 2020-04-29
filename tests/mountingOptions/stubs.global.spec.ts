@@ -2,8 +2,91 @@ import { h, ComponentOptions } from 'vue'
 
 import { mount } from '../../src'
 import Hello from '../components/Hello.vue'
+import ComponentWithoutName from '../components/ComponentWithoutName.vue'
 
 describe('mounting options: stubs', () => {
+  it('handles Array syntax', () => {
+    const Foo = {
+      name: 'Foo',
+      render() {
+        return h('p')
+      }
+    }
+    const Component: ComponentOptions = {
+      render() {
+        return h(() => [h('div'), h(Foo)])
+      }
+    }
+
+    const wrapper = mount(Component, {
+      global: {
+        stubs: ['foo']
+      }
+    })
+
+    expect(wrapper.html()).toBe('<div></div><foo-stub></foo-stub>')
+  })
+
+  it('stubs a functional component by its variable declaration name', () => {
+    const FunctionalFoo = (props) => h('p', props, 'Foo Text')
+
+    const Component = {
+      template: '<div><foo/></div>',
+      components: { Foo: FunctionalFoo }
+    }
+
+    const wrapper = mount(Component, {
+      global: {
+        stubs: {
+          FunctionalFoo: true
+        }
+      }
+    })
+
+    expect(wrapper.html()).toEqual(
+      '<div><functional-foo-stub></functional-foo-stub></div>'
+    )
+  })
+
+  // TODO: fix this
+  // https://github.com/vuejs/vue-test-utils-next/pull/80#issuecomment-617188758
+  it.skip('stubs a component without a name', () => {
+    const Component = {
+      template: '<div><foo/></div>',
+      components: { Foo: ComponentWithoutName }
+    }
+    const wrapper = mount(Component, {
+      global: {
+        stubs: { Foo: true }
+      }
+    })
+
+    expect(wrapper.html()).toEqual('<div><foo-stub></foo-stub></div>')
+  })
+
+  it('passes all attributes to stubbed components', () => {
+    const Foo = {
+      name: 'Foo',
+      props: ['dynamic'],
+      template: '<p class="Foo">Foo</p>'
+    }
+    const Component = {
+      data: () => ({ dynamic: { foo: 'bar' } }),
+      template:
+        '<div><foo class="bar" test-id="foo" :dynamic="dynamic"/></div>',
+      components: { Foo }
+    }
+    const wrapper = mount(Component, {
+      global: {
+        stubs: { Foo: true }
+      }
+    })
+
+    expect(wrapper.html()).toEqual(
+      '<div><foo-stub class="bar" test-id="foo"></foo-stub></div>'
+    )
+  })
+
   it('stubs in a fragment', () => {
     const Foo = {
       name: 'Foo',
@@ -196,7 +279,7 @@ describe('mounting options: stubs', () => {
       }
     })
 
-    expect(wrapper.html()).toBe('<foobar-stub></foobar-stub>')
+    expect(wrapper.html()).toBe('<foo-bar-stub></foo-bar-stub>')
   })
 
   it('stubs a component with registered with strange casing', () => {
@@ -215,6 +298,6 @@ describe('mounting options: stubs', () => {
       }
     })
 
-    expect(wrapper.html()).toBe('<foobar-stub></foobar-stub>')
+    expect(wrapper.html()).toBe('<foo-bar-stub></foo-bar-stub>')
   })
 })
