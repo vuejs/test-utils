@@ -97,7 +97,7 @@ export class VueWrapper<T extends ComponentPublicInstance>
       return new DOMWrapper(result)
     }
 
-    return new DOMWrapperError({ selector })
+    return new DOMWrapperError()
   }
 
   get<K extends keyof HTMLElementTagNameMap>(

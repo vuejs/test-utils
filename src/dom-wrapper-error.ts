@@ -1,19 +1,8 @@
-import { FindComponentSelector, DOMWrapperAPI } from './types'
-
-interface Options {
-  selector: FindComponentSelector
-}
+import { DOMWrapperAPI } from './types'
 
 export class DOMWrapperError implements DOMWrapperAPI {
-  private selector: FindComponentSelector
-  element: null
-
-  constructor({ selector }: Options) {
-    this.selector = selector
-  }
-
   wrapperError(method: string): Error {
-    return Error(`Cannot call ${method} on an empty wrapper.`)
+    return Error(`Cannot call ${method} on an empty dom wrapper.`)
   }
 
   attributes(): never {

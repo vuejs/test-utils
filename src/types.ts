@@ -11,11 +11,36 @@ export interface VueWrapperAPI<T> {
 export interface DOMWrapperAPI {
   attributes: (key?: string) => string | Record<string, string>
   classes: (className?: string) => string[] | boolean | ErrorWrapper
-  readonly element: Element
   exists: () => boolean
+
+  get<K extends keyof HTMLElementTagNameMap>(
+    selector: K
+  ): DOMWrapper<HTMLElementTagNameMap[K]>
+  get<K extends keyof SVGElementTagNameMap>(
+    selector: K
+  ): DOMWrapper<SVGElementTagNameMap[K]>
   get<T extends Element>(selector: string): DOMWrapper<T>
+  get(selector: string): DOMWrapper<Element>
+
+  find<K extends keyof HTMLElementTagNameMap>(
+    selector: K
+  ): DOMWrapper<HTMLElementTagNameMap[K]> | DOMWrapperError
+  find<K extends keyof SVGElementTagNameMap>(
+    selector: K
+  ): DOMWrapper<SVGElementTagNameMap[K]> | DOMWrapperError
   find<T extends Element>(selector: string): DOMWrapper<T> | DOMWrapperError
+  find<T extends Element>(selector: string): DOMWrapper<T> | DOMWrapperError
+  find(selector: string): DOMWrapper<Element> | DOMWrapperError
+
+  findAll<K extends keyof HTMLElementTagNameMap>(
+    selector: K
+  ): DOMWrapper<HTMLElementTagNameMap[K]>[]
+  findAll<K extends keyof SVGElementTagNameMap>(
+    selector: K
+  ): DOMWrapper<SVGElementTagNameMap[K]>[]
   findAll<T extends Element>(selector: string): DOMWrapper<T>[]
+  findAll(selector: string): DOMWrapper<Element>[]
+
   html: () => string
   text: () => string
   setValue: (value?: any) => Promise<(fn?: () => void) => Promise<void>>

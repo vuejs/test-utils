@@ -56,7 +56,7 @@ export class DOMWrapper<ElementType extends Element> implements DOMWrapperAPI {
       return new DOMWrapper(result)
     }
 
-    return new DOMWrapperError({ selector })
+    return new DOMWrapperError()
   }
 
   get<K extends keyof HTMLElementTagNameMap>(
