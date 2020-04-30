@@ -54,8 +54,7 @@ export class DOMWrapper<ElementType extends Element> {
       return new DOMWrapper(result)
     }
 
-    createWrapperError({ selector })
-    // return new ErrorWrapper({ selector })
+    return createWrapperError({ selector })
   }
 
   get<K extends keyof HTMLElementTagNameMap>(
@@ -67,11 +66,11 @@ export class DOMWrapper<ElementType extends Element> {
   get<T extends Element>(selector: string): DOMWrapper<T>
   get(selector: string): DOMWrapper<Element> {
     const result = this.find(selector)
-    // if (result instanceof ErrorWrapper) {
-    //   throw new Error(`Unable to find ${selector} within: ${this.html()}`)
-    // }
+    if (result instanceof DOMWrapper) {
+      return result
+    }
 
-    return result
+    throw new Error(`Unable to get ${selector} within: ${this.html()}`)
   }
 
   findAll<K extends keyof HTMLElementTagNameMap>(

@@ -103,12 +103,12 @@ export class VueWrapper<T extends ComponentPublicInstance> {
   ): DOMWrapper<SVGElementTagNameMap[K]>
   get<T extends Element>(selector: string): DOMWrapper<T>
   get(selector: string): DOMWrapper<Element> {
-    const result = this.parentElement.querySelector(selector)
-    if (!result) {
-      throw new Error(`Unable to get ${selector} within: ${this.html()}`)
+    const result = this.find(selector)
+    if (result instanceof DOMWrapper) {
+      return result
     }
 
-    return new DOMWrapper(result)
+    throw new Error(`Unable to get ${selector} within: ${this.html()}`)
   }
 
   findComponent<T extends ComponentPublicInstance>(
