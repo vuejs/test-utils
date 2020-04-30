@@ -8,7 +8,6 @@ import { createWrapperError } from './error-wrapper'
 import { TriggerOptions } from './create-dom-event'
 import { find } from './utils/find'
 
-// @ts-ignore
 export class VueWrapper<T extends ComponentPublicInstance> {
   private componentVM: T
   private rootVM: ComponentPublicInstance
