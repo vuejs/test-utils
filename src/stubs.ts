@@ -1,4 +1,4 @@
-import { transformVNodeArgs, h } from 'vue'
+import { transformVNodeArgs, h, createVNode } from 'vue'
 import { hyphenate } from '@vue/shared'
 import { matchName } from './utils/matchName'
 
@@ -7,8 +7,7 @@ interface IStubOptions {
   props: any
 }
 
-// TODO: figure out how to type this
-type VNodeArgs = any[]
+type VNodeArgs = Parameters<typeof createVNode>
 
 export const createStub = ({ name, props }: IStubOptions) => {
   const anonName = 'anonymous-stub'
