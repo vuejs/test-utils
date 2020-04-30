@@ -1,70 +1,36 @@
-import { FindComponentSelector } from './types'
+import { ComponentPublicInstance } from 'vue'
 
-interface Options {
-  selector: FindComponentSelector
+import { DOMWrapper } from './dom-wrapper'
+import { VueWrapper } from './vue-wrapper'
+
+interface ErrorWrapperOptions {
+  selector?: string
 }
 
-export class ErrorWrapper {
-  selector: FindComponentSelector
-  element: null
+export function createWrapperError(options?: ErrorWrapperOptions) {
+  return new Proxy<DOMWrapper<Element>>(Object.create(null), {
+    get(obj, prop) {
+      switch (prop) {
+        case 'exists':
+          return () => false
+        default:
+          throw new Error(`Cannot call ${String(prop)} on an empty DOMWrapper.`)
+      }
+    }
+  })
+}
 
-  constructor({ selector }: Options) {
-    this.selector = selector
-  }
-
-  wrapperError(method: string): Error {
-    return Error(`Cannot call ${method} on an empty wrapper.`)
-  }
-
-  vm(): Error {
-    throw this.wrapperError('vm')
-  }
-
-  attributes() {
-    throw this.wrapperError('attributes')
-  }
-
-  classes() {
-    throw this.wrapperError('classes')
-  }
-
-  exists() {
-    return false
-  }
-
-  find(): never {
-    throw this.wrapperError('find')
-  }
-
-  get(): never {
-    throw this.wrapperError('get')
-  }
-
-  findAll(): never {
-    throw this.wrapperError('findAll')
-  }
-
-  setProps() {
-    throw this.wrapperError('setProps')
-  }
-
-  setValue() {
-    throw this.wrapperError('setValue')
-  }
-
-  props() {
-    throw this.wrapperError('props')
-  }
-
-  text() {
-    throw this.wrapperError('text')
-  }
-
-  trigger() {
-    throw this.wrapperError('trigger')
-  }
-
-  unmount() {
-    throw this.wrapperError('unmount')
-  }
+export function createVueWrapperError<T extends ComponentPublicInstance>(
+  options?: ErrorWrapperOptions
+) {
+  return new Proxy<VueWrapper<T>>(Object.create(null), {
+    get(obj, prop) {
+      switch (prop) {
+        case 'exists':
+          return () => false
+        default:
+          throw new Error(`Cannot call ${String(prop)} on an empty VueWrapper.`)
+      }
+    }
+  })
 }

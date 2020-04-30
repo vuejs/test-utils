@@ -3,18 +3,13 @@ import { ShapeFlags } from '@vue/shared'
 import { config } from './config'
 
 import { DOMWrapper } from './dom-wrapper'
-import {
-  FindAllComponentsSelector,
-  FindComponentSelector,
-  WrapperAPI
-} from './types'
-import { ErrorWrapper } from './error-wrapper'
+import { FindAllComponentsSelector, FindComponentSelector } from './types'
+import { createWrapperError, createVueWrapperError } from './error-wrapper'
 import { TriggerOptions } from './create-dom-event'
 import { find } from './utils/find'
 
 // @ts-ignore
-export class VueWrapper<T extends ComponentPublicInstance>
-  implements WrapperAPI {
+export class VueWrapper<T extends ComponentPublicInstance> {
   private componentVM: T
   private rootVM: ComponentPublicInstance
   private __app: App | null
@@ -85,19 +80,19 @@ export class VueWrapper<T extends ComponentPublicInstance>
 
   find<K extends keyof HTMLElementTagNameMap>(
     selector: K
-  ): DOMWrapper<HTMLElementTagNameMap[K]> | ErrorWrapper
+  ): DOMWrapper<HTMLElementTagNameMap[K]>
   find<K extends keyof SVGElementTagNameMap>(
     selector: K
-  ): DOMWrapper<SVGElementTagNameMap[K]> | ErrorWrapper
-  find<T extends Element>(selector: string): DOMWrapper<T> | ErrorWrapper
-  find(selector: string): DOMWrapper<Element> | ErrorWrapper {
+  ): DOMWrapper<SVGElementTagNameMap[K]>
+  find<T extends Element>(selector: string): DOMWrapper<T>
+  find(selector: string): DOMWrapper<Element> {
     // force using the parentElement to allow finding the root element
     const result = this.parentElement.querySelector(selector)
     if (result) {
       return new DOMWrapper(result)
     }
 
-    return new ErrorWrapper({ selector })
+    return createWrapperError({ selector })
   }
 
   get<K extends keyof HTMLElementTagNameMap>(
@@ -108,33 +103,36 @@ export class VueWrapper<T extends ComponentPublicInstance>
   ): DOMWrapper<SVGElementTagNameMap[K]>
   get<T extends Element>(selector: string): DOMWrapper<T>
   get(selector: string): DOMWrapper<Element> {
-    const result = this.find(selector)
-    if (result instanceof ErrorWrapper) {
+    const result = this.parentElement.querySelector(selector)
+    if (!result) {
       throw new Error(`Unable to get ${selector} within: ${this.html()}`)
     }
 
-    return result
+    return new DOMWrapper(result)
   }
 
   findComponent<T extends ComponentPublicInstance>(
     selector: new () => T
-  ): VueWrapper<T> | ErrorWrapper
+  ): VueWrapper<T>
   findComponent<T extends ComponentPublicInstance>(
     selector: FindComponentSelector
-  ): VueWrapper<T> | ErrorWrapper
+  ): VueWrapper<T>
   findComponent<T extends ComponentPublicInstance>(
     selector: any
-  ): VueWrapper<T> | ErrorWrapper {
+  ): VueWrapper<T> {
     if (typeof selector === 'object' && 'ref' in selector) {
       const result = this.vm.$refs[selector.ref]
-      return result
-        ? createWrapper(null, result as T)
-        : new ErrorWrapper({ selector })
+      if (result) {
+        return createWrapper(null, result as T)
+      }
     }
 
     const result = find(this.vm.$.subTree, selector)
-    if (!result.length) return new ErrorWrapper({ selector })
-    return createWrapper(null, result[0])
+    if (result.length) {
+      return createWrapper(null, result[0])
+    }
+
+    return createVueWrapperError<T>({ selector })
   }
 
   getComponent<T extends ComponentPublicInstance>(
@@ -147,22 +145,23 @@ export class VueWrapper<T extends ComponentPublicInstance>
     selector: any
   ): VueWrapper<T> {
     const result = this.findComponent(selector)
-    if (result instanceof ErrorWrapper) {
-      let message = 'Unable to get '
-      if (typeof selector === 'string') {
-        message += `component with selector ${selector}`
-      } else if (selector.name) {
-        message += `component with name ${selector.name}`
-      } else if (selector.ref) {
-        message += `component with ref ${selector.ref}`
-      } else {
-        message += 'specified component'
-      }
-      message += ` within: ${this.html()}`
-      throw new Error(message)
+
+    if (result instanceof VueWrapper) {
+      return result as VueWrapper<T>
     }
 
-    return result as VueWrapper<T>
+    let message = 'Unable to get '
+    if (typeof selector === 'string') {
+      message += `component with selector ${selector}`
+    } else if (selector.name) {
+      message += `component with name ${selector.name}`
+    } else if (selector.ref) {
+      message += `component with ref ${selector.ref}`
+    } else {
+      message += 'specified component'
+    }
+    message += ` within: ${this.html()}`
+    throw new Error(message)
   }
 
   findAllComponents(selector: FindAllComponentsSelector): VueWrapper<T>[] {

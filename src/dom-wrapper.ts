@@ -1,18 +1,16 @@
 import { nextTick } from 'vue'
 
-import { WrapperAPI } from './types'
-import { ErrorWrapper } from './error-wrapper'
-
+import { createWrapperError } from './error-wrapper'
 import { TriggerOptions, createDOMEvent } from './create-dom-event'
 
-export class DOMWrapper<ElementType extends Element> implements WrapperAPI {
+export class DOMWrapper<ElementType extends Element> {
   element: ElementType
 
   constructor(element: ElementType) {
     this.element = element
   }
 
-  classes(className?) {
+  classes(className?: string) {
     const classes = this.element.classList
 
     if (className) return classes.contains(className)
@@ -45,18 +43,19 @@ export class DOMWrapper<ElementType extends Element> implements WrapperAPI {
 
   find<K extends keyof HTMLElementTagNameMap>(
     selector: K
-  ): DOMWrapper<HTMLElementTagNameMap[K]> | ErrorWrapper
+  ): DOMWrapper<HTMLElementTagNameMap[K]>
   find<K extends keyof SVGElementTagNameMap>(
     selector: K
-  ): DOMWrapper<SVGElementTagNameMap[K]> | ErrorWrapper
-  find<T extends Element>(selector: string): DOMWrapper<T> | ErrorWrapper
-  find(selector: string): DOMWrapper<Element> | ErrorWrapper {
+  ): DOMWrapper<SVGElementTagNameMap[K]>
+  find<T extends Element>(selector: string): DOMWrapper<T>
+  find(selector: string): DOMWrapper<Element> {
     const result = this.element.querySelector(selector)
     if (result) {
       return new DOMWrapper(result)
     }
 
-    return new ErrorWrapper({ selector })
+    createWrapperError({ selector })
+    // return new ErrorWrapper({ selector })
   }
 
   get<K extends keyof HTMLElementTagNameMap>(
@@ -68,9 +67,9 @@ export class DOMWrapper<ElementType extends Element> implements WrapperAPI {
   get<T extends Element>(selector: string): DOMWrapper<T>
   get(selector: string): DOMWrapper<Element> {
     const result = this.find(selector)
-    if (result instanceof ErrorWrapper) {
-      throw new Error(`Unable to find ${selector} within: ${this.html()}`)
-    }
+    // if (result instanceof ErrorWrapper) {
+    //   throw new Error(`Unable to find ${selector} within: ${this.html()}`)
+    // }
 
     return result
   }
