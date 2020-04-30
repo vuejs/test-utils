@@ -1,7 +1,6 @@
 import { ComponentPublicInstance } from 'vue'
 
-import { mount, config } from '../../src'
-import { WrapperAPI } from '../../src/types'
+import { mount, config, VueWrapper } from '../../src'
 
 declare module '../../src/vue-wrapper' {
   interface VueWrapper<T extends ComponentPublicInstance> {
@@ -29,7 +28,7 @@ describe('Plugin', () => {
     })
 
     it('receives the wrapper inside the plugin setup', () => {
-      const plugin = (wrapper: WrapperAPI) => {
+      const plugin = (wrapper: VueWrapper<ComponentPublicInstance>) => {
         return {
           $el: wrapper.element // simple aliases
         }
