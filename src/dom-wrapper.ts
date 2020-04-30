@@ -54,7 +54,7 @@ export class DOMWrapper<ElementType extends Element> {
       return new DOMWrapper(result)
     }
 
-    return createWrapperError({ selector })
+    return createWrapperError('DOMWrapper')
   }
 
   get<K extends keyof HTMLElementTagNameMap>(

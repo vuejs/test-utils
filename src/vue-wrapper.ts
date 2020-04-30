@@ -4,7 +4,7 @@ import { config } from './config'
 
 import { DOMWrapper } from './dom-wrapper'
 import { FindAllComponentsSelector, FindComponentSelector } from './types'
-import { createWrapperError, createVueWrapperError } from './error-wrapper'
+import { createWrapperError } from './error-wrapper'
 import { TriggerOptions } from './create-dom-event'
 import { find } from './utils/find'
 
@@ -92,7 +92,7 @@ export class VueWrapper<T extends ComponentPublicInstance> {
       return new DOMWrapper(result)
     }
 
-    return createWrapperError({ selector })
+    return createWrapperError('DOMWrapper')
   }
 
   get<K extends keyof HTMLElementTagNameMap>(
@@ -132,7 +132,7 @@ export class VueWrapper<T extends ComponentPublicInstance> {
       return createWrapper(null, result[0])
     }
 
-    return createVueWrapperError<T>({ selector })
+    return createWrapperError('VueWrapper')
   }
 
   getComponent<T extends ComponentPublicInstance>(
