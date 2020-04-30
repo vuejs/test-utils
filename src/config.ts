@@ -1,5 +1,8 @@
 import { GlobalMountOptions } from './types'
 
-export const config: { global: GlobalMountOptions } = {
-  global: {}
+type Config = { global: GlobalMountOptions; renderAllStubSlots: boolean }
+
+export const config: Config = {
+  global: {},
+  renderAllStubSlots: false
 }

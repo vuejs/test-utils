@@ -1,6 +1,6 @@
 import { h, ComponentOptions } from 'vue'
 
-import { mount } from '../../src'
+import { config, mount } from '../../src'
 import Hello from '../components/Hello.vue'
 import ComponentWithoutName from '../components/ComponentWithoutName.vue'
 import ComponentWithSlots from '../components/ComponentWithSlots.vue'
@@ -302,23 +302,46 @@ describe('mounting options: stubs', () => {
     expect(wrapper.html()).toBe('<foo-bar-stub></foo-bar-stub>')
   })
 
-  it('renders stub slots by default', () => {
+  describe('stub slots', () => {
     const Component = {
       name: 'Parent',
-      template: `<div><component-with-slots>
-        <template #default>Default</template>
-        <template #named>A named</template>
-        <template #noop>A not existing one</template>
-      </component-with-slots></div>`,
+      template: `
+        <div>
+          <component-with-slots>
+            <template #default>Default</template>
+            <template #named>A named</template>
+            <template #noop>A not existing one</template>
+            <template #scoped="{ boolean, string }">{{ boolean }} {{ string }}</template>
+          </component-with-slots>
+        </div>`,
       components: { ComponentWithSlots }
     }
-    const wrapper = mount(Component, {
-      global: {
-        stubs: ['ComponentWithSlots']
-      }
+
+    afterEach(() => {
+      config.renderAllStubSlots = false
     })
-    expect(wrapper.html()).toBe(
-      '<div><component-with-slots-stub>Default A named With Default Content</component-with-slots-stub></div>'
-    )
+
+    it('renders only the default stub slot by default', () => {
+      const wrapper = mount(Component, {
+        global: {
+          stubs: ['ComponentWithSlots']
+        }
+      })
+      expect(wrapper.html()).toBe(
+        `<div><component-with-slots-stub>Default</component-with-slots-stub></div>`
+      )
+    })
+
+    it('renders all provided stub slots', () => {
+      config.renderAllStubSlots = true
+      const wrapper = mount(Component, {
+        global: {
+          stubs: ['ComponentWithSlots']
+        }
+      })
+      expect(wrapper.html()).toBe(
+        '<div><component-with-slots-stub>DefaultA namedA not existing one </component-with-slots-stub></div>'
+      )
+    })
   })
 })
