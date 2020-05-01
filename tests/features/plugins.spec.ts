@@ -47,6 +47,15 @@ describe('Plugin', () => {
     })
 
     describe('error states', () => {
+      beforeAll(() => {
+        jest.spyOn(console, 'error').mockImplementation(() => {})
+      })
+
+      afterAll(() => {
+        // @ts-ignore
+        console.error.mockRestore()
+      })
+
       const plugins = [
         () => false,
         () => true,

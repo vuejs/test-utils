@@ -10,7 +10,8 @@ import {
   ComponentOptionsWithObjectProps,
   ComponentOptionsWithArrayProps,
   ComponentOptionsWithoutProps,
-  ExtractPropTypes
+  ExtractPropTypes,
+  Component
 } from 'vue'
 
 import { config } from './config'
@@ -39,12 +40,18 @@ interface MountingOptions<Props> {
   attachTo?: HTMLElement | string
 }
 
+// TODO improve the typings of the overloads
+
+type ExtractComponent<T> = T extends { new (): infer PublicInstance }
+  ? PublicInstance
+  : any
+
 // Component declared with defineComponent
 export function mount<
   TestedComponent extends ComponentPublicInstance,
   PublicProps extends TestedComponent['$props']
 >(
-  originalComponent: new () => TestedComponent,
+  originalComponent: { new (): TestedComponent } & Component,
   options?: MountingOptions<PublicProps>
 ): VueWrapper<TestedComponent>
 // Component declared with { props: { ... } }
@@ -54,7 +61,7 @@ export function mount<
 >(
   originalComponent: TestedComponent,
   options?: MountingOptions<PublicProps>
-): VueWrapper<any>
+): VueWrapper<ExtractComponent<TestedComponent>>
 // Component declared with { props: [] }
 export function mount<
   TestedComponent extends ComponentOptionsWithArrayProps,
@@ -62,15 +69,16 @@ export function mount<
 >(
   originalComponent: TestedComponent,
   options?: MountingOptions<PublicProps>
-): VueWrapper<any>
+): VueWrapper<ExtractComponent<TestedComponent>>
 // Component declared with no props
 export function mount<
   TestedComponent extends ComponentOptionsWithoutProps,
+  ComponentT extends ComponentOptionsWithoutProps & {},
   PublicProps extends Record<string, any>
 >(
-  originalComponent: TestedComponent,
+  originalComponent: ComponentT extends { new (): any } ? never : ComponentT,
   options?: MountingOptions<PublicProps>
-): VueWrapper<any>
+): VueWrapper<ExtractComponent<TestedComponent>>
 export function mount(
   originalComponent: any,
   options?: MountingOptions<any>
