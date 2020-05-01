@@ -26,16 +26,21 @@ describe('mountingOptions.props', () => {
     expect(wrapper.text()).toBe('Message is Hello')
   })
 
-  test('assigns extra attributes on components', () => {
+  test('assigns extra properties as attributes on components', () => {
+    // the recommended way is to use `attrs` though
+    // and ideally it should not even compile, but props is too loosely typed
+    // for components defined with `defineComponent`
     const wrapper = mount(Component, {
       props: {
-        message: 'Hello World'
-      },
-      attrs: {
+        message: 'Hello World',
         class: 'HelloFromTheOtherSide',
         id: 'hello',
         disabled: true
       }
+    })
+
+    expect(wrapper.props()).toEqual({
+      message: 'Hello World'
     })
 
     expect(wrapper.attributes()).toEqual({
@@ -43,23 +48,5 @@ describe('mountingOptions.props', () => {
       disabled: 'true',
       id: 'hello'
     })
-
-    expect(wrapper.props()).toEqual({
-      message: 'Hello World'
-    })
-  })
-
-  test('assigns event listeners', async () => {
-    const Component = {
-      template: '<button @click="$emit(\'customEvent\', true)">Click</button>'
-    }
-    const onCustomEvent = jest.fn()
-    const wrapper = mount(Component, { props: { onCustomEvent } })
-    const button = wrapper.find('button')
-    await button.trigger('click')
-    await button.trigger('click')
-    await button.trigger('click')
-
-    expect(onCustomEvent).toHaveBeenCalledTimes(3)
   })
 })
