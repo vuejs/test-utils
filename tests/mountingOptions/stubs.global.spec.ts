@@ -343,5 +343,40 @@ describe('mounting options: stubs', () => {
         '<div><component-with-slots-stub>DefaultA namedA not existing one </component-with-slots-stub></div>'
       )
     })
+
+    it('renders the default slot of deeply nested stubs by default', () => {
+      const SimpleSlot = {
+        name: 'SimpleSlot',
+        template: '<div class="simpleSlot"><slot/></div>'
+      }
+      const WrappingComponent = {
+        template: `
+          <component-with-slots>
+            <component-with-slots>
+              <simple-slot>
+                <template #default>nested content</template>
+                <template #not-existing>not rendered</template>
+              </simple-slot>
+            </component-with-slots>
+          </component-with-slots>`,
+        components: {
+          ComponentWithSlots,
+          SimpleSlot
+        }
+      }
+      const wrapper = mount(WrappingComponent, {
+        global: {
+          stubs: ['component-with-slots', 'simple-slot']
+        }
+      })
+
+      expect(wrapper.html()).toEqual(
+        '<component-with-slots-stub>' +
+          '<component-with-slots-stub>' +
+          '<simple-slot-stub>nested content</simple-slot-stub>' +
+          '</component-with-slots-stub>' +
+          '</component-with-slots-stub>'
+      )
+    })
   })
 })
