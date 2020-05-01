@@ -28,7 +28,7 @@
     "@types/jest": "^24.9.1",
     "@types/lodash": "^4.14.149",
     "@types/node": "12.12.35",
-    "@vue/compiler-sfc": "^3.0.0-beta.4",
+    "@vue/compiler-sfc": "^3.0.0-beta.5",
     "babel-jest": "^25.2.3",
     "babel-preset-jest": "^25.2.1",
     "flush-promises": "^1.0.2",
@@ -43,7 +43,7 @@
     "ts-jest": "^25.0.0",
     "tsd": "0.11.0",
     "typescript": "^3.7.5",
-    "vue": "^3.0.0-beta.4",
+    "vue": "^3.0.0-beta.5",
     "vue-jest": "vuejs/vue-jest#next",
     "vuex": "^4.0.0-beta.1"
   },
