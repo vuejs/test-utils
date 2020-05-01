@@ -10,7 +10,7 @@ interface IStubOptions {
 // TODO: figure out how to type this
 type VNodeArgs = any[]
 
-export const createStub = ({ name, props }: IStubOptions) => {
+const createStub = ({ name, props }: IStubOptions) => {
   const anonName = 'anonymous-stub'
   const tag = name ? `${hyphenate(name)}-stub` : anonName
   const render = () => h(tag)
