@@ -41,17 +41,20 @@ describe('mountingOptions.attrs', () => {
     })
   })
 
-  test('assigns event listeners', async () => {
-    const Component = {
-      template: '<button @click="$emit(\'customEvent\', true)">Click</button>'
-    }
-    const onCustomEvent = jest.fn()
-    const wrapper = mount(Component, { attrs: { onCustomEvent } })
-    const button = wrapper.find('button')
-    await button.trigger('click')
-    await button.trigger('click')
-    await button.trigger('click')
+  test('is overridden by a prop with the same name', () => {
+    const wrapper = mount(Component, {
+      props: {
+        message: 'Hello World'
+      },
+      attrs: {
+        message: 'HelloFromTheOtherSide'
+      }
+    })
 
-    expect(onCustomEvent).toHaveBeenCalledTimes(3)
+    expect(wrapper.props()).toEqual({
+      message: 'Hello World'
+    })
+
+    expect(wrapper.attributes()).toEqual({})
   })
 })

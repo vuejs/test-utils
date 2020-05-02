@@ -49,4 +49,19 @@ describe('mountingOptions.props', () => {
       id: 'hello'
     })
   })
+
+  test('assigns event listeners', async () => {
+    const Component = {
+      template: '<button @click="$emit(\'customEvent\', true)">Click</button>'
+    }
+    const onCustomEvent = jest.fn()
+    // Note that, as the component does not have any props declared, we need to cast the mounting props
+    const wrapper = mount(Component, { props: { onCustomEvent } as never })
+    const button = wrapper.find('button')
+    await button.trigger('click')
+    await button.trigger('click')
+    await button.trigger('click')
+
+    expect(onCustomEvent).toHaveBeenCalledTimes(3)
+  })
 })

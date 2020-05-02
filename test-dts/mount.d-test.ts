@@ -94,3 +94,8 @@ expectError(
     props: { b: 'Hello' }
   }))
 )
+
+// except if explicitly cast
+mount(AppWithoutProps, {
+  props: { b: 'Hello' } as never
+})
