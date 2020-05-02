@@ -1,6 +1,6 @@
 import { ref, defineComponent, h, Transition } from 'vue'
 
-export const WithTransition = defineComponent({
+export default defineComponent({
   name: 'WithTransition',
 
   setup() {
