@@ -30,4 +30,5 @@ jobs:
     - run: yarn build
       env:
         CI: true
+    - run: yarn test:build
     - run: yarn tsd

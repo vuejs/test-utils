@@ -7,21 +7,25 @@ const AppWithDefine = defineComponent({
     a: {
       type: String,
       required: true
-    }
+    },
+    b: Number
   },
   template: ''
 })
 
 // accept props
 let wrapper = mount(AppWithDefine, {
-  props: { a: 'Hello' }
+  props: { a: 'Hello', b: 2 }
 })
 // vm is properly typed
 expectType<string>(wrapper.vm.a)
 
 // can receive extra props
+// ideally, it should not
+// but the props have type { a: string } & VNodeProps
+// which allows any property
 mount(AppWithDefine, {
-  props: { a: 'Hello', b: 2 }
+  props: { a: 'Hello', c: 2 }
 })
 
 // wrong prop type should not compile
@@ -48,10 +52,12 @@ wrapper = mount(AppWithProps, {
 // vm is properly typed
 expectType<string>(wrapper.vm.a)
 
-// can receive extra props
-mount(AppWithProps, {
-  props: { a: 'Hello', b: 2 }
-})
+// can't receive extra props
+expectError(
+  mount(AppWithProps, {
+    props: { a: 'Hello', b: 2 }
+  })
+)
 
 // wrong prop type should not compile
 expectError(
@@ -73,6 +79,7 @@ wrapper = mount(AppWithArrayProps, {
 expectType<string>(wrapper.vm.a)
 
 // can receive extra props
+// as they are declared as `string[]`
 mount(AppWithArrayProps, {
   props: { a: 'Hello', b: 2 }
 })
@@ -81,7 +88,14 @@ const AppWithoutProps = {
   template: ''
 }
 
-// can receive extra props
-wrapper = mount(AppWithoutProps, {
-  props: { b: 'Hello' }
+// can't receive extra props
+expectError(
+  (wrapper = mount(AppWithoutProps, {
+    props: { b: 'Hello' }
+  }))
+)
+
+// except if explicitly cast
+mount(AppWithoutProps, {
+  props: { b: 'Hello' } as never
 })

@@ -11,3 +11,7 @@ console.info = (...args) => {
 
   originalConsole(...args)
 }
+
+if (__USE_BUILD__) {
+  jest.mock('./src', () => jest.requireActual('./dist/vue-test-utils.cjs'))
+}

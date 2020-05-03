@@ -1,22 +1,11 @@
 import { Component, ComponentOptions, Directive, Plugin } from 'vue'
 
-import { DOMWrapper } from './dom-wrapper'
-import { ErrorWrapper } from './error-wrapper'
+interface RefSelector {
+  ref: string
+}
 
-export interface WrapperAPI {
-  attributes: (key?: string) => string | Record<string, string>
-  classes: (className?: string) => string[] | boolean | ErrorWrapper
-  readonly element: Element
-  exists: () => boolean
-  get<T extends Element>(selector: string): DOMWrapper<T>
-  find<T extends Element>(selector: string): DOMWrapper<T> | ErrorWrapper
-  findAll<T extends Element>(selector: string): DOMWrapper<T>[]
-  html: () => string
-  text: () => string
-  trigger: (
-    eventString: string,
-    options?: Object
-  ) => Promise<(fn?: () => void) => Promise<void>>
+interface NameSelector {
+  name: string
 }
 
 interface RefSelector {
