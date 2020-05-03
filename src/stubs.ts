@@ -12,12 +12,7 @@ interface IStubOptions {
 type VNodeArgs = any[]
 
 function getSlots(ctx) {
-  return config.renderAllStubSlots
-    ? Object.entries(ctx.$slots)
-        .filter(([name]) => name !== '_')
-        // @ts-ignore
-        .map(([name, slot]) => slot.call(ctx, {}))
-    : ctx.$slots
+  return !config.renderStubDefaultSlot ? undefined : ctx.$slots
 }
 
 export const createStub = ({ name, props }: IStubOptions) => {
@@ -25,8 +20,7 @@ export const createStub = ({ name, props }: IStubOptions) => {
   const tag = name ? `${hyphenate(name)}-stub` : anonName
 
   const render = (ctx) => {
-    const slots = getSlots(ctx)
-    return h(tag, {}, slots)
+    return h(tag, {}, getSlots(ctx))
   }
 
   return { name: name || anonName, render, props }

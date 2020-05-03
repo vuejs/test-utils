@@ -318,10 +318,12 @@ describe('mounting options: stubs', () => {
     }
 
     afterEach(() => {
-      config.renderAllStubSlots = false
+      config.renderStubDefaultSlot = false
     })
 
-    it('renders only the default stub slot by default', () => {
+    it('renders only the default stub slot only behind flag', () => {
+      config.renderStubDefaultSlot = true
+
       const wrapper = mount(Component, {
         global: {
           stubs: ['ComponentWithSlots']
@@ -332,19 +334,21 @@ describe('mounting options: stubs', () => {
       )
     })
 
-    it('renders all provided stub slots', () => {
-      config.renderAllStubSlots = true
+    it('renders none of the slots on a stub', () => {
+      config.renderStubDefaultSlot = false
       const wrapper = mount(Component, {
         global: {
           stubs: ['ComponentWithSlots']
         }
       })
       expect(wrapper.html()).toBe(
-        '<div><component-with-slots-stub>DefaultA namedA not existing one </component-with-slots-stub></div>'
+        '<div><component-with-slots-stub></component-with-slots-stub></div>'
       )
     })
 
-    it('renders the default slot of deeply nested stubs by default', () => {
+    it('renders the default slot of deeply nested stubs when renderStubDefaultSlot=true', () => {
+      config.renderStubDefaultSlot = true
+
       const SimpleSlot = {
         name: 'SimpleSlot',
         template: '<div class="simpleSlot"><slot/></div>'
