@@ -45,5 +45,15 @@ describe('options.attachTo', () => {
     expect(document.getElementById('attach-to')).toBeNull()
   })
 
+  it('throws if the provided CSS selector string can not be find', () => {
+    expect(() =>
+      mount(TestComponent, {
+        attachTo: '#unknown' // attach to an unknown selector
+      })
+    ).toThrowError(
+      'Unable to find the element matching the selector #unknown given as the `attachTo` option'
+    )
+  })
+
   it.todo('correctly hydrates markup')
 })
