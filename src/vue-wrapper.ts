@@ -12,7 +12,7 @@ export class VueWrapper<T extends ComponentPublicInstance> {
   private componentVM: T
   private rootVM: ComponentPublicInstance
   private __app: App | null
-  private __setProps: (props: Record<string, any>) => void
+  private __setProps: ((props: Record<string, any>) => void) | undefined
 
   constructor(
     app: App | null,
@@ -20,7 +20,7 @@ export class VueWrapper<T extends ComponentPublicInstance> {
     setProps?: (props: Record<string, any>) => void
   ) {
     this.__app = app
-    this.rootVM = vm.$root
+    this.rootVM = vm.$root!
     this.componentVM = vm as T
     this.__setProps = setProps
     // plugins hook
@@ -46,9 +46,8 @@ export class VueWrapper<T extends ComponentPublicInstance> {
   }
 
   props(selector?: string) {
-    return selector
-      ? this.componentVM.$props[selector]
-      : this.componentVM.$props
+    const props = this.componentVM.$props as { [key: string]: any }
+    return selector ? props[selector] : props
   }
 
   classes(className?: string) {
@@ -180,8 +179,8 @@ export class VueWrapper<T extends ComponentPublicInstance> {
   }
 
   setProps(props: Record<string, any>): Promise<void> {
-    // if this VM's parent is not the root, error out
-    if (this.vm.$parent !== this.rootVM) {
+    // if this VM's parent is not the root or if setProps does not exist, error out
+    if (this.vm.$parent !== this.rootVM || !this.__setProps) {
       throw Error('You can only use setProps on your mounted component')
     }
     this.__setProps(props)
@@ -209,7 +208,7 @@ export class VueWrapper<T extends ComponentPublicInstance> {
 }
 
 export function createWrapper<T extends ComponentPublicInstance>(
-  app: App,
+  app: App | null,
   vm: ComponentPublicInstance,
   setProps?: (props: Record<string, any>) => void
 ): VueWrapper<T> {
