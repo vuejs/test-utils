@@ -1,9 +1,4 @@
-import {
-  defineAsyncComponent,
-  defineComponent,
-  h,
-  ComponentPublicInstance
-} from 'vue'
+import { defineAsyncComponent, defineComponent, h } from 'vue'
 import flushPromises from 'flush-promises'
 
 import { mount } from '../../src'
@@ -11,6 +6,9 @@ import { mount } from '../../src'
 // AsyncComponents are documented here: https://github.com/vuejs/rfcs/blob/async-component/active-rfcs/0026-async-component-api.md
 
 describe('defineAsyncComponent', () => {
+  beforeAll(jest.useFakeTimers)
+  afterAll(jest.useRealTimers)
+
   it('works with the basic usage', async () => {
     const AsyncHello = defineAsyncComponent(() =>
       import('../components/Hello.vue')
@@ -26,7 +24,7 @@ describe('defineAsyncComponent', () => {
     expect(wrapper.html()).toContain('Hello world')
   })
 
-  it('works with options usage', async (done) => {
+  it('works with options usage', async () => {
     const Async = defineAsyncComponent({
       loader: () =>
         new Promise<any>((res) => {
@@ -49,32 +47,13 @@ describe('defineAsyncComponent', () => {
     })
 
     const wrapper = mount(Comp)
-
-    setTimeout(() => {
-      expect(wrapper.html()).toContain('Loading Component')
-    }, 35)
-
-    setTimeout(() => {
-      expect(wrapper.html()).toContain('Async Component')
-      done()
-    }, 100)
-  })
-
-  it('works with vue files', async () => {
-    const Async = defineAsyncComponent({
-      loader: () => import('../components/Hello.vue')
-    })
-
-    const Comp = defineComponent({
-      render() {
-        return h('div', [h(Async)])
-      }
-    })
-
-    const wrapper = mount(Comp)
+    jest.runTimersToTime(35)
     await flushPromises()
+    expect(wrapper.html()).toContain('Loading Component')
 
-    expect(wrapper.html()).toContain('Hello world')
+    jest.runTimersToTime(100)
+    await flushPromises()
+    expect(wrapper.html()).toContain('Async Component')
   })
 
   it('catches error and renders ErrorComponent', async () => {
