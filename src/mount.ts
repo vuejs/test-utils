@@ -26,6 +26,7 @@ import {
   MOUNT_PARENT_NAME
 } from './constants'
 import { stubComponents } from './stubs'
+import { compile } from '@vue/compiler-dom'
 
 type Slot = VNode | string | { render: Function }
 
@@ -103,7 +104,12 @@ export function mount(
         return acc
       }
 
-      acc[name] = () => slot
+      if (typeof slot === 'function') {
+        acc[name] = slot
+        return acc
+      }
+
+      acc[name] = () => compile(slot)
       return acc
     }, {})
 
