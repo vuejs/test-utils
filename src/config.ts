@@ -1,4 +1,6 @@
 import { GlobalMountOptions } from './types'
+import { VueWrapper } from './vue-wrapper'
+import { ComponentPublicInstance } from 'vue'
 
 interface GlobalConfigOptions {
   global: GlobalMountOptions
@@ -9,13 +11,22 @@ interface GlobalConfigOptions {
   renderStubDefaultSlot: boolean
 }
 
-class Pluggable {
-  installedPlugins: any
-  constructor() {
-    this.installedPlugins = []
-  }
+interface Plugin {
+  handler: (
+    instance: VueWrapper<ComponentPublicInstance>
+  ) => Record<string, any>
+  options: Record<string, any>
+}
 
-  install(handler, options = {}) {
+class Pluggable {
+  installedPlugins = [] as Array<Plugin>
+
+  install(
+    handler: (
+      instance: VueWrapper<ComponentPublicInstance>
+    ) => Record<string, any>,
+    options: Record<string, any> = {}
+  ) {
     if (typeof handler !== 'function') {
       console.error('plugin.install must receive a function')
       handler = () => ({})
@@ -23,13 +34,13 @@ class Pluggable {
     this.installedPlugins.push({ handler, options })
   }
 
-  extend(instance) {
-    const invokeSetup = (plugin) => plugin.handler(instance) // invoke the setup method passed to install
+  extend(instance: VueWrapper<ComponentPublicInstance>) {
+    const invokeSetup = (plugin: Plugin) => plugin.handler(instance) // invoke the setup method passed to install
     const bindProperty = ([property, value]: [string, any]) => {
-      instance[property] =
+      ;(instance as any)[property] =
         typeof value === 'function' ? value.bind(instance) : value
     }
-    const addAllPropertiesFromSetup = (setupResult) => {
+    const addAllPropertiesFromSetup = (setupResult: Record<string, any>) => {
       setupResult = typeof setupResult === 'object' ? setupResult : {}
       Object.entries(setupResult).forEach(bindProperty)
     }
