@@ -48,9 +48,7 @@ describe('mounting options: stubs', () => {
     )
   })
 
-  // TODO: fix this
-  // https://github.com/vuejs/vue-test-utils-next/pull/80#issuecomment-617188758
-  it.skip('stubs a component without a name', () => {
+  it('stubs a component without a name', () => {
     const Component = {
       template: '<div><foo/></div>',
       components: { Foo: ComponentWithoutName }
