@@ -39,6 +39,7 @@ interface MountingOptions<Props> {
   }
   global?: GlobalMountOptions
   attachTo?: HTMLElement | string
+  shallow?: boolean
 }
 
 // TODO improve the typings of the overloads
@@ -84,6 +85,11 @@ export function mount(
       ? document.querySelector(options.attachTo)
       : options.attachTo
 
+    if (!to) {
+      throw new Error(
+        `Unable to find the element matching the selector ${options.attachTo} given as the \`attachTo\` option`
+      )
+    }
     to.appendChild(el)
   }
 
@@ -184,8 +190,8 @@ export function mount(
   app.mixin(attachEmitListener())
 
   // stubs
-  if (options?.global?.stubs) {
-    stubComponents(options.global.stubs)
+  if (options?.global?.stubs || options?.shallow) {
+    stubComponents(options?.global?.stubs, options?.shallow)
   } else {
     transformVNodeArgs()
   }
@@ -195,4 +201,11 @@ export function mount(
 
   const App = vm.$refs[MOUNT_COMPONENT_REF] as ComponentPublicInstance
   return createWrapper(app, App, setProps)
+}
+
+export function shallowMount(
+  originalComponent,
+  options?: MountingOptions<any>
+) {
+  return mount(originalComponent, { ...options, shallow: true })
 }
