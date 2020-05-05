@@ -1,6 +1,7 @@
 import { transformVNodeArgs, h, createVNode } from 'vue'
 import { hyphenate } from '@vue/shared'
 import { MOUNT_COMPONENT_REF, MOUNT_PARENT_NAME } from './constants'
+import { config } from './index'
 import { matchName } from './utils/matchName'
 
 interface IStubOptions {
@@ -10,10 +11,17 @@ interface IStubOptions {
 
 type VNodeArgs = Parameters<typeof createVNode>
 
+function getSlots(ctx) {
+  return !config.renderStubDefaultSlot ? undefined : ctx.$slots
+}
+
 const createStub = ({ name, props }: IStubOptions) => {
   const anonName = 'anonymous-stub'
   const tag = name ? `${hyphenate(name)}-stub` : anonName
-  const render = () => h(tag)
+
+  const render = (ctx) => {
+    return h(tag, {}, getSlots(ctx))
+  }
 
   return { name: name || anonName, render, props }
 }
@@ -94,7 +102,7 @@ export function stubComponents(
         return [
           createStub({ name, props: propsDeclaration }),
           props,
-          {},
+          children,
           patchFlag,
           dynamicProps
         ]
