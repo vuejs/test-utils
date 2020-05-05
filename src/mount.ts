@@ -35,7 +35,7 @@ import { stubComponents } from './stubs'
 type Slot = VNode | string | { render: Function }
 
 interface MountingOptions<Props, Data = {}> {
-  data?: () => unknown extends Data ? never : Partial<Data>
+  data?: () => Data extends object ? Partial<Data> : never
   props?: Props
   attrs?: Record<string, unknown>
   slots?: {
