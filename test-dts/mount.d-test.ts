@@ -13,12 +13,12 @@ const AppWithDefine = defineComponent({
   template: ''
 })
 
-// accept props
-let wrapper = mount(AppWithDefine, {
-  props: { a: 'Hello', b: 2 }
-})
-// vm is properly typed
-expectType<string>(wrapper.vm.a)
+// accept props- vm is properly typed
+expectType<string>(
+  mount(AppWithDefine, {
+    props: { a: 'Hello', b: 2 }
+  }).vm.a
+)
 
 // can receive extra props
 // ideally, it should not
@@ -45,12 +45,12 @@ const AppWithProps = {
   template: ''
 }
 
-// accept props
-wrapper = mount(AppWithProps, {
-  props: { a: 'Hello' }
-})
-// vm is properly typed
-expectType<string>(wrapper.vm.a)
+// accept props - vm is properly typed
+expectType<string>(
+  mount(AppWithProps, {
+    props: { a: 'Hello' }
+  }).vm.a
+)
 
 // can't receive extra props
 expectError(
@@ -71,18 +71,33 @@ const AppWithArrayProps = {
   template: ''
 }
 
-// accept props
-wrapper = mount(AppWithArrayProps, {
-  props: { a: 'Hello' }
-})
-// vm is properly typed
-expectType<string>(wrapper.vm.a)
+// accept props - vm is properly typed
+expectType<string>(
+  mount(AppWithArrayProps, {
+    props: { a: 'Hello' }
+  }).vm.a
+)
 
 // can receive extra props
 // as they are declared as `string[]`
 mount(AppWithArrayProps, {
   props: { a: 'Hello', b: 2 }
 })
+
+// cannot receive extra props
+// if they pass use object inside
+expectError(
+  mount(
+    {
+      props: ['a']
+    },
+    {
+      props: {
+        b: 2
+      }
+    }
+  )
+)
 
 const AppWithoutProps = {
   template: ''
