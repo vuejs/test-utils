@@ -116,9 +116,9 @@ const AppWithoutProps = {
 
 // can't receive extra props
 expectError(
-  (wrapper = mount(AppWithoutProps, {
+  mount(AppWithoutProps, {
     props: { b: 'Hello' }
-  }))
+  })
 )
 
 // except if explicitly cast

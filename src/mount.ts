@@ -34,7 +34,7 @@ import { stubComponents } from './stubs'
 
 type Slot = VNode | string | { render: Function }
 
-interface MountingOptions<Props, Data extends object = {}> {
+interface MountingOptions<Props, Data = {}> {
   data?: () => Data extends unknown ? never : Data
   props?: Props
   attrs?: Record<string, unknown>
@@ -102,7 +102,7 @@ export function mount<
     E,
     EE
   >,
-  options?: MountingOptions<Props, D>
+  options?: MountingOptions<never, D>
 ): VueWrapper<
   ComponentPublicInstance<Props, RawBindings, D, C, M, E, VNodeProps & Props>
 >
