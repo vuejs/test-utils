@@ -20,6 +20,17 @@ expectType<string>(
   }).vm.a
 )
 
+// no data provided
+expectError(
+  mount(AppWithDefine, {
+    data() {
+      return {
+        myVal: 1
+      }
+    }
+  })
+)
+
 // can receive extra props
 // ideally, it should not
 // but the props have type { a: string } & VNodeProps
