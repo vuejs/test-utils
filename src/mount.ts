@@ -202,3 +202,10 @@ export function mount(
   const App = vm.$refs[MOUNT_COMPONENT_REF] as ComponentPublicInstance
   return createWrapper(app, App, setProps)
 }
+
+export function shallowMount(
+  originalComponent,
+  options?: MountingOptions<any>
+) {
+  return mount(originalComponent, { ...options, shallow: true })
+}
