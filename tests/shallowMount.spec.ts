@@ -8,7 +8,7 @@ describe('shallowMount', () => {
       '<div class="ComponentWithChildren">' +
         '<hello-stub></hello-stub>' +
         '<component-with-input-stub></component-with-input-stub>' +
-        '<anonymous-stub></anonymous-stub>' +
+        '<component-without-name-stub></component-without-name-stub>' +
         '<with-props-stub></with-props-stub>' +
         '</div>'
     )
