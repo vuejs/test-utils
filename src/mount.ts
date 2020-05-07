@@ -142,7 +142,6 @@ export function mount(
 
   // create the app
   const app = createApp(Parent)
-
   const global = mergeGlobalProperties(config.global, options?.global)
 
   // global mocks mixin
@@ -156,6 +155,13 @@ export function mount(
     }
 
     app.mixin(mixin)
+  }
+
+  // AppConfig
+  if (global?.config) {
+    for (const [k, v] of Object.entries(global.config)) {
+      app.config[k] = v
+    }
   }
 
   // use and plugins from mounting options
