@@ -39,11 +39,11 @@ describe('slots', () => {
       expect(wrapper.html()).toBe('<div><span>Foo</span></div>')
     })
 
-    it('supports default and named slots together', () => {
+    it.only('supports default and named slots together', () => {
       const Component = defineComponent({
         render() {
           return h('div', {}, [
-            h('div', {}, this.$slots.foo()),
+            // h('div', {}, this.$slots.foo()),
             h('div', {}, this.$slots.default())
           ])
         }
@@ -51,8 +51,8 @@ describe('slots', () => {
 
       const wrapper = mount(Component, {
         slots: {
-          default: 'Default',
-          foo: h('h1', {}, 'Named Slot')
+          default: 'Default'
+          // foo: h('h1', {}, 'Named Slot')
         }
       })
 
