@@ -115,7 +115,7 @@ export function mount(
         return acc
       }
 
-      acc[name] = () => processSlot(slot)
+      acc[name] = (props) => h(processSlot(slot), props)
       return acc
     }, {})
 

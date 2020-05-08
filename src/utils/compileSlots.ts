@@ -1,8 +1,6 @@
 import { compile } from '@vue/compiler-dom'
 
-export function processSlot(template) {
-  const Vue = require('vue')
-
+export function processSlot(template, Vue = require('vue')) {
   const { code } = compile(
     `<SlotWrapper v-bind="$attrs">${template}</SlotWrapper>`,
     {
@@ -10,12 +8,24 @@ export function processSlot(template) {
       prefixIdentifiers: true
     }
   )
+  const createRenderFunction = new Function('Vue', `'use strict';\n${code}`)
+
   return {
-    render: eval(`(() => {${code}})()`),
+    inheritAttrs: false,
+    render: createRenderFunction(Vue),
     components: {
       SlotWrapper: {
-        setup(props, { slots }) {
-          return () => slots.default(props)
+        inheritAttrs: false,
+        setup(_, { slots, attrs }) {
+          return () => {
+            const names = Object.keys(slots)
+            if (names.length === 0) {
+              return []
+            } else {
+              const slotName = names[0]
+              return slots[slotName](attrs)
+            }
+          }
         }
       }
     }

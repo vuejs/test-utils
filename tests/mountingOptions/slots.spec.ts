@@ -39,7 +39,7 @@ describe('slots', () => {
       expect(wrapper.html()).toBe('<div><span>Foo</span></div>')
     })
 
-    it.only('supports default and named slots together', () => {
+    it('supports default and named slots together', () => {
       const Component = defineComponent({
         render() {
           return h('div', {}, [
@@ -99,7 +99,7 @@ describe('slots', () => {
     it('allows passing a scoped slot with params', () => {
       const wrapper = mount(ComponentWithSlots, {
         slots: {
-          scoped: `<div>{{ params.string }}</div>`
+          scoped: `<template #scoped="params"><div>Just a plain {{ params.string }}</div></template>`
         }
       })
 
