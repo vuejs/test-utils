@@ -1,7 +1,7 @@
 import { compile } from '@vue/compiler-dom'
 
-export function processSlot(template, Vue = require('vue')) {
-  const hasWrappingTemplate = template.startsWith('<template')
+export function processSlot(template = '', Vue = require('vue')) {
+  const hasWrappingTemplate = template && template.startsWith('<template')
 
   // allow content without `template` tag, for easier testing
   if (!hasWrappingTemplate) {
