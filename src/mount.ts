@@ -115,6 +115,7 @@ export function mount(
         return acc
       }
 
+      // slot is most probably a scoped slot string or a plain string
       acc[name] = (props) => h(processSlot(slot), props)
       return acc
     }, {})

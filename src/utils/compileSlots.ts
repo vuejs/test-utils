@@ -1,6 +1,13 @@
 import { compile } from '@vue/compiler-dom'
 
-export function processSlot(template, Vue = require('vue')) {
+export function processSlot(template: string, Vue = require('vue')) {
+  const hasWrappingTemplate = template.startsWith('<template')
+
+  // allow content without `template` tag, for easier testing
+  if (!hasWrappingTemplate) {
+    template = `<template #default="params">${template}</template>`
+  }
+
   const { code } = compile(
     `<SlotWrapper v-bind="$attrs">${template}</SlotWrapper>`,
     {
