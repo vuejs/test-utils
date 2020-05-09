@@ -110,7 +110,7 @@ export function mount(
         return acc
       }
 
-      if (typeof slot === 'object' && '_isVNode' in slot) {
+      if (typeof slot === 'object') {
         acc[name] = () => slot
         return acc
       }

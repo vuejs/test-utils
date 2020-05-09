@@ -53,7 +53,7 @@ describe('slots', () => {
     it('does not render slots that do not exist', () => {
       const wrapper = mount(ComponentWithSlots, {
         slots: {
-          notExisting: h('span', {}, 'NotExistingText')
+          notExisting: () => h('span', {}, 'NotExistingText')
         }
       })
 
