@@ -100,6 +100,26 @@ describe('slots', () => {
       )
     })
 
+    it('allows passing a function to store variables for assertion', () => {
+      let assertParams
+
+      const wrapper = mount(ComponentWithSlots, {
+        slots: {
+          scoped: (params) => {
+            assertParams = params
+            // always return something
+            return 'foo'
+          }
+        }
+      })
+
+      expect(assertParams).toEqual({
+        boolean: true,
+        string: 'string',
+        object: { foo: 'foo' }
+      })
+    })
+
     it('allows passing a scoped slot via string with no destructuring using the # syntax', () => {
       const wrapper = mount(ComponentWithSlots, {
         slots: {
