@@ -175,8 +175,9 @@ export function mount(
   }
 
   if (global?.components) {
-    for (const key of Object.keys(global.components))
+    for (const key of Object.keys(global.components)) {
       app.component(key, global.components[key])
+    }
   }
 
   if (global?.directives) {
