@@ -2,54 +2,29 @@ import { GlobalMountOptions } from './types'
 
 const isString = (val: unknown): val is string => typeof val === 'string'
 
-function deepMerge(...objects: object[]) {
-  const isObject = (obj: any) => obj && typeof obj === 'object'
-
-  function deepMergeInner(target: object, source: object) {
-    Object.keys(source).forEach((key: string) => {
-      const targetValue = target[key]
-      const sourceValue = source[key]
-
-      if (Array.isArray(targetValue) && Array.isArray(sourceValue)) {
-        target[key] = targetValue.concat(sourceValue)
-      } else if (isObject(targetValue) && isObject(sourceValue)) {
-        target[key] = deepMergeInner(
-          Object.assign({}, targetValue),
-          sourceValue
-        )
-      } else {
-        target[key] = sourceValue
+// Deep merge function, adapted from from https://gist.github.com/ahtcx/0cd94e62691f539160b32ecda18af3d6
+// Merge a `source` object to a `target` recursively
+const merge = (target: object, source: object) => {
+  // Iterate through `source` properties and if an `Object` set property to merge of `target` and `source` properties
+  for (const key of Object.keys(source)) {
+    if (!target[key]) {
+      target[key] = source[key]
+    } else {
+      if (source[key] instanceof Object) {
+        Object.assign(source[key], merge(target[key], source[key]))
       }
-    })
-
-    return target
+    }
   }
 
-  if (objects.length < 2) {
-    throw new Error(
-      'deepMerge: this function expects at least 2 objects to be provided'
-    )
-  }
-
-  if (objects.some((object) => !isObject(object))) {
-    throw new Error('deepMerge: all values should be of type "object"')
-  }
-
-  const target = objects.shift()
-  let source: object
-
-  while ((source = objects.shift())) {
-    deepMergeInner(target, source)
-  }
-
-  return target
+  Object.assign(target || {}, source)
 }
 
 function mergeGlobalProperties(
   configGlobal: GlobalMountOptions = {},
   mountGlobal: GlobalMountOptions = {}
 ): GlobalMountOptions {
-  return deepMerge(configGlobal, mountGlobal)
+  merge(configGlobal, mountGlobal)
+  return configGlobal
 }
 
 export { isString, mergeGlobalProperties }

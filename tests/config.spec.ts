@@ -1,5 +1,3 @@
-import { h } from 'vue'
-
 import { config, mount } from '../src'
 import Hello from './components/Hello.vue'
 
@@ -23,19 +21,19 @@ describe('config', () => {
     }
 
     it('allows setting components globally', () => {
-      console.log('TODO: Fix this')
-      const HelloOverride = {
-        name: 'HelloOverride',
+      const HelloLocal = {
         props: ['msg'],
-        render() {
-          return () => h('div', `${this.msg} Hello world override`)
-        }
+        template: '<div>{{ msg }}</div>'
       }
-      config.global.components = { Hello: HelloOverride }
-      const wrapper1 = mount(Component, { props: { msg: 'Wrapper1' } })
-      const wrapper2 = mount(Component, { props: { msg: 'Wrapper2' } })
-      expect(wrapper1.text()).toEqual('Wrapper1 Hello world override')
-      expect(wrapper2.text()).toEqual('Wrapper2 Hello world override')
+      config.global.components = { Hello: HelloLocal }
+      const wrapper1 = mount(Component, {
+        props: { msg: 'Wrapper1 Overwritten' }
+      })
+      const wrapper2 = mount(Component, {
+        props: { msg: 'Wrapper2 Overwritten' }
+      })
+      expect(wrapper1.text()).toEqual('Wrapper1 Overwritten')
+      expect(wrapper2.text()).toEqual('Wrapper2 Overwritten')
     })
 
     it('allows overwriting globally set component config on a per mount instance', () => {

@@ -6,6 +6,14 @@ import ComponentWithoutName from '../components/ComponentWithoutName.vue'
 import ComponentWithSlots from '../components/ComponentWithSlots.vue'
 
 describe('mounting options: stubs', () => {
+  beforeEach(() => {
+    config.global.stubs = {}
+  })
+
+  afterEach(() => {
+    config.global.stubs = {}
+  })
+
   it('handles Array syntax', () => {
     const Foo = {
       name: 'Foo',
