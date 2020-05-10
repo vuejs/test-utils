@@ -1,29 +1,30 @@
 import isString from 'lodash/isString'
-import mergeWith from 'lodash/mergeWith'
 
 import { GlobalMountOptions } from './types'
+
+// Deep merge function, adapted from from https://gist.github.com/ahtcx/0cd94e62691f539160b32ecda18af3d6
+// Merge a `source` object to a `target` recursively
+const merge = (target: object, source: object) => {
+  // Iterate through `source` properties and if an `Object` set property to merge of `target` and `source` properties
+  for (const key of Object.keys(source)) {
+    if (!target[key]) {
+      target[key] = source[key]
+    } else {
+      if (source[key] instanceof Object) {
+        Object.assign(source[key], merge(target[key], source[key]))
+      }
+    }
+  }
+
+  Object.assign(target || {}, source)
+}
 
 function mergeGlobalProperties(
   configGlobal: GlobalMountOptions = {},
   mountGlobal: GlobalMountOptions = {}
 ): GlobalMountOptions {
-  return mergeWith(
-    {},
-    configGlobal,
-    mountGlobal,
-    (objValue, srcValue, key: keyof GlobalMountOptions) => {
-      switch (key) {
-        case 'mocks':
-        case 'provide':
-        case 'components':
-        case 'directives':
-          return { ...objValue, ...srcValue }
-        case 'plugins':
-        case 'mixins':
-          return [...(objValue || []), ...(srcValue || [])].filter(Boolean)
-      }
-    }
-  )
+  merge(configGlobal, mountGlobal)
+  return configGlobal
 }
 
 export { isString, mergeGlobalProperties }

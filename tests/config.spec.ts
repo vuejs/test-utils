@@ -20,11 +20,19 @@ describe('config', () => {
     }
 
     it('allows setting components globally', () => {
-      config.global.components = { Hello }
-      const wrapper1 = mount(Component, { props: { msg: 'Wrapper1' } })
-      const wrapper2 = mount(Component, { props: { msg: 'Wrapper2' } })
-      expect(wrapper1.text()).toEqual('Wrapper1 Hello world')
-      expect(wrapper2.text()).toEqual('Wrapper2 Hello world')
+      const HelloLocal = {
+        props: ['msg'],
+        template: '<div>{{ msg }}</div>'
+      }
+      config.global.components = { Hello: HelloLocal }
+      const wrapper1 = mount(Component, {
+        props: { msg: 'Wrapper1 Overwritten' }
+      })
+      const wrapper2 = mount(Component, {
+        props: { msg: 'Wrapper2 Overwritten' }
+      })
+      expect(wrapper1.text()).toEqual('Wrapper1 Overwritten')
+      expect(wrapper2.text()).toEqual('Wrapper2 Overwritten')
     })
 
     it('allows overwriting globally set component config on a per mount instance', () => {
