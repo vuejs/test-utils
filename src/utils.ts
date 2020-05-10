@@ -1,5 +1,3 @@
-import mergeWith from 'lodash/mergeWith'
-
 import { GlobalMountOptions } from './types'
 
 const isString = (val: unknown): val is string => typeof val === 'string'
@@ -51,31 +49,7 @@ function mergeGlobalProperties(
   configGlobal: GlobalMountOptions = {},
   mountGlobal: GlobalMountOptions = {}
 ): GlobalMountOptions {
-  // const merged: GlobalMountOptions = deepMerge(configGlobal, mountGlobal)
-  // merged.components = {
-  //   ...mountGlobal.components,
-  //   ...configGlobal.components
-  // }
-  // console.log(merged)
-  // return merged
-  return mergeWith(
-    {},
-    configGlobal,
-    mountGlobal,
-    (objValue, srcValue, key: keyof GlobalMountOptions) => {
-      switch (key) {
-        case 'mocks':
-        case 'provide':
-        case 'components':
-        case 'directives':
-          return { ...objValue, ...srcValue }
-        case 'plugins':
-        case 'mixins':
-          return [...(objValue || []), ...(srcValue || [])].filter(Boolean)
-      }
-    }
-  )
-  // return mountGlobal
+  return deepMerge(configGlobal, mountGlobal)
 }
 
 export { isString, mergeGlobalProperties }
