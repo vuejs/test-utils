@@ -1204,7 +1204,7 @@
     estree-walker "^0.8.1"
     source-map "^0.6.1"
 
-"@vue/compiler-dom@3.0.0-beta.10":
+"@vue/compiler-dom@3.0.0-beta.10", "@vue/compiler-dom@^3.0.0-beta.10":
   version "3.0.0-beta.10"
   resolved "https://registry.yarnpkg.com/@vue/compiler-dom/-/compiler-dom-3.0.0-beta.10.tgz#5b35df447eb96cb7faed37b76a8a9aca71a87c67"
   integrity sha512-S1Qqc74Hc3BnHjORzWJvG4Fj5B4O8aqTF1Oyd+Px65CB6qkbAaqTLneYnM5by/78j8inmt4FCHOf48L+gzChRA==
@@ -2219,11 +2219,6 @@ dir-glob@^2.2.2:
   integrity sha512-f9LBi5QWzIW3I6e//uxZoLBlUt9kcp66qo0sSCxL6YZKc75R1c4MFCoe/LaZiBGmgujvQdxc5Bn3QhfyvK5Hsw==
   dependencies:
     path-type "^3.0.0"
-
-dom-event-types@^1.0.0:
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/dom-event-types/-/dom-event-types-1.0.0.tgz#5830a0a29e1bf837fe50a70cd80a597232813cae"
-  integrity sha512-2G2Vwi2zXTHBGqXHsJ4+ak/iP0N8Ar+G8a7LiD2oup5o4sQWytwqqrZu/O6hIMV0KMID2PL69OhpshLO0n7UJQ==
 
 domexception@^1.0.1:
   version "1.0.1"

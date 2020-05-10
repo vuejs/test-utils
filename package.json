@@ -12,10 +12,6 @@
     "README.md",
     "dist/index.d.ts"
   ],
-  "dependencies": {
-    "dom-event-types": "^1.0.0",
-    "lodash": "^4.17.15"
-  },
   "devDependencies": {
     "@babel/core": "^7.9.0",
     "@babel/preset-env": "^7.8.4",
@@ -28,6 +24,7 @@
     "@types/jest": "^24.9.1",
     "@types/lodash": "^4.14.149",
     "@types/node": "12.12.35",
+    "@vue/compiler-dom": "^3.0.0-beta.10",
     "@vue/compiler-sfc": "^3.0.0-beta.10",
     "babel-jest": "^25.2.3",
     "babel-preset-jest": "^25.2.1",
@@ -49,6 +46,7 @@
   },
   "peerDependencies": {
     "@vue/compiler-sfc": "^3.0.0-beta.10",
+    "@vue/compiler-dom": "^3.0.0-beta.10",
     "vue": "^3.0.0-beta.10"
   },
   "author": {

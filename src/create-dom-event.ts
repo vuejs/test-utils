@@ -1,4 +1,4 @@
-import * as eventTypes from 'dom-event-types'
+import eventTypes from 'dom-event-types'
 
 interface TriggerOptions {
   code?: String
