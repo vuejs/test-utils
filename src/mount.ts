@@ -124,6 +124,9 @@ export function mount(
     ref: MOUNT_COMPONENT_REF
   })
 
+  const global = mergeGlobalProperties(config.global, options?.global)
+  component.components = { ...component.components, ...global.components }
+
   // create the wrapper component
   const Parent = defineComponent({
     name: MOUNT_PARENT_NAME,
@@ -142,7 +145,6 @@ export function mount(
 
   // create the app
   const app = createApp(Parent)
-  const global = mergeGlobalProperties(config.global, options?.global)
 
   // global mocks mixin
   if (global?.mocks) {
