@@ -28,6 +28,7 @@
     "@vue/compiler-sfc": "^3.0.0-beta.10",
     "babel-jest": "^25.2.3",
     "babel-preset-jest": "^25.2.1",
+    "dom-event-types": "^1.0.0",
     "flush-promises": "^1.0.2",
     "husky": "^4.2.3",
     "jest": "^25.1.0",
@@ -45,8 +46,8 @@
     "vuex": "^4.0.0-beta.1"
   },
   "peerDependencies": {
-    "@vue/compiler-sfc": "^3.0.0-beta.10",
     "@vue/compiler-dom": "^3.0.0-beta.10",
+    "@vue/compiler-sfc": "^3.0.0-beta.10",
     "vue": "^3.0.0-beta.10"
   },
   "author": {
