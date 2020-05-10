@@ -46,7 +46,7 @@ function createEntry(options) {
   }
 
   if (format === 'es') {
-    config.output.file = isBrowser ? pkg.browser : pkg.module
+    config.output.file = pkg.module
   }
   if (format === 'cjs') {
     config.output.file = pkg.main
@@ -58,7 +58,7 @@ function createEntry(options) {
       check: format === 'es' && isBrowser,
       tsconfigOverride: {
         compilerOptions: {
-          declaration: format === 'es' && isBrowser,
+          declaration: format === 'es',
           target: 'es5', // not sure what this should be?
           module: format === 'cjs' ? 'es2015' : 'esnext'
         },
