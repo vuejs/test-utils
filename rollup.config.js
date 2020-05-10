@@ -25,6 +25,7 @@ function createEntry(options) {
     input,
     external: [
       'vue',
+      '@vue/compiler-dom',
       'lodash/mergeWith',
       'lodash/isString'
     ],
@@ -41,6 +42,7 @@ function createEntry(options) {
       format,
       globals: {
         vue: 'Vue',
+        '@vue/compiler-dom': 'VueCompilerDOM',
         'lodash/mergeWith': '_.mergeWith',
         'lodash/isString': '_.isString',
       }
