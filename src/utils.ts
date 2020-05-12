@@ -6,51 +6,36 @@ function mergeGlobalProperties(
   configGlobal: GlobalMountOptions = {},
   mountGlobal: GlobalMountOptions = {}
 ): GlobalMountOptions {
-  const {
-    mixins: configMixins = [],
-    plugins: configPlugins = [],
-    ...configRest
-  } = configGlobal
-  const {
-    mixins: mountMixins = [],
-    plugins: mountPlugins = [],
-    ...mountRest
-  } = mountGlobal
-  const mixins = [...configMixins, ...mountMixins]
-  const plugins = [...configPlugins, ...mountPlugins]
-
   const stubs: Record<string, any> = {}
-
-  if (configRest.stubs) {
-    if (Array.isArray(configRest.stubs)) {
-      configRest.stubs.forEach((x) => (stubs[x] = true))
+  if (configGlobal.stubs) {
+    if (Array.isArray(configGlobal.stubs)) {
+      configGlobal.stubs.forEach((x) => (stubs[x] = true))
     } else {
-      for (const [k, v] of Object.entries(configRest.stubs)) {
+      for (const [k, v] of Object.entries(configGlobal.stubs)) {
         stubs[k] = v
       }
     }
   }
 
-  if (mountRest.stubs) {
-    if (mountRest.stubs && Array.isArray(mountRest.stubs)) {
-      mountRest.stubs.forEach((x) => (stubs[x] = true))
+  if (mountGlobal.stubs) {
+    if (mountGlobal.stubs && Array.isArray(mountGlobal.stubs)) {
+      mountGlobal.stubs.forEach((x) => (stubs[x] = true))
     } else {
-      for (const [k, v] of Object.entries(mountRest.stubs)) {
+      for (const [k, v] of Object.entries(mountGlobal.stubs)) {
         stubs[k] = v
       }
     }
   }
 
   return {
-    mixins,
-    plugins,
+    mixins: [...(configGlobal.mixins || []), ...(mountGlobal.mixins || [])],
+    plugins: [...(configGlobal.plugins || []), ...(mountGlobal.plugins || [])],
     stubs,
-    components: { ...configRest.components, ...mountRest.components },
-    provide: { ...configRest.provide, ...mountRest.provide },
-    mocks: { ...configRest.mocks, ...mountRest.mocks },
-    config: { ...configRest.config, ...mountRest.config },
-    directives: { ...configRest.directives, ...mountRest.directives }
-    // stubs: { configRest.stubs, ...mountRest.stubs }
+    components: { ...configGlobal.components, ...mountGlobal.components },
+    provide: { ...configGlobal.provide, ...mountGlobal.provide },
+    mocks: { ...configGlobal.mocks, ...mountGlobal.mocks },
+    config: { ...configGlobal.config, ...mountGlobal.config },
+    directives: { ...configGlobal.directives, ...mountGlobal.directives }
   }
 }
 
