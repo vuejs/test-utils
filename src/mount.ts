@@ -31,13 +31,16 @@ import { parse } from '@vue/compiler-dom'
 
 type Slot = VNode | string | { render: Function } | Function
 
+type SlotDictionary = {
+  [key: string]: Slot
+}
+
 interface MountingOptions<Props> {
   data?: () => Record<string, unknown>
   props?: Props
   attrs?: Record<string, unknown>
-  slots?: {
+  slots?: SlotDictionary & {
     default?: Slot
-    [key: string]: Slot
   }
   global?: GlobalMountOptions
   attachTo?: HTMLElement | string
