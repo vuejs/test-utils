@@ -12,6 +12,8 @@ describe('config', () => {
       mocks: undefined,
       provide: undefined
     }
+
+    jest.clearAllMocks()
   })
 
   describe('components', () => {
@@ -103,6 +105,48 @@ describe('config', () => {
       expect(
         mount(Component, { global: { mocks: { foo: 'baz' } } }).text()
       ).toEqual('baz')
+    })
+  })
+
+  describe('mixins', () => {
+    const createdHook = jest.fn()
+    const mixin = {
+      created() {
+        createdHook()
+      }
+    }
+    const Component = {
+      render() {
+        return h('div')
+      }
+    }
+
+    it('sets a mixin everywhere', () => {
+      config.global.mixins = [mixin]
+      mount(Component)
+
+      // once on root, once in the mounted component
+      expect(createdHook).toHaveBeenCalledTimes(2)
+    })
+
+    it('concats with locally defined mixins', () => {
+      config.global.mixins = [mixin]
+      const localHook = jest.fn()
+      const localMixin = {
+        created() {
+          localHook(this.$options.name)
+        }
+      }
+
+      mount(Component, {
+        global: {
+          mixins: [localMixin]
+        }
+      })
+
+      // once on root, once in the mounted component
+      expect(localHook).toHaveBeenCalledTimes(2)
+      expect(createdHook).toHaveBeenCalledTimes(2)
     })
   })
 })
