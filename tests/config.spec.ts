@@ -1,4 +1,4 @@
-import { h } from 'vue'
+import { h, inject } from 'vue'
 import { config, mount } from '../src'
 import Hello from './components/Hello.vue'
 
@@ -108,6 +108,44 @@ describe('config', () => {
     })
   })
 
+  describe('provide', () => {
+    it('sets a provide everywhere', () => {
+      config.global.provide = {
+        theme: 'dark'
+      }
+      const Comp = {
+        setup() {
+          const theme = inject('theme')
+          return () => h('div', theme)
+        }
+      }
+
+      const wrapper = mount(Comp)
+      expect(wrapper.html()).toContain('dark')
+    })
+
+    it('overrides with a local provide', () => {
+      config.global.provide = {
+        theme: 'dark'
+      }
+      const Comp = {
+        setup() {
+          const theme = inject('theme')
+          return () => h('div', theme)
+        }
+      }
+
+      const wrapper = mount(Comp, {
+        global: {
+          provide: {
+            theme: 'light'
+          }
+        }
+      })
+      expect(wrapper.html()).toContain('light')
+    })
+  })
+
   describe('mixins', () => {
     const createdHook = jest.fn()
     const mixin = {
@@ -147,6 +185,60 @@ describe('config', () => {
       // once on root, once in the mounted component
       expect(localHook).toHaveBeenCalledTimes(2)
       expect(createdHook).toHaveBeenCalledTimes(2)
+    })
+  })
+
+  describe('stubs', () => {
+    const Foo = {
+      name: 'Foo',
+      render() {
+        return h('div', 'real foo')
+      }
+    }
+
+    const Component = {
+      render() {
+        return h('div', h(Foo))
+      }
+    }
+
+    it('sets a stub globally', () => {
+      config.global.stubs = {
+        Foo: {
+          render() {
+            return h('div', 'foo stub')
+          }
+        }
+      }
+
+      const wrapper = mount(Component)
+
+      // once on root, once in the mounted component
+      expect(wrapper.html()).toContain('foo stub')
+    })
+
+    xit('overrides config stub with locally defined stub', () => {
+      config.global.stubs = {
+        Foo: {
+          render() {
+            return h('div', 'config foo stub')
+          }
+        }
+      }
+
+      const wrapper = mount(Component, {
+        global: {
+          stubs: {
+            Foo: {
+              render() {
+                return h('div', 'local foo stub')
+              }
+            }
+          }
+        }
+      })
+
+      expect(wrapper.html()).toContain('local foo stub')
     })
   })
 })

@@ -160,34 +160,34 @@ export function mount(
   }
 
   // AppConfig
-  if (global?.config) {
+  if (global.config) {
     for (const [k, v] of Object.entries(global.config)) {
       app.config[k] = v
     }
   }
 
   // use and plugins from mounting options
-  if (global?.plugins) {
+  if (global.plugins) {
     for (const use of global.plugins) app.use(use)
   }
 
   // use any mixins from mounting options
-  if (global?.mixins) {
+  if (global.mixins) {
     for (const mixin of global.mixins) app.mixin(mixin)
   }
 
-  if (global?.components) {
+  if (global.components) {
     for (const key of Object.keys(global.components))
       app.component(key, global.components[key])
   }
 
-  if (global?.directives) {
+  if (global.directives) {
     for (const key of Object.keys(global.directives))
       app.directive(key, global.directives[key])
   }
 
   // provide any values passed via provides mounting option
-  if (global?.provide) {
+  if (global.provide) {
     for (const key of Reflect.ownKeys(global.provide)) {
       // @ts-ignore: https://github.com/microsoft/TypeScript/issues/1863
       app.provide(key, global.provide[key])
@@ -198,8 +198,8 @@ export function mount(
   app.mixin(attachEmitListener())
 
   // stubs
-  if (options?.global?.stubs || options?.shallow) {
-    stubComponents(options?.global?.stubs, options?.shallow)
+  if (global.stubs || options?.shallow) {
+    stubComponents(global.stubs, options?.shallow)
   } else {
     transformVNodeArgs()
   }
