@@ -17,6 +17,7 @@ import {
 import { config } from './config'
 import { GlobalMountOptions } from './types'
 import { mergeGlobalProperties, isString } from './utils'
+import { processSlot } from './utils/compileSlots'
 import { createWrapper, VueWrapper } from './vue-wrapper'
 import { attachEmitListener } from './emitMixin'
 import { createDataMixin } from './dataMixin'
@@ -26,16 +27,20 @@ import {
   MOUNT_PARENT_NAME
 } from './constants'
 import { stubComponents } from './stubs'
+import { parse } from '@vue/compiler-dom'
 
-type Slot = VNode | string | { render: Function }
+type Slot = VNode | string | { render: Function } | Function
+
+type SlotDictionary = {
+  [key: string]: Slot
+}
 
 interface MountingOptions<Props> {
   data?: () => Record<string, unknown>
   props?: Props
   attrs?: Record<string, unknown>
-  slots?: {
+  slots?: SlotDictionary & {
     default?: Slot
-    [key: string]: Slot
   }
   global?: GlobalMountOptions
   attachTo?: HTMLElement | string
@@ -103,8 +108,21 @@ export function mount(
         return acc
       }
 
-      acc[name] = () => slot
-      return acc
+      if (typeof slot === 'function') {
+        acc[name] = slot
+        return acc
+      }
+
+      if (typeof slot === 'object') {
+        acc[name] = () => slot
+        return acc
+      }
+
+      if (typeof slot === 'string') {
+        // slot is most probably a scoped slot string or a plain string
+        acc[name] = (props) => h(processSlot(slot), props)
+        return acc
+      }
     }, {})
 
   // override component data with mounting options data

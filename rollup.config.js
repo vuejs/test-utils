@@ -25,7 +25,7 @@ function createEntry(options) {
     input,
     external: [
       'vue',
-      '@vue/compiler-dom'
+      '@vue/compiler-dom',
     ],
     plugins: [
       replace({
@@ -40,7 +40,7 @@ function createEntry(options) {
       format,
       globals: {
         vue: 'Vue',
-        '@vue/compiler-dom': 'VueCompilerDOM'
+        '@vue/compiler-dom': 'VueCompilerDOM',
       }
     }
   }
