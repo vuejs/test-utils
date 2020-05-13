@@ -6,6 +6,7 @@ import {
   VNodeNormalizedChildren,
   transformVNodeArgs,
   reactive,
+  FunctionalComponent,
   ComponentPublicInstance,
   ComponentOptionsWithObjectProps,
   ComponentOptionsWithArrayProps,
@@ -53,6 +54,11 @@ type ExtractComponent<T> = T extends { new (): infer PublicInstance }
   ? PublicInstance
   : any
 
+// Functional component
+export function mount<TestedComponent extends FunctionalComponent>(
+  originalComponent: TestedComponent,
+  options?: MountingOptions<any>
+): VueWrapper<ComponentPublicInstance>
 // Component declared with defineComponent
 export function mount<TestedComponent extends ComponentPublicInstance>(
   originalComponent: { new (): TestedComponent } & Component,
@@ -80,7 +86,14 @@ export function mount(
   originalComponent: any,
   options?: MountingOptions<any>
 ): VueWrapper<any> {
-  const component = { ...originalComponent }
+  // normalise the incoming component
+  const component =
+    typeof originalComponent === 'function'
+      ? {
+          setup: (_, { attrs, slots }) => () =>
+            h(originalComponent, attrs, slots)
+        }
+      : { ...originalComponent }
 
   const el = document.createElement('div')
   el.id = MOUNT_ELEMENT_ID
