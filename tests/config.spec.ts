@@ -109,9 +109,6 @@ describe('config', () => {
   })
 
   describe('provide', () => {
-    config.global.provide = {
-      theme: 'dark'
-    }
     const Comp = {
       setup() {
         const theme = inject('theme')
@@ -120,11 +117,17 @@ describe('config', () => {
     }
 
     it('sets a provide everywhere', () => {
+      config.global.provide = {
+        theme: 'dark'
+      }
       const wrapper = mount(Comp)
       expect(wrapper.html()).toContain('dark')
     })
 
     it('overrides with a local provide', () => {
+      config.global.provide = {
+        theme: 'dark'
+      }
       const wrapper = mount(Comp, {
         global: {
           provide: {
