@@ -12,10 +12,6 @@
     "README.md",
     "dist/index.d.ts"
   ],
-  "dependencies": {
-    "dom-event-types": "^1.0.0",
-    "lodash": "^4.17.15"
-  },
   "devDependencies": {
     "@babel/core": "^7.9.0",
     "@babel/preset-env": "^7.8.4",
@@ -26,11 +22,12 @@
     "@rollup/plugin-replace": "^2.3.2",
     "@types/estree": "^0.0.42",
     "@types/jest": "^24.9.1",
-    "@types/lodash": "^4.14.149",
     "@types/node": "12.12.35",
+    "@vue/compiler-dom": "^3.0.0-beta.12",
     "@vue/compiler-sfc": "^3.0.0-beta.12",
     "babel-jest": "^25.2.3",
     "babel-preset-jest": "^25.2.1",
+    "dom-event-types": "^1.0.0",
     "flush-promises": "^1.0.2",
     "husky": "^4.2.3",
     "jest": "^25.1.0",
@@ -48,6 +45,7 @@
     "vuex": "^4.0.0-beta.1"
   },
   "peerDependencies": {
+    "@vue/compiler-dom": "^3.0.0-beta.12",
     "@vue/compiler-sfc": "^3.0.0-beta.12",
     "vue": "^3.0.0-beta.12"
   },
