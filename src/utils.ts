@@ -2,30 +2,26 @@ import { GlobalMountOptions } from './types'
 
 const isString = (val: unknown): val is string => typeof val === 'string'
 
+function mergeStubs(target, source) {
+  if (source.stubs) {
+    if (Array.isArray(source.stubs)) {
+      source.stubs.forEach((x) => (target[x] = true))
+    } else {
+      for (const [k, v] of Object.entries(source.stubs)) {
+        target[k] = v
+      }
+    }
+  }
+}
+
 function mergeGlobalProperties(
   configGlobal: GlobalMountOptions = {},
   mountGlobal: GlobalMountOptions = {}
 ): GlobalMountOptions {
   const stubs: Record<string, any> = {}
-  if (configGlobal.stubs) {
-    if (Array.isArray(configGlobal.stubs)) {
-      configGlobal.stubs.forEach((x) => (stubs[x] = true))
-    } else {
-      for (const [k, v] of Object.entries(configGlobal.stubs)) {
-        stubs[k] = v
-      }
-    }
-  }
 
-  if (mountGlobal.stubs) {
-    if (mountGlobal.stubs && Array.isArray(mountGlobal.stubs)) {
-      mountGlobal.stubs.forEach((x) => (stubs[x] = true))
-    } else {
-      for (const [k, v] of Object.entries(mountGlobal.stubs)) {
-        stubs[k] = v
-      }
-    }
-  }
+  mergeStubs(stubs, configGlobal)
+  mergeStubs(stubs, mountGlobal)
 
   return {
     mixins: [...(configGlobal.mixins || []), ...(mountGlobal.mixins || [])],

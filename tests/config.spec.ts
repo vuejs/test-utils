@@ -109,32 +109,22 @@ describe('config', () => {
   })
 
   describe('provide', () => {
-    it('sets a provide everywhere', () => {
-      config.global.provide = {
-        theme: 'dark'
+    config.global.provide = {
+      theme: 'dark'
+    }
+    const Comp = {
+      setup() {
+        const theme = inject('theme')
+        return () => h('div', theme)
       }
-      const Comp = {
-        setup() {
-          const theme = inject('theme')
-          return () => h('div', theme)
-        }
-      }
+    }
 
+    it('sets a provide everywhere', () => {
       const wrapper = mount(Comp)
       expect(wrapper.html()).toContain('dark')
     })
 
     it('overrides with a local provide', () => {
-      config.global.provide = {
-        theme: 'dark'
-      }
-      const Comp = {
-        setup() {
-          const theme = inject('theme')
-          return () => h('div', theme)
-        }
-      }
-
       const wrapper = mount(Comp, {
         global: {
           provide: {
@@ -202,30 +192,25 @@ describe('config', () => {
       }
     }
 
-    it('sets a stub globally', () => {
+    beforeEach(() => {
       config.global.stubs = {
         Foo: {
-          render() {
-            return h('div', 'foo stub')
-          }
-        }
-      }
-
-      const wrapper = mount(Component)
-
-      // once on root, once in the mounted component
-      expect(wrapper.html()).toContain('foo stub')
-    })
-
-    xit('overrides config stub with locally defined stub', () => {
-      config.global.stubs = {
-        Foo: {
+          name: 'Foo',
           render() {
             return h('div', 'config foo stub')
           }
         }
       }
+    })
 
+    it('sets a stub globally', () => {
+      const wrapper = mount(Component)
+
+      // once on root, once in the mounted component
+      expect(wrapper.html()).toContain('config foo stub')
+    })
+
+    it('overrides config stub with locally defined stub', () => {
       const wrapper = mount(Component, {
         global: {
           stubs: {
