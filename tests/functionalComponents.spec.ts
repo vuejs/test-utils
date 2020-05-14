@@ -4,11 +4,11 @@ import Hello from './components/Hello.vue'
 
 describe('functionalComponents', () => {
   it('mounts a functional component', () => {
-    const Foo = (props) => h('div', { class: 'foo' }, props.msg)
+    const Foo = (props: { msg: string }) =>
+      h('div', { class: 'foo' }, props.msg)
 
     const wrapper = mount(Foo, {
       props: {
-        // @ts-ignore
         msg: 'foo'
       }
     })
