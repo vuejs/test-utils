@@ -50,7 +50,9 @@ export class VueWrapper<T extends ComponentPublicInstance> {
     return selector ? props[selector] : props
   }
 
-  classes(className?: string) {
+  classes(): string[]
+  classes(className: string): boolean
+  classes(className?: string): string[] | boolean {
     return new DOMWrapper(this.element).classes(className)
   }
 

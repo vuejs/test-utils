@@ -92,3 +92,9 @@ expectType<{ [key: string]: string }>(wrapper.attributes())
 expectType<string>(wrapper.attributes('key'))
 expectType<{ [key: string]: string }>(domWrapper.attributes())
 expectType<string>(domWrapper.attributes('key'))
+
+// classes
+expectType<Array<string>>(wrapper.classes())
+expectType<boolean>(wrapper.classes('class'))
+expectType<Array<string>>(domWrapper.classes())
+expectType<boolean>(domWrapper.classes('class'))

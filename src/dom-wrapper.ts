@@ -10,7 +10,9 @@ export class DOMWrapper<ElementType extends Element> {
     this.element = element
   }
 
-  classes(className?: string) {
+  classes(): string[]
+  classes(className: string): boolean
+  classes(className?: string): string[] | boolean {
     const classes = this.element.classList
 
     if (className) return classes.contains(className)
