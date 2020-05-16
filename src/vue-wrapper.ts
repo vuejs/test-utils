@@ -54,7 +54,9 @@ export class VueWrapper<T extends ComponentPublicInstance> {
     return new DOMWrapper(this.element).classes(className)
   }
 
-  attributes(key?: string) {
+  attributes(): { [key: string]: string }
+  attributes(key: string): string
+  attributes(key?: string): { [key: string]: string } | string {
     return new DOMWrapper(this.element).attributes(key)
   }
 
