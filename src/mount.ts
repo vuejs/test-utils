@@ -99,15 +99,18 @@ export function mount(
   el.id = MOUNT_ELEMENT_ID
 
   if (options?.attachTo) {
-    const to = isString(options.attachTo)
-      ? document.querySelector(options.attachTo)
-      : options.attachTo
-
-    if (!to) {
-      throw new Error(
-        `Unable to find the element matching the selector ${options.attachTo} given as the \`attachTo\` option`
-      )
+    let to: Element
+    if (typeof options.attachTo === 'string') {
+      to = document.querySelector(options.attachTo)
+      if (!to) {
+        throw new Error(
+          `Unable to find the element matching the selector ${options.attachTo} given as the \`attachTo\` option`
+        )
+      }
+    } else {
+      to = options.attachTo
     }
+
     to.appendChild(el)
   }
 
