@@ -98,3 +98,7 @@ expectType<Array<string>>(wrapper.classes())
 expectType<boolean>(wrapper.classes('class'))
 expectType<Array<string>>(domWrapper.classes())
 expectType<boolean>(domWrapper.classes('class'))
+
+// props
+expectType<{ [key: string]: any }>(wrapper.props())
+expectType<any>(wrapper.props('prop'))

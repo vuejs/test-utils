@@ -24,7 +24,7 @@ export class DOMWrapper<ElementType extends Element> {
   attributes(key: string): string
   attributes(key?: string): { [key: string]: string } | string {
     const attributes = this.element.attributes
-    const attributeMap: { [key: string]: string } = {}
+    const attributeMap: Record<string, string> = {}
     for (let i = 0; i < attributes.length; i++) {
       const att = attributes.item(i)!
       attributeMap[att.localName] = att.value

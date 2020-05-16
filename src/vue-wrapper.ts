@@ -45,7 +45,9 @@ export class VueWrapper<T extends ComponentPublicInstance> {
     return this.componentVM
   }
 
-  props(selector?: string) {
+  props(): { [key: string]: any }
+  props(selector: string): any
+  props(selector?: string): { [key: string]: any } | any {
     const props = this.componentVM.$props as { [key: string]: any }
     return selector ? props[selector] : props
   }
