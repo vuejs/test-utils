@@ -1,5 +1,5 @@
 import { ComponentPublicInstance, nextTick, App } from 'vue'
-import { ShapeFlags } from '@vue/shared'
+import { ShapeFlags } from './utils/vueShared'
 import { config } from './config'
 
 import { DOMWrapper } from './dom-wrapper'
