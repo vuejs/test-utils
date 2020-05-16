@@ -86,9 +86,12 @@ export function mount(
   el.id = MOUNT_ELEMENT_ID
 
   if (options?.attachTo) {
-    const to = isString(options.attachTo)
-      ? document.querySelector(options.attachTo)
-      : options.attachTo
+    let to: Element
+    if (typeof options.attachTo === 'string') {
+      to = document.querySelector(options.attachTo)
+    } else {
+      to = options.attachTo
+    }
 
     if (!to) {
       throw new Error(
