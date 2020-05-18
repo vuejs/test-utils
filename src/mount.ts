@@ -12,12 +12,14 @@ import {
   ComponentOptionsWithArrayProps,
   ComponentOptionsWithoutProps,
   ExtractPropTypes,
-  Component
+  Component,
+  AppConfig,
+  VNodeProps
 } from 'vue'
 
 import { config } from './config'
 import { GlobalMountOptions } from './types'
-import { mergeGlobalProperties, isString } from './utils'
+import { mergeGlobalProperties } from './utils'
 import { processSlot } from './utils/compileSlots'
 import { createWrapper, VueWrapper } from './vue-wrapper'
 import { attachEmitListener } from './emitMixin'
@@ -28,7 +30,6 @@ import {
   MOUNT_PARENT_NAME
 } from './constants'
 import { stubComponents } from './stubs'
-import { parse } from '@vue/compiler-dom'
 
 type Slot = VNode | string | { render: Function } | Function
 
@@ -89,17 +90,17 @@ export function mount(
   // normalise the incoming component
   const component =
     typeof originalComponent === 'function'
-      ? {
+      ? defineComponent({
           setup: (_, { attrs, slots }) => () =>
             h(originalComponent, attrs, slots)
-        }
+        })
       : { ...originalComponent }
 
   const el = document.createElement('div')
   el.id = MOUNT_ELEMENT_ID
 
   if (options?.attachTo) {
-    let to: Element
+    let to: Element | null
     if (typeof options.attachTo === 'string') {
       to = document.querySelector(options.attachTo)
       if (!to) {
@@ -117,29 +118,37 @@ export function mount(
   // handle any slots passed via mounting options
   const slots: VNodeNormalizedChildren =
     options?.slots &&
-    Object.entries(options.slots).reduce((acc, [name, slot]) => {
-      // case of an SFC getting passed
-      if (typeof slot === 'object' && 'render' in slot) {
-        acc[name] = slot.render
-        return acc
-      }
+    Object.entries(options.slots).reduce(
+      (
+        acc: { [key: string]: Function },
+        [name, slot]: [string, Slot]
+      ): { [key: string]: Function } => {
+        // case of an SFC getting passed
+        if (typeof slot === 'object' && 'render' in slot) {
+          acc[name] = slot.render
+          return acc
+        }
 
-      if (typeof slot === 'function') {
-        acc[name] = slot
-        return acc
-      }
+        if (typeof slot === 'function') {
+          acc[name] = slot
+          return acc
+        }
 
-      if (typeof slot === 'object') {
-        acc[name] = () => slot
-        return acc
-      }
+        if (typeof slot === 'object') {
+          acc[name] = () => slot
+          return acc
+        }
 
-      if (typeof slot === 'string') {
-        // slot is most probably a scoped slot string or a plain string
-        acc[name] = (props) => h(processSlot(slot), props)
+        if (typeof slot === 'string') {
+          // slot is most probably a scoped slot string or a plain string
+          acc[name] = (props: VNodeProps) => h(processSlot(slot), props)
+          return acc
+        }
+
         return acc
-      }
-    }, {})
+      },
+      {}
+    )
 
   // override component data with mounting options data
   if (options?.data) {
@@ -184,8 +193,10 @@ export function mount(
   if (global?.mocks) {
     const mixin = {
       beforeCreate() {
-        for (const [k, v] of Object.entries(global.mocks)) {
-          this[k] = v
+        for (const [k, v] of Object.entries(
+          global.mocks as { [key: string]: any }
+        )) {
+          ;(this as any)[k] = v
         }
       }
     }
@@ -195,7 +206,10 @@ export function mount(
 
   // AppConfig
   if (global.config) {
-    for (const [k, v] of Object.entries(global.config)) {
+    for (const [k, v] of Object.entries(global.config) as [
+      keyof Omit<AppConfig, 'isNativeTag'>,
+      any
+    ][]) {
       app.config[k] = v
     }
   }
