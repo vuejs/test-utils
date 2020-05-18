@@ -23,11 +23,10 @@ export class DOMWrapper<ElementType extends Element> {
   attributes(): { [key: string]: string }
   attributes(key: string): string
   attributes(key?: string): { [key: string]: string } | string {
-    const attributes = this.element.attributes
+    const attributes = Array.from(this.element.attributes)
     const attributeMap: Record<string, string> = {}
-    for (let i = 0; i < attributes.length; i++) {
-      const att = attributes.item(i)!
-      attributeMap[att.localName] = att.value
+    for (const attribute of attributes) {
+      attributeMap[attribute.localName] = attribute.value
     }
 
     return key ? attributeMap[key] : attributeMap
