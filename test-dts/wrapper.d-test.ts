@@ -86,3 +86,19 @@ expectType<SVGLineElement>(line.element)
 // string selector
 byClass = domWrapper.get('.todo')
 expectType<Element>(byClass.element)
+
+// attributes
+expectType<{ [key: string]: string }>(wrapper.attributes())
+expectType<string>(wrapper.attributes('key'))
+expectType<{ [key: string]: string }>(domWrapper.attributes())
+expectType<string>(domWrapper.attributes('key'))
+
+// classes
+expectType<Array<string>>(wrapper.classes())
+expectType<boolean>(wrapper.classes('class'))
+expectType<Array<string>>(domWrapper.classes())
+expectType<boolean>(domWrapper.classes('class'))
+
+// props
+expectType<{ [key: string]: any }>(wrapper.props())
+expectType<any>(wrapper.props('prop'))
