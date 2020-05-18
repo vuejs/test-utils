@@ -259,9 +259,6 @@ export function mount(
   return createWrapper(app, App, setProps)
 }
 
-export function shallowMount(
-  originalComponent,
-  options?: MountingOptions<any>
-) {
-  return mount(originalComponent, { ...options, shallow: true })
+export const shallowMount: typeof mount = (component: any, options?: any) => {
+  return mount(component, { ...options, shallow: true })
 }
