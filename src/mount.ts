@@ -245,41 +245,6 @@ export function mount(
   return createWrapper(app, App, setProps)
 }
 
-// Functional component
-export function shallowMount<TestedComponent extends FunctionalComponent>(
-  originalComponent: TestedComponent,
-  options?: MountingOptions<any>
-): VueWrapper<ComponentPublicInstance>
-// Component declared with defineComponent
-export function shallowMount<TestedComponent extends ComponentPublicInstance>(
-  originalComponent: { new (): TestedComponent } & Component,
-  options?: MountingOptions<TestedComponent['$props']>
-): VueWrapper<TestedComponent>
-// Component declared with { props: { ... } }
-export function shallowMount<
-  TestedComponent extends ComponentOptionsWithObjectProps
->(
-  originalComponent: TestedComponent,
-  options?: MountingOptions<ExtractPropTypes<TestedComponent['props'], false>>
-): VueWrapper<ExtractComponent<TestedComponent>>
-// Component declared with { props: [] }
-export function shallowMount<
-  TestedComponent extends ComponentOptionsWithArrayProps
->(
-  originalComponent: TestedComponent,
-  options?: MountingOptions<Record<string, any>>
-): VueWrapper<ExtractComponent<TestedComponent>>
-// Component declared with no props
-export function shallowMount<
-  TestedComponent extends ComponentOptionsWithoutProps,
-  ComponentT extends ComponentOptionsWithoutProps & {}
->(
-  originalComponent: ComponentT extends { new (): any } ? never : ComponentT,
-  options?: MountingOptions<never>
-): VueWrapper<ExtractComponent<TestedComponent>>
-export function shallowMount(
-  originalComponent: any,
-  options?: MountingOptions<any>
-) {
-  return mount(originalComponent, { ...options, shallow: true })
+export const shallowMount: typeof mount = (component: any, options?: any) => {
+  return mount(component, { ...options, shallow: true })
 }
