@@ -68,7 +68,7 @@ expectType<{ count: number }>(incrementEvent[0])
 
 // without event name
 let allEvents = wrapper.emitted()
-expectType<Record<string, unknown>>(allEvents)
+expectType<Record<string, unknown[]>>(allEvents)
 
 // get
 // HTML element selector
