@@ -1,5 +1,5 @@
 import { ComponentPublicInstance, nextTick, App } from 'vue'
-import { ShapeFlags } from '@vue/shared'
+import { ShapeFlags } from './utils/vueShared'
 import { config } from './config'
 
 import { DOMWrapper } from './dom-wrapper'
@@ -45,16 +45,22 @@ export class VueWrapper<T extends ComponentPublicInstance> {
     return this.componentVM
   }
 
-  props(selector?: string) {
+  props(): { [key: string]: any }
+  props(selector: string): any
+  props(selector?: string): { [key: string]: any } | any {
     const props = this.componentVM.$props as { [key: string]: any }
     return selector ? props[selector] : props
   }
 
-  classes(className?: string) {
+  classes(): string[]
+  classes(className: string): boolean
+  classes(className?: string): string[] | boolean {
     return new DOMWrapper(this.element).classes(className)
   }
 
-  attributes(key?: string) {
+  attributes(): { [key: string]: string }
+  attributes(key: string): string
+  attributes(key?: string): { [key: string]: string } | string {
     return new DOMWrapper(this.element).attributes(key)
   }
 

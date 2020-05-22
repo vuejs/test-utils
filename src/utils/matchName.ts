@@ -1,4 +1,4 @@
-import { camelize, capitalize } from '@vue/shared'
+import { camelize, capitalize } from './vueShared'
 
 export function matchName(target, sourceName) {
   const camelized = camelize(target)

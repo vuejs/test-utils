@@ -6,17 +6,20 @@ import {
   VNodeNormalizedChildren,
   transformVNodeArgs,
   reactive,
+  FunctionalComponent,
   ComponentPublicInstance,
   ComponentOptionsWithObjectProps,
   ComponentOptionsWithArrayProps,
   ComponentOptionsWithoutProps,
   ExtractPropTypes,
-  Component
+  Component,
+  AppConfig,
+  VNodeProps
 } from 'vue'
 
 import { config } from './config'
 import { GlobalMountOptions } from './types'
-import { mergeGlobalProperties, isString } from './utils'
+import { mergeGlobalProperties } from './utils'
 import { processSlot } from './utils/compileSlots'
 import { createWrapper, VueWrapper } from './vue-wrapper'
 import { attachEmitListener } from './emitMixin'
@@ -27,7 +30,6 @@ import {
   MOUNT_PARENT_NAME
 } from './constants'
 import { stubComponents } from './stubs'
-import { parse } from '@vue/compiler-dom'
 
 type Slot = VNode | string | { render: Function } | Function
 
@@ -53,6 +55,11 @@ type ExtractComponent<T> = T extends { new (): infer PublicInstance }
   ? PublicInstance
   : any
 
+// Functional component
+export function mount<TestedComponent extends FunctionalComponent>(
+  originalComponent: TestedComponent,
+  options?: MountingOptions<any>
+): VueWrapper<ComponentPublicInstance>
 // Component declared with defineComponent
 export function mount<TestedComponent extends ComponentPublicInstance>(
   originalComponent: { new (): TestedComponent } & Component,
@@ -80,50 +87,68 @@ export function mount(
   originalComponent: any,
   options?: MountingOptions<any>
 ): VueWrapper<any> {
-  const component = { ...originalComponent }
+  // normalise the incoming component
+  const component =
+    typeof originalComponent === 'function'
+      ? defineComponent({
+          setup: (_, { attrs, slots }) => () =>
+            h(originalComponent, attrs, slots)
+        })
+      : { ...originalComponent }
 
   const el = document.createElement('div')
   el.id = MOUNT_ELEMENT_ID
 
   if (options?.attachTo) {
-    const to = isString(options.attachTo)
-      ? document.querySelector(options.attachTo)
-      : options.attachTo
-
-    if (!to) {
-      throw new Error(
-        `Unable to find the element matching the selector ${options.attachTo} given as the \`attachTo\` option`
-      )
+    let to: Element | null
+    if (typeof options.attachTo === 'string') {
+      to = document.querySelector(options.attachTo)
+      if (!to) {
+        throw new Error(
+          `Unable to find the element matching the selector ${options.attachTo} given as the \`attachTo\` option`
+        )
+      }
+    } else {
+      to = options.attachTo
     }
+
     to.appendChild(el)
   }
 
   // handle any slots passed via mounting options
   const slots: VNodeNormalizedChildren =
     options?.slots &&
-    Object.entries(options.slots).reduce((acc, [name, slot]) => {
-      // case of an SFC getting passed
-      if (typeof slot === 'object' && 'render' in slot) {
-        acc[name] = slot.render
-        return acc
-      }
+    Object.entries(options.slots).reduce(
+      (
+        acc: { [key: string]: Function },
+        [name, slot]: [string, Slot]
+      ): { [key: string]: Function } => {
+        // case of an SFC getting passed
+        if (typeof slot === 'object' && 'render' in slot) {
+          acc[name] = slot.render
+          return acc
+        }
 
-      if (typeof slot === 'function') {
-        acc[name] = slot
-        return acc
-      }
+        if (typeof slot === 'function') {
+          acc[name] = slot
+          return acc
+        }
 
-      if (typeof slot === 'object') {
-        acc[name] = () => slot
-        return acc
-      }
+        if (typeof slot === 'object') {
+          acc[name] = () => slot
+          return acc
+        }
 
-      if (typeof slot === 'string') {
-        // slot is most probably a scoped slot string or a plain string
-        acc[name] = (props) => h(processSlot(slot), props)
+        if (typeof slot === 'string') {
+          // slot is most probably a scoped slot string or a plain string
+          acc[name] = (props: VNodeProps) => h(processSlot(slot), props)
+          return acc
+        }
+
         return acc
-      }
-    }, {})
+      },
+      {}
+    )
 
   // override component data with mounting options data
   if (options?.data) {
@@ -141,6 +166,9 @@ export function mount(
     ...options?.props,
     ref: MOUNT_COMPONENT_REF
   })
+
+  const global = mergeGlobalProperties(config.global, options?.global)
+  component.components = { ...component.components, ...global.components }
 
   // create the wrapper component
   const Parent = defineComponent({
@@ -160,14 +188,15 @@ export function mount(
 
   // create the app
   const app = createApp(Parent)
-  const global = mergeGlobalProperties(config.global, options?.global)
 
   // global mocks mixin
   if (global?.mocks) {
     const mixin = {
       beforeCreate() {
-        for (const [k, v] of Object.entries(global.mocks)) {
-          this[k] = v
+        for (const [k, v] of Object.entries(
+          global.mocks as { [key: string]: any }
+        )) {
+          ;(this as any)[k] = v
         }
       }
     }
@@ -176,34 +205,37 @@ export function mount(
   }
 
   // AppConfig
-  if (global?.config) {
-    for (const [k, v] of Object.entries(global.config)) {
+  if (global.config) {
+    for (const [k, v] of Object.entries(global.config) as [
+      keyof Omit<AppConfig, 'isNativeTag'>,
+      any
+    ][]) {
       app.config[k] = v
     }
   }
 
   // use and plugins from mounting options
-  if (global?.plugins) {
+  if (global.plugins) {
     for (const use of global.plugins) app.use(use)
   }
 
   // use any mixins from mounting options
-  if (global?.mixins) {
+  if (global.mixins) {
     for (const mixin of global.mixins) app.mixin(mixin)
   }
 
-  if (global?.components) {
+  if (global.components) {
     for (const key of Object.keys(global.components))
       app.component(key, global.components[key])
   }
 
-  if (global?.directives) {
+  if (global.directives) {
     for (const key of Object.keys(global.directives))
       app.directive(key, global.directives[key])
   }
 
   // provide any values passed via provides mounting option
-  if (global?.provide) {
+  if (global.provide) {
     for (const key of Reflect.ownKeys(global.provide)) {
       // @ts-ignore: https://github.com/microsoft/TypeScript/issues/1863
       app.provide(key, global.provide[key])
@@ -214,8 +246,8 @@ export function mount(
   app.mixin(attachEmitListener())
 
   // stubs
-  if (options?.global?.stubs || options?.shallow) {
-    stubComponents(options?.global?.stubs, options?.shallow)
+  if (global.stubs || options?.shallow) {
+    stubComponents(global.stubs, options?.shallow)
   } else {
     transformVNodeArgs()
   }
@@ -227,9 +259,6 @@ export function mount(
   return createWrapper(app, App, setProps)
 }
 
-export function shallowMount(
-  originalComponent,
-  options?: MountingOptions<any>
-) {
-  return mount(originalComponent, { ...options, shallow: true })
+export const shallowMount: typeof mount = (component: any, options?: any) => {
+  return mount(component, { ...options, shallow: true })
 }
