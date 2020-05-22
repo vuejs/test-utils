@@ -6,6 +6,7 @@ interface GlobalConfigOptions {
     VueWrapper: Pluggable
     DOMWrapper: Pluggable
   }
+  renderStubDefaultSlot: boolean
 }
 
 class Pluggable {
@@ -47,5 +48,6 @@ export const config: GlobalConfigOptions = {
   plugins: {
     VueWrapper: new Pluggable(),
     DOMWrapper: new Pluggable()
-  }
+  },
+  renderStubDefaultSlot: false
 }

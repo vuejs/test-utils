@@ -1,18 +1,18 @@
 import { nextTick } from 'vue'
 
-import { WrapperAPI } from './types'
-import { ErrorWrapper } from './error-wrapper'
-
+import { createWrapperError } from './error-wrapper'
 import { TriggerOptions, createDOMEvent } from './create-dom-event'
 
-export class DOMWrapper<ElementType extends Element> implements WrapperAPI {
+export class DOMWrapper<ElementType extends Element> {
   element: ElementType
 
   constructor(element: ElementType) {
     this.element = element
   }
 
-  classes(className?) {
+  classes(): string[]
+  classes(className: string): boolean
+  classes(className?: string): string[] | boolean {
     const classes = this.element.classList
 
     if (className) return classes.contains(className)
@@ -20,12 +20,13 @@ export class DOMWrapper<ElementType extends Element> implements WrapperAPI {
     return Array.from(classes)
   }
 
-  attributes(key?: string) {
-    const attributes = this.element.attributes
-    const attributeMap = {}
-    for (let i = 0; i < attributes.length; i++) {
-      const att = attributes.item(i)
-      attributeMap[att.localName] = att.value
+  attributes(): { [key: string]: string }
+  attributes(key: string): string
+  attributes(key?: string): { [key: string]: string } | string {
+    const attributes = Array.from(this.element.attributes)
+    const attributeMap: Record<string, string> = {}
+    for (const attribute of attributes) {
+      attributeMap[attribute.localName] = attribute.value
     }
 
     return key ? attributeMap[key] : attributeMap
@@ -45,18 +46,18 @@ export class DOMWrapper<ElementType extends Element> implements WrapperAPI {
 
   find<K extends keyof HTMLElementTagNameMap>(
     selector: K
-  ): DOMWrapper<HTMLElementTagNameMap[K]> | ErrorWrapper
+  ): DOMWrapper<HTMLElementTagNameMap[K]>
   find<K extends keyof SVGElementTagNameMap>(
     selector: K
-  ): DOMWrapper<SVGElementTagNameMap[K]> | ErrorWrapper
-  find<T extends Element>(selector: string): DOMWrapper<T> | ErrorWrapper
-  find(selector: string): DOMWrapper<Element> | ErrorWrapper {
+  ): DOMWrapper<SVGElementTagNameMap[K]>
+  find<T extends Element>(selector: string): DOMWrapper<T>
+  find(selector: string): DOMWrapper<Element> {
     const result = this.element.querySelector(selector)
     if (result) {
       return new DOMWrapper(result)
     }
 
-    return new ErrorWrapper({ selector })
+    return createWrapperError('DOMWrapper')
   }
 
   get<K extends keyof HTMLElementTagNameMap>(
@@ -68,11 +69,11 @@ export class DOMWrapper<ElementType extends Element> implements WrapperAPI {
   get<T extends Element>(selector: string): DOMWrapper<T>
   get(selector: string): DOMWrapper<Element> {
     const result = this.find(selector)
-    if (result instanceof ErrorWrapper) {
-      throw new Error(`Unable to find ${selector} within: ${this.html()}`)
+    if (result instanceof DOMWrapper) {
+      return result
     }
 
-    return result
+    throw new Error(`Unable to get ${selector} within: ${this.html()}`)
   }
 
   findAll<K extends keyof HTMLElementTagNameMap>(

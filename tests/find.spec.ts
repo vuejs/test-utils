@@ -38,6 +38,17 @@ describe('find', () => {
     expect(wrapper.find('.foo').exists()).toBe(true)
   })
 
+  it('can be chained', () => {
+    const Component = defineComponent({
+      render() {
+        return h('div', { class: 'foo' }, [h('div', { class: 'bar' })])
+      }
+    })
+
+    const wrapper = mount(Component)
+    expect(wrapper.find('.foo').find('.bar').exists()).toBe(true)
+  })
+
   test('works with suspense', async () => {
     const wrapper = mount(SuspenseComponent)
 
