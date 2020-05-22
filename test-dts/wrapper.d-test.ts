@@ -61,6 +61,15 @@ expectType<SVGLineElement | undefined>(lineArray[0].element)
 byClassArray = domWrapper.findAll('.todo')
 expectType<Element | undefined>(byClassArray[0].element)
 
+// emitted
+// event name
+let incrementEvent = wrapper.emitted<{ count: number }>('increment')
+expectType<{ count: number }>(incrementEvent[0])
+
+// without event name
+let allEvents = wrapper.emitted()
+expectType<Record<string, unknown[]>>(allEvents)
+
 // get
 // HTML element selector
 let input = wrapper.get('input')

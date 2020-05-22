@@ -68,10 +68,14 @@ export class VueWrapper<T extends ComponentPublicInstance> {
     return true
   }
 
-  emitted(): Record<string, unknown[]> {
-    // TODO Should we define this?
-    // @ts-ignore
-    return this.vm.__emitted
+  emitted<T = unknown>(): Record<string, T[]>
+  emitted<T = unknown>(eventName?: string): T[]
+  emitted<T = unknown>(eventName?: string): T[] | Record<string, T[]> {
+    if (eventName) {
+      const emitted = (this.vm['__emitted'] as Record<string, T[]>)[eventName]
+      return emitted
+    }
+    return this.vm['__emitted'] as Record<string, T[]>
   }
 
   html() {
