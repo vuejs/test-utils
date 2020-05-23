@@ -124,6 +124,10 @@ describe('trigger', () => {
       await wrapper.trigger('keydown', { key: 'Enter' })
       expect(keydownHandler).toHaveBeenCalledTimes(2)
       expect(keydownHandler.mock.calls[1][0].key).toBe('Enter')
+
+      await wrapper.trigger('keydown.enter')
+      expect(keydownHandler).toHaveBeenCalledTimes(3)
+      expect(keydownHandler.mock.calls[2][0].key).toBe('enter')
     })
 
     it('causes keydown handler to fire with the appropiate keyCode when wrapper.trigger("keydown", { keyCode: 65 }) is fired', async () => {
