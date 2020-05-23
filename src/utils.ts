@@ -1,8 +1,6 @@
 import { GlobalMountOptions } from './types'
-
-const isString = (val: unknown): val is string => typeof val === 'string'
-
-function mergeStubs(target, source) {
+import { AppConfig } from 'vue'
+function mergeStubs(target: Record<string, any>, source: GlobalMountOptions) {
   if (source.stubs) {
     if (Array.isArray(source.stubs)) {
       source.stubs.forEach((x) => (target[x] = true))
@@ -30,9 +28,12 @@ function mergeGlobalProperties(
     components: { ...configGlobal.components, ...mountGlobal.components },
     provide: { ...configGlobal.provide, ...mountGlobal.provide },
     mocks: { ...configGlobal.mocks, ...mountGlobal.mocks },
-    config: { ...configGlobal.config, ...mountGlobal.config },
+    config: { ...configGlobal.config, ...mountGlobal.config } as Omit<
+      AppConfig,
+      'isNativeTag'
+    >,
     directives: { ...configGlobal.directives, ...mountGlobal.directives }
   }
 }
 
-export { isString, mergeGlobalProperties }
+export { mergeGlobalProperties }
