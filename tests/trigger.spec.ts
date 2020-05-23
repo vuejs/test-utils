@@ -157,6 +157,10 @@ describe('trigger', () => {
       await wrapper.trigger('keydown', { key: 'ENTER' })
       expect(keydownHandler).not.toHaveBeenCalled()
 
+      // is not called if passed keyCode instead
+      await wrapper.trigger('keydown', { keyCode: 13 })
+      expect(keydownHandler).not.toHaveBeenCalled()
+
       // is called when key is lowercase 'enter'
       await wrapper.trigger('keydown', { key: 'enter' })
       expect(keydownHandler).toHaveBeenCalledTimes(1)
