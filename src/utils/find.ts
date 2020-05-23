@@ -1,4 +1,9 @@
-import { VNode, ComponentPublicInstance } from 'vue'
+import {
+  ComponentPublicInstance,
+  VNode,
+  VNodeArrayChildren,
+  VNodeNormalizedChildren
+} from 'vue'
 import { FindAllComponentsSelector } from '../types'
 import { matchName } from './matchName'
 
@@ -29,25 +34,54 @@ function matches(node: VNode, selector: FindAllComponentsSelector): boolean {
 }
 
 /**
+ * Filters out the null, undefined and primitive values,
+ * to only keep VNode and VNodeArrayChildren values
+ * @param value
+ */
+function nodesAsObject<Node>(
+  value:
+    | string
+    | number
+    | boolean
+    | VNodeArrayChildren
+    | VNode
+    | null
+    | undefined
+    | void
+): value is VNodeArrayChildren | VNode {
+  return !!value && typeof value === 'object'
+}
+
+/**
  * Collect all children
  * @param nodes
  * @param children
  */
-function aggregateChildren(nodes, children) {
+function aggregateChildren(nodes: VNode[], children: VNodeNormalizedChildren) {
   if (children && Array.isArray(children)) {
-    ;[...children].reverse().forEach((n: VNode) => {
-      nodes.unshift(n)
+    const reversedNodes = [...children].reverse().filter(nodesAsObject)
+    reversedNodes.forEach((node: VNodeArrayChildren | VNode) => {
+      if (Array.isArray(node)) {
+        aggregateChildren(nodes, node)
+      } else {
+        nodes.unshift(node)
+      }
     })
   }
 }
 
-function findAllVNodes(vnode: VNode, selector: any): VNode[] {
-  const matchingNodes = []
-  const nodes = [vnode]
+function findAllVNodes(
+  vnode: VNode,
+  selector: FindAllComponentsSelector
+): VNode[] {
+  const matchingNodes: VNode[] = []
+  const nodes: VNode[] = [vnode]
   while (nodes.length) {
-    const node = nodes.shift()
+    const node = nodes.shift()!
     aggregateChildren(nodes, node.children)
-    aggregateChildren(nodes, node.component?.subTree.children)
+    if (node.component) {
+      aggregateChildren(nodes, node.component.subTree.children)
+    }
     if (matches(node, selector)) {
       matchingNodes.push(node)
     }
@@ -56,8 +90,11 @@ function findAllVNodes(vnode: VNode, selector: any): VNode[] {
   return matchingNodes
 }
 
-export function find(root: VNode, selector: any): ComponentPublicInstance[] {
+export function find(
+  root: VNode,
+  selector: FindAllComponentsSelector
+): ComponentPublicInstance[] {
   return findAllVNodes(root, selector).map(
-    (vnode: VNode) => vnode.component.proxy
+    (vnode: VNode) => vnode.component!.proxy!
   )
 }
