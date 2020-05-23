@@ -4,9 +4,9 @@ export const attachEmitListener = () => {
   return {
     beforeCreate() {
       let events: Record<string, unknown[]> = {}
-      this.__emitted = events
-      const originalEmit = getCurrentInstance().emit
-      getCurrentInstance().emit = (event: string, ...args: unknown[]) => {
+      ;(this as any).__emitted = events
+      const originalEmit = getCurrentInstance()!.emit
+      getCurrentInstance()!.emit = (event: string, ...args: unknown[]) => {
         events[event]
           ? (events[event] = [...events[event], [...args]])
           : (events[event] = [[...args]])
