@@ -50,6 +50,48 @@ describe('trigger', () => {
       expect(wrapper.find('p').text()).toBe('Count: 1')
     })
 
+    it('works with right modifier', async () => {
+      const handler = jest.fn()
+      const Component = {
+        template: '<div @click.right="handler"/>',
+        methods: { handler }
+      }
+      const wrapper = mount(Component)
+      await wrapper.trigger('click.right')
+
+      expect(handler).toHaveBeenCalledTimes(1)
+      expect(handler.mock.calls[0][0].type).toBe('contextmenu')
+      expect(handler.mock.calls[0][0].button).toBe(2)
+    })
+
+    it('works with middle modifier', async () => {
+      const handler = jest.fn()
+      const Component = {
+        template: '<div @click.middle="handler"/>',
+        methods: { handler }
+      }
+      const wrapper = mount(Component)
+      await wrapper.trigger('click.middle')
+
+      expect(handler).toHaveBeenCalledTimes(1)
+      expect(handler.mock.calls[0][0].button).toBe(1)
+      expect(handler.mock.calls[0][0].type).toBe('mouseup')
+    })
+
+    it('works with meta and key modifiers', async () => {
+      const handler = jest.fn()
+      const Component = {
+        template: '<div @click.meta.right="handler"/>',
+        methods: { handler }
+      }
+      const wrapper = mount(Component)
+      await wrapper.trigger('click.meta.right')
+
+      expect(handler).toHaveBeenCalledTimes(1)
+      expect(handler.mock.calls[0][0].metaKey).toBe(true)
+      expect(handler.mock.calls[0][0].button).toBe(2)
+    })
+
     it('causes DOM to update after a click handler method that changes components data is called', async () => {
       const Component = defineComponent({
         setup() {
@@ -105,7 +147,7 @@ describe('trigger', () => {
         template: '<input @keydown.enter="keydownHandler" />',
         methods: { keydownHandler }
       }
-      const wrapper = mount(Component, {})
+      const wrapper = mount(Component)
 
       // is not called when key is not 'enter'
       await wrapper.trigger('keydown', { key: 'Backspace' })
@@ -113,6 +155,10 @@ describe('trigger', () => {
 
       // is not called when key is uppercase 'ENTER'
       await wrapper.trigger('keydown', { key: 'ENTER' })
+      expect(keydownHandler).not.toHaveBeenCalled()
+
+      // is not called if passed keyCode instead
+      await wrapper.trigger('keydown', { keyCode: 13 })
       expect(keydownHandler).not.toHaveBeenCalled()
 
       // is called when key is lowercase 'enter'
@@ -124,9 +170,47 @@ describe('trigger', () => {
       await wrapper.trigger('keydown', { key: 'Enter' })
       expect(keydownHandler).toHaveBeenCalledTimes(2)
       expect(keydownHandler.mock.calls[1][0].key).toBe('Enter')
+
+      await wrapper.trigger('keydown.enter')
+      expect(keydownHandler).toHaveBeenCalledTimes(3)
+      expect(keydownHandler.mock.calls[2][0].key).toBe('enter')
     })
 
-    it('causes keydown handler to fire with the appropiate keyCode when wrapper.trigger("keydown", { keyCode: 65 }) is fired', async () => {
+    it('overwrites key if passed as a modifier', async () => {
+      const keydownHandler = jest.fn()
+      const Component = {
+        template: '<input @keydown.enter="keydownHandler" />',
+        methods: { keydownHandler }
+      }
+      const wrapper = mount(Component)
+
+      // is called when key is lowercase 'enter'
+      await wrapper.trigger('keydown.enter', { key: 'up' })
+      expect(keydownHandler).toHaveBeenCalledTimes(1)
+      expect(keydownHandler.mock.calls[0][0].key).toBe('enter')
+      expect(keydownHandler.mock.calls[0][0].keyCode).toBe(13)
+    })
+
+    it('causes keydown handler to fire with multiple modifiers', async () => {
+      const keydownHandler = jest.fn()
+      const Component = {
+        template: '<input @keydown.ctrl.shift.left="keydownHandler" />',
+        methods: { keydownHandler }
+      }
+      const wrapper = mount(Component)
+
+      await wrapper.trigger('keydown.ctrl.shift.left')
+
+      expect(keydownHandler).toHaveBeenCalledTimes(1)
+
+      let event = keydownHandler.mock.calls[0][0]
+      expect(event.key).toBe('left')
+      expect(event.shiftKey).toBe(true)
+      expect(event.ctrlKey).toBe(true)
+      expect(event.ctrlKey).toBe(true)
+    })
+
+    it('causes keydown handler to fire with the appropriate keyCode when wrapper.trigger("keydown", { keyCode: 65 }) is fired', async () => {
       const keydownHandler = jest.fn()
       const Component = {
         template: '<input @keydown="keydownHandler" />',
@@ -139,7 +223,7 @@ describe('trigger', () => {
       expect(keydownHandler.mock.calls[0][0].keyCode).toBe(65)
     })
 
-    it('causes keydown handler to fire converting keyName in an apropiate keyCode when wrapper.trigger("keydown.${keyName}") is fired', async () => {
+    it('causes keydown handler to fire converting keyName in an appropriate keyCode when wrapper.trigger("keydown.${keyName}") is fired', async () => {
       let keydownHandler = jest.fn()
 
       const Component = {
