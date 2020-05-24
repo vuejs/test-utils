@@ -1,7 +1,7 @@
 import { transformVNodeArgs, h, createVNode } from 'vue'
-import { hyphenate } from '@vue/shared'
+import { hyphenate } from './utils/vueShared'
 import { MOUNT_COMPONENT_REF, MOUNT_PARENT_NAME } from './constants'
-import { config } from './index'
+import { config } from './config'
 import { matchName } from './utils/matchName'
 
 interface IStubOptions {

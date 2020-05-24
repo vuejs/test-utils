@@ -96,4 +96,29 @@ describe('emitted', () => {
     wrapper.find('button').trigger('click')
     expect(wrapper.emitted().parent[1]).toEqual(['foo', 'bar'])
   })
+
+  it('should allow passing the name of an event', () => {
+    const Component = defineComponent({
+      name: 'ContextEmit',
+
+      setup(props, ctx) {
+        return () =>
+          h('div', [
+            h('button', { onClick: () => ctx.emit('hello', 'foo', 'bar') })
+          ])
+      }
+    })
+    const wrapper = mount(Component)
+
+    // test what happens if you pass a none existent event
+    expect(wrapper.emitted('hello')).toEqual(undefined)
+
+    wrapper.find('button').trigger('click')
+    expect(wrapper.emitted('hello')[0]).toEqual(['foo', 'bar'])
+
+    wrapper.find('button').trigger('click')
+    expect(wrapper.emitted('hello')[1]).toEqual(['foo', 'bar'])
+
+    expect(wrapper.emitted('hello')).toHaveLength(2)
+  })
 })

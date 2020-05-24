@@ -1,4 +1,4 @@
-import { Component, ComponentOptions, Directive, Plugin } from 'vue'
+import { Component, ComponentOptions, Directive, Plugin, AppConfig } from 'vue'
 
 interface RefSelector {
   ref: string
@@ -21,6 +21,7 @@ export type FindAllComponentsSelector = NameSelector | string
 
 export type GlobalMountOptions = {
   plugins?: Plugin[]
+  config?: Omit<AppConfig, 'isNativeTag'> // isNativeTag is readonly, so we omit it
   mixins?: ComponentOptions[]
   mocks?: Record<string, any>
   provide?: Record<any, any>

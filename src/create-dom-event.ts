@@ -1,4 +1,4 @@
-import * as eventTypes from 'dom-event-types'
+import eventTypes from 'dom-event-types'
 
 interface TriggerOptions {
   code?: String
@@ -9,9 +9,45 @@ interface TriggerOptions {
 
 interface EventParams {
   eventType: string
-  modifier: string
-  meta: any
+  modifiers: string[]
   options?: TriggerOptions
+}
+
+// modifiers to keep an eye on
+const ignorableKeyModifiers = ['stop', 'prevent', 'self', 'exact']
+const systemKeyModifiers = ['ctrl', 'shift', 'alt', 'meta']
+const mouseKeyModifiers = ['left', 'middle', 'right']
+
+/**
+ * Groups modifiers into lists
+ */
+function generateModifiers(modifiers: string[], isOnClick: boolean) {
+  const keyModifiers: string[] = []
+  const systemModifiers: string[] = []
+
+  for (let i = 0; i < modifiers.length; i++) {
+    const modifier = modifiers[i]
+
+    // addEventListener() options, e.g. .passive & .capture, that we dont need to handle
+    if (ignorableKeyModifiers.includes(modifier)) {
+      continue
+    }
+    // modifiers that require special conversion
+    // if passed a left/right key modifier with onClick, add it here as well.
+    if (
+      systemKeyModifiers.includes(modifier) ||
+      (mouseKeyModifiers.includes(modifier) && isOnClick)
+    ) {
+      systemModifiers.push(modifier)
+    } else {
+      keyModifiers.push(modifier)
+    }
+  }
+
+  return {
+    keyModifiers,
+    systemModifiers
+  }
 }
 
 export const keyCodesByKeyName = {
@@ -33,52 +69,90 @@ export const keyCodesByKeyName = {
 }
 
 function getEventProperties(eventParams: EventParams) {
-  const { modifier, meta, options } = eventParams
-  const keyCode =
-    keyCodesByKeyName[modifier] ||
-    (options && (options.keyCode || options.code))
+  let { modifiers, options = {}, eventType } = eventParams
 
-  return {
-    ...options, // What the user passed in as the second argument to #trigger
-    bubbles: meta.bubbles,
-    meta: meta.cancelable,
-    // Any derived options should go here
-    keyCode,
-    code: keyCode
-  }
-}
+  let isOnClick = eventType === 'click'
 
-function createEvent(eventParams: EventParams) {
-  const { eventType, meta } = eventParams
-  const metaEventInterface = window[meta.eventInterface]
-
-  const SupportedEventInterface =
-    typeof metaEventInterface === 'function' ? metaEventInterface : window.Event
-
-  const eventProperties = getEventProperties(eventParams)
-
-  const event = new SupportedEventInterface(
-    eventType,
-    // event properties can only be added when the event is instantiated
-    // custom properties must be added after the event has been instantiated
-    eventProperties
+  const { keyModifiers, systemModifiers } = generateModifiers(
+    modifiers,
+    isOnClick
   )
 
-  return event
-}
+  if (isOnClick) {
+    // if it's a right click, it should fire a `contextmenu` event
+    if (systemModifiers.includes('right')) {
+      eventType = 'contextmenu'
+      options.button = 2
+      // if its a middle click, fire a `mouseup` event
+    } else if (systemModifiers.includes('middle')) {
+      eventType = 'mouseup'
+      options.button = 1
+    }
+  }
 
-function createDOMEvent(eventString: String, options?: TriggerOptions) {
-  const [eventType, modifier] = eventString.split('.')
   const meta = eventTypes[eventType] || {
     eventInterface: 'Event',
     cancelable: true,
     bubbles: true
   }
 
-  const eventParams: EventParams = { eventType, modifier, meta, options }
+  // convert `shift, ctrl` to `shiftKey, ctrlKey`
+  // allows trigger('keydown.shift.ctrl.n') directly
+  const systemModifiersMeta = systemModifiers.reduce((all, key) => {
+    all[`${key}Key`] = true
+    return all
+  }, {})
+
+  // get the keyCode for backwards compat
+  const keyCode =
+    keyCodesByKeyName[keyModifiers[0]] ||
+    (options && (options.keyCode || options.code))
+
+  const eventProperties = {
+    ...systemModifiersMeta, // shiftKey, metaKey etc
+    ...options, // What the user passed in as the second argument to #trigger
+    bubbles: meta.bubbles,
+    meta: meta.cancelable,
+    // Any derived options should go here
+    keyCode,
+    code: keyCode,
+    // if we have a `key`, use it, otherwise dont set anything (allows user to pass custom key)
+    ...(keyModifiers[0] ? { key: keyModifiers[0] } : {})
+  }
+
+  return {
+    eventProperties,
+    meta,
+    eventType
+  }
+}
+
+function createEvent(eventParams: EventParams) {
+  const { eventProperties, meta, eventType } = getEventProperties(eventParams)
+
+  // user defined eventInterface
+  const metaEventInterface = window[meta.eventInterface]
+
+  const SupportedEventInterface =
+    typeof metaEventInterface === 'function' ? metaEventInterface : window.Event
+
+  return new SupportedEventInterface(
+    eventType,
+    // event properties can only be added when the event is instantiated
+    // custom properties must be added after the event has been instantiated
+    eventProperties
+  )
+}
+
+function createDOMEvent(eventString: String, options?: TriggerOptions) {
+  // split eventString like `keydown.ctrl.shift.c` into `keydown` and array of modifiers
+  const [eventType, ...modifiers] = eventString.split('.')
+
+  const eventParams: EventParams = { eventType, modifiers, options }
   const event: Event = createEvent(eventParams)
   const eventPrototype = Object.getPrototypeOf(event)
 
+  // attach custom options to the event, like `relatedTarget` and so on.
   options &&
     Object.keys(options).forEach((key) => {
       const propertyDescriptor = Object.getOwnPropertyDescriptor(

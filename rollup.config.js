@@ -25,8 +25,7 @@ function createEntry(options) {
     input,
     external: [
       'vue',
-      'lodash/mergeWith',
-      'lodash/isString'
+      '@vue/compiler-dom',
     ],
     plugins: [
       replace({
@@ -41,30 +40,25 @@ function createEntry(options) {
       format,
       globals: {
         vue: 'Vue',
-        'lodash/mergeWith': '_.mergeWith',
-        'lodash/isString': '_.isString',
+        '@vue/compiler-dom': 'VueCompilerDOM',
       }
     }
   }
 
-  if (['es', 'cjs'].includes(format)) {
-    config.external.push('dom-event-types')
-  }
-
   if (format === 'es') {
-    config.output.file = isBrowser ? pkg.browser : pkg.module
+    config.output.file = pkg.module
   }
   if (format === 'cjs') {
     config.output.file = pkg.main
   }
-  console.log('file is', config.output.file)
+  console.log(`Building ${format}: ${config.output.file}`)
 
   config.plugins.push(
     ts({
       check: format === 'es' && isBrowser,
       tsconfigOverride: {
         compilerOptions: {
-          declaration: format === 'es' && isBrowser,
+          declaration: format === 'es',
           target: 'es5', // not sure what this should be?
           module: format === 'cjs' ? 'es2015' : 'esnext'
         },
@@ -78,7 +72,6 @@ function createEntry(options) {
 
 export default [
   createEntry({ format: 'es', input: 'src/index.ts', isBrowser: false }),
-  createEntry({ format: 'es', input: 'src/index.ts', isBrowser: true }),
   createEntry({ format: 'iife', input: 'src/index.ts', isBrowser: true }),
   createEntry({ format: 'cjs', input: 'src/index.ts', isBrowser: false }),
 ]

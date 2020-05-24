@@ -10,7 +10,9 @@ export class DOMWrapper<ElementType extends Element> {
     this.element = element
   }
 
-  classes(className?: string) {
+  classes(): string[]
+  classes(className: string): boolean
+  classes(className?: string): string[] | boolean {
     const classes = this.element.classList
 
     if (className) return classes.contains(className)
@@ -18,12 +20,13 @@ export class DOMWrapper<ElementType extends Element> {
     return Array.from(classes)
   }
 
-  attributes(key?: string) {
-    const attributes = this.element.attributes
-    const attributeMap = {}
-    for (let i = 0; i < attributes.length; i++) {
-      const att = attributes.item(i)
-      attributeMap[att.localName] = att.value
+  attributes(): { [key: string]: string }
+  attributes(key: string): string
+  attributes(key?: string): { [key: string]: string } | string {
+    const attributes = Array.from(this.element.attributes)
+    const attributeMap: Record<string, string> = {}
+    for (const attribute of attributes) {
+      attributeMap[attribute.localName] = attribute.value
     }
 
     return key ? attributeMap[key] : attributeMap
