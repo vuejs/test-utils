@@ -14,7 +14,7 @@ interface EventParams {
 }
 
 // modifiers to keep an eye on
-const ignorableKeyModifiers = ['stop', 'prevent', 'self', 'exact', 'exact']
+const ignorableKeyModifiers = ['stop', 'prevent', 'self', 'exact']
 const systemKeyModifiers = ['ctrl', 'shift', 'alt', 'meta']
 const mouseKeyModifiers = ['left', 'middle', 'right']
 
@@ -97,6 +97,7 @@ function getEventProperties(eventParams: EventParams) {
   }
 
   // convert `shift, ctrl` to `shiftKey, ctrlKey`
+  // allows trigger('keydown.shift.ctrl.n') directly
   const systemModifiersMeta = systemModifiers.reduce((all, key) => {
     all[`${key}Key`] = true
     return all
