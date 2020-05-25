@@ -64,35 +64,19 @@ export type ObjectEmitsOptions = Record<
 export type EmitsOptions = ObjectEmitsOptions | string[]
 
 // Functional component
-export function mount<TestedComponent extends FunctionalComponent>(
+export function mount<
+  TestedComponent extends FunctionalComponent<Props>,
+  Props
+>(
   originalComponent: TestedComponent,
-  options?: MountingOptions<any>
-): VueWrapper<ComponentPublicInstance>
+  options?: MountingOptions<Props>
+): VueWrapper<ComponentPublicInstance<Props>>
+
 // Component declared with defineComponent
 export function mount<TestedComponent extends ComponentPublicInstance>(
   originalComponent: { new (): TestedComponent } & Component,
   options?: MountingOptions<TestedComponent['$props'], TestedComponent['$data']>
 ): VueWrapper<TestedComponent>
-
-// Functional Component declared with (props, ctx)=> render
-export function mount<Props, RawBindings = object>(
-  setup: (
-    props: Readonly<Props>,
-    ctx: SetupContext
-  ) => RawBindings | RenderFunction,
-
-  options: MountingOptions<Props, {}>
-): VueWrapper<
-  ComponentPublicInstance<
-    Props,
-    RawBindings,
-    {},
-    {},
-    {},
-    // public props
-    VNodeProps & Props
-  >
->
 
 // Component declared with no props
 export function mount<

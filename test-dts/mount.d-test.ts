@@ -91,9 +91,11 @@ expectType<string>(
 
 // can receive extra props
 // as they are declared as `string[]`
-mount(AppWithArrayProps, {
-  props: { a: 'Hello', b: 2 }
-})
+expectType<number>(
+  mount(AppWithArrayProps, {
+    props: { a: 'Hello', b: 2 }
+  }).vm.b
+)
 
 // cannot receive extra props
 // if they pass use object inside
@@ -125,3 +127,20 @@ expectError(
 mount(AppWithoutProps, {
   props: { b: 'Hello' } as never
 })
+
+// Functional tests
+
+// wrong props
+expectError((props: { a: 1 }) => {}, {
+  props: {
+    a: '222'
+  }
+})
+
+expectType<number>(
+  mount((props: { a: 1 }, ctx) => {}, {
+    props: {
+      a: 22
+    }
+  }).vm.a
+)
