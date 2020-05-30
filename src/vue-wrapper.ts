@@ -197,6 +197,13 @@ export class VueWrapper<T extends ComponentPublicInstance> {
     return nextTick()
   }
 
+  setModelValue(value: any, prop?: string): Promise<void> {
+    const propEvent = prop || 'modelValue'
+    // @ts-ignore
+    this.vm.$emit(`update:${propEvent}`, value)
+    return this.vm.$nextTick()
+  }
+
   trigger(eventString: string, options?: TriggerOptions) {
     const rootElementWrapper = new DOMWrapper(this.element)
     return rootElementWrapper.trigger(eventString, options)
