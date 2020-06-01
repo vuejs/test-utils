@@ -1,4 +1,4 @@
-import { defineComponent, h, computed } from 'vue'
+import { defineComponent, h, computed, ref, watchEffect } from 'vue'
 
 import { mount } from '../src'
 
@@ -142,5 +142,59 @@ describe('setProps', () => {
     expect(() => FooResult.setProps({ baz: 'bin' })).toThrowError(
       'You can only use setProps on your mounted component'
     )
+  })
+
+  it('should trigger props watchers', async () => {
+    /**
+     * This is a mini Alert component,
+     * that can be show or hide via the the `show` prop,
+     * and can be dismissed when clicking on the button.
+     * When dismissed, it does not display.
+     * We want to reset the dismiss value, if the parent component shows the Alert again.
+     */
+    const Alert = {
+      name: 'Alert',
+      props: {
+        show: {
+          type: Boolean,
+          required: false
+        }
+      },
+      template: `<div v-if="show && !isDismissed">
+        <button type="button" @click="dismiss()">X</button>
+        <div>Hello</div>
+      </div>`,
+      setup(props) {
+        const isDismissed = ref(false)
+        function dismiss() {
+          isDismissed.value = true
+        }
+        watchEffect(() => {
+          if (props.show) {
+            isDismissed.value = false
+          }
+        })
+
+        return { isDismissed, dismiss }
+      }
+    }
+
+    const wrapper = mount(Alert, {
+      props: {
+        show: true
+      }
+    })
+    expect(wrapper.find('button').exists()).toBe(true)
+    expect(wrapper.html()).toContain('Hello')
+
+    // it should hide the alert when clicking on it
+    await wrapper.get('button').trigger('click')
+    expect(wrapper.html()).not.toContain('Hello')
+    expect(wrapper.vm.isDismissed).toBe(true)
+
+    // it should display the alert again if the parent component wants to (triggers the props watcher)
+    await wrapper.setProps({ shown: true })
+    expect(wrapper.vm.isDismissed).toBe(false)
+    expect(wrapper.html()).toContain('Hello')
   })
 })
