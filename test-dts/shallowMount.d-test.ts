@@ -46,11 +46,12 @@ const AppWithProps = {
 }
 
 // accept props
-wrapper = shallowMount(AppWithProps, {
-  props: { a: 'Hello' }
-})
 // vm is properly typed
-expectType<string>(wrapper.vm.a)
+expectType<string>(
+  shallowMount(AppWithProps, {
+    props: { a: 'Hello' }
+  }).vm.a
+)
 
 // can't receive extra props
 expectError(

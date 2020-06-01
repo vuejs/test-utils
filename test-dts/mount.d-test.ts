@@ -13,12 +13,23 @@ const AppWithDefine = defineComponent({
   template: ''
 })
 
-// accept props
-let wrapper = mount(AppWithDefine, {
-  props: { a: 'Hello', b: 2 }
-})
-// vm is properly typed
-expectType<string>(wrapper.vm.a)
+// accept props- vm is properly typed
+expectType<string>(
+  mount(AppWithDefine, {
+    props: { a: 'Hello', b: 2 }
+  }).vm.a
+)
+
+// no data provided
+expectError(
+  mount(AppWithDefine, {
+    data() {
+      return {
+        myVal: 1
+      }
+    }
+  })
+)
 
 // can receive extra props
 // ideally, it should not
@@ -45,12 +56,12 @@ const AppWithProps = {
   template: ''
 }
 
-// accept props
-wrapper = mount(AppWithProps, {
-  props: { a: 'Hello' }
-})
-// vm is properly typed
-expectType<string>(wrapper.vm.a)
+// accept props - vm is properly typed
+expectType<string>(
+  mount(AppWithProps, {
+    props: { a: 'Hello' }
+  }).vm.a
+)
 
 // can't receive extra props
 expectError(
@@ -71,18 +82,35 @@ const AppWithArrayProps = {
   template: ''
 }
 
-// accept props
-wrapper = mount(AppWithArrayProps, {
-  props: { a: 'Hello' }
-})
-// vm is properly typed
-expectType<string>(wrapper.vm.a)
+// accept props - vm is properly typed
+expectType<string>(
+  mount(AppWithArrayProps, {
+    props: { a: 'Hello' }
+  }).vm.a
+)
 
 // can receive extra props
 // as they are declared as `string[]`
-mount(AppWithArrayProps, {
-  props: { a: 'Hello', b: 2 }
-})
+expectType<number>(
+  mount(AppWithArrayProps, {
+    props: { a: 'Hello', b: 2 }
+  }).vm.b
+)
+
+// cannot receive extra props
+// if they pass use object inside
+expectError(
+  mount(
+    {
+      props: ['a']
+    },
+    {
+      props: {
+        b: 2
+      }
+    }
+  )
+)
 
 const AppWithoutProps = {
   template: ''
@@ -90,12 +118,29 @@ const AppWithoutProps = {
 
 // can't receive extra props
 expectError(
-  (wrapper = mount(AppWithoutProps, {
+  mount(AppWithoutProps, {
     props: { b: 'Hello' }
-  }))
+  })
 )
 
 // except if explicitly cast
 mount(AppWithoutProps, {
   props: { b: 'Hello' } as never
 })
+
+// Functional tests
+
+// wrong props
+expectError((props: { a: 1 }) => {}, {
+  props: {
+    a: '222'
+  }
+})
+
+expectType<number>(
+  mount((props: { a: 1 }, ctx) => {}, {
+    props: {
+      a: 22
+    }
+  }).vm.a
+)

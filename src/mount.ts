@@ -13,6 +13,10 @@ import {
   ComponentOptionsWithoutProps,
   ExtractPropTypes,
   Component,
+  WritableComputedOptions,
+  SetupContext,
+  RenderFunction,
+  ComponentPropsOptions,
   AppConfig,
   VNodeProps
 } from 'vue'
@@ -37,8 +41,8 @@ type SlotDictionary = {
   [key: string]: Slot
 }
 
-interface MountingOptions<Props> {
-  data?: () => Record<string, unknown>
+interface MountingOptions<Props, Data = {}> {
+  data?: () => Data extends object ? Partial<Data> : never
   props?: Props
   attrs?: Record<string, unknown>
   slots?: SlotDictionary & {
@@ -49,40 +53,116 @@ interface MountingOptions<Props> {
   shallow?: boolean
 }
 
-// TODO improve the typings of the overloads
-
-type ExtractComponent<T> = T extends { new (): infer PublicInstance }
-  ? PublicInstance
-  : any
+export type ComputedOptions = Record<
+  string,
+  ((ctx?: any) => any) | WritableComputedOptions<any>
+>
+export type ObjectEmitsOptions = Record<
+  string,
+  ((...args: any[]) => any) | null
+>
+export type EmitsOptions = ObjectEmitsOptions | string[]
 
 // Functional component
-export function mount<TestedComponent extends FunctionalComponent>(
+export function mount<
+  TestedComponent extends FunctionalComponent<Props>,
+  Props
+>(
   originalComponent: TestedComponent,
-  options?: MountingOptions<any>
-): VueWrapper<ComponentPublicInstance>
+  options?: MountingOptions<Props>
+): VueWrapper<ComponentPublicInstance<Props>>
+
 // Component declared with defineComponent
 export function mount<TestedComponent extends ComponentPublicInstance>(
   originalComponent: { new (): TestedComponent } & Component,
-  options?: MountingOptions<TestedComponent['$props']>
+  options?: MountingOptions<TestedComponent['$props'], TestedComponent['$data']>
 ): VueWrapper<TestedComponent>
-// Component declared with { props: { ... } }
-export function mount<TestedComponent extends ComponentOptionsWithObjectProps>(
-  originalComponent: TestedComponent,
-  options?: MountingOptions<ExtractPropTypes<TestedComponent['props'], false>>
-): VueWrapper<ExtractComponent<TestedComponent>>
-// Component declared with { props: [] }
-export function mount<TestedComponent extends ComponentOptionsWithArrayProps>(
-  originalComponent: TestedComponent,
-  options?: MountingOptions<Record<string, any>>
-): VueWrapper<ExtractComponent<TestedComponent>>
+
 // Component declared with no props
 export function mount<
-  TestedComponent extends ComponentOptionsWithoutProps,
-  ComponentT extends ComponentOptionsWithoutProps & {}
+  Props = {},
+  RawBindings = {},
+  D = {},
+  C extends ComputedOptions = {},
+  M extends Record<string, Function> = {},
+  E extends EmitsOptions = Record<string, any>,
+  EE extends string = string
 >(
-  originalComponent: ComponentT extends { new (): any } ? never : ComponentT,
-  options?: MountingOptions<never>
-): VueWrapper<ExtractComponent<TestedComponent>>
+  componentOptions: ComponentOptionsWithoutProps<
+    Props,
+    RawBindings,
+    D,
+    C,
+    M,
+    E,
+    EE
+  >,
+  options?: MountingOptions<never, D>
+): VueWrapper<
+  ComponentPublicInstance<Props, RawBindings, D, C, M, E, VNodeProps & Props>
+>
+
+// Component declared with { props: [] }
+export function mount<
+  PropNames extends string,
+  RawBindings,
+  D,
+  C extends ComputedOptions = {},
+  M extends Record<string, Function> = {},
+  E extends EmitsOptions = Record<string, any>,
+  EE extends string = string,
+  Props extends Readonly<{ [key in PropNames]?: any }> = Readonly<
+    { [key in PropNames]?: any }
+  >
+>(
+  componentOptions: ComponentOptionsWithArrayProps<
+    PropNames,
+    RawBindings,
+    D,
+    C,
+    M,
+    E,
+    EE,
+    Props
+  >,
+  options?: MountingOptions<Props, D>
+): VueWrapper<ComponentPublicInstance<Props, RawBindings, D, C, M, E>>
+
+// Component declared with { props: { ... } }
+export function mount<
+  // the Readonly constraint allows TS to treat the type of { required: true }
+  // as constant instead of boolean.
+  PropsOptions extends Readonly<ComponentPropsOptions>,
+  RawBindings,
+  D,
+  C extends ComputedOptions = {},
+  M extends Record<string, Function> = {},
+  E extends EmitsOptions = Record<string, any>,
+  EE extends string = string
+>(
+  componentOptions: ComponentOptionsWithObjectProps<
+    PropsOptions,
+    RawBindings,
+    D,
+    C,
+    M,
+    E,
+    EE
+  >,
+  options?: MountingOptions<ExtractPropTypes<PropsOptions>, D>
+): VueWrapper<
+  ComponentPublicInstance<
+    ExtractPropTypes<PropsOptions>,
+    RawBindings,
+    D,
+    C,
+    M,
+    E,
+    VNodeProps & ExtractPropTypes<PropsOptions, false>
+  >
+>
+
+// implementation
 export function mount(
   originalComponent: any,
   options?: MountingOptions<any>
