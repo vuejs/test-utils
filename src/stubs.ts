@@ -1,29 +1,37 @@
-import { transformVNodeArgs, h, createVNode } from 'vue'
+import {
+  transformVNodeArgs,
+  h,
+  ComponentPublicInstance,
+  Slots,
+  ComponentOptions,
+  defineComponent,
+  VNodeProps,
+  VNodeTypes
+} from 'vue'
 import { hyphenate } from './utils/vueShared'
 import { MOUNT_COMPONENT_REF, MOUNT_PARENT_NAME } from './constants'
 import { config } from './config'
 import { matchName } from './utils/matchName'
 
-interface IStubOptions {
+interface StubOptions {
   name?: string
   props: any
 }
 
-type VNodeArgs = Parameters<typeof createVNode>
-
-function getSlots(ctx) {
+function getSlots(ctx: ComponentPublicInstance): Slots | undefined {
   return !config.renderStubDefaultSlot ? undefined : ctx.$slots
 }
 
-const createStub = ({ name, props }: IStubOptions) => {
+const createStub = ({ name, props }: StubOptions): ComponentOptions => {
   const anonName = 'anonymous-stub'
   const tag = name ? `${hyphenate(name)}-stub` : anonName
 
-  const render = (ctx) => {
-    return h(tag, {}, getSlots(ctx))
+  const render = (ctx: ComponentPublicInstance) => {
+    // TS is not happy with this signature, so we cast the Slots as any
+    return h(tag, {}, getSlots(ctx) as any)
   }
 
-  return { name: name || anonName, render, props }
+  return defineComponent({ name: name || anonName, render, props })
 }
 
 const resolveComponentStubByName = (
@@ -45,19 +53,22 @@ const resolveComponentStubByName = (
   }
 }
 
-const isHTMLElement = (args: VNodeArgs) => typeof args[0] === 'string'
+const isHTMLElement = (type: VNodeTypes) => typeof type === 'string'
 
-const isCommentOrFragment = (args: VNodeArgs) => typeof args[0] === 'symbol'
+const isCommentOrFragment = (type: VNodeTypes) => typeof type === 'symbol'
 
-const isParent = (args: VNodeArgs) =>
-  isComponent(args) && args[0]['name'] === MOUNT_PARENT_NAME
+const isParent = (type: VNodeTypes) =>
+  isComponent(type) && type['name'] === MOUNT_PARENT_NAME
 
-const isMountedComponent = (args: VNodeArgs) =>
-  isComponent(args) && args[1] && args[1]['ref'] === MOUNT_COMPONENT_REF
+const isMountedComponent = (
+  type: VNodeTypes,
+  props: ({ [key: string]: unknown } & VNodeProps) | null | undefined
+) => isComponent(type) && props && props['ref'] === MOUNT_COMPONENT_REF
 
-const isComponent = (args: VNodeArgs) => typeof args[0] === 'object'
+const isComponent = (type: VNodeTypes): type is ComponentOptions =>
+  typeof type === 'object'
 
-const isFunctionalComponent = ([type]: VNodeArgs) =>
+const isFunctionalComponent = (type: VNodeTypes): type is ComponentOptions =>
   typeof type === 'function' && ('name' in type || 'displayName' in type)
 
 export function stubComponents(
@@ -65,21 +76,22 @@ export function stubComponents(
   shallow: boolean = false
 ) {
   transformVNodeArgs((args) => {
+    const [nodeType, props, children, patchFlag, dynamicProps] = args
+    const type = nodeType as VNodeTypes
     // args[0] can either be:
     // 1. a HTML tag (div, span...)
     // 2. An object of component options, such as { name: 'foo', render: [Function], props: {...} }
     // Depending what it is, we do different things.
     if (
-      isHTMLElement(args) ||
-      isCommentOrFragment(args) ||
-      isParent(args) ||
-      isMountedComponent(args)
+      isHTMLElement(type) ||
+      isCommentOrFragment(type) ||
+      isParent(type) ||
+      isMountedComponent(type, props)
     ) {
       return args
     }
 
-    if (isComponent(args) || isFunctionalComponent(args)) {
-      const [type, props, children, patchFlag, dynamicProps] = args
+    if (isComponent(type) || isFunctionalComponent(type)) {
       const name = type['name'] || type['displayName']
       if (!name && !shallow) {
         return args
@@ -97,7 +109,6 @@ export function stubComponents(
       // where the signature is h(Component, props, slots)
       // case 1: default stub
       if (stub === true || shallow) {
-        // @ts-ignore
         const propsDeclaration = type?.props || {}
         return [
           createStub({ name, props: propsDeclaration }),
