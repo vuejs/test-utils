@@ -6,5 +6,5 @@ test('works with transitions', async () => {
   expect(wrapper.find('#message').exists()).toBe(false)
 
   await wrapper.find('button').trigger('click')
-  expect(wrapper.find('#message')).toBeTruthy()
+  expect(wrapper.find('#message').exists()).toBe(true)
 })
