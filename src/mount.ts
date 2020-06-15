@@ -52,7 +52,11 @@ type SlotDictionary = {
 }
 
 interface MountingOptions<Props, Data = {}> {
-  data?: () => Data extends object ? Partial<Data> : never
+  data?: () => {} extends Data
+    ? never
+    : Data extends object
+    ? Partial<Data>
+    : never
   props?: Props
   attrs?: Record<string, unknown>
   slots?: SlotDictionary & {
