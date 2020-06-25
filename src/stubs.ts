@@ -27,8 +27,7 @@ const createStub = ({ name, props }: StubOptions): ComponentOptions => {
   const tag = name ? `${hyphenate(name)}-stub` : anonName
 
   const render = (ctx: ComponentPublicInstance) => {
-    // TS is not happy with this signature, so we cast the Slots as any
-    return h(tag, {}, getSlots(ctx) as any)
+    return h(tag, {}, getSlots(ctx))
   }
 
   return defineComponent({ name: name || anonName, render, props })

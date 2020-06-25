@@ -14,8 +14,7 @@ import {
   ExtractPropTypes,
   Component,
   WritableComputedOptions,
-  SetupContext,
-  RenderFunction,
+  ComponentOptionsBase,
   ComponentPropsOptions,
   AppConfig,
   VNodeProps
@@ -35,6 +34,17 @@ import {
 } from './constants'
 import { stubComponents } from './stubs'
 
+// TODO remove when https://github.com/vuejs/vue-next/pull/1361 is merged
+type ComponentOptionsMixin = ComponentOptionsBase<
+  any,
+  any,
+  any,
+  any,
+  any,
+  any,
+  any,
+  any
+>
 type Slot = VNode | string | { render: Function } | Function
 
 type SlotDictionary = {
@@ -42,7 +52,11 @@ type SlotDictionary = {
 }
 
 interface MountingOptions<Props, Data = {}> {
-  data?: () => Data extends object ? Partial<Data> : never
+  data?: () => {} extends Data
+    ? never
+    : Data extends object
+    ? Partial<Data>
+    : never
   props?: Props
   attrs?: Record<string, unknown>
   slots?: SlotDictionary & {
@@ -86,6 +100,8 @@ export function mount<
   C extends ComputedOptions = {},
   M extends Record<string, Function> = {},
   E extends EmitsOptions = Record<string, any>,
+  Mixin extends ComponentOptionsMixin = ComponentOptionsMixin,
+  Extends extends ComponentOptionsMixin = ComponentOptionsMixin,
   EE extends string = string
 >(
   componentOptions: ComponentOptionsWithoutProps<
@@ -95,6 +111,8 @@ export function mount<
     C,
     M,
     E,
+    Mixin,
+    Extends,
     EE
   >,
   options?: MountingOptions<never, D>
@@ -110,6 +128,8 @@ export function mount<
   C extends ComputedOptions = {},
   M extends Record<string, Function> = {},
   E extends EmitsOptions = Record<string, any>,
+  Mixin extends ComponentOptionsMixin = ComponentOptionsMixin,
+  Extends extends ComponentOptionsMixin = ComponentOptionsMixin,
   EE extends string = string,
   Props extends Readonly<{ [key in PropNames]?: any }> = Readonly<
     { [key in PropNames]?: any }
@@ -122,6 +142,8 @@ export function mount<
     C,
     M,
     E,
+    Mixin,
+    Extends,
     EE,
     Props
   >,
@@ -138,6 +160,8 @@ export function mount<
   C extends ComputedOptions = {},
   M extends Record<string, Function> = {},
   E extends EmitsOptions = Record<string, any>,
+  Mixin extends ComponentOptionsMixin = ComponentOptionsMixin,
+  Extends extends ComponentOptionsMixin = ComponentOptionsMixin,
   EE extends string = string
 >(
   componentOptions: ComponentOptionsWithObjectProps<
@@ -147,6 +171,8 @@ export function mount<
     C,
     M,
     E,
+    Mixin,
+    Extends,
     EE
   >,
   options?: MountingOptions<ExtractPropTypes<PropsOptions>, D>
