@@ -1,6 +1,7 @@
 import { expectType } from 'tsd'
 import { defineComponent } from 'vue'
 import { mount } from '../src'
+import Hello from '../tests/components/Hello.vue'
 
 const AppWithDefine = defineComponent({
   template: ''
@@ -111,3 +112,6 @@ expectType<boolean>(domWrapper.classes('class'))
 // props
 expectType<{ [key: string]: any }>(wrapper.props())
 expectType<any>(wrapper.props('prop'))
+
+// vm
+expectType<Function>(wrapper.findComponent(Hello).vm.$emit)
