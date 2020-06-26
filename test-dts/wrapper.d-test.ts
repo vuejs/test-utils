@@ -114,4 +114,7 @@ expectType<{ [key: string]: any }>(wrapper.props())
 expectType<any>(wrapper.props('prop'))
 
 // vm
-expectType<Function>(wrapper.findComponent(Hello).vm.$emit)
+expectType<
+  ((event: string, ...args: unknown[]) => void) &
+    ((event: string, ...args: any[]) => void)
+>(wrapper.findComponent(Hello).vm.$emit)
