@@ -79,5 +79,8 @@
         "dom"
       ]
     }
+  },
+  "dependencies": {
+    "vue-router": "^4.0.0-alpha.13"
   }
 }
