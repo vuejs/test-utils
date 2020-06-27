@@ -1,4 +1,4 @@
-import { createRouter, createWebHistory } from 'vue-router'
+import { createRouter, createWebHistory, RouterView } from 'vue-router'
 import { h, createApp } from 'vue'
 import WithRouter from '../components/WithRouter.vue'
 import { mount } from '../../src'
@@ -28,13 +28,19 @@ const router = () => {
 }
 
 describe('vue-router', () => {
-  it('may not be a VTU issue?', async () => {
+  const App = {
+    render() {
+      return h('span', [h(RouterView)])
+    }
+  }
+
+  it.only('may not be a VTU issue?', async () => {
     const el = document.createElement('div')
     el.id = 'app'
     document.body.appendChild(el)
-    const app = createApp(WithRouter)
+    const app = createApp(App)
     app.use(router())
-    app.mount('#app')
+    app.mount(el)
     console.log(document.body.innerHTML)
   })
 
