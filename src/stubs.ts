@@ -75,6 +75,17 @@ export function stubComponents(
   shallow: boolean = false
 ) {
   transformVNodeArgs((args) => {
+    const locallyRegisteredComponents = (args[0] as any).components as
+      | Record<string, VNodeTypes>
+      | undefined
+    if (locallyRegisteredComponents) {
+      for (const registrationName in locallyRegisteredComponents) {
+        const component = locallyRegisteredComponents[registrationName]
+        if (!component['name'] && !component['displayName']) {
+          component['name'] = registrationName
+        }
+      }
+    }
     const [nodeType, props, children, patchFlag, dynamicProps] = args
     const type = nodeType as VNodeTypes
     // args[0] can either be:
