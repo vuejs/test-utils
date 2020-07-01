@@ -26,7 +26,7 @@ describe('shallowMount', () => {
     )
   })
 
-  it.only('stubs all components, but allows providing custom stub', () => {
+  it('stubs all components, but allows providing custom stub', () => {
     const wrapper = mount(ComponentWithChildren, {
       shallow: true,
       global: {
