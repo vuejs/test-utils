@@ -21,12 +21,40 @@ function matches(node: VNode, selector: FindAllComponentsSelector): boolean {
     return node.el?.matches?.(selector)
   }
 
-  if (typeof selector === 'object' && typeof node.type === 'object') {
-    if (selector === node.type) return true
+  const nodeType = node.type
+  if (typeof selector === 'object' && typeof nodeType === 'object') {
+    // we are looking for this exact component
+    if (selector === nodeType) {
+      return true
+    }
 
-    if (selector.name && ('name' in node.type || 'displayName' in node.type)) {
+    let componentName
+    if ('name' in nodeType || 'displayName' in nodeType) {
       // match normal component definitions or functional components
-      return matchName(selector.name, node.type.name || node.type.displayName)
+      componentName = nodeType.name || nodeType.displayName
+    }
+    let selectorName = selector.name
+
+    // the component and selector both have a name
+    if (componentName && selectorName) {
+      return matchName(selectorName, componentName)
+    }
+
+    // if a name is missing, then check the locally registered components in the parent
+    if (node.component.parent) {
+      const registry = (node.component.parent as any).components
+      for (const key in registry) {
+        // is it the selector
+        if (!selectorName && registry[key] === selector) {
+          selectorName = key
+        }
+        // is it the component
+        if (!componentName && registry[key] === nodeType) {
+          componentName = key
+        }
+      }
+      // we may have one or both missing names
+      return matchName(selectorName, componentName)
     }
   }
 

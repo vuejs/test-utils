@@ -12,6 +12,7 @@ import { hyphenate } from './utils/vueShared'
 import { MOUNT_COMPONENT_REF, MOUNT_PARENT_NAME } from './constants'
 import { config } from './config'
 import { matchName } from './utils/matchName'
+import { ComponentInternalInstance } from '@vue/runtime-core'
 
 interface StubOptions {
   name?: string
@@ -74,18 +75,7 @@ export function stubComponents(
   stubs: Record<any, any> = {},
   shallow: boolean = false
 ) {
-  transformVNodeArgs((args) => {
-    const locallyRegisteredComponents = (args[0] as any).components as
-      | Record<string, VNodeTypes>
-      | undefined
-    if (locallyRegisteredComponents) {
-      for (const registrationName in locallyRegisteredComponents) {
-        const component = locallyRegisteredComponents[registrationName]
-        if (!component['name'] && !component['displayName']) {
-          component['name'] = registrationName
-        }
-      }
-    }
+  transformVNodeArgs((args, instance: ComponentInternalInstance | null) => {
     const [nodeType, props, children, patchFlag, dynamicProps] = args
     const type = nodeType as VNodeTypes
     // args[0] can either be:
@@ -102,7 +92,19 @@ export function stubComponents(
     }
 
     if (isComponent(type) || isFunctionalComponent(type)) {
-      const name = type['name'] || type['displayName']
+      let name = type['name'] || type['displayName']
+
+      // if no name, then check the locally registered components in the parent
+      if (!name && instance && instance.parent) {
+        // try to infer the name based on local resolution
+        const registry = (instance.type as any).components
+        for (const key in registry) {
+          if (registry[key] === type) {
+            name = key
+            break
+          }
+        }
+      }
       if (!name && !shallow) {
         return args
       }
