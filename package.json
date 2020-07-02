@@ -23,8 +23,7 @@
     "@types/estree": "^0.0.42",
     "@types/jest": "^24.9.1",
     "@types/node": "12.12.35",
-    "@vue/compiler-dom": "^3.0.0-beta.12",
-    "@vue/compiler-sfc": "^3.0.0-beta.12",
+    "@vue/compiler-sfc": "^3.0.0-beta.18",
     "babel-jest": "^25.2.3",
     "babel-preset-jest": "^25.2.1",
     "dom-event-types": "^1.0.0",
@@ -40,13 +39,13 @@
     "ts-jest": "^25.0.0",
     "tsd": "0.11.0",
     "typescript": "^3.7.5",
-    "vue": "^3.0.0-beta.16",
+    "vue": "^3.0.0-beta.18",
+    "vue-router": "^4.0.0-alpha.14",
     "vue-jest": "vuejs/vue-jest#next",
     "vuex": "^4.0.0-beta.1"
   },
   "peerDependencies": {
-    "@vue/compiler-dom": "^3.0.0-beta.12",
-    "vue": "^3.0.0-beta.12"
+    "vue": "^3.0.0-beta.17"
   },
   "author": {
     "name": "Lachlan Miller",
