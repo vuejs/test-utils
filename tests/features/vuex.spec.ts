@@ -1,4 +1,3 @@
-// @ts-ignore - Vuex 4 typedefs have no been updated yet.
 import { createStore } from 'vuex'
 
 import { mount } from '../../src'

@@ -199,7 +199,6 @@ export class VueWrapper<T extends ComponentPublicInstance> {
 
   setValue(value: any, prop?: string): Promise<void> {
     const propEvent = prop || 'modelValue'
-    // @ts-ignore
     this.vm.$emit(`update:${propEvent}`, value)
     return this.vm.$nextTick()
   }
