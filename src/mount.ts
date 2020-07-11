@@ -17,7 +17,8 @@ import {
   ComponentOptionsBase,
   ComponentPropsOptions,
   AppConfig,
-  VNodeProps
+  VNodeProps,
+  ComponentOptionsMixin
 } from 'vue'
 
 import { config } from './config'
@@ -34,17 +35,6 @@ import {
 } from './constants'
 import { stubComponents } from './stubs'
 
-// TODO remove when https://github.com/vuejs/vue-next/pull/1361 is merged
-type ComponentOptionsMixin = ComponentOptionsBase<
-  any,
-  any,
-  any,
-  any,
-  any,
-  any,
-  any,
-  any
->
 type Slot = VNode | string | { render: Function } | Function
 
 type SlotDictionary = {
