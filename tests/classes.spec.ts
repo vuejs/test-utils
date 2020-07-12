@@ -4,54 +4,43 @@ import { mount } from '../src'
 
 describe('classes', () => {
   describe('DOMWrapper', () => {
-    it('returns array of class names if wrapper has class names', () => {
+    let wrapper
+    beforeEach(() => {
       const Component = defineComponent({
         render() {
           return h('div', {}, [h('span', { class: 'class-a' })])
         }
       })
 
-      const wrapper = mount(Component)
-
+      wrapper = mount(Component)
+    })
+    it('returns array of class names if wrapper has class names', () => {
       expect(wrapper.find('.class-a').classes()).toContain('class-a')
     })
 
     it('returns true if the component has the class', () => {
-      const Component = defineComponent({
-        render() {
-          return h('div', {}, [h('span', { class: 'class-a' })])
-        }
-      })
-
-      const wrapper = mount(Component).find('span')
-
-      expect(wrapper.classes('class-a')).toBe(true)
-      expect(wrapper.classes('class-b')).toBe(false)
+      expect(wrapper.find('span').classes('class-a')).toBe(true)
+      expect(wrapper.find('span').classes('class-b')).toBe(false)
     })
   })
 
   describe('VueWrapper', () => {
-    it('returns array of class names if wrapper has class names', () => {
+    let wrapper
+    beforeEach(() => {
       const Component = defineComponent({
         render() {
           return h('div', { class: 'class-a' }, 'some text')
         }
       })
 
-      const wrapper = mount(Component)
+      wrapper = mount(Component)
+    })
 
+    it('returns array of class names if wrapper has class names', () => {
       expect(wrapper.classes()).toContain('class-a')
     })
 
     it('returns true if the component has the class', () => {
-      const Component = defineComponent({
-        render() {
-          return h('div', { class: 'class-a' }, 'some text')
-        }
-      })
-
-      const wrapper = mount(Component)
-
       expect(wrapper.classes('class-a')).toBe(true)
       expect(wrapper.classes('class-b')).toBe(false)
     })
