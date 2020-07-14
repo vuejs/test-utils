@@ -1,7 +1,7 @@
 import { nextTick } from 'vue'
 
-import { createWrapperError } from './error-wrapper'
-import { TriggerOptions, createDOMEvent } from './create-dom-event'
+import { createWrapperError } from './errorWrapper'
+import { TriggerOptions, createDOMEvent } from './createDomEvent'
 
 export class DOMWrapper<ElementType extends Element> {
   element: ElementType
