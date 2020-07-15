@@ -2,10 +2,10 @@ import { ComponentPublicInstance, nextTick, App } from 'vue'
 import { ShapeFlags } from './utils/vueShared'
 import { config } from './config'
 
-import { DOMWrapper } from './dom-wrapper'
+import { DOMWrapper } from './domWrapper'
 import { FindAllComponentsSelector, FindComponentSelector } from './types'
-import { createWrapperError } from './error-wrapper'
-import { TriggerOptions } from './create-dom-event'
+import { createWrapperError } from './errorWrapper'
+import { TriggerOptions } from './createDomEvent'
 import { find } from './utils/find'
 
 export class VueWrapper<T extends ComponentPublicInstance> {

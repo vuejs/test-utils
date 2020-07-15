@@ -1,7 +1,7 @@
 import { defineComponent, h, ref } from 'vue'
 
 import { mount } from '../src'
-import { keyCodesByKeyName } from '../src/create-dom-event'
+import { keyCodesByKeyName } from '../src/createDomEvent'
 
 describe('trigger', () => {
   describe('on click', () => {
