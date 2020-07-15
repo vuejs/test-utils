@@ -1,7 +1,5 @@
-import flushPromises from 'flush-promises'
-
 import SuspenseComponent from '../components/Suspense.vue'
-import { mount } from '../../src'
+import { mount, flushPromises } from '../../src'
 
 let mockShouldError = false
 jest.mock('../utils', () => ({
