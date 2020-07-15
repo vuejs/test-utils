@@ -1,7 +1,6 @@
 import { defineAsyncComponent, defineComponent, h, AppConfig } from 'vue'
-import flushPromises from 'flush-promises'
 
-import { mount } from '../../src'
+import { mount, flushPromises } from '../../src'
 
 const config: AppConfig = {
   devtools: false,

@@ -27,7 +27,6 @@
     "babel-jest": "^25.2.3",
     "babel-preset-jest": "^25.2.1",
     "dom-event-types": "^1.0.0",
-    "flush-promises": "^1.0.2",
     "husky": "^4.2.3",
     "jest": "^25.1.0",
     "jsdom": "^16.2.2",
