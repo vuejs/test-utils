@@ -1,5 +1,5 @@
 import { GlobalMountOptions } from './types'
-import { VueWrapper } from './vue-wrapper'
+import { VueWrapper } from './vueWrapper'
 import { ComponentPublicInstance } from 'vue'
 
 interface GlobalConfigOptions {

@@ -25,7 +25,7 @@ import { config } from './config'
 import { GlobalMountOptions } from './types'
 import { mergeGlobalProperties } from './utils'
 import { processSlot } from './utils/compileSlots'
-import { createWrapper, VueWrapper } from './vue-wrapper'
+import { createWrapper, VueWrapper } from './vueWrapper'
 import { attachEmitListener } from './emitMixin'
 import { createDataMixin } from './dataMixin'
 import {
