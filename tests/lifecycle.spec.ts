@@ -30,7 +30,7 @@ describe('lifecycles', () => {
     mount(Component)
     await nextTick()
     expect(beforeMountFn).toHaveBeenCalled()
-    expect(onBeforeMountFn).toHaveBeenCalled()
+    expect(onMountFn).toHaveBeenCalled()
     expect(onBeforeMountFn).toHaveBeenCalled()
   })
 
