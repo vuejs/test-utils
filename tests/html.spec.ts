@@ -27,6 +27,25 @@ describe('html', () => {
     expect(wrapper.html()).toBe('<div>foo</div><div>bar</div><div>baz</div>')
   })
 
+  it('returns the html when mounting multiple nested components', () => {
+    const Baz = defineComponent({
+      render() {
+        return h('p', "Baz")
+      }
+    })
+
+    const Foo = defineComponent({
+      render() {
+        return h('div', [h(Baz)])
+      }
+    })
+
+
+    const wrapper = mount(Foo)
+
+    expect(wrapper.html()).toBe('<div><p>Baz</p></div>')
+  })
+
   it('returns the html when mounting a Suspense component', () => {
     const Foo = {
       template: '<div class="Foo">FOO</div>',
