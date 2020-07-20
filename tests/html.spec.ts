@@ -33,16 +33,12 @@ describe('html', () => {
         return h('p', "Baz")
       }
     })
-
     const Foo = defineComponent({
       render() {
         return h('div', [h(Baz)])
       }
     })
-
-
     const wrapper = mount(Foo)
-
     expect(wrapper.html()).toBe('<div><p>Baz</p></div>')
   })
 
