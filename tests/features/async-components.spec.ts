@@ -3,7 +3,6 @@ import { defineAsyncComponent, defineComponent, h, AppConfig } from 'vue'
 import { mount, flushPromises } from '../../src'
 
 const config: AppConfig = {
-  devtools: false,
   optionMergeStrategies: {},
   globalProperties: {},
   isCustomElement: (tag: string) => false,

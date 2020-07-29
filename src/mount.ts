@@ -18,7 +18,8 @@ import {
   ComponentPropsOptions,
   AppConfig,
   VNodeProps,
-  ComponentOptionsMixin
+  ComponentOptionsMixin,
+  HTMLAttributes
 } from 'vue'
 
 import { config } from './config'
