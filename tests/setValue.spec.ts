@@ -219,6 +219,7 @@ describe('setValue', () => {
         expect(multiInput.text()).toContain('barValue')
       })
     })
+
     describe('shallowMount', () => {
       it('triggers a normal `v-model` on a Vue Component', async () => {
         const wrapper = shallowMount(Component)
