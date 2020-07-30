@@ -27,12 +27,11 @@ describe('mountingOptions.props', () => {
   })
 
   test('assigns extra properties as attributes on components', () => {
-    // the recommended way is to use `attrs` though
-    // and ideally it should not even compile, but props is too loosely typed
-    // for components defined with `defineComponent`
     const wrapper = mount(Component, {
       props: {
-        message: 'Hello World',
+        message: 'Hello World'
+      },
+      attrs: {
         class: 'HelloFromTheOtherSide',
         id: 'hello',
         disabled: true
