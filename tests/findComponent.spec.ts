@@ -1,4 +1,4 @@
-import { defineComponent } from 'vue'
+import { defineComponent, nextTick } from 'vue'
 import { mount } from '../src'
 import Hello from './components/Hello.vue'
 import ComponentWithoutName from './components/ComponentWithoutName.vue'
@@ -110,6 +110,35 @@ describe('findComponent', () => {
     const wrapper = mount(compA)
     expect(wrapper.findComponent(Hello).text()).toBe('Hello world')
     expect(wrapper.findComponent(compC).text()).toBe('C')
+  })
+
+  it('finds component in a Suspense', async () => {
+    const AsyncComponent = defineComponent({
+      template: '{{ result }}',
+      async setup() {
+        return { result: 'Hello world' }
+      }
+    })
+    const SuspenseComponent = defineComponent({
+      template: `<Suspense>
+        <template #default><AsyncComponent/></template>
+        <template #fallback><CompC/></template>
+      </Suspense>`,
+      components: {
+        AsyncComponent,
+        CompC: compC
+      }
+    })
+    const wrapper = mount(SuspenseComponent)
+    expect(wrapper.html()).toContain('<div class="C">C</div>')
+    expect(wrapper.findComponent(compC).exists()).toBe(true)
+    expect(wrapper.findComponent(AsyncComponent).exists()).toBe(false)
+    await nextTick()
+    await nextTick()
+    expect(wrapper.html()).toContain('Hello world')
+    expect(wrapper.findComponent(compC).exists()).toBe(false)
+    expect(wrapper.findComponent(AsyncComponent).exists()).toBe(true)
+    expect(wrapper.findComponent(AsyncComponent).text()).toBe('Hello world')
   })
 
   it('finds a stub by name', () => {
