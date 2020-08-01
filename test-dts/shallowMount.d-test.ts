@@ -20,13 +20,12 @@ let wrapper = shallowMount(AppWithDefine, {
 // vm is properly typed
 expectType<string>(wrapper.vm.a)
 
-// can receive extra props
-// ideally, it should not
-// but the props have type { a: string } & VNodeProps
-// which allows any property
-shallowMount(AppWithDefine, {
-  props: { a: 'Hello', c: 2 }
-})
+// can not receive extra props
+expectError(
+  shallowMount(AppWithDefine, {
+    props: { a: 'Hello', c: 2 }
+  })
+)
 
 // wrong prop type should not compile
 expectError(

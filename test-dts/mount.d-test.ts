@@ -13,7 +13,7 @@ const AppWithDefine = defineComponent({
   template: ''
 })
 
-// accept props- vm is properly typed
+// accept props - vm is properly typed
 expectType<string>(
   mount(AppWithDefine, {
     props: { a: 'Hello', b: 2 }
@@ -31,13 +31,12 @@ expectError(
   })
 )
 
-// can receive extra props
-// ideally, it should not
-// but the props have type { a: string } & VNodeProps
-// which allows any property
-mount(AppWithDefine, {
-  props: { a: 'Hello', c: 2 }
-})
+// can not receive extra props
+expectError(
+  mount(AppWithDefine, {
+    props: { a: 'Hello', c: 2 }
+  })
+)
 
 // wrong prop type should not compile
 expectError(

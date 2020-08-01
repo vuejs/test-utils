@@ -42,7 +42,7 @@ function matches(node: VNode, selector: FindAllComponentsSelector): boolean {
 
     // if a name is missing, then check the locally registered components in the parent
     if (node.component.parent) {
-      const registry = (node.component.parent as any).components
+      const registry = (node.component.parent as any).type.components
       for (const key in registry) {
         // is it the selector
         if (!selectorName && registry[key] === selector) {
