@@ -139,7 +139,7 @@ mount(Component, {
 ```
 ### Global
 You can provide properties to the App instance using the properties under the `global` mount property
- 
+
 ### `global.mixins`
 
 Applies mixins via `app.mixin(...)`.
@@ -223,7 +223,7 @@ test('installs a component globally', () => {
     global: {
       components: {
         GlobalComponent
-      } 
+      }
     }
   })
 
@@ -246,7 +246,7 @@ test('installs a directive globally', () => {
     global: {
       directives: {
         Bar: Directive
-      } 
+      }
     }
   })
 
@@ -329,7 +329,7 @@ Similar to `find`, but instead returns an array of `DOMWrapper`.
 ```vue
 <template>
   <div>
-    <span 
+    <span
       v-for="number in [1, 2, 3]"
       :key="number"
       data-test="number"
@@ -353,7 +353,7 @@ test('findAll', () => {
 Finds a Vue Component instance and returns a `VueWrapper` if one is found, otherwise returns `ErrorWrapper`.
 
 **Supported syntax:**
- 
+
 * **querySelector** - `findComponent('.component')` - Matches standard query selector.
 * **Name** - `findComponent({ name: 'myComponent' })` - matches PascalCase, snake-case, camelCase
 * **ref** - `findComponent({ ref: 'dropdown' })` - Can be used only on direct ref children of mounted component
@@ -368,8 +368,8 @@ Finds a Vue Component instance and returns a `VueWrapper` if one is found, other
 <script>
 export default { name: 'Foo' }
 </script>
-``` 
- 
+```
+
 ```vue
 <template>
   <div>
@@ -394,21 +394,21 @@ test('findComponent', () => {
 
 ### `findAllComponents`
 
-Similar to `findComponent` but finds all Vue Component instances that match the query and returns an array of `VueWrapper`. 
+Similar to `findComponent` but finds all Vue Component instances that match the query and returns an array of `VueWrapper`.
 
 **Supported syntax:**
- 
+
  * **querySelector** - `findAllComponents('.component')`
  * **Name** - `findAllComponents({ name: 'myComponent' })`
  * **SFC** - `findAllComponents(ImportedComponent)`
- 
+
 **Note** - `Ref` is not supported here.
- 
- 
+
+
 ```vue
 <template>
   <div>
-    <FooComponent 
+    <FooComponent
       v-for="number in [1, 2, 3]"
       :key="number"
       data-test="number"
@@ -462,7 +462,8 @@ test('trigger', async () => {
 
 ### `classes`
 
-Returns an array of classes on an element (via `classList`).
+Returns an array of classes on an element (via `classList`) if no arguments are given.
+Otherwise, returns whether the component has the class given as the argument.
 
 ```vue
 <template>
@@ -476,7 +477,30 @@ Returns an array of classes on an element (via `classList`).
 test('classes', () => {
   const wrapper = mount(Component)
 
-  expect(wrapper.find('.my-span').classes()).toContain('my-span')
+  expect(wrapper.find('span').classes()).toContain('my-span')
+  expect(wrapper.find('span').styles('my-span')).toBe(true)
+})
+```
+
+### `styles`
+
+Returns the style object of the element if the method is called without arguments.
+If `styles` is called with a specific style name, the style value is returned.
+
+```vue
+<template>
+  <div>
+    <span style="color: red" />
+  </div>
+</template>
+```
+
+```js
+test('style', () => {
+  const wrapper = mount(Component)
+
+  expect(wrapper.find('span').styles()).toHaveProperty('color')
+  expect(wrapper.find('span').styles('color')).toBe('red')
 })
 ```
 
@@ -522,8 +546,8 @@ export default {
 test('emitted', () => {
   const wrapper = mount(Component)
 
-  console.log(wrapper.emitted()) 
-  // { 
+  console.log(wrapper.emitted())
+  // {
   //   greet: [ ['hello'], ['goodbye'] ]
   // }
 
@@ -534,7 +558,7 @@ test('emitted', () => {
 
 ### `setChecked`
 
-Set an input (either `type="checkbox"` or `type="radio"`) to be checked or not checked. Since this will often result in a DOM re-render, `setChecked` returns `Vue.nextTick`, so you will often have to call this with `await` to ensure the DOM has been updated before making an assertion. 
+Set an input (either `type="checkbox"` or `type="radio"`) to be checked or not checked. Since this will often result in a DOM re-render, `setChecked` returns `Vue.nextTick`, so you will often have to call this with `await` to ensure the DOM has been updated before making an assertion.
 
 ```vue
 <template>
