@@ -64,6 +64,12 @@ export class VueWrapper<T extends ComponentPublicInstance> {
     return new DOMWrapper(this.element).attributes(key)
   }
 
+  styles(): CSSStyleDeclaration
+  styles<K extends keyof CSSStyleDeclaration>(key: K): CSSStyleDeclaration[K]
+  styles(key?: keyof CSSStyleDeclaration): CSSStyleDeclaration | string {
+    return new DOMWrapper(this.element).styles(key)
+  }
+
   exists() {
     return true
   }

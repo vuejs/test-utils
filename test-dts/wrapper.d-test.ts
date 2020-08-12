@@ -1,4 +1,4 @@
-import { expectType } from 'tsd'
+import { expectType, expectError } from 'tsd'
 import { defineComponent } from 'vue'
 import { mount } from '../src'
 
@@ -107,6 +107,14 @@ expectType<Array<string>>(wrapper.classes())
 expectType<boolean>(wrapper.classes('class'))
 expectType<Array<string>>(domWrapper.classes())
 expectType<boolean>(domWrapper.classes('class'))
+
+// styles
+expectType<CSSStyleDeclaration>(wrapper.styles())
+expectType<string>(wrapper.styles('backgroundColor'))
+expectType<CSSStyleDeclaration>(domWrapper.styles())
+expectType<string>(domWrapper.styles('backgroundColor'))
+expectError(wrapper.styles('colour'))
+expectError(domWrapper.styles('colour'))
 
 // props
 expectType<{ [key: string]: any }>(wrapper.props())

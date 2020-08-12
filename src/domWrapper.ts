@@ -32,6 +32,18 @@ export class DOMWrapper<ElementType extends Element> {
     return key ? attributeMap[key] : attributeMap
   }
 
+  styles(): CSSStyleDeclaration
+  styles<K extends keyof CSSStyleDeclaration>(key: K): CSSStyleDeclaration[K]
+  styles(key?: keyof CSSStyleDeclaration): CSSStyleDeclaration | string {
+    // styles does exist on HTMLElement, SVGElement and MathMLElement
+    // instead of type detection, we test if element has style attribute
+    const styles = ((this.element as unknown) as HTMLElement).style
+    if (!styles) {
+      throw new TypeError(`Element does not have style attributes`)
+    }
+    return key ? styles[key] : styles
+  }
+
   exists() {
     return true
   }
