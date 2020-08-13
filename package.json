@@ -38,6 +38,7 @@
     "ts-jest": "^25.0.0",
     "tsd": "0.11.0",
     "typescript": "^3.7.5",
+    "vitepress": "^0.5.0",
     "vue": "^3.0.0-rc.5",
     "vue-jest": "vuejs/vue-jest#next",
     "vue-router": "^4.0.0-alpha.14",
@@ -46,10 +47,7 @@
   "peerDependencies": {
     "vue": "^3.0.0-rc.5"
   },
-  "author": {
-    "name": "Lachlan Miller",
-    "email": "lachlan.miller.1990@outlook.com"
-  },
+  "author": "Lachlan Miller <lachlan.miller.1990@outlook.com>",
   "scripts": {
     "test": "yarn jest --runInBand tests",
     "test:build": "yarn jest --runInBand tests -use-build",
@@ -77,5 +75,6 @@
         "dom"
       ]
     }
-  }
+  },
+  "repository": "https://github.com/vuejs/vue-test-utils-next.git"
 }
