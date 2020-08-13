@@ -170,32 +170,4 @@ describe('findComponent', () => {
     const wrapper = mount(compA)
     expect(wrapper.findComponent(Hello).unmount).toThrowError()
   })
-
-  it('finds nested componens', () => {
-    // https://github.com/vuejs/vue-test-utils-next/issues/173
-    const ComponentA = {
-      name: 'ComponentA',
-      template: `<div><slot></slot></div>`
-    }
-
-    const ComponentB = {
-      name: 'ComponentB',
-      template: '<div><slot></slot></div>'
-    }
-    const wrapper = mount({
-      components: {
-        ComponentA,
-        ComponentB
-      },
-      template: `
-        <ComponentA>
-          <ComponentB>1</ComponentB>
-          <ComponentB>2</ComponentB>
-          <ComponentB>3</ComponentB>
-        </ComponentA>
-      `
-    })
-    const com1 = wrapper.findComponent(ComponentB)
-    expect(com1.html()).toBe('<div>1</div>')
-  })
 })
