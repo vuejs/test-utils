@@ -19,7 +19,7 @@ describe('mounting options: plugins', () => {
     }
     mount(Component, {
       global: {
-        plugins: [{ plugin: Plugin }]
+        plugins: [Plugin]
       }
     })
 
@@ -30,8 +30,8 @@ describe('mounting options: plugins', () => {
     const installed = jest.fn()
 
     class Plugin {
-      static install(_app: App, options: { option1: boolean }) {
-        installed(options)
+      static install(_app: App, ...options) {
+        installed(...options)
       }
     }
 
@@ -41,12 +41,46 @@ describe('mounting options: plugins', () => {
       }
     }
     const options = { option1: true }
+    const testString = 'hello'
     mount(Component, {
       global: {
-        plugins: [{ plugin: Plugin, options }]
+        plugins: [[Plugin, options, testString]]
       }
     })
 
-    expect(installed).toHaveBeenCalledWith(options)
+    expect(installed).toHaveBeenCalledWith(options, testString)
   })
+})
+
+test('installs plugins with and without options', () => {
+  const installed = jest.fn()
+  class Plugin {
+    static install() {
+      installed()
+    }
+  }
+
+  const installedWithOptions = jest.fn()
+  class PluginWithOptions {
+    static install(_app: App, ...args) {
+      installedWithOptions(...args)
+    }
+  }
+
+  const Component = {
+    render() {
+      return h('div')
+    }
+  }
+  mount(Component, {
+    global: {
+      plugins: [Plugin, [PluginWithOptions, 'argument 1', 'another argument']]
+    }
+  })
+
+  expect(installed).toHaveBeenCalled()
+  expect(installedWithOptions).toHaveBeenCalledWith(
+    'argument 1',
+    'another argument'
+  )
 })

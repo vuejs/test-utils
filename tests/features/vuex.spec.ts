@@ -30,7 +30,7 @@ describe('vuex', () => {
 
     const wrapper = mount(Foo, {
       global: {
-        plugins: [{ plugin: store }]
+        plugins: [store]
       }
     })
 
