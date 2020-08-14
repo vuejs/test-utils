@@ -1,0 +1,1 @@
+import{g as t,f as e,z as a}from"./common-4aa23611.js";const o='{"title":"Third-party Integration","frontmatter":{},"lastUpdated":1597330264249.839}';var r={};const i=a('',5);r.render=function(a,o,r,n,l,s){return e(),t("div",null,[i])};export default r;export{o as __pageData};

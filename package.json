@@ -51,6 +51,8 @@
   "scripts": {
     "test": "yarn jest --runInBand tests",
     "test:build": "yarn jest --runInBand tests -use-build",
+    "docs:build": "yarn vitepress build docs",
+    "docs:dev": "yarn vitepress dev docs",
     "tsd": "tsd",
     "build": "yarn rollup -c rollup.config.js",
     "lint": "prettier -c --parser typescript \"(src|tests)/**/*.ts?(x)\"",
