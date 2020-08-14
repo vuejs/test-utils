@@ -190,7 +190,7 @@ export default {}
 test('installs a plugin via `plugins`', () => {
   const installed = jest.fn()
   class Plugin {
-    static install() {
+    static install(app: App, options?: any) {
       installed()
     }
   }
@@ -199,7 +199,7 @@ test('installs a plugin via `plugins`', () => {
   }
   mount(Component, {
     global: {
-      plugins: [Plugin]
+      plugins: [{ plugin: Plugin, options: {} }]
     }
   })
 

@@ -20,7 +20,7 @@ export type FindComponentSelector = RefSelector | NameSelector | string
 export type FindAllComponentsSelector = NameSelector | string
 
 export type GlobalMountOptions = {
-  plugins?: Plugin[]
+  plugins?: { plugin: Plugin; options?: any }[]
   config?: Omit<AppConfig, 'isNativeTag'> // isNativeTag is readonly, so we omit it
   mixins?: ComponentOptions[]
   mocks?: Record<string, any>

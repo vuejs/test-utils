@@ -312,7 +312,7 @@ export function mount(
 
   // use and plugins from mounting options
   if (global.plugins) {
-    for (const use of global.plugins) app.use(use)
+    for (const { plugin, options } of global.plugins) app.use(plugin, options)
   }
 
   // use any mixins from mounting options
