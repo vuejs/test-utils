@@ -312,7 +312,13 @@ export function mount(
 
   // use and plugins from mounting options
   if (global.plugins) {
-    for (const use of global.plugins) app.use(use)
+    for (const plugin of global.plugins) {
+      if (Array.isArray(plugin)) {
+        app.use(plugin[0], ...plugin.slice(1))
+        continue
+      }
+      app.use(plugin)
+    }
   }
 
   // use any mixins from mounting options

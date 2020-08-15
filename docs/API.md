@@ -187,23 +187,37 @@ export default {}
 ```
 
 ```js
-test('installs a plugin via `plugins`', () => {
+test('installs plugins via `plugins`', () => {
   const installed = jest.fn()
   class Plugin {
     static install() {
       installed()
     }
   }
+
+  const installedWithOptions = jest.fn()
+  class PluginWithOptions {
+    static install(_app: App, ...args) {
+      installedWithOptions(...args)
+    }
+  }
+
   const Component = {
-    render() { return h('div') }
+    render() {
+      return h('div')
+    }
   }
   mount(Component, {
     global: {
-      plugins: [Plugin]
+      plugins: [Plugin, [PluginWithOptions, 'argument 1', 'another argument']]
     }
   })
 
   expect(installed).toHaveBeenCalled()
+  expect(installedWithOptions).toHaveBeenCalledWith(
+    'argument 1',
+    'another argument'
+  )
 })
 ```
 
