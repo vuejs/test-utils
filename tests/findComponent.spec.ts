@@ -170,4 +170,60 @@ describe('findComponent', () => {
     const wrapper = mount(compA)
     expect(wrapper.findComponent(Hello).unmount).toThrowError()
   })
+
+  // https://github.com/vuejs/vue-test-utils-next/issues/173
+  const ComponentA = {
+    name: 'ComponentA',
+    template: `<div><slot></slot></div>`
+  }
+
+  const ComponentB = {
+    name: 'ComponentB',
+    template: '<div><slot></slot></div>'
+  }
+
+  it('finds nested components and obtains expected html and innerText', () => {
+    const wrapper = mount({
+      components: {
+        ComponentA,
+        ComponentB
+      },
+      template: `
+        <ComponentA>
+          <ComponentB>1</ComponentB>
+          <ComponentB>2</ComponentB>
+          <ComponentB>3</ComponentB>
+        </ComponentA>
+      `
+    })
+    const com1 = wrapper.findComponent(ComponentB)
+    expect(com1.html()).toBe('<div>1</div>')
+  })
+
+  it('finds nested components and obtains expected html and innerText', () => {
+    const wrapper = mount({
+      components: {
+        ComponentA,
+        ComponentB
+      },
+      template: `
+        <ComponentA>
+          <ComponentB>
+            <div class="content" id="1">1</div>
+          </ComponentB>
+          <ComponentB>
+            <div class="content" id="2">2</div>
+          </ComponentB>
+          <ComponentB>
+            <div class="content" id="3">3</div>
+          </ComponentB>
+        </ComponentA>
+      `
+    })
+
+    const compB = wrapper.findAllComponents(ComponentB)
+    expect(compB[0].find('.content').text()).toBe('1')
+    expect(compB[0].vm.$el.querySelector('.content').innerHTML).toBe('1')
+    expect(compB[0].vm.$el.querySelector('.content').textContent).toBe('1')
+  })
 })

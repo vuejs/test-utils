@@ -79,7 +79,12 @@ export class VueWrapper<T extends ComponentPublicInstance> {
   }
 
   html() {
-    return this.parentElement.innerHTML
+    // cover cases like <Suspense>, multiple root nodes.
+    if (this.parentElement['__vue_app__']) {
+      return this.parentElement.innerHTML
+    }
+
+    return this.element.outerHTML
   }
 
   text() {
