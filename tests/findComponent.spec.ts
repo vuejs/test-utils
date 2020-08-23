@@ -1,4 +1,4 @@
-import { defineComponent, nextTick } from 'vue'
+import { defineComponent, nextTick, h } from 'vue'
 import { mount } from '../src'
 import Hello from './components/Hello.vue'
 import ComponentWithoutName from './components/ComponentWithoutName.vue'
@@ -37,7 +37,46 @@ const compA = defineComponent({
   components: { compB, Hello }
 })
 
+const createRenderComponent = (
+  name: string,
+  props: Record<string, string> = {},
+  children?: any
+) => ({
+  name,
+  render() {
+    return h('div', props, children)
+  }
+})
+
 describe('findComponent', () => {
+  it('works with simple render functions', () => {
+    const Child = {
+      name: 'Child',
+      render() {
+        return h('div', { id: 'child' })
+      }
+    }
+    const Parent = {
+      name: 'Parent',
+      render() {
+        return h(Child)
+      }
+    }
+
+    const wrapper = mount(Parent)
+    wrapper.getComponent(Child)
+  })
+
+  it('works with simple render functions many layers deep', () => {
+    const A = createRenderComponent('A', { id: 'a' })
+    const B = createRenderComponent('B', { id: 'b' }, h(A))
+    const C = createRenderComponent('C', { id: 'c' }, h(B))
+    const Parent = createRenderComponent('Parent', { id: 'parent' }, h(C))
+
+    const wrapper = mount(Parent)
+    wrapper.getComponent(A)
+  })
+
   it('does not find plain dom elements', () => {
     const wrapper = mount(compA)
     expect(wrapper.findComponent('.domElement').exists()).toBeFalsy()
@@ -171,18 +210,16 @@ describe('findComponent', () => {
     expect(wrapper.findComponent(Hello).unmount).toThrowError()
   })
 
-  // https://github.com/vuejs/vue-test-utils-next/issues/173
-  const ComponentA = {
-    name: 'ComponentA',
-    template: `<div><slot></slot></div>`
-  }
-
-  const ComponentB = {
-    name: 'ComponentB',
-    template: '<div><slot></slot></div>'
-  }
-
   it('finds nested components and obtains expected html and innerText', () => {
+    const ComponentA = {
+      name: 'ComponentA',
+      template: `<div><slot></slot></div>`
+    }
+    const ComponentB = {
+      name: 'ComponentB',
+      template: '<div><slot></slot></div>'
+    }
+
     const wrapper = mount({
       components: {
         ComponentA,
@@ -201,6 +238,15 @@ describe('findComponent', () => {
   })
 
   it('finds nested components and obtains expected html and innerText', () => {
+    const ComponentA = {
+      name: 'ComponentA',
+      template: `<div><slot></slot></div>`
+    }
+    const ComponentB = {
+      name: 'ComponentB',
+      template: '<div><slot></slot></div>'
+    }
+
     const wrapper = mount({
       components: {
         ComponentA,
@@ -225,5 +271,52 @@ describe('findComponent', () => {
     expect(compB[0].find('.content').text()).toBe('1')
     expect(compB[0].vm.$el.querySelector('.content').innerHTML).toBe('1')
     expect(compB[0].vm.$el.querySelector('.content').textContent).toBe('1')
+  })
+
+  it('finds component in deeply nested render function and slots', () => {
+    const ComponentA = {
+      name: 'ComponentA',
+      render() {
+        return h('div', { class: 'comp-a' }, this.$slots.default())
+      }
+    }
+    const ComponentB = {
+      name: 'ComponentB',
+      render() {
+        return h('div', { class: 'comp-b' }, this?.$slots?.default?.())
+      }
+    }
+
+    const Main = defineComponent({
+      name: 'Main',
+      render() {
+        return h(ComponentA, () => [h(ComponentB, () => '1')])
+      }
+    })
+
+    const App = {
+      name: 'App',
+      render() {
+        return h(Main)
+      }
+    }
+
+    const wrapper = mount(App)
+    wrapper.getComponent(ComponentB)
+  })
+
+  it('finds functional components', () => {
+    const Functional = () => h('h4', 'functional')
+
+    const App = {
+      name: 'Main',
+      render() {
+        return h(Functional)
+      }
+    }
+
+    const wrapper = mount(App)
+
+    wrapper.getComponent(Functional)
   })
 })

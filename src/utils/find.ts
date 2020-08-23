@@ -1,31 +1,62 @@
-import {
-  ComponentPublicInstance,
-  VNode,
-  VNodeArrayChildren,
-  VNodeNormalizedChildren
-} from 'vue'
+import { ComponentPublicInstance, VNode, isVNode } from 'vue'
+import { ShapeFlags } from '@vue/shared'
 import { FindAllComponentsSelector } from '../types'
 import { matchName } from './matchName'
+import { isObject, isFunction } from '../utils'
 
+type ComponentMatchType = 'functional' | 'stateful' | 'runtimeCompile'
+interface ComponentMatchResult {
+  match: boolean
+  type?: ComponentMatchType
+}
 /**
  * Detect whether a selector matches a VNode
  * @param node
  * @param selector
- * @return {boolean | ((value: any) => boolean)}
+ * @return {boolean | ((value: any) => { match: boolean, type?: ComponentMatchType })}
  */
-function matches(node: VNode, selector: FindAllComponentsSelector): boolean {
+function matches(
+  node: VNode,
+  selector: FindAllComponentsSelector
+): ComponentMatchResult {
   // do not return none Vue components
-  if (!node.component) return false
+  if (!node.component) {
+    if (isObject(node.type) && 'render' in node.type) {
+      return {
+        match: true,
+        type: 'functional'
+      }
+    }
+
+    return {
+      match: false
+    }
+  }
+
+  if (node.shapeFlag === ShapeFlags.FUNCTIONAL_COMPONENT) {
+    return {
+      match: true,
+      type: 'functional'
+    }
+  }
 
   if (typeof selector === 'string') {
-    return node.el?.matches?.(selector)
+    if ((node.el as HTMLElement)?.matches?.(selector)) {
+      return {
+        match: true,
+        type: 'stateful'
+      }
+    }
   }
 
   const nodeType = node.type
   if (typeof selector === 'object' && typeof nodeType === 'object') {
     // we are looking for this exact component
     if (selector === nodeType) {
-      return true
+      return {
+        match: true,
+        type: 'stateful'
+      }
     }
 
     let componentName
@@ -36,8 +67,15 @@ function matches(node: VNode, selector: FindAllComponentsSelector): boolean {
     let selectorName = selector.name
 
     // the component and selector both have a name
-    if (componentName && selectorName) {
-      return matchName(selectorName, componentName)
+    if (
+      componentName &&
+      selectorName &&
+      matchName(selectorName, componentName)
+    ) {
+      return {
+        match: true,
+        type: 'stateful'
+      }
     }
 
     // if a name is missing, then check the locally registered components in the parent
@@ -53,89 +91,97 @@ function matches(node: VNode, selector: FindAllComponentsSelector): boolean {
           componentName = key
         }
       }
+
       // we may have one or both missing names
-      return matchName(selectorName, componentName)
-    }
-  }
-
-  return false
-}
-
-/**
- * Filters out the null, undefined and primitive values,
- * to only keep VNode and VNodeArrayChildren values
- * @param value
- */
-function nodesAsObject<Node>(
-  value:
-    | string
-    | number
-    | boolean
-    | VNodeArrayChildren
-    | VNode
-    | null
-    | undefined
-    | void
-): value is VNodeArrayChildren | VNode {
-  return !!value && typeof value === 'object'
-}
-
-/**
- * Collect all children
- * @param nodes
- * @param children
- */
-function aggregateChildren(nodes: VNode[], children: VNodeNormalizedChildren) {
-  if (children && Array.isArray(children)) {
-    const reversedNodes = [...children].reverse().filter(nodesAsObject)
-    reversedNodes.forEach((node: VNodeArrayChildren | VNode) => {
-      if (Array.isArray(node)) {
-        aggregateChildren(nodes, node)
-      } else {
-        nodes.unshift(node)
-      }
-    })
-  }
-}
-
-function findAllVNodes(
-  vnode: VNode,
-  selector: FindAllComponentsSelector
-): VNode[] {
-  const matchingNodes: VNode[] = []
-  const nodes: VNode[] = [vnode]
-  while (nodes.length) {
-    const node = nodes.shift()!
-    // match direct children
-    aggregateChildren(nodes, node.children)
-    if (node.component) {
-      // match children of the wrapping component
-      aggregateChildren(nodes, node.component.subTree.children)
-    }
-    if (node.suspense) {
-      // match children if component is Suspense
-      const { isResolved, fallbackTree, subTree } = node.suspense
-      if (isResolved) {
-        // if the suspense is resolved, we match its children
-        aggregateChildren(nodes, subTree.children)
-      } else {
-        // otherwise we match its fallback tree
-        aggregateChildren(nodes, fallbackTree.children)
+      if (matchName(selectorName, componentName)) {
+        return {
+          match: true,
+          type: 'stateful'
+        }
       }
     }
-    if (matches(node, selector)) {
-      matchingNodes.push(node)
-    }
   }
 
-  return matchingNodes
+  return {
+    match: false
+  }
+}
+
+const findAllVNodes = (
+  vnodes: VNode[],
+  selector: FindAllComponentsSelector,
+  found: Record<string, VNode>
+) => {
+  return vnodes.reduce<Record<string, VNode>>((acc, vnode) => {
+    if (matches(vnode, selector).match) {
+      if (!vnode.component) {
+        // functional or slot component do not have uid, so we just use a random identifier to track them.
+        return { ...acc, [Math.random()]: vnode }
+      }
+      return { ...acc, [vnode.component.uid]: vnode }
+    }
+
+    if (vnode?.component?.subTree) {
+      if (vnode.component.subTree.children) {
+        if (Array.isArray(vnode.component.subTree.children)) {
+          const nodes = vnode.component.subTree.children.filter(isVNode)
+          return findAllVNodes(nodes, selector, acc)
+        } else if (
+          isObject(vnode.component.subTree.children) &&
+          'default' in vnode.component.subTree.children &&
+          isFunction(vnode.component.subTree.children['default'])
+        ) {
+          const defaultSlotContent = vnode.component.subTree.children[
+            'default'
+          ]()
+          return findAllVNodes(defaultSlotContent, selector, acc)
+        }
+      }
+    }
+
+    if (vnode.children) {
+      if (Array.isArray(vnode.children)) {
+        const nodes = vnode.children.filter(isVNode)
+        return findAllVNodes(nodes, selector, acc)
+      }
+
+      // suspense
+      if (
+        isObject(vnode.children) &&
+        'default' in vnode.children &&
+        'fallback' in vnode.children
+      ) {
+        const { isResolved, fallbackTree, subTree } = vnode.suspense
+        if (isResolved) {
+          // if the suspense is resolved, we match its children
+          return findAllVNodes([subTree], selector, acc)
+        } else {
+          // otherwise we match its fallback tree
+          return findAllVNodes([fallbackTree], selector, acc)
+        }
+      }
+    }
+
+    return acc
+  }, found)
 }
 
 export function find(
   root: VNode,
   selector: FindAllComponentsSelector
 ): ComponentPublicInstance[] {
-  return findAllVNodes(root, selector).map(
-    (vnode: VNode) => vnode.component!.proxy!
-  )
+  const result = findAllVNodes([root], selector, {})
+  return Object.values(result).map((x: VNode) => {
+    if (!x.component) {
+      // only stateful components with instances (vm) have component.proxy
+      // we need to consider the case of functional components, slots, etc.
+      // Dunno what we can really do, though. We could hack in some basic stuff like
+      // a .html method etc.
+      // honestly I think we should abandon findComponent or *strongly* discourage it.
+      // We could throw some useful warning here?
+      // There are too many unsolvable edge cases!
+      return
+    }
+    return x.component!.proxy
+  })
 }
