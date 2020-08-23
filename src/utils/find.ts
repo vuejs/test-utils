@@ -136,6 +136,7 @@ export function find(
   selector: FindAllComponentsSelector
 ): ComponentPublicInstance[] {
   return findAllVNodes(root, selector).map(
+    // @ts-ignore
     (vnode: VNode) => vnode.component!.proxy!
   )
 }
