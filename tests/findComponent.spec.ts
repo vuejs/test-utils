@@ -2,6 +2,11 @@ import { defineComponent, nextTick, h } from 'vue'
 import { mount } from '../src'
 import Hello from './components/Hello.vue'
 import ComponentWithoutName from './components/ComponentWithoutName.vue'
+import ComponentBSFC from './components/ComponentB.vue'
+import Issue from './components/Issue.vue'
+import A from './components/A.vue'
+import C from './components/C.vue'
+import D from './components/D.vue'
 
 const compC = defineComponent({
   name: 'ComponentC',
@@ -273,6 +278,15 @@ describe('findComponent', () => {
     expect(compB[0].vm.$el.querySelector('.content').textContent).toBe('1')
   })
 
+  it('finds nested components and obtains expected html and innerText using SFCs', () => {
+    const wrapper = mount(Issue)
+
+    const compB = wrapper.findAllComponents(ComponentBSFC)
+    expect(compB[0].find('.content').text()).toBe('1')
+    expect(compB[0].vm.$el.querySelector('.content').innerHTML).toBe('1')
+    expect(compB[0].vm.$el.querySelector('.content').textContent).toBe('1')
+  })
+
   it('finds component in deeply nested render function and slots', () => {
     const ComponentA = {
       name: 'ComponentA',
@@ -318,5 +332,19 @@ describe('findComponent', () => {
     const wrapper = mount(App)
 
     wrapper.getComponent(Functional)
+  })
+
+  it('nested SFCs', () => {
+    const App = {
+      name: 'Main',
+      render() {
+        return h(A)
+      }
+    }
+
+    const wrapper = mount(App)
+
+    wrapper.getComponent(C)
+    wrapper.getComponent(D)
   })
 })
