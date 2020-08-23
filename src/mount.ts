@@ -358,7 +358,9 @@ export function mount(
   const vm = app.mount(el)
 
   const App = vm.$refs[MOUNT_COMPONENT_REF] as ComponentPublicInstance
-  return createWrapper(app, App, setProps)
+  return createWrapper(app, App, setProps, {
+    isFunctionalComponent: typeof originalComponent === 'function'
+  })
 }
 
 export const shallowMount: typeof mount = (component: any, options?: any) => {

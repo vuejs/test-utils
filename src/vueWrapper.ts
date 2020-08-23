@@ -1,9 +1,13 @@
 import { ComponentPublicInstance, nextTick, App } from 'vue'
 import { ShapeFlags } from '@vue/shared'
-import { config } from './config'
 
+import { config } from './config'
 import { DOMWrapper } from './domWrapper'
-import { FindAllComponentsSelector, FindComponentSelector } from './types'
+import {
+  FindAllComponentsSelector,
+  FindComponentSelector,
+  VueWrapperMeta
+} from './types'
 import { createWrapperError } from './errorWrapper'
 import { TriggerOptions } from './createDomEvent'
 import { find } from './utils/find'
@@ -13,16 +17,19 @@ export class VueWrapper<T extends ComponentPublicInstance> {
   private rootVM: ComponentPublicInstance
   private __app: App | null
   private __setProps: ((props: Record<string, any>) => void) | undefined
+  private __isFunctionalComponent: boolean
 
   constructor(
     app: App | null,
     vm: ComponentPublicInstance,
-    setProps?: (props: Record<string, any>) => void
+    setProps?: (props: Record<string, any>) => void,
+    meta?: VueWrapperMeta
   ) {
     this.__app = app
     this.rootVM = vm.$root!
     this.componentVM = vm as T
     this.__setProps = setProps
+    this.__isFunctionalComponent = meta.isFunctionalComponent
     // plugins hook
     config.plugins.VueWrapper.extend(this)
   }
@@ -71,10 +78,17 @@ export class VueWrapper<T extends ComponentPublicInstance> {
   emitted<T = unknown>(): Record<string, T[]>
   emitted<T = unknown>(eventName?: string): T[]
   emitted<T = unknown>(eventName?: string): T[] | Record<string, T[]> {
+    if (this.__isFunctionalComponent) {
+      console.warn(
+        '[Vue Test Utils]: capture events emitted from functional components is currently not supported.'
+      )
+    }
+
     if (eventName) {
       const emitted = (this.vm['__emitted'] as Record<string, T[]>)[eventName]
       return emitted
     }
+
     return this.vm['__emitted'] as Record<string, T[]>
   }
 
@@ -228,7 +242,8 @@ export class VueWrapper<T extends ComponentPublicInstance> {
 export function createWrapper<T extends ComponentPublicInstance>(
   app: App | null,
   vm: ComponentPublicInstance,
-  setProps?: (props: Record<string, any>) => void
+  setProps?: (props: Record<string, any>) => void,
+  meta?: VueWrapperMeta
 ): VueWrapper<T> {
-  return new VueWrapper<T>(app, vm, setProps)
+  return new VueWrapper<T>(app, vm, setProps, meta)
 }
