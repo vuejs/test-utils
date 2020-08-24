@@ -111,6 +111,7 @@ function findAllVNodes(
     if (node.component) {
       // match children of the wrapping component
       aggregateChildren(nodes, node.component.subTree.children)
+      aggregateChildren(nodes, [node.component.subTree])
     }
     if (node.suspense) {
       // match children if component is Suspense
@@ -123,10 +124,12 @@ function findAllVNodes(
         aggregateChildren(nodes, fallbackTree.children)
       }
     }
-    if (matches(node, selector)) {
+    if (matches(node, selector) && matchingNodes.indexOf(node) < 0) {
       matchingNodes.push(node)
     }
   }
+
+  // console.log(matchingNodes)
 
   return matchingNodes
 }
