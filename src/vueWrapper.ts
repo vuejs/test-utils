@@ -151,7 +151,7 @@ export class VueWrapper<T extends ComponentPublicInstance> {
     if (typeof selector === 'object' && 'ref' in selector) {
       const result = this.vm.$refs[selector.ref]
       if (result) {
-        return createWrapper(null, result as T, null, {
+        return createWrapper(null, result as T, {
           isFunctionalComponent: isFunctionalComponent(result)
         })
       }
@@ -159,7 +159,7 @@ export class VueWrapper<T extends ComponentPublicInstance> {
 
     const result = find(this.vm.$.subTree, selector)
     if (result.length) {
-      return createWrapper(null, result[0], null, {
+      return createWrapper(null, result[0], {
         isFunctionalComponent: isFunctionalComponent(result)
       })
     }
@@ -198,7 +198,7 @@ export class VueWrapper<T extends ComponentPublicInstance> {
 
   findAllComponents(selector: FindAllComponentsSelector): VueWrapper<T>[] {
     return find(this.vm.$.subTree, selector).map((c) =>
-      createWrapper(null, c, null, {
+      createWrapper(null, c, {
         isFunctionalComponent: isFunctionalComponent(c)
       })
     )
@@ -251,8 +251,8 @@ export class VueWrapper<T extends ComponentPublicInstance> {
 export function createWrapper<T extends ComponentPublicInstance>(
   app: App | null,
   vm: ComponentPublicInstance,
-  setProps?: (props: Record<string, any>) => void,
-  meta?: VueWrapperMeta
+  meta: VueWrapperMeta,
+  setProps?: (props: Record<string, any>) => void
 ): VueWrapper<T> {
   return new VueWrapper<T>(app, vm, setProps, meta)
 }
