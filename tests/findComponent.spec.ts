@@ -244,7 +244,7 @@ describe('findComponent', () => {
     components: { SlotMain }
   })
 
-  it('finds components with slots which will be compile to `{ default: () => [children] }`', () => {
+  it('finds components with slots which will be compiled to `{ default: () => [children] }`', () => {
     const wrapper = mount(SlotApp)
     expect(wrapper.findComponent(slotComponent).exists()).toBe(true)
     expect(wrapper.findComponent(compB).exists()).toBe(true)
