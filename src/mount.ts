@@ -14,7 +14,6 @@ import {
   ExtractPropTypes,
   Component,
   WritableComputedOptions,
-  ComponentOptionsBase,
   ComponentPropsOptions,
   AppConfig,
   VNodeProps,
@@ -23,7 +22,7 @@ import {
 
 import { config } from './config'
 import { GlobalMountOptions } from './types'
-import { mergeGlobalProperties } from './utils'
+import { mergeGlobalProperties, isFunctionalComponent } from './utils'
 import { processSlot } from './utils/compileSlots'
 import { createWrapper, VueWrapper } from './vueWrapper'
 import { attachEmitListener } from './emitMixin'
@@ -359,7 +358,7 @@ export function mount(
 
   const App = vm.$refs[MOUNT_COMPONENT_REF] as ComponentPublicInstance
   return createWrapper(app, App, setProps, {
-    isFunctionalComponent: typeof originalComponent === 'function'
+    isFunctionalComponent: isFunctionalComponent(originalComponent)
   })
 }
 

@@ -11,6 +11,7 @@ import {
 import { createWrapperError } from './errorWrapper'
 import { TriggerOptions } from './createDomEvent'
 import { find } from './utils/find'
+import { isFunctionalComponent } from './utils'
 
 export class VueWrapper<T extends ComponentPublicInstance> {
   private componentVM: T
@@ -150,13 +151,17 @@ export class VueWrapper<T extends ComponentPublicInstance> {
     if (typeof selector === 'object' && 'ref' in selector) {
       const result = this.vm.$refs[selector.ref]
       if (result) {
-        return createWrapper(null, result as T)
+        return createWrapper(null, result as T, null, {
+          isFunctionalComponent: isFunctionalComponent(result)
+        })
       }
     }
 
     const result = find(this.vm.$.subTree, selector)
     if (result.length) {
-      return createWrapper(null, result[0])
+      return createWrapper(null, result[0], null, {
+        isFunctionalComponent: isFunctionalComponent(result)
+      })
     }
 
     return createWrapperError('VueWrapper')
@@ -192,7 +197,11 @@ export class VueWrapper<T extends ComponentPublicInstance> {
   }
 
   findAllComponents(selector: FindAllComponentsSelector): VueWrapper<T>[] {
-    return find(this.vm.$.subTree, selector).map((c) => createWrapper(null, c))
+    return find(this.vm.$.subTree, selector).map((c) =>
+      createWrapper(null, c, null, {
+        isFunctionalComponent: isFunctionalComponent(c)
+      })
+    )
   }
 
   findAll<K extends keyof HTMLElementTagNameMap>(
