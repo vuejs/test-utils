@@ -226,4 +226,29 @@ describe('findComponent', () => {
     expect(compB[0].vm.$el.querySelector('.content').innerHTML).toBe('1')
     expect(compB[0].vm.$el.querySelector('.content').textContent).toBe('1')
   })
+
+  // https://github.com/vuejs/vue-test-utils-next/pull/188
+  const slotComponent = defineComponent({
+    name: 'slotA',
+    template: '<div><slot /><slot name="b" /></div>'
+  })
+  const SlotMain = defineComponent({
+    name: 'SlotMain',
+    template:
+      '<slot-component><comp-b /><comp-b /><comp-b /><comp-c v-slot:b /></slot-component>',
+    components: { slotComponent, compB, compC }
+  })
+  const SlotApp = defineComponent({
+    name: 'SlotApp',
+    template: `<slot-main />`,
+    components: { SlotMain }
+  })
+
+  it('finds components with slots which will be compile to `{ default: () => [children] }`', () => {
+    const wrapper = mount(SlotApp)
+    expect(wrapper.findComponent(slotComponent).exists()).toBe(true)
+    expect(wrapper.findComponent(compB).exists()).toBe(true)
+    expect(wrapper.findComponent(compC).exists()).toBe(true)
+    expect(wrapper.findComponent(SlotMain).exists()).toBe(true)
+  })
 })

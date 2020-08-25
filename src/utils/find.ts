@@ -124,12 +124,10 @@ function findAllVNodes(
         aggregateChildren(nodes, fallbackTree.children)
       }
     }
-    if (matches(node, selector) && matchingNodes.indexOf(node) < 0) {
+    if (matches(node, selector) && !matchingNodes.includes(node)) {
       matchingNodes.push(node)
     }
   }
-
-  // console.log(matchingNodes)
 
   return matchingNodes
 }
