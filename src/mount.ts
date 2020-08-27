@@ -14,7 +14,6 @@ import {
   ExtractPropTypes,
   Component,
   WritableComputedOptions,
-  ComponentOptionsBase,
   ComponentPropsOptions,
   AppConfig,
   VNodeProps,
@@ -23,7 +22,7 @@ import {
 
 import { config } from './config'
 import { GlobalMountOptions } from './types'
-import { mergeGlobalProperties } from './utils'
+import { mergeGlobalProperties, isFunctionalComponent } from './utils'
 import { processSlot } from './utils/compileSlots'
 import { createWrapper, VueWrapper } from './vueWrapper'
 import { attachEmitListener } from './emitMixin'
@@ -358,7 +357,14 @@ export function mount(
   const vm = app.mount(el)
 
   const App = vm.$refs[MOUNT_COMPONENT_REF] as ComponentPublicInstance
-  return createWrapper(app, App, setProps)
+  return createWrapper(
+    app,
+    App,
+    {
+      isFunctionalComponent: isFunctionalComponent(originalComponent)
+    },
+    setProps
+  )
 }
 
 export const shallowMount: typeof mount = (component: any, options?: any) => {

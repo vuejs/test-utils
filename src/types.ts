@@ -29,3 +29,7 @@ export type GlobalMountOptions = {
   directives?: Record<string, Directive>
   stubs?: Record<any, any>
 }
+
+export interface VueWrapperMeta {
+  isFunctionalComponent: boolean
+}
