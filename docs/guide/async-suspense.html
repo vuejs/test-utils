@@ -5,7 +5,7 @@
     <link rel="stylesheet" href="/vue-test-utils-next/_assets/style.48077fc8.css">
     <link rel="modulepreload" href="/vue-test-utils-next/_assets/common-eb2a78a6.js">
     <link rel="modulepreload" href="/vue-test-utils-next/_assets/guide_async-suspense.md.ea32b991.lean.js">
-    <link rel="modulepreload" href="/vue-test-utils-next/_assets/app.24556747.js">
+    <link rel="modulepreload" href="/vue-test-utils-next/_assets/app.30fe1149.js">
     
     
   </head>
@@ -74,6 +74,6 @@ jest<span class="token punctuation">.</span><span class="token function">mock</s
 
 </code></pre></div><blockquote><p>If you haven&#39;t tested Components with API requests before, you can learn more in <a href="/guide/http-requests.html">HTTP Requests</a>.</p></blockquote><h2 id="conclusion"><a class="header-anchor" href="#conclusion" aria-hidden="true">#</a> Conclusion</h2><ul><li>Vue updates the DOM asynchronously; tests runner execute code synchronously.</li><li>Use <code>await nextTick()</code> to ensure the DOM has updated before the test continues</li><li>Functions that might update the DOM, like <code>trigger</code> and <code>setValue</code> return <code>nextTick</code>, so you should <code>await</code> them.</li><li>Use <code>flush-promises</code> to resolve any unresolved promises from non-Vue dependencies.</li></ul></div></div></main></div><!----><!--]--></div>
     <script>__VP_HASH_MAP__ = JSON.parse("{\"index.md\":\"f2b7345f\",\"guide_a-crash-course.md\":\"95f5d421\",\"guide_api.md\":\"b6865d62\",\"guide_async-suspense.md\":\"ea32b991\",\"guide_community-learning.md\":\"3f597d5c\",\"guide_component-instance.md\":\"8a69fc75\",\"guide_conditional-rendering.md\":\"3091ba58\",\"guide_event-handling.md\":\"c9dc5852\",\"guide_forms.md\":\"f4529d70\",\"guide_http-requests.md\":\"9e686e00\",\"guide_installation.md\":\"bea160bc\",\"guide_introduction.md\":\"0f4f7bc9\",\"guide_migration.md\":\"d488e11e\",\"guide_passing-data.md\":\"f6108356\",\"guide_plugins.md\":\"c8af3a30\",\"guide_reusability-composition.md\":\"5808237b\",\"guide_slots.md\":\"7aa77544\",\"guide_stubs-shallow-mount.md\":\"c9c3c0ae\",\"guide_third-party.md\":\"7ae984e0\",\"guide_transitions.md\":\"3b60c55f\",\"guide_vue-router.md\":\"fdc68408\",\"guide_vuex.md\":\"0d6b386c\"}")</script>
-    <script type="module" async src="/vue-test-utils-next/_assets/app.24556747.js"></script>
+    <script type="module" async src="/vue-test-utils-next/_assets/app.30fe1149.js"></script>
   </body>
 </html>
