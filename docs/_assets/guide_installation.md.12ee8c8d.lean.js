@@ -1,0 +1,1 @@
+import{g as e,f as t,A as o}from"./common-ab061852.js";const r='{"title":"Installation","frontmatter":{},"headers":[{"level":2,"title":"Installation","slug":"installation"},{"level":2,"title":"Usage","slug":"usage"}],"lastUpdated":1598528079985.505}';var a={};const n=o('',8);a.render=function(o,r,a,s,i,l){return t(),e("div",null,[n])};export default a;export{r as __pageData};

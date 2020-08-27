@@ -1,1 +1,0 @@
-import{g as e,f as t,z as o}from"./common-eb2a78a6.js";const a='{"title":"Installation","frontmatter":{},"headers":[{"level":2,"title":"Installation","slug":"installation"},{"level":2,"title":"Usage","slug":"usage"}],"lastUpdated":1598528079985.505}';var r={};const n=o('',8);r.render=function(o,a,r,s,i,l){return t(),e("div",null,[n])};export default r;export{a as __pageData};
