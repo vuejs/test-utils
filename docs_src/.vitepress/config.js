@@ -1,3 +1,5 @@
+const base = process.env.NODE_ENV === 'development' ? '' : '/vue-test-utils-next/'
+
 const sidebar = {
   guide: [
     {
@@ -51,7 +53,7 @@ const sidebar = {
 }
 
 module.exports = {
-  base: '/vue-test-utils-next/',
+  base,
   title: 'Vue Test Utils',
   locales: {
     '/': {
@@ -63,7 +65,7 @@ module.exports = {
     editLinks: true,
     sidebarDepth: 2,
     sidebar: {
-      '/guide/': sidebar.guide
+      [`${base}/guide/`]: sidebar.guide
     },
     nav: [
       { text: 'Guide', link: '/guide/introduction' },

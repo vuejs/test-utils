@@ -111,6 +111,7 @@ function findAllVNodes(
     if (node.component) {
       // match children of the wrapping component
       aggregateChildren(nodes, node.component.subTree.children)
+      aggregateChildren(nodes, [node.component.subTree])
     }
     if (node.suspense) {
       // match children if component is Suspense
@@ -123,7 +124,7 @@ function findAllVNodes(
         aggregateChildren(nodes, fallbackTree.children)
       }
     }
-    if (matches(node, selector)) {
+    if (matches(node, selector) && !matchingNodes.includes(node)) {
       matchingNodes.push(node)
     }
   }
@@ -136,6 +137,7 @@ export function find(
   selector: FindAllComponentsSelector
 ): ComponentPublicInstance[] {
   return findAllVNodes(root, selector).map(
+    // @ts-ignore
     (vnode: VNode) => vnode.component!.proxy!
   )
 }

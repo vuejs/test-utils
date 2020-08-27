@@ -216,10 +216,7 @@ export class VueWrapper<T extends ComponentPublicInstance> {
       )
     }
 
-    if (this.parentElement) {
-      this.parentElement.removeChild(this.element)
-    }
-    this.__app.unmount(this.element)
+    this.__app.unmount(this.parentElement)
   }
 }
 
