@@ -125,12 +125,12 @@ export class VueWrapper<T extends ComponentPublicInstance> {
 
   get<K extends keyof HTMLElementTagNameMap>(
     selector: K
-  ): DOMWrapper<HTMLElementTagNameMap[K]>
+  ): Omit<DOMWrapper<HTMLElementTagNameMap[K]>, 'exists'>
   get<K extends keyof SVGElementTagNameMap>(
     selector: K
-  ): DOMWrapper<SVGElementTagNameMap[K]>
-  get<T extends Element>(selector: string): DOMWrapper<T>
-  get(selector: string): DOMWrapper<Element> {
+  ): Omit<DOMWrapper<SVGElementTagNameMap[K]>, 'exists'>
+  get<T extends Element>(selector: string): Omit<DOMWrapper<T>, 'exists'>
+  get(selector: string): Omit<DOMWrapper<Element>, 'exists'> {
     const result = this.find(selector)
     if (result instanceof DOMWrapper) {
       return result
@@ -169,13 +169,13 @@ export class VueWrapper<T extends ComponentPublicInstance> {
 
   getComponent<T extends ComponentPublicInstance>(
     selector: new () => T
-  ): VueWrapper<T>
+  ): Omit<VueWrapper<T>, 'exists'>
   getComponent<T extends ComponentPublicInstance>(
     selector: FindComponentSelector
-  ): VueWrapper<T>
+  ): Omit<VueWrapper<T>, 'exists'>
   getComponent<T extends ComponentPublicInstance>(
     selector: any
-  ): VueWrapper<T> {
+  ): Omit<VueWrapper<T>, 'exists'> {
     const result = this.findComponent(selector)
 
     if (result instanceof VueWrapper) {
