@@ -143,3 +143,13 @@ expectType<number>(
     }
   }).vm.a
 )
+
+// global config should accept a partial config
+mount(AppWithProps, {
+  props: { a: 'Hello' },
+  global: {
+    config: {
+      isCustomElement: (tag: string) => true
+    }
+  }
+})
