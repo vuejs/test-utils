@@ -34,7 +34,7 @@ import {
 } from './constants'
 import { stubComponents } from './stubs'
 
-type Slot = VNode | string | { render: Function } | Function
+type Slot = VNode | string | { render: Function } | Function | Component
 
 type SlotDictionary = {
   [key: string]: Slot
