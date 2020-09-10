@@ -1,6 +1,8 @@
 import { expectError, expectType } from 'tsd'
 import { defineComponent } from 'vue'
 import { mount } from '../src'
+// @ts-ignore
+import Hello from '../tests/components/Hello.vue'
 
 const AppWithDefine = defineComponent({
   props: {
@@ -18,17 +20,6 @@ expectType<string>(
   mount(AppWithDefine, {
     props: { a: 'Hello', b: 2 }
   }).vm.a
-)
-
-// no data provided
-expectError(
-  mount(AppWithDefine, {
-    data() {
-      return {
-        myVal: 1
-      }
-    }
-  })
 )
 
 // can not receive extra props
@@ -150,6 +141,15 @@ mount(AppWithProps, {
   global: {
     config: {
       isCustomElement: (tag: string) => true
+    }
+  }
+})
+
+// SFC with data option
+mount(Hello, {
+  data() {
+    return {
+      foo: 'bar'
     }
   }
 })

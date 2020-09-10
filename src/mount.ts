@@ -42,7 +42,7 @@ type SlotDictionary = {
 
 interface MountingOptions<Props, Data = {}> {
   data?: () => {} extends Data
-    ? never
+    ? {}
     : Data extends object
     ? Partial<Data>
     : never
