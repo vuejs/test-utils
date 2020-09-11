@@ -236,7 +236,7 @@ export function mount(
 
         if (typeof slot === 'string') {
           // slot is most probably a scoped slot string or a plain string
-          acc[name] = (props: VNodeProps) => h(processSlot(slot.trim()), props)
+          acc[name] = (props: VNodeProps) => h(processSlot(slot), props)
           return acc
         }
 
