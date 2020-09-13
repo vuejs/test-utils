@@ -20,6 +20,13 @@ expectType<string>(
   }).vm.a
 )
 
+// accept propsData - vm is properly typed
+expectType<string>(
+  mount(AppWithDefine, {
+    propsData: { a: 'Hello', b: 2 }
+  }).vm.a
+)
+
 // no data provided
 expectError(
   mount(AppWithDefine, {

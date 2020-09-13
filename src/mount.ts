@@ -47,6 +47,8 @@ interface MountingOptions<Props, Data = {}> {
     ? Partial<Data>
     : never
   props?: Props
+  /** @deprecated */
+  propsData?: Props
   attrs?: Record<string, unknown>
   slots?: SlotDictionary & {
     default?: Slot
@@ -258,6 +260,7 @@ export function mount(
   // Vue's reactivity system will cause a rerender.
   const props = reactive({
     ...options?.attrs,
+    ...options?.propsData,
     ...options?.props,
     ref: MOUNT_COMPONENT_REF
   })
