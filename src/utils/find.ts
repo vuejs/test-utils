@@ -115,14 +115,8 @@ function findAllVNodes(
     }
     if (node.suspense) {
       // match children if component is Suspense
-      const { isResolved, fallbackTree, subTree } = node.suspense
-      if (isResolved) {
-        // if the suspense is resolved, we match its children
-        aggregateChildren(nodes, subTree.children)
-      } else {
-        // otherwise we match its fallback tree
-        aggregateChildren(nodes, fallbackTree.children)
-      }
+      const { activeBranch } = node.suspense
+      aggregateChildren(nodes, [activeBranch])
     }
     if (matches(node, selector) && !matchingNodes.includes(node)) {
       matchingNodes.push(node)
