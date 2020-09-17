@@ -44,7 +44,7 @@
     "vuex": "^4.0.0-beta.1"
   },
   "peerDependencies": {
-    "vue": "^3.0.0-rc.11"
+    "vue": "^3.0.0-rc.12"
   },
   "author": {
     "name": "Lachlan Miller",
