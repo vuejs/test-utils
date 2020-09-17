@@ -175,7 +175,7 @@ export function mount<
     C,
     M,
     E,
-    VNodeProps & ExtractPropTypes<PropsOptions, false>
+    VNodeProps & ExtractPropTypes<PropsOptions>
   >
 >
 
