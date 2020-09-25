@@ -353,7 +353,8 @@ export function mount(
   if (global.stubs || options?.shallow) {
     stubComponents(global.stubs, options?.shallow)
   } else {
-    transformVNodeArgs()
+    // still apply default stub of Transition and Transition Group
+    stubComponents()
   }
 
   // mount the app!

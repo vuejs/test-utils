@@ -4,10 +4,13 @@
  * Licensed under the MIT License.
  */
 
-type StylableElement = HTMLElement | SVGElement
+function isStyleVisible<T extends Element>(element: T) {
+  if (!(element instanceof HTMLElement) && !(element instanceof SVGElement)) {
+    return false
+  }
 
-function isStyleVisible<T extends StylableElement>(element: T) {
   const { display, visibility, opacity } = element.style
+
   return (
     display !== 'none' &&
     visibility !== 'hidden' &&
@@ -16,14 +19,14 @@ function isStyleVisible<T extends StylableElement>(element: T) {
   )
 }
 
-function isAttributeVisible<T extends StylableElement>(element: T) {
+function isAttributeVisible<T extends Element>(element: T) {
   return (
     !element.hasAttribute('hidden') &&
     (element.nodeName === 'DETAILS' ? element.hasAttribute('open') : true)
   )
 }
 
-export function isElementVisible<T extends StylableElement>(element: T) {
+export function isElementVisible<T extends Element>(element: T) {
   return (
     element.nodeName !== '#comment' &&
     isStyleVisible(element) &&
