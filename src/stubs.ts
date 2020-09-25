@@ -36,12 +36,15 @@ const createStub = ({ name, props }: StubOptions): ComponentOptions => {
   return defineComponent({ name: name || anonName, render, props })
 }
 
-const createTransitionStub = ({ props }: StubOptions): ComponentOptions => {
+const createTransitionStub = ({
+  name,
+  props
+}: StubOptions): ComponentOptions => {
   const render = (ctx: ComponentPublicInstance) => {
-    return h('transition-stub', {}, ctx.$slots)
+    return h(name, {}, ctx.$slots)
   }
 
-  return defineComponent({ name: 'transition-stub', render, props })
+  return defineComponent({ name, render, props })
 }
 
 const resolveComponentStubByName = (
@@ -93,11 +96,22 @@ export function stubComponents(
     // 2. An object of component options, such as { name: 'foo', render: [Function], props: {...} }
     // Depending what it is, we do different things.
     if (type === Transition && stubs['transition']) {
-      return [createTransitionStub({ props: undefined }), undefined, children]
+      return [
+        createTransitionStub({ name: 'transition-stub', props: undefined }),
+        undefined,
+        children
+      ]
     }
 
     if (type === TransitionGroup && stubs['transition-group']) {
-      return [createTransitionStub({ props: undefined }), undefined, children]
+      return [
+        createTransitionStub({
+          name: 'transition-group-stub',
+          props: undefined
+        }),
+        undefined,
+        children
+      ]
     }
 
     if (

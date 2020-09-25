@@ -6,12 +6,13 @@ import ComponentWithoutName from '../components/ComponentWithoutName.vue'
 import ComponentWithSlots from '../components/ComponentWithSlots.vue'
 
 describe('mounting options: stubs', () => {
+  let configStubsSave = config.global.stubs
   beforeEach(() => {
-    config.global.stubs = {}
+    config.global.stubs = configStubsSave
   })
 
   afterEach(() => {
-    config.global.stubs = {}
+    config.global.stubs = configStubsSave
   })
 
   it('handles Array syntax', () => {
@@ -306,6 +307,59 @@ describe('mounting options: stubs', () => {
     })
 
     expect(wrapper.html()).toBe('<foo-bar-stub></foo-bar-stub>')
+  })
+
+  it('stubs transition by default', () => {
+    const Comp = {
+      template: `<transition><div id="content" /></transition>`
+    }
+    const wrapper = mount(Comp)
+
+    expect(wrapper.html()).toBe(
+      '<transition-stub><div id="content"></div></transition-stub>'
+    )
+  })
+
+  it('opts out of stubbing transition by default', () => {
+    const Comp = {
+      template: `<transition><div id="content" /></transition>`
+    }
+    const wrapper = mount(Comp, {
+      global: {
+        stubs: {
+          transition: false
+        }
+      }
+    })
+
+    // Vue removes <transition> at run-time and does it's magic, so <transition> should not
+    // appear in the html when it isn't stubbed.
+    expect(wrapper.html()).toBe('<div id="content"></div>')
+  })
+
+  it('opts out of stubbing transition-group by default', () => {
+    const Comp = {
+      template: `<transition-group><div key="content" id="content" /></transition-group>`
+    }
+    const wrapper = mount(Comp, {
+      global: {
+        stubs: {
+          'transition-group': false
+        }
+      }
+    })
+
+    // Vue removes <transition-group> at run-time and does it's magic, so <transition-group> should not
+    // appear in the html when it isn't stubbed.
+    expect(wrapper.html()).toBe('<div id="content"></div>')
+  })
+
+  it('stubs transition-group by default', () => {
+    const Comp = {
+      template: `<transition-group><div key="a" id="content" /></transition-group>`
+    }
+    const wrapper = mount(Comp)
+    expect(wrapper.find('#content').exists()).toBe(true)
   })
 
   describe('stub slots', () => {
