@@ -350,12 +350,9 @@ export function mount(
   app.mixin(attachEmitListener())
 
   // stubs
-  if (global.stubs || options?.shallow) {
-    stubComponents(global.stubs, options?.shallow)
-  } else {
-    // still apply default stub of Transition and Transition Group
-    stubComponents()
-  }
+  // even if we are using `mount`, we will still
+  // stub out Transition and Transition Group by default.
+  stubComponents(global.stubs, options?.shallow)
 
   // mount the app!
   const vm = app.mount(el)

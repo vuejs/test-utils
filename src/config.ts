@@ -1,6 +1,6 @@
+import { ComponentPublicInstance } from 'vue'
 import { GlobalMountOptions } from './types'
 import { VueWrapper } from './vueWrapper'
-import { ComponentPublicInstance } from 'vue'
 
 interface GlobalConfigOptions {
   global: GlobalMountOptions
@@ -19,7 +19,7 @@ interface Plugin {
 }
 
 class Pluggable {
-  installedPlugins = [] as Array<Plugin>
+  installedPlugins: Plugin[] = []
 
   install(
     handler: (
@@ -55,7 +55,12 @@ class Pluggable {
 }
 
 export const config: GlobalConfigOptions = {
-  global: {},
+  global: {
+    stubs: {
+      transition: true,
+      'transition-group': true
+    }
+  },
   plugins: {
     VueWrapper: new Pluggable(),
     DOMWrapper: new Pluggable()

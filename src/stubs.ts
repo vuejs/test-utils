@@ -92,7 +92,11 @@ export function stubComponents(
     // 1. a HTML tag (div, span...)
     // 2. An object of component options, such as { name: 'foo', render: [Function], props: {...} }
     // Depending what it is, we do different things.
-    if (type === Transition || type === TransitionGroup) {
+    if (type === Transition && stubs['transition']) {
+      return [createTransitionStub({ props: undefined }), undefined, children]
+    }
+
+    if (type === TransitionGroup && stubs['transition-group']) {
       return [createTransitionStub({ props: undefined }), undefined, children]
     }
 
