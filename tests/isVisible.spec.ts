@@ -30,6 +30,15 @@ describe('isVisible', () => {
     expect(wrapper.find('span').isVisible()).toBe(true)
   })
 
+  it('returns false when element parent is invisible via v-show', () => {
+    const Comp = {
+      template: `<div v-show="false"><span /></div>`
+    }
+    const wrapper = mount(Comp)
+
+    expect(wrapper.find('span').isVisible()).toBe(false)
+  })
+
   it('element becomes hidden reactively', async () => {
     const Comp = {
       template: `<button @click="show = false" /><span v-show="show" />`,
