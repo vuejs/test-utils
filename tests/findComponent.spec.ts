@@ -4,7 +4,7 @@ import Hello from './components/Hello.vue'
 import ComponentWithoutName from './components/ComponentWithoutName.vue'
 
 const compC = defineComponent({
-  name: 'ComponentC',
+  // name: 'ComponentC',
   template: '<div class="C">C</div>'
 })
 
@@ -28,6 +28,7 @@ const compB = defineComponent({
 })
 
 const compA = defineComponent({
+  name: 'A',
   template: `
     <div class="A">
       <comp-b />
@@ -80,6 +81,11 @@ describe('findComponent', () => {
     expect(wrapper.findComponent({ name: 'Hello' }).text()).toBe('Hello world')
     expect(wrapper.findComponent({ name: 'ComponentB' }).exists()).toBeTruthy()
     expect(wrapper.findComponent({ name: 'component-c' }).exists()).toBeTruthy()
+  })
+
+  it('finds root component', () => {
+    const wrapper = mount(compA)
+    expect(wrapper.findComponent(compA).exists()).toBe(true)
   })
 
   it('finds component without a name by using its object definition', () => {

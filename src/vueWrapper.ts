@@ -10,7 +10,7 @@ import {
 } from './types'
 import { createWrapperError } from './errorWrapper'
 import { TriggerOptions } from './createDomEvent'
-import { find } from './utils/find'
+import { find, matches } from './utils/find'
 import { isFunctionalComponent } from './utils'
 
 export class VueWrapper<T extends ComponentPublicInstance> {
@@ -161,6 +161,16 @@ export class VueWrapper<T extends ComponentPublicInstance> {
     if (result.length) {
       return createWrapper(null, result[0], {
         isFunctionalComponent: isFunctionalComponent(result)
+      })
+    }
+
+    // https://github.com/vuejs/vue-test-utils-next/issues/211
+    // VTU v1 supported finding the component mounted itself.
+    // eg: mount(Comp).findComponent(Comp)
+    // this is the same as doing `wrapper.vm`, but we keep this behavior for back compat.
+    if (matches(this.vm.$.vnode, selector)) {
+      return createWrapper(null, this.vm.$.vnode.component.proxy, {
+        isFunctionalComponent: false
       })
     }
 

@@ -13,7 +13,10 @@ import { matchName } from './matchName'
  * @param selector
  * @return {boolean | ((value: any) => boolean)}
  */
-function matches(node: VNode, selector: FindAllComponentsSelector): boolean {
+export function matches(
+  node: VNode,
+  selector: FindAllComponentsSelector
+): boolean {
   // do not return none Vue components
   if (!node.component) return false
 
@@ -54,7 +57,9 @@ function matches(node: VNode, selector: FindAllComponentsSelector): boolean {
         }
       }
       // we may have one or both missing names
-      return matchName(selectorName, componentName)
+      if (selectorName && componentName) {
+        return matchName(selectorName, componentName)
+      }
     }
   }
 
