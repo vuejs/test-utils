@@ -2,6 +2,7 @@ import { nextTick } from 'vue'
 
 import { createWrapperError } from './errorWrapper'
 import { TriggerOptions, createDOMEvent } from './createDomEvent'
+import { isElementVisible } from './utils/isElementVisible'
 
 export class DOMWrapper<ElementType extends Element> {
   element: ElementType
@@ -34,6 +35,10 @@ export class DOMWrapper<ElementType extends Element> {
 
   exists() {
     return true
+  }
+
+  isVisible() {
+    return isElementVisible(this.element)
   }
 
   text() {

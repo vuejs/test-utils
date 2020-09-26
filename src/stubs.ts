@@ -1,5 +1,7 @@
 import {
   transformVNodeArgs,
+  Transition,
+  TransitionGroup,
   h,
   ComponentPublicInstance,
   Slots,
@@ -32,6 +34,17 @@ const createStub = ({ name, props }: StubOptions): ComponentOptions => {
   }
 
   return defineComponent({ name: name || anonName, render, props })
+}
+
+const createTransitionStub = ({
+  name,
+  props
+}: StubOptions): ComponentOptions => {
+  const render = (ctx: ComponentPublicInstance) => {
+    return h(name, {}, ctx.$slots)
+  }
+
+  return defineComponent({ name, render, props })
 }
 
 const resolveComponentStubByName = (
@@ -78,6 +91,28 @@ export function stubComponents(
   transformVNodeArgs((args, instance: ComponentInternalInstance | null) => {
     const [nodeType, props, children, patchFlag, dynamicProps] = args
     const type = nodeType as VNodeTypes
+
+    // stub transition by default via config.global.stubs
+    if (type === Transition && stubs['transition']) {
+      return [
+        createTransitionStub({ name: 'transition-stub', props: undefined }),
+        undefined,
+        children
+      ]
+    }
+
+    // stub transition-group by default via config.global.stubs
+    if (type === TransitionGroup && stubs['transition-group']) {
+      return [
+        createTransitionStub({
+          name: 'transition-group-stub',
+          props: undefined
+        }),
+        undefined,
+        children
+      ]
+    }
+
     // args[0] can either be:
     // 1. a HTML tag (div, span...)
     // 2. An object of component options, such as { name: 'foo', render: [Function], props: {...} }

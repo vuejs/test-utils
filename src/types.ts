@@ -28,6 +28,7 @@ export type GlobalMountOptions = {
   components?: Record<string, Component | object>
   directives?: Record<string, Directive>
   stubs?: Record<any, any>
+  renderStubDefaultSlot?: boolean
 }
 
 export interface VueWrapperMeta {
