@@ -28,6 +28,7 @@ const compB = defineComponent({
 })
 
 const compA = defineComponent({
+  name: 'A',
   template: `
     <div class="A">
       <comp-b />
@@ -80,6 +81,23 @@ describe('findComponent', () => {
     expect(wrapper.findComponent({ name: 'Hello' }).text()).toBe('Hello world')
     expect(wrapper.findComponent({ name: 'ComponentB' }).exists()).toBeTruthy()
     expect(wrapper.findComponent({ name: 'component-c' }).exists()).toBeTruthy()
+  })
+
+  it('finds root component', async () => {
+    const Comp = defineComponent({
+      name: 'C',
+      template: `
+        <input v-model="msg" />
+        {{ msg }}
+      `,
+      data() {
+        return { msg: 'foo' }
+      }
+    })
+    const wrapper = mount(Comp)
+    expect(wrapper.findComponent(Comp).exists()).toBe(true)
+    await wrapper.find('input').setValue('bar')
+    expect(wrapper.html()).toContain('bar')
   })
 
   it('finds component without a name by using its object definition', () => {
