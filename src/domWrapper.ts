@@ -2,12 +2,15 @@ import { nextTick } from 'vue'
 
 import { createWrapperError } from './errorWrapper'
 import { TriggerOptions, createDOMEvent } from './createDomEvent'
+import { config } from './config'
 
 export class DOMWrapper<ElementType extends Element> {
   element: ElementType
 
   constructor(element: ElementType) {
     this.element = element
+    // plugins hook
+    config.plugins.DOMWrapper.extend(this)
   }
 
   classes(): string[]
