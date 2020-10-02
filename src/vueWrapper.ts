@@ -1,28 +1,36 @@
 import { ComponentPublicInstance, nextTick, App } from 'vue'
 import { ShapeFlags } from '@vue/shared'
-import { config } from './config'
 
+import { config } from './config'
 import { DOMWrapper } from './domWrapper'
-import { FindAllComponentsSelector, FindComponentSelector } from './types'
+import {
+  FindAllComponentsSelector,
+  FindComponentSelector,
+  VueWrapperMeta
+} from './types'
 import { createWrapperError } from './errorWrapper'
 import { TriggerOptions } from './createDomEvent'
-import { find } from './utils/find'
+import { find, matches } from './utils/find'
+import { isFunctionalComponent } from './utils'
 
 export class VueWrapper<T extends ComponentPublicInstance> {
   private componentVM: T
   private rootVM: ComponentPublicInstance
   private __app: App | null
   private __setProps: ((props: Record<string, any>) => void) | undefined
+  private __isFunctionalComponent: boolean
 
   constructor(
     app: App | null,
     vm: ComponentPublicInstance,
-    setProps?: (props: Record<string, any>) => void
+    setProps?: (props: Record<string, any>) => void,
+    meta?: VueWrapperMeta
   ) {
     this.__app = app
     this.rootVM = vm.$root!
     this.componentVM = vm as T
     this.__setProps = setProps
+    this.__isFunctionalComponent = meta.isFunctionalComponent
     // plugins hook
     config.plugins.VueWrapper.extend(this)
   }
@@ -71,15 +79,27 @@ export class VueWrapper<T extends ComponentPublicInstance> {
   emitted<T = unknown>(): Record<string, T[]>
   emitted<T = unknown>(eventName?: string): T[]
   emitted<T = unknown>(eventName?: string): T[] | Record<string, T[]> {
+    if (this.__isFunctionalComponent) {
+      console.warn(
+        '[Vue Test Utils]: capture events emitted from functional components is currently not supported.'
+      )
+    }
+
     if (eventName) {
       const emitted = (this.vm['__emitted'] as Record<string, T[]>)[eventName]
       return emitted
     }
+
     return this.vm['__emitted'] as Record<string, T[]>
   }
 
   html() {
-    return this.parentElement.innerHTML
+    // cover cases like <Suspense>, multiple root nodes.
+    if (this.parentElement['__vue_app__']) {
+      return this.parentElement.innerHTML
+    }
+
+    return this.element.outerHTML
   }
 
   text() {
@@ -105,12 +125,12 @@ export class VueWrapper<T extends ComponentPublicInstance> {
 
   get<K extends keyof HTMLElementTagNameMap>(
     selector: K
-  ): DOMWrapper<HTMLElementTagNameMap[K]>
+  ): Omit<DOMWrapper<HTMLElementTagNameMap[K]>, 'exists'>
   get<K extends keyof SVGElementTagNameMap>(
     selector: K
-  ): DOMWrapper<SVGElementTagNameMap[K]>
-  get<T extends Element>(selector: string): DOMWrapper<T>
-  get(selector: string): DOMWrapper<Element> {
+  ): Omit<DOMWrapper<SVGElementTagNameMap[K]>, 'exists'>
+  get<T extends Element>(selector: string): Omit<DOMWrapper<T>, 'exists'>
+  get(selector: string): Omit<DOMWrapper<Element>, 'exists'> {
     const result = this.find(selector)
     if (result instanceof DOMWrapper) {
       return result
@@ -131,13 +151,27 @@ export class VueWrapper<T extends ComponentPublicInstance> {
     if (typeof selector === 'object' && 'ref' in selector) {
       const result = this.vm.$refs[selector.ref]
       if (result) {
-        return createWrapper(null, result as T)
+        return createWrapper(null, result as T, {
+          isFunctionalComponent: isFunctionalComponent(result)
+        })
       }
     }
 
     const result = find(this.vm.$.subTree, selector)
     if (result.length) {
-      return createWrapper(null, result[0])
+      return createWrapper(null, result[0], {
+        isFunctionalComponent: isFunctionalComponent(result)
+      })
+    }
+
+    // https://github.com/vuejs/vue-test-utils-next/issues/211
+    // VTU v1 supported finding the component mounted itself.
+    // eg: mount(Comp).findComponent(Comp)
+    // this is the same as doing `wrapper.vm`, but we keep this behavior for back compat.
+    if (matches(this.vm.$.vnode, selector)) {
+      return createWrapper(null, this.vm.$.vnode.component.proxy, {
+        isFunctionalComponent: false
+      })
     }
 
     return createWrapperError('VueWrapper')
@@ -145,13 +179,13 @@ export class VueWrapper<T extends ComponentPublicInstance> {
 
   getComponent<T extends ComponentPublicInstance>(
     selector: new () => T
-  ): VueWrapper<T>
+  ): Omit<VueWrapper<T>, 'exists'>
   getComponent<T extends ComponentPublicInstance>(
     selector: FindComponentSelector
-  ): VueWrapper<T>
+  ): Omit<VueWrapper<T>, 'exists'>
   getComponent<T extends ComponentPublicInstance>(
     selector: any
-  ): VueWrapper<T> {
+  ): Omit<VueWrapper<T>, 'exists'> {
     const result = this.findComponent(selector)
 
     if (result instanceof VueWrapper) {
@@ -173,7 +207,11 @@ export class VueWrapper<T extends ComponentPublicInstance> {
   }
 
   findAllComponents(selector: FindAllComponentsSelector): VueWrapper<T>[] {
-    return find(this.vm.$.subTree, selector).map((c) => createWrapper(null, c))
+    return find(this.vm.$.subTree, selector).map((c) =>
+      createWrapper(null, c, {
+        isFunctionalComponent: isFunctionalComponent(c)
+      })
+    )
   }
 
   findAll<K extends keyof HTMLElementTagNameMap>(
@@ -216,17 +254,15 @@ export class VueWrapper<T extends ComponentPublicInstance> {
       )
     }
 
-    if (this.parentElement) {
-      this.parentElement.removeChild(this.element)
-    }
-    this.__app.unmount(this.element)
+    this.__app.unmount(this.parentElement)
   }
 }
 
 export function createWrapper<T extends ComponentPublicInstance>(
   app: App | null,
   vm: ComponentPublicInstance,
+  meta: VueWrapperMeta,
   setProps?: (props: Record<string, any>) => void
 ): VueWrapper<T> {
-  return new VueWrapper<T>(app, vm, setProps)
+  return new VueWrapper<T>(app, vm, setProps, meta)
 }

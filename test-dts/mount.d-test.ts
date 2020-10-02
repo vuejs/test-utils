@@ -20,6 +20,13 @@ expectType<string>(
   }).vm.a
 )
 
+// accept propsData - vm is properly typed
+expectType<string>(
+  mount(AppWithDefine, {
+    propsData: { a: 'Hello', b: 2 }
+  }).vm.a
+)
+
 // no data provided
 expectError(
   mount(AppWithDefine, {
@@ -143,3 +150,13 @@ expectType<number>(
     }
   }).vm.a
 )
+
+// global config should accept a partial config
+mount(AppWithProps, {
+  props: { a: 'Hello' },
+  global: {
+    config: {
+      isCustomElement: (tag: string) => true
+    }
+  }
+})

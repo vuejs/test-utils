@@ -14,7 +14,6 @@ import {
   ExtractPropTypes,
   Component,
   WritableComputedOptions,
-  ComponentOptionsBase,
   ComponentPropsOptions,
   AppConfig,
   VNodeProps,
@@ -23,7 +22,7 @@ import {
 
 import { config } from './config'
 import { GlobalMountOptions } from './types'
-import { mergeGlobalProperties } from './utils'
+import { mergeGlobalProperties, isFunctionalComponent } from './utils'
 import { processSlot } from './utils/compileSlots'
 import { createWrapper, VueWrapper } from './vueWrapper'
 import { attachEmitListener } from './emitMixin'
@@ -35,7 +34,7 @@ import {
 } from './constants'
 import { stubComponents } from './stubs'
 
-type Slot = VNode | string | { render: Function } | Function
+type Slot = VNode | string | { render: Function } | Function | Component
 
 type SlotDictionary = {
   [key: string]: Slot
@@ -48,6 +47,8 @@ interface MountingOptions<Props, Data = {}> {
     ? Partial<Data>
     : never
   props?: Props
+  /** @deprecated */
+  propsData?: Props
   attrs?: Record<string, unknown>
   slots?: SlotDictionary & {
     default?: Slot
@@ -174,7 +175,7 @@ export function mount<
     C,
     M,
     E,
-    VNodeProps & ExtractPropTypes<PropsOptions, false>
+    VNodeProps & ExtractPropTypes<PropsOptions>
   >
 >
 
@@ -259,6 +260,7 @@ export function mount(
   // Vue's reactivity system will cause a rerender.
   const props = reactive({
     ...options?.attrs,
+    ...options?.propsData,
     ...options?.props,
     ref: MOUNT_COMPONENT_REF
   })
@@ -312,7 +314,13 @@ export function mount(
 
   // use and plugins from mounting options
   if (global.plugins) {
-    for (const use of global.plugins) app.use(use)
+    for (const plugin of global.plugins) {
+      if (Array.isArray(plugin)) {
+        app.use(plugin[0], ...plugin.slice(1))
+        continue
+      }
+      app.use(plugin)
+    }
   }
 
   // use any mixins from mounting options
@@ -342,17 +350,22 @@ export function mount(
   app.mixin(attachEmitListener())
 
   // stubs
-  if (global.stubs || options?.shallow) {
-    stubComponents(global.stubs, options?.shallow)
-  } else {
-    transformVNodeArgs()
-  }
+  // even if we are using `mount`, we will still
+  // stub out Transition and Transition Group by default.
+  stubComponents(global.stubs, options?.shallow)
 
   // mount the app!
   const vm = app.mount(el)
 
   const App = vm.$refs[MOUNT_COMPONENT_REF] as ComponentPublicInstance
-  return createWrapper(app, App, setProps)
+  return createWrapper(
+    app,
+    App,
+    {
+      isFunctionalComponent: isFunctionalComponent(originalComponent)
+    },
+    setProps
+  )
 }
 
 export const shallowMount: typeof mount = (component: any, options?: any) => {

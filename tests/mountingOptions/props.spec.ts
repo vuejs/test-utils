@@ -26,6 +26,27 @@ describe('mountingOptions.props', () => {
     expect(wrapper.text()).toBe('Message is Hello')
   })
 
+  test("passes props with 'propsData'", () => {
+    const wrapper = mount(Component, {
+      propsData: {
+        message: 'Hello'
+      }
+    })
+    expect(wrapper.text()).toBe('Message is Hello')
+  })
+
+  test("uses props from 'props' attribute, when 'propsData' also contains same attribute keys", () => {
+    const wrapper = mount(Component, {
+      propsData: {
+        message: 'Hello from propsData'
+      },
+      props: {
+        message: 'Hello from props'
+      }
+    })
+    expect(wrapper.text()).toBe('Message is Hello from props')
+  })
+
   test('assigns extra properties as attributes on components', () => {
     const wrapper = mount(Component, {
       props: {

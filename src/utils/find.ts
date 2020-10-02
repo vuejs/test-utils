@@ -13,7 +13,10 @@ import { matchName } from './matchName'
  * @param selector
  * @return {boolean | ((value: any) => boolean)}
  */
-function matches(node: VNode, selector: FindAllComponentsSelector): boolean {
+export function matches(
+  node: VNode,
+  selector: FindAllComponentsSelector
+): boolean {
   // do not return none Vue components
   if (!node.component) return false
 
@@ -54,7 +57,9 @@ function matches(node: VNode, selector: FindAllComponentsSelector): boolean {
         }
       }
       // we may have one or both missing names
-      return matchName(selectorName, componentName)
+      if (selectorName && componentName) {
+        return matchName(selectorName, componentName)
+      }
     }
   }
 
@@ -111,19 +116,14 @@ function findAllVNodes(
     if (node.component) {
       // match children of the wrapping component
       aggregateChildren(nodes, node.component.subTree.children)
+      aggregateChildren(nodes, [node.component.subTree])
     }
     if (node.suspense) {
       // match children if component is Suspense
-      const { isResolved, fallbackTree, subTree } = node.suspense
-      if (isResolved) {
-        // if the suspense is resolved, we match its children
-        aggregateChildren(nodes, subTree.children)
-      } else {
-        // otherwise we match its fallback tree
-        aggregateChildren(nodes, fallbackTree.children)
-      }
+      const { activeBranch } = node.suspense
+      aggregateChildren(nodes, [activeBranch])
     }
-    if (matches(node, selector)) {
+    if (matches(node, selector) && !matchingNodes.includes(node)) {
       matchingNodes.push(node)
     }
   }
@@ -136,6 +136,7 @@ export function find(
   selector: FindAllComponentsSelector
 ): ComponentPublicInstance[] {
   return findAllVNodes(root, selector).map(
+    // @ts-ignore
     (vnode: VNode) => vnode.component!.proxy!
   )
 }

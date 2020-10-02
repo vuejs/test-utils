@@ -28,6 +28,7 @@ const compB = defineComponent({
 })
 
 const compA = defineComponent({
+  name: 'A',
   template: `
     <div class="A">
       <comp-b />
@@ -80,6 +81,23 @@ describe('findComponent', () => {
     expect(wrapper.findComponent({ name: 'Hello' }).text()).toBe('Hello world')
     expect(wrapper.findComponent({ name: 'ComponentB' }).exists()).toBeTruthy()
     expect(wrapper.findComponent({ name: 'component-c' }).exists()).toBeTruthy()
+  })
+
+  it('finds root component', async () => {
+    const Comp = defineComponent({
+      name: 'C',
+      template: `
+        <input v-model="msg" />
+        {{ msg }}
+      `,
+      data() {
+        return { msg: 'foo' }
+      }
+    })
+    const wrapper = mount(Comp)
+    expect(wrapper.findComponent(Comp).exists()).toBe(true)
+    await wrapper.find('input').setValue('bar')
+    expect(wrapper.html()).toContain('bar')
   })
 
   it('finds component without a name by using its object definition', () => {
@@ -169,5 +187,86 @@ describe('findComponent', () => {
   it('throw error if trying to unmount component from find', () => {
     const wrapper = mount(compA)
     expect(wrapper.findComponent(Hello).unmount).toThrowError()
+  })
+
+  // https://github.com/vuejs/vue-test-utils-next/issues/173
+  const ComponentA = {
+    name: 'ComponentA',
+    template: `<div><slot></slot></div>`
+  }
+
+  const ComponentB = {
+    name: 'ComponentB',
+    template: '<div><slot></slot></div>'
+  }
+
+  it('finds nested components and obtains expected html and innerText', () => {
+    const wrapper = mount({
+      components: {
+        ComponentA,
+        ComponentB
+      },
+      template: `
+        <ComponentA>
+          <ComponentB>1</ComponentB>
+          <ComponentB>2</ComponentB>
+          <ComponentB>3</ComponentB>
+        </ComponentA>
+      `
+    })
+    const com1 = wrapper.findComponent(ComponentB)
+    expect(com1.html()).toBe('<div>1</div>')
+  })
+
+  it('finds nested components and obtains expected html and innerText', () => {
+    const wrapper = mount({
+      components: {
+        ComponentA,
+        ComponentB
+      },
+      template: `
+        <ComponentA>
+          <ComponentB>
+            <div class="content" id="1">1</div>
+          </ComponentB>
+          <ComponentB>
+            <div class="content" id="2">2</div>
+          </ComponentB>
+          <ComponentB>
+            <div class="content" id="3">3</div>
+          </ComponentB>
+        </ComponentA>
+      `
+    })
+
+    const compB = wrapper.findAllComponents(ComponentB)
+    expect(compB[0].find('.content').text()).toBe('1')
+    expect(compB[0].vm.$el.querySelector('.content').innerHTML).toBe('1')
+    expect(compB[0].vm.$el.querySelector('.content').textContent).toBe('1')
+  })
+
+  // https://github.com/vuejs/vue-test-utils-next/pull/188
+  const slotComponent = defineComponent({
+    name: 'slotA',
+    template: '<div><slot /><slot name="b" /></div>'
+  })
+  const SlotMain = defineComponent({
+    name: 'SlotMain',
+    template:
+      '<slot-component><comp-b /><comp-b /><comp-b /><comp-c v-slot:b /></slot-component>',
+    components: { slotComponent, compB, compC }
+  })
+  const SlotApp = defineComponent({
+    name: 'SlotApp',
+    template: `<slot-main />`,
+    components: { SlotMain }
+  })
+
+  it('finds components with slots which will be compiled to `{ default: () => [children] }`', () => {
+    const wrapper = mount(SlotApp)
+    expect(wrapper.findComponent(slotComponent).exists()).toBe(true)
+    expect(wrapper.findComponent(compB).exists()).toBe(true)
+    expect(wrapper.findComponent(compC).exists()).toBe(true)
+    expect(wrapper.findComponent(SlotMain).exists()).toBe(true)
   })
 })

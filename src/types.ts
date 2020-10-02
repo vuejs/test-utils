@@ -20,12 +20,17 @@ export type FindComponentSelector = RefSelector | NameSelector | string
 export type FindAllComponentsSelector = NameSelector | string
 
 export type GlobalMountOptions = {
-  plugins?: Plugin[]
-  config?: Omit<AppConfig, 'isNativeTag'> // isNativeTag is readonly, so we omit it
+  plugins?: (Plugin | [Plugin, ...any[]])[]
+  config?: Partial<Omit<AppConfig, 'isNativeTag'>> // isNativeTag is readonly, so we omit it
   mixins?: ComponentOptions[]
   mocks?: Record<string, any>
   provide?: Record<any, any>
   components?: Record<string, Component | object>
   directives?: Record<string, Directive>
   stubs?: Record<any, any>
+  renderStubDefaultSlot?: boolean
+}
+
+export interface VueWrapperMeta {
+  isFunctionalComponent: boolean
 }

@@ -1,7 +1,8 @@
 import { compile } from '@vue/compiler-dom'
 import * as vue from 'vue'
 
-export function processSlot(template = '', Vue = vue) {
+export function processSlot(source = '', Vue = vue) {
+  let template = source.trim()
   const hasWrappingTemplate = template && template.startsWith('<template')
 
   // allow content without `template` tag, for easier testing

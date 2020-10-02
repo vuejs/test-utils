@@ -3,6 +3,17 @@ import { defineComponent, h } from 'vue'
 import { mount } from '../src'
 
 describe('emitted', () => {
+  let consoleWarnSave = console.info
+
+  beforeEach(() => {
+    consoleWarnSave = console.warn
+    console.warn = jest.fn()
+  })
+
+  afterEach(() => {
+    console.warn = consoleWarnSave
+  })
+
   it('captures events emitted via this.$emit', () => {
     const Component = defineComponent({
       render() {
@@ -120,5 +131,17 @@ describe('emitted', () => {
     expect(wrapper.emitted('hello')[1]).toEqual(['foo', 'bar'])
 
     expect(wrapper.emitted('hello')).toHaveLength(2)
+  })
+
+  it('gives a useful warning for functional components', () => {
+    const Component = (_, ctx) => {
+      return h('button', { onClick: () => ctx.emit('hello', 'foo', 'bar') })
+    }
+
+    mount(Component).emitted()
+
+    expect(console.warn).toHaveBeenCalledWith(
+      '[Vue Test Utils]: capture events emitted from functional components is currently not supported.'
+    )
   })
 })

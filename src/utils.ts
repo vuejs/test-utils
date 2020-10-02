@@ -1,5 +1,6 @@
 import { GlobalMountOptions } from './types'
 import { AppConfig } from 'vue'
+
 function mergeStubs(target: Record<string, any>, source: GlobalMountOptions) {
   if (source.stubs) {
     if (Array.isArray(source.stubs)) {
@@ -12,7 +13,7 @@ function mergeStubs(target: Record<string, any>, source: GlobalMountOptions) {
   }
 }
 
-function mergeGlobalProperties(
+export function mergeGlobalProperties(
   configGlobal: GlobalMountOptions = {},
   mountGlobal: GlobalMountOptions = {}
 ): GlobalMountOptions {
@@ -36,4 +37,6 @@ function mergeGlobalProperties(
   }
 }
 
-export { mergeGlobalProperties }
+export function isFunctionalComponent(component: any) {
+  return typeof component === 'function'
+}
