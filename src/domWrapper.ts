@@ -2,6 +2,7 @@ import { nextTick } from 'vue'
 
 import { createWrapperError } from './errorWrapper'
 import { TriggerOptions, createDOMEvent } from './createDomEvent'
+import { config } from './config'
 import { isElementVisible } from './utils/isElementVisible'
 
 export class DOMWrapper<ElementType extends Element> {
@@ -9,6 +10,8 @@ export class DOMWrapper<ElementType extends Element> {
 
   constructor(element: ElementType) {
     this.element = element
+    // plugins hook
+    config.plugins.DOMWrapper.extend(this)
   }
 
   classes(): string[]
