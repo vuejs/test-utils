@@ -39,7 +39,7 @@ export default {
     onErrorCaptured((e) => {
       const err = e as Error
       error.value = err.message
-      return true
+      return false
     })
 
     return { error }
