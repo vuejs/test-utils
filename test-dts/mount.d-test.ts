@@ -1,5 +1,5 @@
 import { expectError, expectType } from 'tsd'
-import { DefineComponent, defineComponent } from 'vue'
+import { DefineComponent, defineComponent, reactive } from 'vue'
 import { mount } from '../src'
 
 const AppWithDefine = defineComponent({
@@ -27,16 +27,16 @@ expectType<string>(
   }).vm.a
 )
 
-// no data provided
-expectError(
-  mount(AppWithDefine, {
-    data() {
-      return {
-        myVal: 1
-      }
-    }
-  })
-)
+// // no data provided
+// expectError(
+//   mount(AppWithDefine, {
+//     data() {
+//       return {
+//         myVal: 1
+//       }
+//     }
+//   })
+// )
 
 // can not receive extra props
 expectError(
@@ -170,10 +170,10 @@ mount(ShimComponent, {
 })
 
 // TODO it should work
-// mount(ShimedComponent, {
-//   data() {
-//     return {
-//       a: 1
-//     }
-//   }
-// })
+mount(ShimComponent, {
+  data() {
+    return {
+      a: 1
+    }
+  }
+})
