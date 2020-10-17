@@ -53,7 +53,6 @@ interface MountingOptions<Props, Data = {}> {
     : Data extends object
     ? Partial<Data>
     : never
-  // data?: {} extends Data ? never : () => Partial<Data>
   props?: Props
   /** @deprecated */
   propsData?: Props
@@ -86,11 +85,6 @@ export function mount<
 ): VueWrapper<ComponentPublicInstance<Props>>
 
 // Component declared with defineComponent
-// export function mount<TestedComponent extends ComponentPublicInstance>(
-//   originalComponent: { new (): TestedComponent } & Component,
-//   options?: MountingOptions<TestedComponent['$props'], TestedComponent['$data']>
-// ): VueWrapper<TestedComponent>
-
 export function mount<
   PropsOrPropOptions = {},
   RawBindings = {},
