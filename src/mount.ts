@@ -39,6 +39,7 @@ import {
 } from './constants'
 import { stubComponents } from './stubs'
 
+// NOTE this should come from `vue`
 type PublicProps = VNodeProps & AllowedComponentProps & ComponentCustomProps
 
 type Slot = VNode | string | { render: Function } | Function | Component
@@ -132,8 +133,6 @@ export function mount<
     >
   >
 >
-
-//Props //VueWrapper<InstanceType<C>> //ExtractPropTypes<PropsOrOptions> //PropsOrOptions //VueWrapper<ThisType<C>>
 
 // Component declared with no props
 export function mount<
