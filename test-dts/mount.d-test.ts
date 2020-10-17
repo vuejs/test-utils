@@ -1,5 +1,5 @@
 import { expectError, expectType } from 'tsd'
-import { defineComponent } from 'vue'
+import { DefineComponent, defineComponent } from 'vue'
 import { mount } from '../src'
 
 const AppWithDefine = defineComponent({
@@ -160,3 +160,20 @@ mount(AppWithProps, {
     }
   }
 })
+
+declare const ShimComponent: DefineComponent
+
+mount(ShimComponent, {
+  props: {
+    msg: 1
+  }
+})
+
+// TODO it should work
+// mount(ShimedComponent, {
+//   data() {
+//     return {
+//       a: 1
+//     }
+//   }
+// })

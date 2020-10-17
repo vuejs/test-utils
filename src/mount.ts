@@ -17,7 +17,12 @@ import {
   ComponentPropsOptions,
   AppConfig,
   VNodeProps,
-  ComponentOptionsMixin
+  ComponentOptionsMixin,
+  DefineComponent,
+  MethodOptions,
+  AllowedComponentProps,
+  ComponentCustomProps,
+  ExtractDefaultPropTypes
 } from 'vue'
 
 import { config } from './config'
@@ -34,6 +39,8 @@ import {
 } from './constants'
 import { stubComponents } from './stubs'
 
+type PublicProps = VNodeProps & AllowedComponentProps & ComponentCustomProps
+
 type Slot = VNode | string | { render: Function } | Function | Component
 
 type SlotDictionary = {
@@ -46,6 +53,7 @@ interface MountingOptions<Props, Data = {}> {
     : Data extends object
     ? Partial<Data>
     : never
+  // data?: {} extends Data ? never : () => Partial<Data>
   props?: Props
   /** @deprecated */
   propsData?: Props
@@ -78,10 +86,60 @@ export function mount<
 ): VueWrapper<ComponentPublicInstance<Props>>
 
 // Component declared with defineComponent
-export function mount<TestedComponent extends ComponentPublicInstance>(
-  originalComponent: { new (): TestedComponent } & Component,
-  options?: MountingOptions<TestedComponent['$props'], TestedComponent['$data']>
-): VueWrapper<TestedComponent>
+// export function mount<TestedComponent extends ComponentPublicInstance>(
+//   originalComponent: { new (): TestedComponent } & Component,
+//   options?: MountingOptions<TestedComponent['$props'], TestedComponent['$data']>
+// ): VueWrapper<TestedComponent>
+
+export function mount<
+  PropsOrPropOptions = {},
+  RawBindings = {},
+  D = {},
+  C extends ComputedOptions = ComputedOptions,
+  M extends MethodOptions = MethodOptions,
+  Mixin extends ComponentOptionsMixin = ComponentOptionsMixin,
+  Extends extends ComponentOptionsMixin = ComponentOptionsMixin,
+  E extends EmitsOptions = Record<string, any>,
+  EE extends string = string,
+  PP = PublicProps,
+  Props = Readonly<ExtractPropTypes<PropsOrPropOptions>>,
+  Defaults = ExtractDefaultPropTypes<PropsOrPropOptions>
+>(
+  component: DefineComponent<
+    PropsOrPropOptions,
+    RawBindings,
+    D,
+    C,
+    M,
+    Mixin,
+    Extends,
+    E,
+    EE,
+    PP,
+    Props,
+    Defaults
+  >,
+  options?: MountingOptions<Props, D>
+): VueWrapper<
+  InstanceType<
+    DefineComponent<
+      PropsOrPropOptions,
+      RawBindings,
+      D,
+      C,
+      M,
+      Mixin,
+      Extends,
+      E,
+      EE,
+      PP,
+      Props,
+      Defaults
+    >
+  >
+>
+
+//Props //VueWrapper<InstanceType<C>> //ExtractPropTypes<PropsOrOptions> //PropsOrOptions //VueWrapper<ThisType<C>>
 
 // Component declared with no props
 export function mount<
