@@ -32,11 +32,7 @@ import { processSlot } from './utils/compileSlots'
 import { createWrapper, VueWrapper } from './vueWrapper'
 import { attachEmitListener } from './emitMixin'
 import { createDataMixin } from './dataMixin'
-import {
-  MOUNT_COMPONENT_REF,
-  MOUNT_ELEMENT_ID,
-  MOUNT_PARENT_NAME
-} from './constants'
+import { MOUNT_COMPONENT_REF, MOUNT_PARENT_NAME } from './constants'
 import { stubComponents } from './stubs'
 
 // NOTE this should come from `vue`
@@ -241,7 +237,6 @@ export function mount(
       : { ...originalComponent }
 
   const el = document.createElement('div')
-  el.id = MOUNT_ELEMENT_ID
 
   if (options?.attachTo) {
     let to: Element | null
