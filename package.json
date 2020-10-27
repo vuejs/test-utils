@@ -39,7 +39,7 @@
     "tsd": "0.11.0",
     "typescript": "^3.7.5",
     "vue": "^3.0.1",
-    "vue-jest": "vuejs/vue-jest#next",
+    "vue-jest": "^5.0.0-alpha.5",
     "vue-router": "^4.0.0-alpha.14",
     "vuex": "^4.0.0-beta.1"
   },
