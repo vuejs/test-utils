@@ -30,7 +30,3 @@ export type GlobalMountOptions = {
   stubs?: Record<any, any>
   renderStubDefaultSlot?: boolean
 }
-
-export interface VueWrapperMeta {
-  isFunctionalComponent: boolean
-}

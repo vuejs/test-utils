@@ -36,7 +36,3 @@ export function mergeGlobalProperties(
     directives: { ...configGlobal.directives, ...mountGlobal.directives }
   }
 }
-
-export function isFunctionalComponent(component: any) {
-  return typeof component === 'function'
-}
