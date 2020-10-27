@@ -143,7 +143,6 @@ describe('emitted', () => {
       })
     }
 
-    // @ts-ignore - need to improve `mount` to support `FunctionalComponent`
     const wrapper = mount(Component, {
       props: {
         bar: 'bar',
