@@ -40,8 +40,8 @@
     "typescript": "^3.7.5",
     "vue": "^3.0.2",
     "vue-jest": "^5.0.0-alpha.5",
-    "vue-router": "^4.0.0-alpha.14",
-    "vuex": "^4.0.0-beta.1"
+    "vue-router": "^4.0.0-rc.1",
+    "vuex": "^4.0.0-beta.4"
   },
   "peerDependencies": {
     "vue": "^3.0.1"
