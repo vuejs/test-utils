@@ -134,10 +134,10 @@ describe('emitted', () => {
   })
 
   it('gives a useful warning for functional components', () => {
-    const Component: FunctionalComponent<{ bar: string; level: number }> = (
-      props,
-      ctx
-    ) => {
+    const Component: FunctionalComponent<
+      { bar: string; level: number },
+      { hello: (foo: string, bar: string) => void }
+    > = (props, ctx) => {
       return h(`h${props.level}`, {
         onClick: () => ctx.emit('hello', 'foo', props.bar)
       })

@@ -1,5 +1,10 @@
 import { expectError, expectType } from 'tsd'
-import { DefineComponent, defineComponent, reactive } from 'vue'
+import {
+  DefineComponent,
+  defineComponent,
+  FunctionalComponent,
+  reactive
+} from 'vue'
 import { mount } from '../src'
 
 const AppWithDefine = defineComponent({
@@ -177,3 +182,24 @@ mount(ShimComponent, {
     }
   }
 })
+
+// functional components
+declare const FunctionalComponent: FunctionalComponent<{
+  bar: string
+  level: number
+}>
+declare const FunctionalComponentEmit: FunctionalComponent<
+  {
+    bar: string
+    level: number
+  },
+  { hello: (foo: string, bar: string) => void }
+>
+
+mount(FunctionalComponent)
+mount(defineComponent(FunctionalComponent))
+
+mount(FunctionalComponentEmit)
+
+// @ts-ignore vue 3.0.2 doesn't work. FIX: https://github.com/vuejs/vue-next/pull/2494
+mount(defineComponent(FunctionalComponentEmit))
