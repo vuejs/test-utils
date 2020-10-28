@@ -66,17 +66,7 @@ export type ObjectEmitsOptions = Record<
   ((...args: any[]) => any) | null
 >
 export type EmitsOptions = ObjectEmitsOptions | string[]
-
-// Functional component
-// export function mount<
-//   TestedComponent extends FunctionalComponent<Props, E>,
-//   Props,
-//   E extends EmitsOptions = {}
-// >(
-//   originalComponent: TestedComponent,
-//   options?: MountingOptions<Props>
-// ): VueWrapper<ComponentPublicInstance<Props>>
-
+  
 // Functional component with emits
 export function mount<Props, E extends EmitsOptions = {}>(
   originalComponent: FunctionalComponent<Props, E>,
