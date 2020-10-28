@@ -11,7 +11,7 @@ import {
 import { createWrapperError } from './errorWrapper'
 import { TriggerOptions } from './createDomEvent'
 import { find, matches } from './utils/find'
-import { isFunctionalComponent } from './utils'
+import { isFunctionalComponent, mergeDeep } from './utils'
 
 export class VueWrapper<T extends ComponentPublicInstance> {
   private componentVM: T
@@ -224,6 +224,11 @@ export class VueWrapper<T extends ComponentPublicInstance> {
   findAll(selector: string): DOMWrapper<Element>[] {
     const results = this.parentElement.querySelectorAll(selector)
     return Array.from(results).map((element) => new DOMWrapper(element))
+  }
+
+  setData(data: Record<string, any>): Promise<void> {
+    mergeDeep(this.componentVM.$data, data)
+    return nextTick()
   }
 
   setProps(props: Record<string, any>): Promise<void> {
