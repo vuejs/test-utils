@@ -4,7 +4,6 @@ import {
   VNode,
   defineComponent,
   VNodeNormalizedChildren,
-  transformVNodeArgs,
   reactive,
   FunctionalComponent,
   ComponentPublicInstance,
@@ -27,7 +26,7 @@ import {
 
 import { config } from './config'
 import { GlobalMountOptions } from './types'
-import { mergeGlobalProperties, isFunctionalComponent } from './utils'
+import { mergeGlobalProperties } from './utils'
 import { processSlot } from './utils/compileSlots'
 import { createWrapper, VueWrapper } from './vueWrapper'
 import { attachEmitListener } from './emitMixin'
@@ -68,12 +67,9 @@ export type ObjectEmitsOptions = Record<
 >
 export type EmitsOptions = ObjectEmitsOptions | string[]
 
-// Functional component
-export function mount<
-  TestedComponent extends FunctionalComponent<Props>,
-  Props
->(
-  originalComponent: TestedComponent,
+// Functional component with emits
+export function mount<Props, E extends EmitsOptions = {}>(
+  originalComponent: FunctionalComponent<Props, E>,
   options?: MountingOptions<Props>
 ): VueWrapper<ComponentPublicInstance<Props>>
 
@@ -228,13 +224,25 @@ export function mount(
   options?: MountingOptions<any>
 ): VueWrapper<any> {
   // normalise the incoming component
-  const component =
-    typeof originalComponent === 'function'
-      ? defineComponent({
-          setup: (_, { attrs, slots }) => () =>
-            h(originalComponent, attrs, slots)
-        })
-      : { ...originalComponent }
+  let component
+
+  const functionalComponentEmits: Record<string, unknown[]> = {}
+
+  if (typeof originalComponent === 'function') {
+    // we need to wrap it like this so we can capture emitted events.
+    // we capture events using a mixin that mutates `emit` in `beforeCreate`,
+    // but functional components do not support mixins, so we need to wrap it
+    // and make it a non-functional component for testing purposes.
+    component = defineComponent({
+      setup: (_, { attrs, slots, emit }) => () => {
+        return h((props: any, ctx: any) =>
+          originalComponent(props, { ...ctx, ...attrs, emit, slots })
+        )
+      }
+    })
+  } else {
+    component = { ...originalComponent }
+  }
 
   const el = document.createElement('div')
 
@@ -400,14 +408,7 @@ export function mount(
   const vm = app.mount(el)
 
   const App = vm.$refs[MOUNT_COMPONENT_REF] as ComponentPublicInstance
-  return createWrapper(
-    app,
-    App,
-    {
-      isFunctionalComponent: isFunctionalComponent(originalComponent)
-    },
-    setProps
-  )
+  return createWrapper(app, App, setProps, functionalComponentEmits)
 }
 
 export const shallowMount: typeof mount = (component: any, options?: any) => {

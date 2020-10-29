@@ -3,34 +3,30 @@ import { ShapeFlags } from '@vue/shared'
 
 import { config } from './config'
 import { DOMWrapper } from './domWrapper'
-import {
-  FindAllComponentsSelector,
-  FindComponentSelector,
-  VueWrapperMeta
-} from './types'
+import { FindAllComponentsSelector, FindComponentSelector } from './types'
 import { createWrapperError } from './errorWrapper'
 import { TriggerOptions } from './createDomEvent'
 import { find, matches } from './utils/find'
-import { isFunctionalComponent, mergeDeep } from './utils'
+import { mergeDeep } from './utils'
 
 export class VueWrapper<T extends ComponentPublicInstance> {
   private componentVM: T
   private rootVM: ComponentPublicInstance
   private __app: App | null
   private __setProps: ((props: Record<string, any>) => void) | undefined
-  private __isFunctionalComponent: boolean
+  private __functionalEmits: Record<string, unknown[]>
 
   constructor(
     app: App | null,
     vm: ComponentPublicInstance,
     setProps?: (props: Record<string, any>) => void,
-    meta?: VueWrapperMeta
+    functionalEmits?: Record<string, unknown[]>
   ) {
     this.__app = app
     this.rootVM = vm.$root!
     this.componentVM = vm as T
     this.__setProps = setProps
-    this.__isFunctionalComponent = meta.isFunctionalComponent
+    this.__functionalEmits = functionalEmits
     // plugins hook
     config.plugins.VueWrapper.extend(this)
   }
@@ -79,12 +75,6 @@ export class VueWrapper<T extends ComponentPublicInstance> {
   emitted<T = unknown>(): Record<string, T[]>
   emitted<T = unknown>(eventName?: string): T[]
   emitted<T = unknown>(eventName?: string): T[] | Record<string, T[]> {
-    if (this.__isFunctionalComponent) {
-      console.warn(
-        '[Vue Test Utils]: capture events emitted from functional components is currently not supported.'
-      )
-    }
-
     if (eventName) {
       const emitted = (this.vm['__emitted'] as Record<string, T[]>)[eventName]
       return emitted
@@ -151,17 +141,13 @@ export class VueWrapper<T extends ComponentPublicInstance> {
     if (typeof selector === 'object' && 'ref' in selector) {
       const result = this.vm.$refs[selector.ref]
       if (result) {
-        return createWrapper(null, result as T, {
-          isFunctionalComponent: isFunctionalComponent(result)
-        })
+        return createWrapper(null, result as T)
       }
     }
 
     const result = find(this.vm.$.subTree, selector)
     if (result.length) {
-      return createWrapper(null, result[0], {
-        isFunctionalComponent: isFunctionalComponent(result)
-      })
+      return createWrapper(null, result[0])
     }
 
     // https://github.com/vuejs/vue-test-utils-next/issues/211
@@ -169,9 +155,7 @@ export class VueWrapper<T extends ComponentPublicInstance> {
     // eg: mount(Comp).findComponent(Comp)
     // this is the same as doing `wrapper.vm`, but we keep this behavior for back compat.
     if (matches(this.vm.$.vnode, selector)) {
-      return createWrapper(null, this.vm.$.vnode.component.proxy, {
-        isFunctionalComponent: false
-      })
+      return createWrapper(null, this.vm.$.vnode.component.proxy)
     }
 
     return createWrapperError('VueWrapper')
@@ -207,11 +191,7 @@ export class VueWrapper<T extends ComponentPublicInstance> {
   }
 
   findAllComponents(selector: FindAllComponentsSelector): VueWrapper<T>[] {
-    return find(this.vm.$.subTree, selector).map((c) =>
-      createWrapper(null, c, {
-        isFunctionalComponent: isFunctionalComponent(c)
-      })
-    )
+    return find(this.vm.$.subTree, selector).map((c) => createWrapper(null, c))
   }
 
   findAll<K extends keyof HTMLElementTagNameMap>(
@@ -266,8 +246,8 @@ export class VueWrapper<T extends ComponentPublicInstance> {
 export function createWrapper<T extends ComponentPublicInstance>(
   app: App | null,
   vm: ComponentPublicInstance,
-  meta: VueWrapperMeta,
-  setProps?: (props: Record<string, any>) => void
+  setProps?: (props: Record<string, any>) => void,
+  functionalComponentEmits?: Record<string, unknown[]>
 ): VueWrapper<T> {
-  return new VueWrapper<T>(app, vm, setProps, meta)
+  return new VueWrapper<T>(app, vm, setProps, functionalComponentEmits)
 }

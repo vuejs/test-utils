@@ -1,4 +1,4 @@
-import { defineComponent, h } from 'vue'
+import { defineComponent, FunctionalComponent, h, SetupContext } from 'vue'
 
 import { mount } from '../src'
 
@@ -134,14 +134,24 @@ describe('emitted', () => {
   })
 
   it('gives a useful warning for functional components', () => {
-    const Component = (_, ctx) => {
-      return h('button', { onClick: () => ctx.emit('hello', 'foo', 'bar') })
+    const Component: FunctionalComponent<
+      { bar: string; level: number },
+      { hello: (foo: string, bar: string) => void }
+    > = (props, ctx) => {
+      return h(`h${props.level}`, {
+        onClick: () => ctx.emit('hello', 'foo', props.bar)
+      })
     }
 
-    mount(Component).emitted()
+    const wrapper = mount(Component, {
+      props: {
+        bar: 'bar',
+        level: 1
+      }
+    })
 
-    expect(console.warn).toHaveBeenCalledWith(
-      '[Vue Test Utils]: capture events emitted from functional components is currently not supported.'
-    )
+    wrapper.find('h1').trigger('click')
+    expect(wrapper.emitted('hello')).toHaveLength(1)
+    expect(wrapper.emitted('hello')[0]).toEqual(['foo', 'bar'])
   })
 })

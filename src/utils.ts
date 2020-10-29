@@ -37,10 +37,6 @@ export function mergeGlobalProperties(
   }
 }
 
-export function isFunctionalComponent(component: any) {
-  return typeof component === 'function'
-}
-
 // https://stackoverflow.com/a/48218209
 export const mergeDeep = (
   target: Record<string, any>,
