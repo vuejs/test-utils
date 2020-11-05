@@ -4,7 +4,7 @@ import { VueWrapper } from './vueWrapper'
 import { DOMWrapper } from './domWrapper'
 
 interface GlobalConfigOptions {
-  global: GlobalMountOptions
+  global: Required<GlobalMountOptions>
   plugins: {
     VueWrapper: Pluggable<VueWrapper<ComponentPublicInstance>>
     DOMWrapper: Pluggable<DOMWrapper<Element>>
@@ -56,7 +56,15 @@ export const config: GlobalConfigOptions = {
     stubs: {
       transition: true,
       'transition-group': true
-    }
+    },
+    provide: {},
+    components: {},
+    config: {},
+    directives: {},
+    mixins: [],
+    mocks: {},
+    plugins: [],
+    renderStubDefaultSlot: false
   },
   plugins: {
     VueWrapper: new Pluggable(),
