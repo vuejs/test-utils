@@ -21,11 +21,13 @@ function createEntry(options) {
     isBrowser
   } = options
 
+  const isEsmBrowser = format === 'es' && isBrowser
+
   const config = {
     input,
     external: [
       'vue',
-      '@vue/compiler-dom',
+      isEsmBrowser ? '@vue/compiler-dom/dist/compiler-dom.esm-browser'  : '@vue/compiler-dom',
     ],
     plugins: [
       replace({
@@ -47,6 +49,9 @@ function createEntry(options) {
 
   if (format === 'es') {
     config.output.file = pkg.module
+    if (isBrowser) {
+      config.output.file = 'dist/vue-test-utils.esm-browser.js'
+    }
   }
   if (format === 'cjs') {
     config.output.file = pkg.main
@@ -72,6 +77,7 @@ function createEntry(options) {
 
 export default [
   createEntry({ format: 'es', input: 'src/index.ts', isBrowser: false }),
+  createEntry({ format: 'es', input: 'src/index.ts', isBrowser: true }),
   createEntry({ format: 'iife', input: 'src/index.ts', isBrowser: true }),
   createEntry({ format: 'cjs', input: 'src/index.ts', isBrowser: false }),
 ]
