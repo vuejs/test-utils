@@ -1,4 +1,4 @@
-import { defineComponent, nextTick } from 'vue'
+import { defineComponent, h, nextTick } from 'vue'
 import { mount } from '../src'
 import Hello from './components/Hello.vue'
 import ComponentWithoutName from './components/ComponentWithoutName.vue'
@@ -268,5 +268,25 @@ describe('findComponent', () => {
     expect(wrapper.findComponent(compB).exists()).toBe(true)
     expect(wrapper.findComponent(compC).exists()).toBe(true)
     expect(wrapper.findComponent(SlotMain).exists()).toBe(true)
+  })
+
+  it('finds a functional component', () => {
+    const Func = () => h('h2')
+    const wrapper = mount({
+      setup() {
+        return () => h('span', {}, h(Func))
+      }
+    })
+    expect(wrapper.findComponent(Func).exists()).toBe(true)
+  })
+
+  it('finds a functional component in a fragment', () => {
+    const Func = () => h('h2')
+    const wrapper = mount({
+      setup() {
+        return () => [h('span'), h('span', {}, h(Func))]
+      }
+    })
+    expect(wrapper.findComponent(Func).exists()).toBe(true)
   })
 })

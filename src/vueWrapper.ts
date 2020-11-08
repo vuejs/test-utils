@@ -23,7 +23,8 @@ export class VueWrapper<T extends ComponentPublicInstance> {
     functionalEmits?: Record<string, unknown[]>
   ) {
     this.__app = app
-    this.rootVM = vm.$root!
+    // root is null on functional components
+    this.rootVM = vm?.$root
     this.componentVM = vm as T
     this.__setProps = setProps
     this.__functionalEmits = functionalEmits
