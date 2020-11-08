@@ -20,6 +20,10 @@ export function matches(
   // do not return none Vue components
   if (!node.component) return false
 
+  if (node.type === selector) {
+    return true
+  }
+
   if (typeof selector === 'string') {
     return node.el?.matches?.(selector)
   }
