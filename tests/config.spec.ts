@@ -10,7 +10,10 @@ describe('config', () => {
       mixins: [],
       plugins: [],
       mocks: {},
-      provide: {}
+      provide: {},
+      stubs: {},
+      config: {},
+      renderStubDefaultSlot: false
     }
 
     jest.clearAllMocks()
