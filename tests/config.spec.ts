@@ -5,12 +5,15 @@ import Hello from './components/Hello.vue'
 describe('config', () => {
   beforeEach(() => {
     config.global = {
-      components: undefined,
-      directives: undefined,
-      mixins: undefined,
-      plugins: undefined,
-      mocks: undefined,
-      provide: undefined
+      components: {},
+      directives: {},
+      mixins: [],
+      plugins: [],
+      mocks: {},
+      provide: {},
+      stubs: {},
+      config: {},
+      renderStubDefaultSlot: false
     }
 
     jest.clearAllMocks()
