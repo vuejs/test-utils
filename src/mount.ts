@@ -26,7 +26,12 @@ import {
 
 import { config } from './config'
 import { GlobalMountOptions } from './types'
-import { isClassComponent, mergeGlobalProperties } from './utils'
+import {
+  isClassComponent,
+  isFunctionalComponent,
+  isObjectComponent,
+  mergeGlobalProperties
+} from './utils'
 import { processSlot } from './utils/compileSlots'
 import { createWrapper, VueWrapper } from './vueWrapper'
 import { attachEmitListener } from './emitMixin'
@@ -231,11 +236,11 @@ export function mount(
   options?: MountingOptions<any>
 ): VueWrapper<any> {
   // normalise the incoming component
-  let component = originalComponent
+  let component
 
   const functionalComponentEmits: Record<string, unknown[]> = {}
 
-  if (typeof originalComponent === 'function' && !isClassComponent(component)) {
+  if (isFunctionalComponent(originalComponent)) {
     // we need to wrap it like this so we can capture emitted events.
     // we capture events using a mixin that mutates `emit` in `beforeCreate`,
     // but functional components do not support mixins, so we need to wrap it
@@ -247,6 +252,10 @@ export function mount(
         )
       }
     })
+  } else if (isObjectComponent(originalComponent)) {
+    component = { ...originalComponent }
+  } else {
+    component = originalComponent
   }
 
   const el = document.createElement('div')

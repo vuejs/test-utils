@@ -68,3 +68,11 @@ export const mergeDeep = (
 export function isClassComponent(component: any) {
   return '__vccBase' in component
 }
+
+export function isFunctionalComponent(component: any) {
+  return typeof component === 'function' && !isClassComponent(component)
+}
+
+export function isObjectComponent(component: any) {
+  return typeof component !== 'function' && !isClassComponent(component)
+}
