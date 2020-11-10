@@ -26,13 +26,19 @@ import {
 
 import { config } from './config'
 import { GlobalMountOptions } from './types'
-import { mergeGlobalProperties } from './utils'
+import {
+  isClassComponent,
+  isFunctionalComponent,
+  isObjectComponent,
+  mergeGlobalProperties
+} from './utils'
 import { processSlot } from './utils/compileSlots'
 import { createWrapper, VueWrapper } from './vueWrapper'
 import { attachEmitListener } from './emitMixin'
 import { createDataMixin } from './dataMixin'
 import { MOUNT_COMPONENT_REF, MOUNT_PARENT_NAME } from './constants'
 import { stubComponents } from './stubs'
+import { VueConstructor } from 'vue-class-component'
 
 // NOTE this should come from `vue`
 type PublicProps = VNodeProps & AllowedComponentProps & ComponentCustomProps
@@ -66,6 +72,12 @@ export type ObjectEmitsOptions = Record<
   ((...args: any[]) => any) | null
 >
 export type EmitsOptions = ObjectEmitsOptions | string[]
+
+// Class component
+export function mount(
+  originalComponent: VueConstructor,
+  options?: MountingOptions<any>
+): VueWrapper<ComponentPublicInstance<any>>
 
 // Functional component with emits
 export function mount<Props, E extends EmitsOptions = {}>(
@@ -228,7 +240,7 @@ export function mount(
 
   const functionalComponentEmits: Record<string, unknown[]> = {}
 
-  if (typeof originalComponent === 'function') {
+  if (isFunctionalComponent(originalComponent)) {
     // we need to wrap it like this so we can capture emitted events.
     // we capture events using a mixin that mutates `emit` in `beforeCreate`,
     // but functional components do not support mixins, so we need to wrap it
@@ -240,8 +252,10 @@ export function mount(
         )
       }
     })
-  } else {
+  } else if (isObjectComponent(originalComponent)) {
     component = { ...originalComponent }
+  } else {
+    component = originalComponent
   }
 
   const el = document.createElement('div')
