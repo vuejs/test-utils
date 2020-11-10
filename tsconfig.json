@@ -6,6 +6,7 @@
     "lib": ["DOM", "ES2015", "ES2017"],
     "moduleResolution": "node",
     "esModuleInterop": true,
+    "experimentalDecorators": true,
     "allowSyntheticDefaultImports": true,
     "baseUrl": ".",
     "paths": {

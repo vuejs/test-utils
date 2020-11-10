@@ -64,3 +64,7 @@ export const mergeDeep = (
 
   return target
 }
+
+export function isClassComponent(component: any) {
+  return '__vccBase' in component
+}
