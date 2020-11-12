@@ -66,7 +66,13 @@ export const mergeDeep = (
 }
 
 export function isClassComponent(component: any) {
-  return '__vccBase' in component
+  // TypeScript
+  return (
+    component.toString().includes('_super.apply(this, arguments) || this') ||
+    // native ES6
+    (typeof component === 'function' &&
+      /^\s*class\s+/.test(component.toString()))
+  )
 }
 
 export function isFunctionalComponent(component: any) {
