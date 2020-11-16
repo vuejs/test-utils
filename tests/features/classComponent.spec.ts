@@ -93,7 +93,7 @@ describe('class component', () => {
     expect(wrapper.vm.b).toBe(3)
   })
 
-  it.only('works with shallow mount and SFC', async () => {
+  it('works with shallow mount and SFC', async () => {
     const wrapper = mount(ClassComponent, {
       props: {
         msg: 'Props Message'
