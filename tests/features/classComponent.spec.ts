@@ -93,11 +93,16 @@ describe('class component', () => {
     expect(wrapper.vm.b).toBe(3)
   })
 
-  it('works with shallow mount and SFC', async () => {
+  it.only('works with shallow mount and SFC', async () => {
     const wrapper = mount(ClassComponent, {
+      props: {
+        msg: 'Props Message'
+      },
       shallow: true
     })
+    expect(wrapper.get('[data-computed]').text()).toBe('Message: Props Message')
+    expect(wrapper.get('[data-props]').text()).toBe('Props Message')
     await wrapper.get('button').trigger('click')
-    expect(wrapper.get('h1').text()).toMatch('Hello')
+    expect(wrapper.get('[data-methods]').text()).toBe('Updated')
   })
 })
