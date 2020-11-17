@@ -41,7 +41,7 @@
     "typescript": "^3.7.5",
     "vue": "^3.0.2",
     "vue-class-component": "^8.0.0-beta.4",
-    "vue-jest": "^5.0.0-alpha.5",
+    "vue-jest": "^5.0.0-alpha.6",
     "vue-router": "^4.0.0-rc.1",
     "vuex": "^4.0.0-beta.4"
   },

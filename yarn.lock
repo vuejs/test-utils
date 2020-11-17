@@ -6164,10 +6164,10 @@ vue-class-component@^8.0.0-beta.4:
   resolved "https://registry.yarnpkg.com/vue-class-component/-/vue-class-component-8.0.0-beta.4.tgz#bff95cdd44eb450a4a4e54b69da22099613d8071"
   integrity sha512-+QXBhVH/Mz8dEC+IU7e8XXM54Tn0Aj9/saybeuK8XmhQiJlcijCB8kB7CYpBEMpHWaA+DoLr6LvHMbclYRCwZQ==
 
-vue-jest@^5.0.0-alpha.5:
-  version "5.0.0-alpha.5"
-  resolved "https://registry.yarnpkg.com/vue-jest/-/vue-jest-5.0.0-alpha.5.tgz#a24b7569ba2078836a316033f283e151afc4906b"
-  integrity sha512-/ddNgiJYEtStK4kfTgIRSpBrkkrFepsCyu6qhIi2ph8rJk8OaI6HJANMjzD2tz2mnGqQOf0mTyZICVfDnLLZHA==
+vue-jest@^5.0.0-alpha.6:
+  version "5.0.0-alpha.6"
+  resolved "https://registry.yarnpkg.com/vue-jest/-/vue-jest-5.0.0-alpha.6.tgz#76615809ba84278e7cd3b7d6d3cc7f18caa2e893"
+  integrity sha512-B0GtGnAZhdS51hoLMqAQimO0574sPBHAyev8YNFNioKk1TbAMCUfDoUDxkPvVKXxeKdWBnXA+kgR9+KP1FizXA==
   dependencies:
     "@babel/plugin-transform-modules-commonjs" "^7.2.0"
     chalk "^2.1.0"
