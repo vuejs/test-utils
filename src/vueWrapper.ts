@@ -14,20 +14,17 @@ export class VueWrapper<T extends ComponentPublicInstance> {
   private rootVM: ComponentPublicInstance
   private __app: App | null
   private __setProps: ((props: Record<string, any>) => void) | undefined
-  private __functionalEmits: Record<string, unknown[]>
 
   constructor(
     app: App | null,
     vm: ComponentPublicInstance,
-    setProps?: (props: Record<string, any>) => void,
-    functionalEmits?: Record<string, unknown[]>
+    setProps?: (props: Record<string, any>) => void
   ) {
     this.__app = app
     // root is null on functional components
     this.rootVM = vm?.$root
     this.componentVM = vm as T
     this.__setProps = setProps
-    this.__functionalEmits = functionalEmits
     // plugins hook
     config.plugins.VueWrapper.extend(this)
   }
@@ -247,8 +244,7 @@ export class VueWrapper<T extends ComponentPublicInstance> {
 export function createWrapper<T extends ComponentPublicInstance>(
   app: App | null,
   vm: ComponentPublicInstance,
-  setProps?: (props: Record<string, any>) => void,
-  functionalComponentEmits?: Record<string, unknown[]>
+  setProps?: (props: Record<string, any>) => void
 ): VueWrapper<T> {
-  return new VueWrapper<T>(app, vm, setProps, functionalComponentEmits)
+  return new VueWrapper<T>(app, vm, setProps)
 }
