@@ -49,7 +49,7 @@ type SlotDictionary = {
   [key: string]: Slot
 }
 
-interface MountingOptions<Props, Data = {}> {
+export interface MountingOptions<Props, Data = {}> {
   data?: () => {} extends Data ? any : Data extends object ? Partial<Data> : any
   props?: Props
   /** @deprecated */
