@@ -27,7 +27,6 @@ import {
 import { config } from './config'
 import { GlobalMountOptions } from './types'
 import {
-  isClassComponent,
   isFunctionalComponent,
   isObjectComponent,
   mergeGlobalProperties
