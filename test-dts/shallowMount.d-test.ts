@@ -119,5 +119,5 @@ class ClassComponent extends Vue {
 }
 
 // @ts-expect-error it requires an argument
-expectError(mount(ClassComponent, {}).vm.changeMessage())
+expectError(shallowMount(ClassComponent, {}).vm.changeMessage())
 shallowMount(ClassComponent, {}).vm.changeMessage('')

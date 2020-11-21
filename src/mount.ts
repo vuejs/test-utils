@@ -27,7 +27,6 @@ import {
 import { config } from './config'
 import { GlobalMountOptions } from './types'
 import {
-  isClassComponent,
   isFunctionalComponent,
   isObjectComponent,
   mergeGlobalProperties
@@ -73,9 +72,12 @@ export type ObjectEmitsOptions = Record<
 export type EmitsOptions = ObjectEmitsOptions | string[]
 
 // Class component
-export function mount<V>(
-  originalComponent: new (...args: any[]) => V,
-  options?: MountingOptions<any>
+export function mount<V, P>(
+  originalComponent: {
+    new (...args: any[]): V
+    props(Props: P)
+  },
+  options?: MountingOptions<P>
 ): VueWrapper<ComponentPublicInstance<V>>
 
 // Functional component with emits
