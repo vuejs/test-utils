@@ -5,6 +5,7 @@ import {
   FunctionalComponent,
   reactive
 } from 'vue'
+import { Options, Vue } from 'vue-class-component'
 import { mount } from '../src'
 
 const AppWithDefine = defineComponent({
@@ -203,3 +204,25 @@ mount(FunctionalComponentEmit)
 
 // @ts-ignore vue 3.0.2 doesn't work. FIX: https://github.com/vuejs/vue-next/pull/2494
 mount(defineComponent(FunctionalComponentEmit))
+
+// class component
+
+@Options({
+  props: {
+    msg: String
+  }
+})
+class ClassComponent extends Vue {
+  dataText: string = ''
+  get computedMsg(): string {
+    return `Message: ${(this.$props as any).msg}`
+  }
+
+  changeMessage(text: string): void {
+    this.dataText = 'Updated'
+  }
+}
+
+// @ts-expect-error it requires an argument
+expectError(mount(ClassComponent, {}).vm.changeMessage())
+mount(ClassComponent, {}).vm.changeMessage('')

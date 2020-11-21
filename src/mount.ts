@@ -38,7 +38,6 @@ import { attachEmitListener } from './emitMixin'
 import { createDataMixin } from './dataMixin'
 import { MOUNT_COMPONENT_REF, MOUNT_PARENT_NAME } from './constants'
 import { stubComponents } from './stubs'
-import { VueConstructor } from 'vue-class-component'
 
 // NOTE this should come from `vue`
 type PublicProps = VNodeProps & AllowedComponentProps & ComponentCustomProps
@@ -74,10 +73,10 @@ export type ObjectEmitsOptions = Record<
 export type EmitsOptions = ObjectEmitsOptions | string[]
 
 // Class component
-export function mount(
-  originalComponent: VueConstructor,
+export function mount<V>(
+  originalComponent: new (...args: any[]) => V,
   options?: MountingOptions<any>
-): VueWrapper<ComponentPublicInstance<any>>
+): VueWrapper<ComponentPublicInstance<V>>
 
 // Functional component with emits
 export function mount<Props, E extends EmitsOptions = {}>(

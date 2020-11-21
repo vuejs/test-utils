@@ -1,5 +1,6 @@
 import { expectError, expectType } from 'tsd'
 import { defineComponent } from 'vue'
+import { Options, Vue } from 'vue-class-component'
 import { shallowMount } from '../src'
 
 const AppWithDefine = defineComponent({
@@ -99,3 +100,24 @@ expectError(
 shallowMount(AppWithoutProps, {
   props: { b: 'Hello' } as never
 })
+
+// class component
+@Options({
+  props: {
+    msg: String
+  }
+})
+class ClassComponent extends Vue {
+  dataText: string = ''
+  get computedMsg(): string {
+    return `Message: ${(this.$props as any).msg}`
+  }
+
+  changeMessage(text: string): void {
+    this.dataText = 'Updated'
+  }
+}
+
+// @ts-expect-error it requires an argument
+expectError(mount(ClassComponent, {}).vm.changeMessage())
+shallowMount(ClassComponent, {}).vm.changeMessage('')
