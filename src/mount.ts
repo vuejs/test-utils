@@ -71,11 +71,21 @@ export type ObjectEmitsOptions = Record<
 >
 export type EmitsOptions = ObjectEmitsOptions | string[]
 
-// Class component
+// Class component - no props
+export function mount<V>(
+  originalComponent: {
+    new (...args: any[]): V
+    registerHooks(keys: string[]): void
+  },
+  options?: MountingOptions<any>
+): VueWrapper<ComponentPublicInstance<V>>
+
+// Class component - props
 export function mount<V, P>(
   originalComponent: {
     new (...args: any[]): V
-    props(Props: P)
+    props(Props: P): any
+    registerHooks(keys: string[]): void
   },
   options?: MountingOptions<P>
 ): VueWrapper<ComponentPublicInstance<V>>
