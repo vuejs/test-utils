@@ -1,4 +1,5 @@
-import { mount, shallowMount, MountingOptions } from './mount'
+import { mount, shallowMount } from './mount'
+import { MountingOptions } from './types'
 import { RouterLinkStub } from './components/RouterLinkStub'
 import { VueWrapper } from './vueWrapper'
 import { DOMWrapper } from './domWrapper'

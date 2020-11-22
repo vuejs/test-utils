@@ -1,7 +1,6 @@
 import {
   h,
   createApp,
-  VNode,
   defineComponent,
   VNodeNormalizedChildren,
   reactive,
@@ -11,7 +10,6 @@ import {
   ComponentOptionsWithArrayProps,
   ComponentOptionsWithoutProps,
   ExtractPropTypes,
-  Component,
   WritableComputedOptions,
   ComponentPropsOptions,
   AppConfig,
@@ -25,7 +23,7 @@ import {
 } from 'vue'
 
 import { config } from './config'
-import { GlobalMountOptions } from './types'
+import { MountingOptions, Slot } from './types'
 import {
   isFunctionalComponent,
   isObjectComponent,
@@ -41,26 +39,6 @@ import { VueConstructor } from 'vue-class-component'
 
 // NOTE this should come from `vue`
 type PublicProps = VNodeProps & AllowedComponentProps & ComponentCustomProps
-
-type Slot = VNode | string | { render: Function } | Function | Component
-
-type SlotDictionary = {
-  [key: string]: Slot
-}
-
-export interface MountingOptions<Props, Data = {}> {
-  data?: () => {} extends Data ? any : Data extends object ? Partial<Data> : any
-  props?: Props
-  /** @deprecated */
-  propsData?: Props
-  attrs?: Record<string, unknown>
-  slots?: SlotDictionary & {
-    default?: Slot
-  }
-  global?: GlobalMountOptions
-  attachTo?: HTMLElement | string
-  shallow?: boolean
-}
 
 export type ComputedOptions = Record<
   string,
