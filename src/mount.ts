@@ -410,8 +410,8 @@ export function mount(
   // compnents, too, such as <router-link> and <router-view>
   // so we register those globally.
   // https://github.com/vuejs/vue-test-utils-next/issues/249
-  if (options?.global?.stubs) {
-    for (const [name, stub] of Object.entries(options.global.stubs)) {
+  if (global?.stubs) {
+    for (const [name, stub] of Object.entries(global.stubs)) {
       const tag = hyphenate(name)
       if (stub === true) {
         // default stub.
