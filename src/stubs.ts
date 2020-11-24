@@ -25,7 +25,7 @@ function getSlots(ctx: ComponentPublicInstance): Slots | undefined {
   return !config.renderStubDefaultSlot ? undefined : ctx.$slots
 }
 
-const createStub = ({ name, props }: StubOptions): ComponentOptions => {
+export const createStub = ({ name, props }: StubOptions): ComponentOptions => {
   const anonName = 'anonymous-stub'
   const tag = name ? `${hyphenate(name)}-stub` : anonName
 

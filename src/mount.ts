@@ -34,7 +34,8 @@ import { createWrapper, VueWrapper } from './vueWrapper'
 import { attachEmitListener } from './emitMixin'
 import { createDataMixin } from './dataMixin'
 import { MOUNT_COMPONENT_REF, MOUNT_PARENT_NAME } from './constants'
-import { stubComponents } from './stubs'
+import { createStub, stubComponents } from './stubs'
+import { hyphenate } from './utils/vueShared'
 
 // NOTE this should come from `vue`
 type PublicProps = VNodeProps & AllowedComponentProps & ComponentCustomProps
@@ -404,6 +405,23 @@ export function mount(
   // even if we are using `mount`, we will still
   // stub out Transition and Transition Group by default.
   stubComponents(global.stubs, options?.shallow)
+
+  // users expect stubs to work with globally registered
+  // compnents, too, such as <router-link> and <router-view>
+  // so we register those globally.
+  // https://github.com/vuejs/vue-test-utils-next/issues/249
+  if (options?.global?.stubs) {
+    for (const [name, stub] of Object.entries(options.global.stubs)) {
+      const tag = hyphenate(name)
+      if (stub === true) {
+        // default stub.
+        app.component(tag, createStub({ name, props: {} }))
+      } else {
+        // user has provided a custom implementation.
+        app.component(tag, stub)
+      }
+    }
+  }
 
   // mount the app!
   const vm = app.mount(el)
