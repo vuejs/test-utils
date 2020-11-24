@@ -12,6 +12,6 @@ export const RouterLinkStub = defineComponent({
   },
 
   render() {
-    return h('a', undefined, this.$slots.default())
+    return h('a', undefined, this.$slots?.default?.())
   }
 })

@@ -1,6 +1,6 @@
-import { h, ComponentOptions } from 'vue'
+import { h, ComponentOptions, defineComponent } from 'vue'
 
-import { config, mount } from '../../src'
+import { config, mount, RouterLinkStub } from '../../src'
 import Hello from '../components/Hello.vue'
 import ComponentWithoutName from '../components/ComponentWithoutName.vue'
 import ComponentWithSlots from '../components/ComponentWithSlots.vue'
@@ -35,6 +35,31 @@ describe('mounting options: stubs', () => {
     })
 
     expect(wrapper.html()).toBe('<div></div><foo-stub></foo-stub>')
+  })
+
+  // https://github.com/vuejs/vue-test-utils-next/issues/249
+  it('applies stubs globally', () => {
+    const Comp = defineComponent({
+      template: '<div><foo /><router-link to="/foo" /><router-view /></div>'
+    })
+    const wrapper = mount(Comp, {
+      global: {
+        stubs: {
+          Foo: true,
+          RouterLink: RouterLinkStub,
+          RouterView: defineComponent({
+            render() {
+              return h('span')
+            }
+          })
+        }
+      }
+    })
+
+    expect(wrapper.html()).toBe(
+      '<div><foo-stub></foo-stub><a></a><span></span></div>'
+    )
+    expect(wrapper.getComponent(RouterLinkStub).vm.to).toBe('/foo')
   })
 
   it('stubs a functional component by its variable declaration name', () => {
