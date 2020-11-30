@@ -1,6 +1,7 @@
 <script setup lang="ts">
 // imported components are also directly usable in template
 import { ref } from 'vue'
+import Hello from './Hello.vue'
 
 // write Composition API code just like in a normal setup()
 // but no need to manually return everything
@@ -10,4 +11,5 @@ const inc = () => { count.value++ }
 
 <template>
   <button @click="inc">{{ count }}</button>
+  <Hello />
 </template>

@@ -425,12 +425,20 @@ export function mount(
 
   // mount the app!
   const vm = app.mount(el)
-  const appRef = vm.$refs[MOUNT_COMPONENT_REF] as ComponentPublicInstance
 
+  // Ingore Avoid app logic that relies on enumerating keys on a component instance... warning
   const warnSave = console.warn
   console.warn = () => {}
+
+  // get `vm`.
+  // for some unknown reason, getting the `vm` for components using `<script setup>`
+  // as of Vue 3.0.3 works differently.
+  // if `appRef` has keys, use that (vm always has keys like $el, $props etc).
+  // if not, use the return value from app.mount.
+  const appRef = vm.$refs[MOUNT_COMPONENT_REF] as ComponentPublicInstance
   const $vm = Reflect.ownKeys(appRef).length ? appRef : vm
   console.warn = warnSave
+
   return createWrapper(app, $vm, setProps)
 }
 

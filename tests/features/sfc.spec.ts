@@ -11,6 +11,8 @@ describe('sfc', () => {
   // rfc: https://github.com/vuejs/rfcs/pull/228
   it('works with <script setup> (as of Vue 3.0.3)', async () => {
     const wrapper = mount(ScriptSetup)
+    expect(wrapper.findComponent(Hello).exists()).toBe(true)
+
     await wrapper.find('button').trigger('click')
     expect(wrapper.html()).toContain('1')
   })
