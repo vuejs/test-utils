@@ -425,9 +425,13 @@ export function mount(
 
   // mount the app!
   const vm = app.mount(el)
+  const appRef = vm.$refs[MOUNT_COMPONENT_REF] as ComponentPublicInstance
 
-  const App = vm.$refs[MOUNT_COMPONENT_REF] as ComponentPublicInstance
-  return createWrapper(app, App, setProps)
+  const warnSave = console.warn
+  console.warn = () => {}
+  const $vm = Reflect.ownKeys(appRef).length ? appRef : vm
+  console.warn = warnSave
+  return createWrapper(app, $vm, setProps)
 }
 
 export const shallowMount: typeof mount = (component: any, options?: any) => {
