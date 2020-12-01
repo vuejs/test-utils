@@ -1,6 +1,6 @@
 {
   "name": "@vue/test-utils",
-  "version": "2.0.0-beta.11",
+  "version": "2.0.0-beta.12",
   "license": "MIT",
   "main": "dist/vue-test-utils.cjs.js",
   "browser": "dist/vue-test-utils.browser.js",
@@ -41,7 +41,7 @@
     "typescript": "^3.7.5",
     "vue": "3.0.3",
     "vue-class-component": "^8.0.0-beta.4",
-    "vue-jest": "^5.0.0-alpha.6",
+    "vue-jest": "^5.0.0-alpha.7",
     "vue-router": "^4.0.0-rc.1",
     "vuex": "^4.0.0-beta.4"
   },
