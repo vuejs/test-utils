@@ -104,7 +104,10 @@ export function mount<
     Props,
     Defaults
   >,
-  options?: MountingOptions<Props, D>
+  options?: MountingOptions<
+    Partial<Defaults> & Omit<Props & PublicProps, keyof Defaults>,
+    D
+  >
 ): VueWrapper<
   InstanceType<
     DefineComponent<

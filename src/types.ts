@@ -4,7 +4,8 @@ import {
   Directive,
   Plugin,
   AppConfig,
-  VNode
+  VNode,
+  VNodeProps
 } from 'vue'
 
 interface RefSelector {
@@ -32,7 +33,14 @@ type SlotDictionary = {
   [key: string]: Slot
 }
 
-export interface MountingOptions<Props, Data = {}> {
+type RawProps = VNodeProps & {
+  // used to differ from a single VNode object as children
+  __v_isVNode?: never
+  // used to differ from Array children
+  [Symbol.iterator]?: never
+} & Record<string, any>
+
+export interface MountingOptions<P, Data = {}> {
   /**
    * Overrides component's default data. Must be a function.
    * @see https://vue-test-utils.vuejs.org/v2/api/#data
@@ -42,11 +50,11 @@ export interface MountingOptions<Props, Data = {}> {
    * Sets component props when mounted.
    * @see https://vue-test-utils.vuejs.org/v2/api/#props
    */
-  props?: Props
+  props?: (RawProps & P) | ({} extends P ? null : never)
   /**
    * @deprecated use `data` instead.
    */
-  propsData?: Props
+  propsData?: P
   /**
    * Sets component attributes when mounted.
    * @see https://vue-test-utils.vuejs.org/v2/api/#attrs

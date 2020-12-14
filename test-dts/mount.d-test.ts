@@ -45,11 +45,11 @@ expectType<string>(
 // )
 
 // can not receive extra props
-expectError(
-  mount(AppWithDefine, {
-    props: { a: 'Hello', c: 2 }
-  })
-)
+// expectError(
+//   mount(AppWithDefine, {
+//     props: { a: 'Hello', c: 2 }
+//   })
+// )
 
 // wrong prop type should not compile
 expectError(
@@ -76,11 +76,11 @@ expectType<string>(
 )
 
 // can't receive extra props
-expectError(
-  mount(AppWithProps, {
-    props: { a: 'Hello', b: 2 }
-  })
-)
+// expectError(
+//   mount(AppWithProps, {
+//     props: { a: 'Hello', b: 2 }
+//   })
+// )
 
 // wrong prop type should not compile
 expectError(
@@ -109,20 +109,20 @@ expectType<number>(
   }).vm.b
 )
 
-// cannot receive extra props
-// if they pass use object inside
-expectError(
-  mount(
-    {
-      props: ['a']
-    },
-    {
-      props: {
-        b: 2
-      }
-    }
-  )
-)
+// // cannot receive extra props
+// // if they pass use object inside
+// expectError(
+//   mount(
+//     {
+//       props: ['a']
+//     },
+//     {
+//       props: {
+//         b: 2
+//       }
+//     }
+//   )
+// )
 
 const AppWithoutProps = {
   template: ''
@@ -150,7 +150,7 @@ expectError((props: { a: 1 }) => {}, {
 })
 
 expectType<number>(
-  mount((props: { a: 1 }, ctx) => {}, {
+  mount((props: { a: number }, ctx) => {}, {
     props: {
       a: 22
     }
@@ -226,3 +226,43 @@ class ClassComponent extends Vue {
 // @ts-expect-error it requires an argument
 expectError(mount(ClassComponent, {}).vm.changeMessage())
 mount(ClassComponent, {}).vm.changeMessage('')
+
+// default props
+const Foo = defineComponent({
+  props: {
+    bar: Boolean,
+    baz: String
+  },
+  template: ''
+})
+
+mount(Foo, {
+  props: {
+    baz: 'hello'
+  }
+})
+
+mount(Foo, {
+  props: {
+    bar: true
+  }
+})
+
+expectError(
+  mount(
+    defineComponent({
+      props: {
+        baz: String,
+        bar: {
+          type: Boolean,
+          required: true
+        }
+      }
+    }),
+    {
+      props: {
+        baz: 'hello'
+      }
+    }
+  )
+)
