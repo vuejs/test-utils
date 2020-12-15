@@ -50,12 +50,7 @@ class Pluggable<Instance = DOMWrapper<Element>> {
       Object.entries(setupResult).forEach(bindProperty)
     }
 
-    // this.installedPlugins.map(invokeSetup).forEach(addAllPropertiesFromSetup)
-    this.installedPlugins
-      .map((plugin) => {
-        return invokeSetup({ handler: plugin.handler, options: plugin.options })
-      })
-      .forEach(addAllPropertiesFromSetup)
+    this.installedPlugins.map(invokeSetup).forEach(addAllPropertiesFromSetup)
   }
 
   /** For testing */
