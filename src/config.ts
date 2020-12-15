@@ -2,6 +2,7 @@ import { ComponentPublicInstance } from 'vue'
 import { GlobalMountOptions } from './types'
 import { VueWrapper } from './vueWrapper'
 import { DOMWrapper } from './domWrapper'
+import { allowedNodeEnvironmentFlags } from 'process'
 
 interface GlobalConfigOptions {
   global: Required<GlobalMountOptions>
@@ -13,7 +14,10 @@ interface GlobalConfigOptions {
 }
 
 interface Plugin<Instance> {
-  handler: (instance: Instance) => Record<string, any>
+  handler: (
+    instance: Instance,
+    options: Record<string, any>
+  ) => Record<string, any>
   options: Record<string, any>
 }
 
@@ -21,7 +25,10 @@ class Pluggable<Instance = DOMWrapper<Element>> {
   installedPlugins: Plugin<Instance>[] = []
 
   install(
-    handler: (instance: Instance) => Record<string, any>,
+    handler: (
+      instance: Instance,
+      options?: Record<string, any>
+    ) => Record<string, any>,
     options: Record<string, any> = {}
   ) {
     if (typeof handler !== 'function') {
@@ -32,7 +39,9 @@ class Pluggable<Instance = DOMWrapper<Element>> {
   }
 
   extend(instance: Instance) {
-    const invokeSetup = (plugin: Plugin<Instance>) => plugin.handler(instance) // invoke the setup method passed to install
+    const invokeSetup = ({ handler, options }: Plugin<Instance>) => {
+      return handler(instance, options) // invoke the setup method passed to install
+    }
     const bindProperty = ([property, value]: [string, any]) => {
       ;(instance as any)[property] =
         typeof value === 'function' ? value.bind(instance) : value
@@ -42,7 +51,12 @@ class Pluggable<Instance = DOMWrapper<Element>> {
       Object.entries(setupResult).forEach(bindProperty)
     }
 
-    this.installedPlugins.map(invokeSetup).forEach(addAllPropertiesFromSetup)
+    // this.installedPlugins.map(invokeSetup).forEach(addAllPropertiesFromSetup)
+    this.installedPlugins
+      .map((plugin) => {
+        return invokeSetup({ handler: plugin.handler, options: plugin.options })
+      })
+      .forEach(addAllPropertiesFromSetup)
   }
 
   /** For testing */
