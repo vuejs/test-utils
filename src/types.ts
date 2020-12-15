@@ -33,6 +33,8 @@ type SlotDictionary = {
   [key: string]: Slot
 }
 
+// From vue next
+// https://github.com/vuejs/vue-next/blob/1f2a652a9d2e3bec472fb1786a4c16d6ccfa1fb1/packages/runtime-core/src/h.ts#L53-L58
 type RawProps = VNodeProps & {
   // used to differ from a single VNode object as children
   __v_isVNode?: never
@@ -40,7 +42,7 @@ type RawProps = VNodeProps & {
   [Symbol.iterator]?: never
 } & Record<string, any>
 
-export interface MountingOptions<P, Data = {}> {
+export interface MountingOptions<Props, Data = {}> {
   /**
    * Overrides component's default data. Must be a function.
    * @see https://vue-test-utils.vuejs.org/v2/api/#data
@@ -50,11 +52,11 @@ export interface MountingOptions<P, Data = {}> {
    * Sets component props when mounted.
    * @see https://vue-test-utils.vuejs.org/v2/api/#props
    */
-  props?: (RawProps & P) | ({} extends P ? null : never)
+  props?: (RawProps & Props) | ({} extends Props ? null : never)
   /**
    * @deprecated use `data` instead.
    */
-  propsData?: P
+  propsData?: Props
   /**
    * Sets component attributes when mounted.
    * @see https://vue-test-utils.vuejs.org/v2/api/#attrs
