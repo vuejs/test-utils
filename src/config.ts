@@ -2,7 +2,6 @@ import { ComponentPublicInstance } from 'vue'
 import { GlobalMountOptions } from './types'
 import { VueWrapper } from './vueWrapper'
 import { DOMWrapper } from './domWrapper'
-import { allowedNodeEnvironmentFlags } from 'process'
 
 interface GlobalConfigOptions {
   global: Required<GlobalMountOptions>
