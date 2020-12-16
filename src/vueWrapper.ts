@@ -25,7 +25,6 @@ export class VueWrapper<T extends ComponentPublicInstance> {
     this.rootVM = vm?.$root
     this.componentVM = vm as T
     this.__setProps = setProps
-    // plugins hook
     config.plugins.VueWrapper.extend(this)
   }
 

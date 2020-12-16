@@ -13,7 +13,10 @@ interface GlobalConfigOptions {
 }
 
 interface Plugin<Instance> {
-  handler: (instance: Instance) => Record<string, any>
+  handler: (
+    instance: Instance,
+    options: Record<string, any>
+  ) => Record<string, any>
   options: Record<string, any>
 }
 
@@ -21,7 +24,10 @@ class Pluggable<Instance = DOMWrapper<Element>> {
   installedPlugins: Plugin<Instance>[] = []
 
   install(
-    handler: (instance: Instance) => Record<string, any>,
+    handler: (
+      instance: Instance,
+      options?: Record<string, any>
+    ) => Record<string, any>,
     options: Record<string, any> = {}
   ) {
     if (typeof handler !== 'function') {
@@ -32,7 +38,9 @@ class Pluggable<Instance = DOMWrapper<Element>> {
   }
 
   extend(instance: Instance) {
-    const invokeSetup = (plugin: Plugin<Instance>) => plugin.handler(instance) // invoke the setup method passed to install
+    const invokeSetup = ({ handler, options }: Plugin<Instance>) => {
+      return handler(instance, options) // invoke the setup method passed to install
+    }
     const bindProperty = ([property, value]: [string, any]) => {
       ;(instance as any)[property] =
         typeof value === 'function' ? value.bind(instance) : value
