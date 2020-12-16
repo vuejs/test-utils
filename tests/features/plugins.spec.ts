@@ -33,7 +33,6 @@ describe('Plugin#install', () => {
     config.plugins.VueWrapper.install(PluginWithOptions, { msg: 'Hello' })
 
     const wrapper = mountComponent()
-    // @ts-ignore
     expect(wrapper.greet('Lachlan')).toBe('Hello, Lachlan')
   })
 
