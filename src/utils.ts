@@ -82,3 +82,17 @@ export function isFunctionalComponent(component: any) {
 export function isObjectComponent(component: any) {
   return typeof component !== 'function' && !isClassComponent(component)
 }
+
+// https://stackoverflow.com/questions/15458876/check-if-a-string-is-html-or-not/15458987#answer-15458968
+export function isHTML(str: string) {
+  var a = document.createElement('div')
+  a.innerHTML = str
+
+  for (let c = a.childNodes, i = c.length; i--; ) {
+    if (c[i].nodeType == 1) {
+      return true
+    }
+  }
+
+  return false
+}

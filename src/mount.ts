@@ -26,6 +26,7 @@ import { config } from './config'
 import { MountingOptions, Slot } from './types'
 import {
   isFunctionalComponent,
+  isHTML,
   isObjectComponent,
   mergeGlobalProperties
 } from './utils'
@@ -289,8 +290,14 @@ export function mount(
         }
 
         if (typeof slot === 'string') {
-          // slot is most probably a scoped slot string or a plain string
-          acc[name] = (props: VNodeProps) => h(processSlot(slot), props)
+          // if it is HTML we process and render it using h
+          if (isHTML(slot)) {
+            acc[name] = (props: VNodeProps) => h(processSlot(slot), props)
+          }
+          // otherwise it is just a string so we just return it as-is
+          else {
+            acc[name] = () => slot
+          }
           return acc
         }
 
