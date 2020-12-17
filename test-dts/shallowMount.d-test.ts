@@ -85,16 +85,9 @@ const AppWithoutProps = {
   template: ''
 }
 
-// can't receive extra props
-expectError(
-  (wrapper = shallowMount(AppWithoutProps, {
-    props: { b: 'Hello' }
-  }))
-)
-
-// except if explicitly cast
-shallowMount(AppWithoutProps, {
-  props: { b: 'Hello' } as never
+// allow extra props, like using `h()`
+wrapper = shallowMount(AppWithoutProps, {
+  props: { b: 'Hello' }
 })
 
 // class component

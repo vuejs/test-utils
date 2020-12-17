@@ -120,16 +120,9 @@ const AppWithoutProps = {
   template: ''
 }
 
-// can't receive extra props
-expectError(
-  mount(AppWithoutProps, {
-    props: { b: 'Hello' }
-  })
-)
-
-// except if explicitly cast
+// allow extra props, like using `h()`
 mount(AppWithoutProps, {
-  props: { b: 'Hello' } as never
+  props: { b: 'Hello' }
 })
 
 // Functional tests

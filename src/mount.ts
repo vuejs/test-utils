@@ -150,7 +150,7 @@ export function mount<
     Extends,
     EE
   >,
-  options?: MountingOptions<PublicProps, D>
+  options?: MountingOptions<Props & PublicProps, D>
 ): VueWrapper<
   ComponentPublicInstance<Props, RawBindings, D, C, M, E, VNodeProps & Props>
 >
