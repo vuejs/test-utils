@@ -21,12 +21,10 @@ let wrapper = shallowMount(AppWithDefine, {
 // vm is properly typed
 expectType<string>(wrapper.vm.a)
 
-// // can not receive extra props
-// expectError(
-//   shallowMount(AppWithDefine, {
-//     props: { a: 'Hello', c: 2 }
-//   })
-// )
+// allow extra props, like using `h()`
+shallowMount(AppWithDefine, {
+  props: { a: 'Hello', c: 2 }
+})
 
 // wrong prop type should not compile
 expectError(
@@ -53,12 +51,10 @@ expectType<string>(
   }).vm.a
 )
 
-// // can't receive extra props
-// expectError(
-//   shallowMount(AppWithProps, {
-//     props: { a: 'Hello', b: 2 }
-//   })
-// )
+// allow extra props, like using `h()`
+shallowMount(AppWithProps, {
+  props: { a: 'Hello', b: 2 }
+})
 
 // wrong prop type should not compile
 expectError(

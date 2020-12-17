@@ -44,12 +44,10 @@ expectType<string>(
 //   })
 // )
 
-// can not receive extra props
-// expectError(
-//   mount(AppWithDefine, {
-//     props: { a: 'Hello', c: 2 }
-//   })
-// )
+// allow extra props, like using `h()`
+mount(AppWithDefine, {
+  props: { a: 'Hello', c: 2 }
+})
 
 // wrong prop type should not compile
 expectError(
@@ -75,12 +73,9 @@ expectType<string>(
   }).vm.a
 )
 
-// can't receive extra props
-// expectError(
-//   mount(AppWithProps, {
-//     props: { a: 'Hello', b: 2 }
-//   })
-// )
+mount(AppWithProps, {
+  props: { a: 'Hello', b: 2 }
+})
 
 // wrong prop type should not compile
 expectError(
@@ -109,20 +104,17 @@ expectType<number>(
   }).vm.b
 )
 
-// // cannot receive extra props
-// // if they pass use object inside
-// expectError(
-//   mount(
-//     {
-//       props: ['a']
-//     },
-//     {
-//       props: {
-//         b: 2
-//       }
-//     }
-//   )
-// )
+// allow extra props, like using `h()`
+mount(
+  {
+    props: ['a']
+  },
+  {
+    props: {
+      b: 2
+    }
+  }
+)
 
 const AppWithoutProps = {
   template: ''
