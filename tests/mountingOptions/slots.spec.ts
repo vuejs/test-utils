@@ -15,6 +15,7 @@ describe('slots', () => {
           named: namedString
         }
       })
+      expect(wrapper.vm.$slots.default()[0].children).toBe(defaultString)
       expect(wrapper.find('.default').text()).toBe(defaultString)
       expect(wrapper.find('.named').text()).toBe(namedString)
     })
