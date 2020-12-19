@@ -67,13 +67,13 @@ export function mount<V, P>(
     props(Props: P): any
     registerHooks(keys: string[]): void
   },
-  options?: MountingOptions<P>
+  options?: MountingOptions<P & PublicProps>
 ): VueWrapper<ComponentPublicInstance<V>>
 
 // Functional component with emits
 export function mount<Props, E extends EmitsOptions = {}>(
   originalComponent: FunctionalComponent<Props, E>,
-  options?: MountingOptions<Props>
+  options?: MountingOptions<Props & PublicProps>
 ): VueWrapper<ComponentPublicInstance<Props>>
 
 // Component declared with defineComponent
@@ -105,7 +105,10 @@ export function mount<
     Props,
     Defaults
   >,
-  options?: MountingOptions<Props, D>
+  options?: MountingOptions<
+    Partial<Defaults> & Omit<Props & PublicProps, keyof Defaults>,
+    D
+  >
 ): VueWrapper<
   InstanceType<
     DefineComponent<
@@ -148,7 +151,7 @@ export function mount<
     Extends,
     EE
   >,
-  options?: MountingOptions<never, D>
+  options?: MountingOptions<Props & PublicProps, D>
 ): VueWrapper<
   ComponentPublicInstance<Props, RawBindings, D, C, M, E, VNodeProps & Props>
 >
@@ -180,7 +183,7 @@ export function mount<
     EE,
     Props
   >,
-  options?: MountingOptions<Props, D>
+  options?: MountingOptions<Props & PublicProps, D>
 ): VueWrapper<ComponentPublicInstance<Props, RawBindings, D, C, M, E>>
 
 // Component declared with { props: { ... } }
@@ -208,7 +211,7 @@ export function mount<
     Extends,
     EE
   >,
-  options?: MountingOptions<ExtractPropTypes<PropsOptions>, D>
+  options?: MountingOptions<ExtractPropTypes<PropsOptions> & PublicProps, D>
 ): VueWrapper<
   ComponentPublicInstance<
     ExtractPropTypes<PropsOptions>,
