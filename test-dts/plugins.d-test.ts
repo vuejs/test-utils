@@ -38,7 +38,7 @@ config.plugins.VueWrapper.install(PluginWithOptionalOptions2)
 config.plugins.VueWrapper.install(PluginWithOptionalOptions, { msg: 'hello' })
 config.plugins.VueWrapper.install(PluginWithOptionalOptions2, { msg: 'hello' })
 
-// FIXME: not sure if this one is possible
+// uncertain if it is possible to forbid this usage
 // expectError(config.plugins.VueWrapper.install(PluginWithoutOptions, {}))
 expectError(config.plugins.VueWrapper.install(PluginWithOptions, { msg: true }))
 expectError(config.plugins.VueWrapper.install(PluginWithOptions, {}))
