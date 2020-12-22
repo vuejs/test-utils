@@ -12,23 +12,23 @@ interface GlobalConfigOptions {
   renderStubDefaultSlot: boolean
 }
 
-interface Plugin<Instance> {
-  handler: (
-    instance: Instance,
-    options: Record<string, any>
-  ) => Record<string, any>
-  options: Record<string, any>
+interface Plugin<Instance, O> {
+  handler(instance: Instance): Record<string, any>
+  handler(instance: Instance, options: O): Record<string, any>
+  options: O
 }
 
 class Pluggable<Instance = DOMWrapper<Element>> {
-  installedPlugins: Plugin<Instance>[] = []
+  installedPlugins: Plugin<Instance, any>[] = []
 
-  install(
-    handler: (
-      instance: Instance,
-      options?: Record<string, any>
-    ) => Record<string, any>,
-    options: Record<string, any> = {}
+  install<O>(handler: (instance: Instance) => Record<string, any>)
+  install<O>(
+    handler: (instance: Instance, options: O) => Record<string, any>,
+    options: O
+  )
+  install<O>(
+    handler: (instance: Instance, options?: O) => Record<string, any>,
+    options?: O
   ) {
     if (typeof handler !== 'function') {
       console.error('plugin.install must receive a function')
@@ -38,7 +38,7 @@ class Pluggable<Instance = DOMWrapper<Element>> {
   }
 
   extend(instance: Instance) {
-    const invokeSetup = ({ handler, options }: Plugin<Instance>) => {
+    const invokeSetup = ({ handler, options }: Plugin<Instance, any>) => {
       return handler(instance, options) // invoke the setup method passed to install
     }
     const bindProperty = ([property, value]: [string, any]) => {
