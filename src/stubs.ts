@@ -19,7 +19,7 @@ import { ComponentInternalInstance } from '@vue/runtime-core'
 interface StubOptions {
   name?: string
   props?: any
-  propsDeclaration: any
+  propsDeclaration?: any
 }
 
 function getSlots(ctx: ComponentPublicInstance): Slots | undefined {
