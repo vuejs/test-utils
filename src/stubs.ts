@@ -18,22 +18,31 @@ import { ComponentInternalInstance } from '@vue/runtime-core'
 
 interface StubOptions {
   name?: string
-  props: any
+  props?: any
+  propsDeclaration: any
 }
 
 function getSlots(ctx: ComponentPublicInstance): Slots | undefined {
   return !config.renderStubDefaultSlot ? undefined : ctx.$slots
 }
 
-export const createStub = ({ name, props }: StubOptions): ComponentOptions => {
+export const createStub = ({
+  name,
+  props,
+  propsDeclaration
+}: StubOptions): ComponentOptions => {
   const anonName = 'anonymous-stub'
   const tag = name ? `${hyphenate(name)}-stub` : anonName
 
   const render = (ctx: ComponentPublicInstance) => {
-    return h(tag, {}, getSlots(ctx))
+    return h(tag, props, getSlots(ctx))
   }
 
-  return defineComponent({ name: name || anonName, render, props })
+  return defineComponent({
+    name: name || anonName,
+    render,
+    props: propsDeclaration
+  })
 }
 
 const createTransitionStub = ({
@@ -95,7 +104,10 @@ export function stubComponents(
     // stub transition by default via config.global.stubs
     if (type === Transition && stubs['transition']) {
       return [
-        createTransitionStub({ name: 'transition-stub', props: undefined }),
+        createTransitionStub({
+          name: 'transition-stub',
+          propsDeclaration: undefined
+        }),
         undefined,
         children
       ]
@@ -106,7 +118,7 @@ export function stubComponents(
       return [
         createTransitionStub({
           name: 'transition-group-stub',
-          props: undefined
+          propsDeclaration: undefined
         }),
         undefined,
         children
@@ -158,7 +170,7 @@ export function stubComponents(
       if (stub === true || shallow) {
         const propsDeclaration = type?.props || {}
         return [
-          createStub({ name, props: propsDeclaration }),
+          createStub({ name, propsDeclaration, props }),
           props,
           children,
           patchFlag,
