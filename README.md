@@ -7,9 +7,11 @@ The next iteration of Vue Test Utils. It targets Vue 3.
 - yarn: `yarn add @vue/test-utils@next --dev`
 - npm: `npm install @vue/test-utils@next --save-dev`
 
-## Coming from Vue 2 + Vue Test Utils beta?
+## Coming from Vue 2 + Vue Test Utils?
 
-We are working on some documentation to help people migrate. At this point you will have better luck trying this out with a brand new Vue 3 app, as opposed to upgrading an existing Vue 2 app. Feedback and bug reports are welcome!
+We are working on [some documentation to help people migrate](https://vue-test-utils.vuejs.org/v2/guide/migration.html).
+
+At this point you will have better luck trying this out with a brand new Vue 3 app, as opposed to upgrading an existing Vue 2 app. Feedback and bug reports are welcome!
 
 ## Working with `.vue` files
 
@@ -19,29 +21,27 @@ If you don't want to configure things, you can download a repository with Vue 3,
 
 ## Docs
 
-Docs are located in [this repo](https://github.com/vuejs/vue-test-utils-next-docs). Read them [here](https://vuejs.github.io/vue-test-utils-next-docs/guide/introduction.html). They are in a separate repository because running Vuepress alongside a repo with Vue 3 causes conflicts - Vuepress expects to be running against Vue 2. This seems like the most simple solution for now.
+Docs are located in [this repo](https://github.com/vuejs/vue-test-utils-next-docs). Read them [here](https://vue-test-utils.vuejs.org/v2/). They are in a separate repository because running Vuepress alongside a repo with Vue 3 causes conflicts - Vuepress expects to be running against Vue 2. This seems like the most simple solution for now.
 
 ## Development
 
 It's a pretty small codebase at the moment. Get started by running `yarn install`. You can run the tests with `yarn test`. That's it!
 
-There is a lot of work to do. See issues for some basic TODOs, or the table at the bottom of this page.
+There is still some work left to do. See issues for some basic TODOs, or the table at the bottom of this page.
 
 ## What works?
 
-See the [docs](https://vuejs.github.io/vue-test-utils-next-docs/guide/introduction.html). Most basic DOM interactions work. Advanced features like `shallowMount` and `stubs` are a work in progress.
+See the [docs](https://vuejs.github.io/vue-test-utils-next-docs/guide/introduction.html).
 
 ## Contributing
 
-This is still very much alpha - if you want to add a feature, have a hack or ping someone in Discord to chat, or check out the issues and project board.
+This is still quite alpha, but we plan on moving to RC sooner than later. If you want to add a feature, have a hack or ping someone in Discord to chat, or check out the issues and project board.
 
-## Where is shallowMount
-
-It's coming soon. We are working on it. Stay tuned!
+There's also some [work left to do in docs](https://github.com/vuejs/vue-test-utils-next-docs/issues).
 
 ## Comparsion with Vue Test Utils beta (targeting Vue 2)
 
-This is table for those coming from VTU beta, comparing the two APIs. A lot of things are still a work in progress.
+This is table for those coming from VTU 1, comparing the two APIs. Some things are still a work in progress.
 
 - ✅ - implemented
 - ❌ - not yet implemented
@@ -90,13 +90,13 @@ props | ✅
 setData | ✅ |
 destroy | ✅ | renamed to `unmount` to match Vue 3 lifecycle hook name.
 props | ✅
+isVisible | ✅
 contains | ⚰️| use `find`
 emittedByOrder | ⚰️ | use `emitted`
 setSelected | ⚰️ | now part of `setValue`
 setChecked | ⚰️| now part of `setValue`
 is | ⚰️
 isEmpty | ⚰️ | use matchers such as [this](https://github.com/testing-library/jest-dom#tobeempty)
-isVisible | ⚰️ | use matchers such as [this](https://github.com/testing-library/jest-dom#tobevisible)
 isVueInstance | ⚰️
 name | ⚰️ |
 setMethods | ⚰️ |
