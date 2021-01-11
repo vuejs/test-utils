@@ -16,6 +16,41 @@ describe('setData', () => {
     expect(wrapper.html()).toContain('qux')
   })
 
+  // This was a problem in V1
+  // See: https://github.com/vuejs/vue-test-utils/issues/1756
+  // Making sure it does not regress here.
+  it('triggers a watcher', async () => {
+    const Comp = {
+      template: `<div />`,
+      data() {
+        return {
+          myObject: {
+            key: 'value'
+          },
+          watchCounter: 0
+        }
+      },
+      watch: {
+        myObject: {
+          immediate: true,
+          handler() {
+            this.watchCounter += 1
+          }
+        }
+      }
+    }
+
+    const initial = 'value'
+    const expected = 'something else'
+    const wrapper = mount(Comp)
+    expect(wrapper.vm.myObject.key).toBe(initial)
+    expect(wrapper.vm.watchCounter).toBe(1)
+
+    await wrapper.setData({ myObject: { key: expected } })
+    expect(wrapper.vm.myObject.key).toEqual(expected)
+    expect(wrapper.vm.watchCounter).toBe(2)
+  })
+
   it('causes nested nodes to re-render', async () => {
     const Component = {
       template: `<div><div v-if="show" id="show">Show</div></div>`,
