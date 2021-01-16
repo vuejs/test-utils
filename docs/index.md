@@ -1,4 +1,5 @@
 ---
+
 home: true
 heroText: Vue Test Utils Next
 heroImage: /logo.png

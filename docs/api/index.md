@@ -8,7 +8,7 @@ Creates a Wrapper that contains the mounted and rendered Vue component to test.
 import { mount } from '@vue/test-utils'
 
 const Hello = {
-  template: '<div>Hello world</div>',
+  template: '<div>Hello world</div>'
 }
 
 test('mounts a component', () => {
@@ -17,7 +17,6 @@ test('mounts a component', () => {
   expect(wrapper.html()).toContain('Hello world')
 })
 ```
-
 
 ## `mount()` options
 
@@ -268,7 +267,6 @@ test('installs a directive globally', () => {
 
 Applies mixins via `app.mixin(...)`.
 
-
 `Component.spec.js`:
 
 ```js
@@ -386,6 +384,7 @@ test('installs a plugin via `plugins`', () => {
   expect(installed).toHaveBeenCalled()
 })
 ```
+
 To use plugin with options, an array of options can be passed.
 
 `Component.spec.js`:
@@ -424,6 +423,7 @@ test('installs plugins with and without options', () => {
   )
 })
 ```
+
 ### `global.provide`
 
 Provides data to be received in a `setup` function via `inject`.
@@ -456,7 +456,7 @@ test('injects dark theme via provide mounting option', () => {
   const wrapper = mount(Component, {
     global: {
       provide: {
-        'Theme': 'dark'
+        Theme: 'dark'
       }
     }
   })
@@ -480,7 +480,6 @@ mount(Component, {
   }
 })
 ```
-
 
 ### `global.stubs`
 
@@ -607,11 +606,9 @@ test('stubs all components automatically using { shallow: true }', () => {
 `shallowMount` is an alias to mounting a component with `shallow: true`.
 :::
 
-
 ## Wrapper methods
 
 When you use `mount`, a `VueWrapper` is returned with a number of useful methods for testing. A `VueWrapper` is a thin wrapper around your component instance. Methods like `find` return a `DOMWrapper`, which is a thin wrapper around the DOM nodes in your component and it's children. Both implement a similar same API.
-
 
 ### `attributes`
 
@@ -645,7 +642,6 @@ test('attributes', () => {
   expect(wrapper.attributes('class')).toBe('bar')
 })
 ```
-
 
 ### `classes`
 
@@ -770,11 +766,7 @@ Similar to `find`, but instead returns an array of `DOMWrapper`.
 ```vue
 <template>
   <div>
-    <span
-      v-for="number in [1, 2, 3]"
-      :key="number"
-      data-test="number"
-    >
+    <span v-for="number in [1, 2, 3]" :key="number" data-test="number">
       {{ number }}
     </span>
   </div>
@@ -797,10 +789,10 @@ Finds a Vue Component instance and returns a `VueWrapper` if one is found, other
 
 **Supported syntax:**
 
-* **querySelector** - `findComponent('.component')` - Matches standard query selector.
-* **Name** - `findComponent({ name: 'myComponent' })` - matches PascalCase, snake-case, camelCase
-* **ref** - `findComponent({ ref: 'dropdown' })` - Can be used only on direct ref children of mounted component
-* **SFC** - `findComponent(ImportedComponent)` - Pass an imported component directly.
+- **querySelector** - `findComponent('.component')` - Matches standard query selector.
+- **Name** - `findComponent({ name: 'myComponent' })` - matches PascalCase, snake-case, camelCase
+- **ref** - `findComponent({ ref: 'dropdown' })` - Can be used only on direct ref children of mounted component
+- **SFC** - `findComponent(ImportedComponent)` - Pass an imported component directly.
 
 `Foo.vue`
 
@@ -824,7 +816,7 @@ export default {
 <template>
   <div>
     <span>Span</span>
-    <Foo data-test="foo" ref="foo"/>
+    <Foo data-test="foo" ref="foo" />
   </div>
 </template>
 
@@ -832,7 +824,7 @@ export default {
 import Foo from '@/Foo'
 
 export default {
-  components: { Foo },
+  components: { Foo }
 }
 </script>
 ```
@@ -875,11 +867,7 @@ Similar to `findComponent` but finds all Vue Component instances that match the 
 ```vue
 <template>
   <div>
-    <FooComponent
-      v-for="number in [1, 2, 3]"
-      :key="number"
-      data-test="number"
-    >
+    <FooComponent v-for="number in [1, 2, 3]" :key="number" data-test="number">
       {{ number }}
     </FooComponent>
   </div>
@@ -896,7 +884,6 @@ test('findAllComponents', () => {
   wrapper.findAllComponents('[data-test="number"]')
 })
 ```
-
 
 ### `get`
 
@@ -928,10 +915,10 @@ Similar to `findComponent`, `getComponent` looks for a Vue Component instance an
 
 **Supported syntax:**
 
-* **querySelector** - `getComponent('.component')` - Matches standard query selector.
-* **Name** - `getComponent({ name: 'myComponent' })` - matches PascalCase, snake-case, camelCase
-* **ref** - `getComponent({ ref: 'dropdown' })` - Can be used only on direct ref children of mounted component
-* **SFC** - `getComponent(ImportedComponent)` - Pass an imported component directly.
+- **querySelector** - `getComponent('.component')` - Matches standard query selector.
+- **Name** - `getComponent({ name: 'myComponent' })` - matches PascalCase, snake-case, camelCase
+- **ref** - `getComponent({ ref: 'dropdown' })` - Can be used only on direct ref children of mounted component
+- **SFC** - `getComponent(ImportedComponent)` - Pass an imported component directly.
 
 `Foo.vue`
 
@@ -960,7 +947,7 @@ export default {
 import Foo from '@/Foo'
 
 export default {
-  components: { Foo },
+  components: { Foo }
 }
 </script>
 ```
@@ -1026,6 +1013,7 @@ Returns props applied on a Vue Component. This should be used mostly to assert p
 **Note:** Props on a normally mounted Vue Component should be asserted by their side effects on the DOM or other.
 
 `Component.vue`:
+
 ```js
 // Foo.vue
 export default {
@@ -1057,7 +1045,7 @@ export default {
 ```js
 test('props', () => {
   const wrapper = mount(Component, {
-      global: { stubs: ['Foo'] }
+    global: { stubs: ['Foo'] }
   })
   const foo = wrapper.getComponent({ name: 'Foo' })
 
@@ -1120,7 +1108,7 @@ You should use `await` when you call `setProps` to ensure that Vue updates the D
 
 <script>
 export default {
-  props: ['message'],
+  props: ['message']
 }
 </script>
 ```
@@ -1145,6 +1133,7 @@ test('updates prop', async () => {
 ### `setValue`
 
 Sets a value on DOM element. Including:
+
 - `<input>`
   - `type="checkbox"` and `type="radio"` are detected and will have `element.checked` set
 - `<select>`
@@ -1284,4 +1273,4 @@ test('unmount', () => {
 
 ### `vm`
 
-This is the ```Vue``` instance. You can access all of the [instance methods and properties of a vm](https://v3.vuejs.org/api/instance-properties.html) with ```wrapper.vm```. This only exists on ```VueWrapper```.
+This is the `Vue` instance. You can access all of the [instance methods and properties of a vm](https://v3.vuejs.org/api/instance-properties.html) with `wrapper.vm`. This only exists on `VueWrapper`.

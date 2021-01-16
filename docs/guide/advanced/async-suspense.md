@@ -2,7 +2,7 @@
 
 You may have noticed some other parts of the guide using `await` when calling some methods on `wrapper`, such as `trigger` and `setValue`. What's that all about?
 
-You might know Vue updates reactively; when you change a value, the DOM is automatically updated to reflect the latest value. Vue does this *asynchronously*. In contrast, a test runner like Jest runs *synchronously*. This can cause some surprising results in tests. Let's look at some strategies to ensure Vue is updating the DOM as expected when we run our tests.
+You might know Vue updates reactively; when you change a value, the DOM is automatically updated to reflect the latest value. Vue does this _asynchronously_. In contrast, a test runner like Jest runs _synchronously_. This can cause some surprising results in tests. Let's look at some strategies to ensure Vue is updating the DOM as expected when we run our tests.
 
 ## A Simple Example - Updating with `trigger`
 
@@ -87,11 +87,11 @@ import flushPromises from 'flush-promises'
 import axios from 'axios'
 
 jest.mock('axios', () => ({
-  get: () => new Promise(resolve => {
-    resolve({ data: 'some mocked data!' })
-  })
+  get: () =>
+    new Promise((resolve) => {
+      resolve({ data: 'some mocked data!' })
+    })
 }))
-
 
 test('uses a mocked axios HTTP client and flush-promises', async () => {
   // some component that makes a HTTP called in `created` using `axios`
@@ -101,10 +101,10 @@ test('uses a mocked axios HTTP client and flush-promises', async () => {
 
   // assertions!
 })
-
 ```
 
 > If you haven't tested Components with API requests before, you can learn more in [HTTP Requests]./http-requests).
+
 ## Conclusion
 
 - Vue updates the DOM asynchronously; tests runner execute code synchronously.

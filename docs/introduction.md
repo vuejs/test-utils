@@ -3,11 +3,13 @@
 Welcome to Vue Test Utils, the official testing utility library for Vue.js!
 
 <!-- content to be removed when we merge VTU repos -->
+
 This is the documentation for Vue Test Utils v2, which targets Vue 3.
 
 In short:
-* [Vue Test Utils 1](https://github.com/vuejs/vue-test-utils/) targets [Vue 2](https://github.com/vuejs/vue/).
-* [Vue Test Utils 2](https://github.com/vuejs/vue-test-utils-next/) targets [Vue 3](https://github.com/vuejs/vue-next/).
+
+- [Vue Test Utils 1](https://github.com/vuejs/vue-test-utils/) targets [Vue 2](https://github.com/vuejs/vue/).
+- [Vue Test Utils 2](https://github.com/vuejs/vue-test-utils-next/) targets [Vue 3](https://github.com/vuejs/vue-next/).
 
 ## What is Vue Test Utils?
 
@@ -21,7 +23,7 @@ import { mount } from '@vue/test-utils'
 // The component to test
 const MessageComponent = {
   template: '<p>{{ msg }}</p>',
-  props: ['msg'],
+  props: ['msg']
 }
 
 test('displays message', () => {
@@ -42,10 +44,9 @@ To see Vue Test Utils in action, [take the Crash Course](./a-crash-course/), whe
 
 Docs are split into two main sections:
 
-* **Essentials**, to cover common uses cases you'll face when testing Vue components.
-* **Vue Test Utils in Depth**, to explore other advanced features of the library.
+- **Essentials**, to cover common uses cases you'll face when testing Vue components.
+- **Vue Test Utils in Depth**, to explore other advanced features of the library.
 
 You can also explore the full [API](../api/).
 
 Alternatively, if you prefer to learn via video, there is [a number of lectures available here](https://www.youtube.com/playlist?list=PLC2LZCNWKL9ahK1IoODqYxKu5aA9T5IOA).
-

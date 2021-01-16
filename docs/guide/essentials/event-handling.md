@@ -82,9 +82,9 @@ Let's recap and break down the output of `emitted()`. Each of these keys contain
 
 ```js
 // console.log(wrapper.emitted('increment'))
-[
-  [ 1 ], // first time it is called, `count` is 1
-  [ 2 ], // second time it is called, `count` is 2
+;[
+  [1], // first time it is called, `count` is 1
+  [2] // second time it is called, `count` is 2
 ]
 ```
 

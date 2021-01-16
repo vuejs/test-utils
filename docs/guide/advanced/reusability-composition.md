@@ -2,6 +2,6 @@
 
 Mostly:
 
--  `global.provide`.
--  `global.mixins`.
--  `global.directives`.
+- `global.provide`.
+- `global.mixins`.
+- `global.directives`.

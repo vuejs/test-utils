@@ -90,7 +90,7 @@ test('vuex', async () => {
 })
 ```
 
-After installing the plugin, we use `trigger` to click the button and assert that `count` is increased. This kind of test, that covers the interaction between different systems (in this case, the Component and the store), is known as an integration test. 
+After installing the plugin, we use `trigger` to click the button and assert that `count` is increased. This kind of test, that covers the interaction between different systems (in this case, the Component and the store), is known as an integration test.
 
 ## Testing with a Mock Store
 
@@ -141,7 +141,7 @@ test('increment mutation', () => {
   })
 
   store.commit('increment')
-  
+
   expect(store.state.count).toBe(1)
 })
 ```
@@ -151,17 +151,18 @@ test('increment mutation', () => {
 Sometimes it can be useful to have the Vuex store in a specific state for a test. One useful technique you can use, other that `global.mocks`, is to create a function that wraps `createStore` and takes an argument to seed the initial state. In this example we extend `increment` to take an additional argument, which will be added on to the `state.count`. If that is not provided, we just increment `state.count` by 1.
 
 ```js
-const createVuexStore = (initialState) => createStore({
-  state: {
-    count: 0,
-    ...initialState
-  },
-  mutations: {
-    increment(state, value) {
-      state.count += value
+const createVuexStore = (initialState) =>
+  createStore({
+    state: {
+      count: 0,
+      ...initialState
+    },
+    mutations: {
+      increment(state, value) {
+        state.count += value
+      }
     }
-  }
-})
+  })
 
 test('increment mutation without passing a value', () => {
   const store = createVuexStore({ count: 20 })
@@ -184,5 +185,5 @@ The [Vue Testing Handbook](https://lmiller1990.github.io/vue-testing-handbook/te
 
 - Use `global.plugins` to install Vuex as a plugin
 - Use `global.mocks` to mock a global object, such as Vuex, for advanced use cases
-- Consider testing complex Vuex mutations and actions in isolation 
+- Consider testing complex Vuex mutations and actions in isolation
 - Wrap `createStore` with a function that takes an argument to set up specific test scenarios

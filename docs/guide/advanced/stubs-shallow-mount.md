@@ -1,6 +1,6 @@
 # Stubs and Shallow Mount
 
-Vue Test Utils provides some advanced features for *stubbing* components. A *stub* is where you replace an existing implementation of a custom component with a dummy component that doesn't do anything at all, which can simplify an otherwise complex test. Let's see an example.
+Vue Test Utils provides some advanced features for _stubbing_ components. A _stub_ is where you replace an existing implementation of a custom component with a dummy component that doesn't do anything at all, which can simplify an otherwise complex test. Let's see an example.
 
 ## Stubbing a single child component
 
@@ -36,7 +36,7 @@ const App = {
 }
 ```
 
- We do not want to make the API call in this particular test, we just want to assert the message is rendered. In this case, we could use the `stubs`, which appears in the `global` mounting option.
+We do not want to make the API call in this particular test, we just want to assert the message is rendered. In this case, we could use the `stubs`, which appears in the `global` mounting option.
 
 ```js
 test('stubs component with custom template', () => {
@@ -81,11 +81,11 @@ test('stubs component', () => {
 })
 ```
 
-This will stub out *all* the `<FetchDataFromApi />` components in the entire render tree, regardless of what level they appear at. That's why it is in the `global` mounting option.
+This will stub out _all_ the `<FetchDataFromApi />` components in the entire render tree, regardless of what level they appear at. That's why it is in the `global` mounting option.
 
 ## Stubbing all children components
 
-Sometimes you might want to stub out *all* the custom components. For example you might have a component like this:
+Sometimes you might want to stub out _all_ the custom components. For example you might have a component like this:
 
 ```js
 const ComplexComponent = {
@@ -107,7 +107,7 @@ const wrapper = mount(ComplexComponent, {
     stubs: {
       ComplexA: true,
       ComplexB: true,
-      ComplexC: true,
+      ComplexC: true
     }
   }
 })

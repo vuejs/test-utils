@@ -99,14 +99,14 @@ Also, let's disable the `<button>` element while loading, too. We don't want use
 
 ```vue {2,4,19,24,28}
 <template>
-    <button :disabled="loading" @click="getPosts">Get posts</button>
+  <button :disabled="loading" @click="getPosts">Get posts</button>
 
-    <p v-if="loading" role="alert">Loading your posts…</p>
-    <ul v-else>
-      <li v-for="post in posts" :key="post.id" data-test="post">
-        {{ post.title }}
-      </li>
-    </ul>
+  <p v-if="loading" role="alert">Loading your posts…</p>
+  <ul v-else>
+    <li v-for="post in posts" :key="post.id" data-test="post">
+      {{ post.title }}
+    </li>
+  </ul>
 </template>
 
 <script>
@@ -133,7 +133,6 @@ export default {
 ```
 
 Let's write a test to assert that all the loading-related elements are rendered on time.
-
 
 ```js
 test('displays loading state on button click', async () => {

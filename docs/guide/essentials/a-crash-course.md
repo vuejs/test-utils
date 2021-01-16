@@ -1,7 +1,7 @@
 # A Crash Course
 
 Let's jump right into it! Let's learn Vue Test Utils (VTU) by building a simple Todo app and writing tests as we go. This
- guide will cover how to:
+guide will cover how to:
 
 - Mount components
 - Find elements
@@ -14,8 +14,7 @@ We will start off with a simple `TodoApp` component with a single todo:
 
 ```vue
 <template>
-  <div>
-  </div>
+  <div></div>
 </template>
 
 <script>
@@ -58,7 +57,7 @@ We start off by importing `mount` - this is the main way to render a component i
 
 Next, we call `mount` and pass the component as the first argument - this is something almost every test you write will do. By convention, we assign the result to a variable called `wrapper`, since `mount` provides a simple "wrapper" around the app with some convenient methods for testing.
 
-Finally, we use another global function common to many tests runner - Jest included - `expect`. The idea is we are asserting, or *expecting*, the actual output to match what we think it should be. In this case, we are finding an element with the selector `data-test="todo"` - in the DOM, this will look like `<div data-test="todo">...</div>`. We then call the `text` method to get the content, which we expect to be `'Learn Vue.js 3'`.
+Finally, we use another global function common to many tests runner - Jest included - `expect`. The idea is we are asserting, or _expecting_, the actual output to match what we think it should be. In this case, we are finding an element with the selector `data-test="todo"` - in the DOM, this will look like `<div data-test="todo">...</div>`. We then call the `text` method to get the content, which we expect to be `'Learn Vue.js 3'`.
 
 > Using `data-test` selectors is not required, but it can make your tests less brittle. classes and ids tend to change or move around as an application grows - by using `data-test`, it's clear to other developers which elements are used in tests, and should not be changed.
 
@@ -69,11 +68,7 @@ If we run this test now, it fails with the following error message: `Unable to g
 ```vue
 <template>
   <div>
-    <div
-      v-for="todo in todos"
-      :key="todo.id"
-      data-test="todo"
-    >
+    <div v-for="todo in todos" :key="todo.id" data-test="todo">
       {{ todo.text }}
     </div>
   </div>
@@ -112,11 +107,7 @@ If we run this test, it will obviously fail. Let's update `TodoApp.vue` to have 
 ```vue
 <template>
   <div>
-    <div
-      v-for="todo in todos"
-      :key="todo.id"
-      data-test="todo"
-    >
+    <div v-for="todo in todos" :key="todo.id" data-test="todo">
       {{ todo.text }}
     </div>
 
@@ -216,7 +207,7 @@ We can get this test to pass by updating the `<template>` to include the `<input
       v-for="todo in todos"
       :key="todo.id"
       data-test="todo"
-      :class="[ todo.completed ? 'completed' : '' ]"
+      :class="[todo.completed ? 'completed' : '']"
     >
       {{ todo.text }}
       <input
@@ -255,11 +246,11 @@ test('creates a todo', async () => {
 
 The test is split into three distinct stages, separated by new lines. The three stages represent the three phases of a test: **arrange**, **act** and **assert**.
 
-In the *arrange* phase, we are setting up the scenario for the test. A more complex example may require creating a Vuex store, or populating a database.
+In the _arrange_ phase, we are setting up the scenario for the test. A more complex example may require creating a Vuex store, or populating a database.
 
-In the *act* phase, we act out the scenario, simulating how a user would interact with the component or application.
+In the _act_ phase, we act out the scenario, simulating how a user would interact with the component or application.
 
-In the *assert* phase, we make assertions about how we expect the current state of the component to be.
+In the _assert_ phase, we make assertions about how we expect the current state of the component to be.
 
 Almost all test will follow these three phases. You don't need to separate them with new lines like this guide does, but it is good to keep these three phases in mind as you write your tests.
 

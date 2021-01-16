@@ -1,6 +1,6 @@
 # Slots
 
-Vue Test Utils provides some useful features for testing components using `slots`. 
+Vue Test Utils provides some useful features for testing components using `slots`.
 
 ## A Simple Example
 

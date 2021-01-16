@@ -12,7 +12,7 @@ Let's take a look at a very basic form:
 ```vue
 <template>
   <div>
-    <input type="email" v-model="email">
+    <input type="email" v-model="email" />
 
     <button @click="submit">Submit</button>
   </div>
@@ -114,19 +114,19 @@ Let's take a look at a more complicated form, which has more types of inputs.
 ```vue
 <template>
   <form @submit.prevent="submit">
-    <input type="email" v-model="form.email">
+    <input type="email" v-model="form.email" />
 
-    <textarea v-model="form.description"/>
+    <textarea v-model="form.description" />
 
     <select v-model="form.city">
       <option value="new-york">New York</option>
       <option value="moscow">Moscow</option>
     </select>
 
-    <input type="checkbox" v-model="form.subscribe"/>
+    <input type="checkbox" v-model="form.subscribe" />
 
-    <input type="radio" value="weekly" v-model="form.interval"/>
-    <input type="radio" value="monthly" v-model="form.interval"/>
+    <input type="radio" value="weekly" v-model="form.interval" />
+    <input type="radio" value="monthly" v-model="form.interval" />
 
     <button type="submit">Submit</button>
   </form>
@@ -177,7 +177,6 @@ As you can see, `setValue` is a very versatile method. It can work with all type
 
 We are using `await` everywhere, to make sure that each change has been applied before we trigger the next. This is recommended to make sure you do assertions when the DOM has updated.
 
-
 ::: tip
 If you don't pass a parameter to `setValue` for `OPTION`, `CHECKBOX` or `RADIO` inputs, they will set as `checked`.
 :::
@@ -213,7 +212,7 @@ test('submits the form', async () => {
     description,
     city,
     subscribe: true,
-    interval: 'monthly',
+    interval: 'monthly'
   })
 })
 ```
@@ -267,7 +266,7 @@ Let's say your code needs something from inside the `event` object. You can test
 ```vue
 <template>
   <form>
-    <input type="text" v-model="value" @blur="handleBlur">
+    <input type="text" v-model="value" @blur="handleBlur" />
     <button>Submit</button>
   </form>
 </template>
@@ -324,7 +323,7 @@ Following is a Component that wraps a `label` and an `input` element:
       type="text"
       :value="modelValue"
       @input="$emit('update:modelValue', $event.target.value)"
-    >
+    />
   </label>
 </template>
 
@@ -340,7 +339,7 @@ export default {
 This Vue component also emits back whatever you type. To use it you do:
 
 ```html
-<custom-input v-model="input" label="Text Input" class="text-input"/>
+<custom-input v-model="input" label="Text Input" class="text-input" />
 ```
 
 As above, most of these Vue-powered inputs have a real `button` or `input` in them. You can just as easily find that element and act on it:
@@ -405,7 +404,7 @@ test('emits textarea value on click', async () => {
 
 ## Conclusion
 
-* Use `setValue` to set the value on both DOM inputs and Vue components.
-* Use `trigger` to trigger DOM events, both with and without modifiers.
-* Add extra event data to `trigger` using the second parameter.
-* Assert that the DOM changed and the right events got emitted. Try not to assert data on the Component instance.
+- Use `setValue` to set the value on both DOM inputs and Vue components.
+- Use `trigger` to trigger DOM events, both with and without modifiers.
+- Add extra event data to `trigger` using the second parameter.
+- Assert that the DOM changed and the right events got emitted. Try not to assert data on the Component instance.

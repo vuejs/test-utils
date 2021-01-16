@@ -72,6 +72,9 @@
   "lint-staged": {
     "*.ts": [
       "prettier --parser=typescript --write"
+    ],
+    "*.md": [
+      "prettier --write"
     ]
   },
   "tsd": {
