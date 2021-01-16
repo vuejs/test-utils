@@ -39,6 +39,7 @@
     "ts-jest": "25.2.1",
     "tsd": "0.11.0",
     "typescript": "^3.7.5",
+    "vitepress": "^0.11.3",
     "vue": "3.0.3",
     "vue-class-component": "^8.0.0-beta.4",
     "vue-jest": "^5.0.0-alpha.7",
@@ -58,7 +59,10 @@
     "tsd": "tsd",
     "build": "yarn rollup -c rollup.config.js",
     "lint": "prettier -c --parser typescript \"(src|tests)/**/*.ts?(x)\"",
-    "lint:fix": "yarn lint --write"
+    "lint:fix": "yarn lint --write",
+    "docs:dev": "vitepress dev docs",
+    "docs:build": "vitepress build docs",
+    "docs:serve": "vitepress serve docs"
   },
   "husky": {
     "hooks": {
