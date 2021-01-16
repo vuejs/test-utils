@@ -1,4 +1,4 @@
-## Installation
+# Installation
 
 ```bash
 npm install --save-dev @vue/test-utils@next

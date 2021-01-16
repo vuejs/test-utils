@@ -1,11 +1,8 @@
-## Plugins
+# Plugins
 
 Plugins add global-level functionality to Vue Test Utils' API. This is the
 official way to extend Vue Test Utils' API with custom logic, methods, or
 functionality.
-
-If you're missing a bit of functionality, consider writing a plugin to
-extend Vue Test Utils' API.
 
 Some use cases for plugins:
 

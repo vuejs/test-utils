@@ -1,4 +1,4 @@
-## Testing Vuex
+# Testing Vuex
 
 Vuex is just an implementation detail; no special treatment is required for testing components using Vuex. That said, there are some techniques that might make your tests easier to read and write. We will look at those here.
 
