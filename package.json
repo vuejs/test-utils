@@ -61,8 +61,7 @@
     "lint": "prettier -c --parser typescript \"(src|tests)/**/*.ts?(x)\"",
     "lint:fix": "yarn lint --write",
     "docs:dev": "vitepress dev docs",
-    "docs:build": "vitepress build docs",
-    "docs:serve": "vitepress serve docs"
+    "docs:build": "vitepress build docs"
   },
   "husky": {
     "hooks": {
