@@ -2,8 +2,9 @@
 
 /** @type {UserConfig} */
 const config = {
-  base: '/v2/',
+  // base: '/v2/',
   title: 'Vue Test Utils for Vue 3',
+  description: 'The documentation for the official Vue Test Utils',
   locales: {
     '/': {
       lang: 'en-US',
@@ -18,9 +19,9 @@ const config = {
     docsBranch: 'master',
     editLinks: true,
     nav: [
-      { text: 'Guide', link: '/guide/' },
+      { text: 'Guide', link: '/introduction/' },
       { text: 'API Reference', link: '/api/' },
-      { text: 'Migrating from Vue 2', link: '/guide/migration' },
+      { text: 'Migrating from Vue 2', link: '/migration/' },
       {
         text: 'Changelog',
         link: 'https://github.com/vuejs/vue-test-utils-next/releases'
@@ -29,11 +30,11 @@ const config = {
     sidebar: [
       {
         text: 'Introduction',
-        link: '/introduction'
+        link: '/introduction/'
       },
       {
         text: 'Installation',
-        link: '/installation'
+        link: '/installation/'
       },
       {
         text: 'Essentials',
@@ -102,7 +103,7 @@ const config = {
       },
       {
         text: 'Migrating from Vue 2',
-        link: '/guide/migration'
+        link: '/migration/'
       },
       {
         text: 'API Reference',

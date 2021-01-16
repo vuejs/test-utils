@@ -169,7 +169,7 @@ test('routing', () => {
 
 The test fails. It also prints two warnings:
 
-```sh
+```bash
 console.warn node_modules/@vue/runtime-core/dist/runtime-core.cjs.js:39
   [Vue warn]: Failed to resolve component: router-link
 
