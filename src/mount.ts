@@ -408,9 +408,6 @@ export function mount(
     }
   }
 
-  // add tracking for emitted events
-  app.mixin(attachEmitListener())
-
   // stubs
   // even if we are using `mount`, we will still
   // stub out Transition and Transition Group by default.
@@ -448,6 +445,9 @@ export function mount(
   const appRef = vm.$refs[MOUNT_COMPONENT_REF] as ComponentPublicInstance
   const $vm = Reflect.ownKeys(appRef).length ? appRef : vm
   console.warn = warnSave
+
+  // add tracking for emitted events
+  attachEmitListener($vm)
 
   return createWrapper(app, $vm, setProps)
 }
