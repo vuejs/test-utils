@@ -180,12 +180,12 @@ describe('setValue', () => {
 
   describe('on component instance', () => {
     const PlainInputComponent = defineComponent({
-      props: ['modelValue'],
+      props: ['modelValue', 'onUpdate:modelValue'],
       template: '<div>{{ modelValue }}</div>'
     })
 
     const MultiInputComponent = defineComponent({
-      props: ['foo', 'bar'],
+      props: ['foo', 'bar', 'onUpdate:bar', 'onUpdate:foo'],
       template: '<div>{{ foo }} {{ bar }}</div>'
     })
 

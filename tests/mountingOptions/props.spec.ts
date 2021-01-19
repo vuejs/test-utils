@@ -72,6 +72,7 @@ describe('mountingOptions.props', () => {
 
   test('assigns event listeners', async () => {
     const Component = {
+      emits: ['customEvent'],
       template: '<button @click="$emit(\'customEvent\', true)">Click</button>'
     }
     const onCustomEvent = jest.fn()
