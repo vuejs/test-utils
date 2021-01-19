@@ -1,27 +1,26 @@
-import { setDevtoolsHook, ComponentPublicInstance } from 'vue'
+import { setDevtoolsHook, ComponentPublicInstance, devtools } from 'vue'
 
 const enum DevtoolsHooks {
   COMPONENT_EMIT = 'component:emit'
 }
 
 export const attachEmitListener = (vm: ComponentPublicInstance) => {
-  let events: Record<string, unknown[]> = {}
+  const events: Record<string, unknown[]> = {}
   ;(vm as any).__emitted = events
-  // use devtools capture this "emit"
+  // use devtools to capture this "emit"
   setDevtoolsHook(createDevTools(events))
 }
 
-function createDevTools(events) {
-  const devTools: any = {
-    emit(type, ...payload) {
-      if (type !== DevtoolsHooks.COMPONENT_EMIT) return
+function createDevTools(events): any {
+  const devTools: Partial<typeof devtools> = {
+    emit(eventType, ...payload) {
+      if (eventType !== DevtoolsHooks.COMPONENT_EMIT) return
 
       // The first argument is root component
       // The second argument is  vm
       // The third argument is event
       // The fourth argument is args of event
       recordEvent(events, payload[2], payload[3])
-      wrapperWarn()
     }
   }
 
