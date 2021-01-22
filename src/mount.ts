@@ -233,16 +233,7 @@ export function mount(
   let component
 
   if (isFunctionalComponent(originalComponent)) {
-    // we need to wrap it like this so we can capture emitted events.
-    // we capture events using a mixin that mutates `emit` in `beforeCreate`,
-    // but functional components do not support mixins, so we need to wrap it
-    // and make it a non-functional component for testing purposes.
-    component = defineComponent({
-      setup: (_, { attrs, slots, emit }) => () => {
-        return h((props: any, ctx: any) =>
-          originalComponent(props, { ...ctx, ...attrs, emit, slots })
-        )
-      }
+    component = setup: (_, { attrs, slots }) => () => h(originalComponent, attrs, slots)
     })
   } else if (isObjectComponent(originalComponent)) {
     component = { ...originalComponent }
