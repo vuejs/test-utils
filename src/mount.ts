@@ -32,7 +32,7 @@ import {
 } from './utils'
 import { processSlot } from './utils/compileSlots'
 import { createWrapper, VueWrapper } from './vueWrapper'
-import { attachEmitListener } from './emitMixin'
+import { attachEmitListener } from './emit'
 import { createDataMixin } from './dataMixin'
 import { MOUNT_COMPONENT_REF, MOUNT_PARENT_NAME } from './constants'
 import { createStub, stubComponents } from './stubs'
@@ -346,6 +346,9 @@ export function mount(
     return vm.$nextTick()
   }
 
+  // add tracking for emitted events
+  attachEmitListener()
+
   // create the app
   const app = createApp(Parent)
 
@@ -445,9 +448,6 @@ export function mount(
   const appRef = vm.$refs[MOUNT_COMPONENT_REF] as ComponentPublicInstance
   const $vm = Reflect.ownKeys(appRef).length ? appRef : vm
   console.warn = warnSave
-
-  // add tracking for emitted events
-  attachEmitListener($vm)
 
   return createWrapper(app, $vm, setProps)
 }

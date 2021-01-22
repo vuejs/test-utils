@@ -1,12 +1,24 @@
-import { setDevtoolsHook, ComponentPublicInstance, devtools } from 'vue'
+import { setDevtoolsHook, devtools } from 'vue'
 
 const enum DevtoolsHooks {
   COMPONENT_EMIT = 'component:emit'
 }
 
-export const attachEmitListener = (vm: ComponentPublicInstance) => {
-  const events: Record<string, unknown[]> = {}
-  ;(vm as any).__emitted = events
+let events: Record<string, unknown[]>
+
+export function emitted<T = unknown>(
+  eventName?: string
+): T[] | Record<string, T[]> {
+  if (eventName) {
+    const emitted = (events as Record<string, T[]>)[eventName]
+    return emitted
+  }
+
+  return events as Record<string, T[]>
+}
+
+export const attachEmitListener = () => {
+  events = {}
   // use devtools to capture this "emit"
   setDevtoolsHook(createDevTools(events))
 }
@@ -29,9 +41,6 @@ function createDevTools(events): any {
 
 function recordEvent(events, event, args) {
   // Record the event message sent by the emit
-  // Stored by a vm
-  // emitted by a subsequent wrapper.emitted
-  // An event object and a vm.__emitted is a reference
   events[event]
     ? (events[event] = [...events[event], [...args]])
     : (events[event] = [[...args]])
