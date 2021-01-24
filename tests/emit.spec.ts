@@ -154,4 +154,14 @@ describe('emitted', () => {
     expect(wrapper.emitted('hello')).toHaveLength(1)
     expect(wrapper.emitted('hello')[0]).toEqual(['foo', 'bar'])
   })
+
+  it('captures an event emitted in setup', () => {
+    const Comp = {
+      setup(_, { emit }) {
+        emit('foo')
+      }
+    }
+    const wrapper = mount(Comp)
+    expect(wrapper.emitted().foo).toBeTruthy()
+  })
 })

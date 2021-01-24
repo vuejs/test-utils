@@ -8,6 +8,7 @@ import { createWrapperError } from './errorWrapper'
 import { TriggerOptions } from './createDomEvent'
 import { find, matches } from './utils/find'
 import { mergeDeep } from './utils'
+import { emitted } from './emit'
 
 export class VueWrapper<T extends ComponentPublicInstance> {
   private componentVM: T
@@ -72,12 +73,7 @@ export class VueWrapper<T extends ComponentPublicInstance> {
   emitted<T = unknown>(): Record<string, T[]>
   emitted<T = unknown>(eventName?: string): T[]
   emitted<T = unknown>(eventName?: string): T[] | Record<string, T[]> {
-    if (eventName) {
-      const emitted = (this.vm['__emitted'] as Record<string, T[]>)[eventName]
-      return emitted
-    }
-
-    return this.vm['__emitted'] as Record<string, T[]>
+    return emitted(eventName)
   }
 
   html() {

@@ -32,7 +32,7 @@ import {
 } from './utils'
 import { processSlot } from './utils/compileSlots'
 import { createWrapper, VueWrapper } from './vueWrapper'
-import { attachEmitListener } from './emitMixin'
+import { attachEmitListener } from './emit'
 import { createDataMixin } from './dataMixin'
 import { MOUNT_COMPONENT_REF, MOUNT_PARENT_NAME } from './constants'
 import { createStub, stubComponents } from './stubs'
@@ -233,16 +233,8 @@ export function mount(
   let component
 
   if (isFunctionalComponent(originalComponent)) {
-    // we need to wrap it like this so we can capture emitted events.
-    // we capture events using a mixin that mutates `emit` in `beforeCreate`,
-    // but functional components do not support mixins, so we need to wrap it
-    // and make it a non-functional component for testing purposes.
     component = defineComponent({
-      setup: (_, { attrs, slots, emit }) => () => {
-        return h((props: any, ctx: any) =>
-          originalComponent(props, { ...ctx, ...attrs, emit, slots })
-        )
-      }
+      setup: (_, { attrs, slots }) => () => h(originalComponent, attrs, slots)
     })
   } else if (isObjectComponent(originalComponent)) {
     component = { ...originalComponent }
@@ -346,6 +338,9 @@ export function mount(
     return vm.$nextTick()
   }
 
+  // add tracking for emitted events
+  attachEmitListener()
+
   // create the app
   const app = createApp(Parent)
 
@@ -407,9 +402,6 @@ export function mount(
       app.provide(key, global.provide[key])
     }
   }
-
-  // add tracking for emitted events
-  app.mixin(attachEmitListener())
 
   // stubs
   // even if we are using `mount`, we will still
