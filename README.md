@@ -7,7 +7,7 @@ The next iteration of Vue Test Utils. It targets Vue 3.
 - yarn: `yarn add @vue/test-utils@next --dev`
 - npm: `npm install @vue/test-utils@next --save-dev`
 
-Get started with the [documentation](https://vue-test-utils.vuejs.org/v2/).
+Get started with the [documentation](https://next.vue-test-utils.vuejs.org/).
 
 ## Coming from Vue 2 + Vue Test Utils?
 
@@ -21,9 +21,9 @@ There is [`vue-jest`](https://github.com/vuejs/vue-jest) for loading `.vue` file
 
 If you don't want to configure things, you can download a repository with Vue 3, `@vue/test-utils@next`, `vue-jest@next` and TypeScript configured [here](https://github.com/lmiller1990/vtu-next-demo).
 
-## What works?
+## Documentation
 
-See the [docs](https://vuejs.github.io/vue-test-utils-next-docs/guide/introduction.html).
+See the [docs](https://next.vue-test-utils.vuejs.org/).
 
 ## Development
 
@@ -33,9 +33,9 @@ There is still some work left to do. See issues for some basic TODOs, or the tab
 
 ## Contributing
 
-This is still quite alpha, but we plan on moving to RC sooner than later. If you want to add a feature, have a hack or ping someone in Discord to chat, or check out the issues and project board.
+We plan on moving to RC sooner than later. If you want to add a feature, have a hack or ping someone in Discord to chat, or check out the issues and project board.
 
-There's also some [work left to do in docs](https://github.com/vuejs/vue-test-utils-next-docs/issues).
+There's also some [work left to do in docs](https://github.com/vuejs/vue-test-utils-next/issues?q=is%3Aopen+is%3Aissue+label%3Adocumentation).
 
 ## Comparison with Vue Test Utils beta (targeting Vue 2)
 
@@ -47,24 +47,24 @@ This is table for those coming from VTU 1, comparing the two APIs. Some things a
 
 ### Mounting Options
 
-| option           | status | notes                                                                                     |
-| ---------------- | ------ | ----------------------------------------------------------------------------------------- |
+| option           | status | notes                                                                               |
+| ---------------- | ------ | ----------------------------------------------------------------------------------- |
 | data             | ✅     |
-| slots            | ✅     | has not been tested vigorously. Please try it out.                                        |
-| mocks            | ✅     | nested in [`global`](https://vuejs.github.io/vue-test-utils-next-docs/api/#global)        |
-| propsData        | ✅     | now called `props`                                                                        |
-| provide          | ✅     | nested in [`global`](https://vuejs.github.io/vue-test-utils-next-docs/api/#global)        |
-| mixins           | ✅     | (new!) nested in [`global`](https://vuejs.github.io/vue-test-utils-next-docs/api/#global) |
-| plugins          | ✅     | (new!) nested in [`global`](https://vuejs.github.io/vue-test-utils-next-docs/api/#global) |
-| component        | ✅     | (new!) nested in [`global`](https://vuejs.github.io/vue-test-utils-next-docs/api/#global) |
-| directives       | ✅     | (new!) nested in [`global`](https://vuejs.github.io/vue-test-utils-next-docs/api/#global) |
+| slots            | ✅     | has not been tested vigorously. Please try it out.                                  |
+| mocks            | ✅     | nested in `global`                                                                  |
+| propsData        | ✅     | now called `props`                                                                  |
+| provide          | ✅     | nested in `global`                                                                  |
+| mixins           | ✅     | (new!) nested in `global`                                                           |
+| plugins          | ✅     | (new!) nested in `global`                                                           |
+| component        | ✅     | (new!) nested in `global`                                                           |
+| directives       | ✅     | (new!) nested in `global`                                                           |
 | stubs            | ✅     |
-| attachToDocument | ✅     | renamed `attachTo`. See [here](https://github.com/vuejs/vue-test-utils/pull/1492)         |
+| attachToDocument | ✅     | renamed `attachTo`. See [here](https://github.com/vuejs/vue-test-utils/pull/1492)   |
 | attrs            | ✅     |
-| scopedSlots      | ⚰️     | scopedSlots are merged with slots in Vue 3                                                |
-| context          | ⚰️     | different from Vue 2, does not make sense anymore.                                        |
-| localVue         | ⚰️     | may not make sense anymore since we do not mutate the global Vue instance in Vue 3.       |
-| listeners        | ⚰️     | no longer exists in Vue 3                                                                 |
+| scopedSlots      | ⚰️     | scopedSlots are merged with `slots` in Vue 3                                        |
+| context          | ⚰️     | different from Vue 2, does not make sense anymore.                                  |
+| localVue         | ⚰️     | may not make sense anymore since we do not mutate the global Vue instance in Vue 3. |
+| listeners        | ⚰️     | no longer exists in Vue 3                                                           |
 | parentComponent  | ⚰️     |
 
 ### Wrapper API (mount)
