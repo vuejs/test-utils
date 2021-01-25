@@ -53,6 +53,10 @@ const config = {
           {
             text: 'Passing Data to Components',
             link: '/guide/essentials/passing-data'
+          },
+          {
+            text: 'Write components that are easy to test',
+            link: '/guide/essentials/easy-to-test'
           }
         ]
       },
