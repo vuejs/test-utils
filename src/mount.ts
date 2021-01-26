@@ -441,8 +441,11 @@ export function mount(
   // if not, use the return value from app.mount.
   const appRef = vm.$refs[MOUNT_COMPONENT_REF] as ComponentPublicInstance
   const $vm = Reflect.ownKeys(appRef).length ? appRef : vm
+  // we add `hasOwnProperty` so jest can spy on the proxied vm without throwing
+  $vm.hasOwnProperty = (property) => {
+    return Reflect.has($vm, property)
+  }
   console.warn = warnSave
-
   return createWrapper(app, $vm, setProps)
 }
 
