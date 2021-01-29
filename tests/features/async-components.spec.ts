@@ -17,8 +17,8 @@ const config: AppConfig = {
 
 // AsyncComponents are documented here: https://github.com/vuejs/rfcs/blob/async-component/active-rfcs/0026-async-component-api.md
 describe('defineAsyncComponent', () => {
-  beforeAll(jest.useFakeTimers)
-  afterAll(jest.useRealTimers)
+  beforeAll(() => jest.useFakeTimers())
+  afterAll(() => jest.useRealTimers())
 
   it('works with the basic usage', async () => {
     const AsyncHello = defineAsyncComponent(
