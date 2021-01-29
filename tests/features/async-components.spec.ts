@@ -21,8 +21,8 @@ describe('defineAsyncComponent', () => {
   afterAll(jest.useRealTimers)
 
   it('works with the basic usage', async () => {
-    const AsyncHello = defineAsyncComponent(() =>
-      import('../components/Hello.vue')
+    const AsyncHello = defineAsyncComponent(
+      () => import('../components/Hello.vue')
     )
     const Comp = defineComponent({
       render() {
@@ -96,8 +96,8 @@ describe('defineAsyncComponent', () => {
   // TODO: Find out why this does not work
   // Is it valid to have an AsyncComponent as the root? Was it ever?
   it.skip('works when AsyncComponent is the root', async () => {
-    const AsyncHello = defineAsyncComponent(() =>
-      import('../components/Hello.vue')
+    const AsyncHello = defineAsyncComponent(
+      () => import('../components/Hello.vue')
     )
     const Comp = defineComponent({
       render() {
