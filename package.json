@@ -29,7 +29,7 @@
     "dom-event-types": "^1.0.0",
     "husky": "^4.2.3",
     "jest": "25.2.1",
-    "jsdom": "^16.2.2",
+    "jsdom": "^16.4.0",
     "jsdom-global": "^3.0.2",
     "lint-staged": "^10.5.3",
     "prettier": "^2.2.1",
