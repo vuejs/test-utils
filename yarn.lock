@@ -6700,10 +6700,10 @@ vitepress@^0.11.5:
     vite "^2.0.0-beta.56"
     vue "^3.0.5"
 
-vue-class-component@^8.0.0-beta.4:
-  version "8.0.0-beta.4"
-  resolved "https://registry.yarnpkg.com/vue-class-component/-/vue-class-component-8.0.0-beta.4.tgz#bff95cdd44eb450a4a4e54b69da22099613d8071"
-  integrity sha512-+QXBhVH/Mz8dEC+IU7e8XXM54Tn0Aj9/saybeuK8XmhQiJlcijCB8kB7CYpBEMpHWaA+DoLr6LvHMbclYRCwZQ==
+vue-class-component@^8.0.0-rc.1:
+  version "8.0.0-rc.1"
+  resolved "https://registry.yarnpkg.com/vue-class-component/-/vue-class-component-8.0.0-rc.1.tgz#db692cd97656eb9a08206c03d0b7398cdb1d9420"
+  integrity sha512-w1nMzsT/UdbDAXKqhwTmSoyuJzUXKrxLE77PCFVuC6syr8acdFDAq116xgvZh9UCuV0h+rlCtxXolr3Hi3HyPQ==
 
 vue-jest@^5.0.0-alpha.8:
   version "5.0.0-alpha.8"
