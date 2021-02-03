@@ -4,6 +4,7 @@ import { createWrapperError } from './errorWrapper'
 import { TriggerOptions, createDOMEvent } from './createDomEvent'
 import { config } from './config'
 import { isElementVisible } from './utils/isElementVisible'
+import { textContent } from './utils'
 
 export class DOMWrapper<ElementType extends Element> {
   element: ElementType
@@ -45,7 +46,7 @@ export class DOMWrapper<ElementType extends Element> {
   }
 
   text() {
-    return this.element.textContent?.trim()
+    return textContent(this.element)
   }
 
   html() {
