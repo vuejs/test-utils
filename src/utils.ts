@@ -96,3 +96,11 @@ export function isHTML(str: string) {
 
   return false
 }
+
+export function textContent(element: Element): string {
+  // we check if the element is a comment first
+  // to return an empty string in that case, instead of the comment content
+  return element.nodeType !== Node.COMMENT_NODE
+    ? element.textContent?.trim()
+    : ''
+}

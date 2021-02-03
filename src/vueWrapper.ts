@@ -7,7 +7,7 @@ import { FindAllComponentsSelector, FindComponentSelector } from './types'
 import { createWrapperError } from './errorWrapper'
 import { TriggerOptions } from './createDomEvent'
 import { find, matches } from './utils/find'
-import { mergeDeep } from './utils'
+import { mergeDeep, textContent } from './utils'
 import { emitted } from './emit'
 
 export class VueWrapper<T extends ComponentPublicInstance> {
@@ -86,7 +86,7 @@ export class VueWrapper<T extends ComponentPublicInstance> {
   }
 
   text() {
-    return this.element.textContent?.trim()
+    return textContent(this.element)
   }
 
   find<K extends keyof HTMLElementTagNameMap>(

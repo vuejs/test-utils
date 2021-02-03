@@ -26,4 +26,17 @@ describe('text', () => {
 
     expect(wrapper.text()).toBe('foobarbaz')
   })
+
+  it('returns empty string when the root element is a comment', () => {
+    const Component = defineComponent({
+      template: '<div v-if="condition">Hello</div>',
+      setup() {
+        return { condition: false }
+      }
+    })
+
+    const wrapper = mount(Component)
+
+    expect(wrapper.text()).toBe('')
+  })
 })
