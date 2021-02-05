@@ -1,20 +1,27 @@
-import { setDevtoolsHook, devtools } from 'vue'
+import { setDevtoolsHook, devtools, ComponentPublicInstance } from 'vue'
 
 const enum DevtoolsHooks {
   COMPONENT_EMIT = 'component:emit'
 }
 
-let events: Record<string, unknown[]>
+let componentEvents: Record<string, unknown[]>
+let events: Record<string, typeof componentEvents>
 
 export function emitted<T = unknown>(
+  vm: ComponentPublicInstance,
   eventName?: string
 ): T[] | Record<string, T[]> {
+  const cid = vm.$.uid
+
+  const vmEvents = (events as Record<string, Record<string, T[]>>)[cid] || {}
   if (eventName) {
-    const emitted = (events as Record<string, T[]>)[eventName]
+    const emitted = vmEvents
+      ? (vmEvents as Record<string, T[]>)[eventName]
+      : undefined
     return emitted
   }
 
-  return events as Record<string, T[]>
+  return vmEvents as Record<string, T[]>
 }
 
 export const attachEmitListener = () => {
@@ -28,20 +35,27 @@ function createDevTools(events): any {
     emit(eventType, ...payload) {
       if (eventType !== DevtoolsHooks.COMPONENT_EMIT) return
 
-      // The first argument is root component
-      // The second argument is  vm
-      // The third argument is event
-      // The fourth argument is args of event
-      recordEvent(events, payload[2], payload[3])
+      const [rootVM, componentVM, event, eventArgs] = payload
+      recordEvent(events, componentVM, event, eventArgs)
     }
   }
 
   return devTools
 }
 
-function recordEvent(events, event, args) {
+function recordEvent(events, vm, event, args): void {
+  // Functional component wrapper creates a parent component
+  let wrapperVm = vm
+  while (typeof wrapperVm.type === 'function') wrapperVm = wrapperVm.parent
+
+  const cid = wrapperVm.uid
+  if (!(cid in events)) {
+    events[cid] = {}
+  }
+  if (!(event in events[cid])) {
+    events[cid][event] = []
+  }
+
   // Record the event message sent by the emit
-  events[event]
-    ? (events[event] = [...events[event], [...args]])
-    : (events[event] = [[...args]])
+  events[cid][event].push(args)
 }
