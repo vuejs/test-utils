@@ -73,7 +73,7 @@ export class VueWrapper<T extends ComponentPublicInstance> {
   emitted<T = unknown>(): Record<string, T[]>
   emitted<T = unknown>(eventName?: string): T[]
   emitted<T = unknown>(eventName?: string): T[] | Record<string, T[]> {
-    return emitted(eventName)
+    return emitted(this.vm, eventName)
   }
 
   html() {
