@@ -33,7 +33,7 @@
     "lint-staged": "^10.5.3",
     "prettier": "^2.2.1",
     "reflect-metadata": "^0.1.13",
-    "rollup": "^1.31.1",
+    "rollup": "^2.38.5",
     "rollup-plugin-typescript2": "^0.29.0",
     "ts-jest": "25.3.1",
     "tsd": "0.14.0",
