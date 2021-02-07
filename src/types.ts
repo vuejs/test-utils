@@ -42,6 +42,8 @@ type RawProps = VNodeProps & {
   [Symbol.iterator]?: never
 } & Record<string, any>
 
+export type TeleportTarget = Element | string
+
 export interface MountingOptions<Props, Data = {}> {
   /**
    * Overrides component's default data. Must be a function.
@@ -87,6 +89,13 @@ export interface MountingOptions<Props, Data = {}> {
    * @see https://vue-test-utils.vuejs.org/v2/api/#slots
    */
   shallow?: boolean
+
+  /**
+   * Specify where to find the teleported component.
+   *
+   * @see https://vue-test-utils.vuejs.org/v2/api/#teleportTarget
+   */
+  teleportTarget?: TeleportTarget | TeleportTarget[]
 }
 
 export type GlobalMountOptions = {

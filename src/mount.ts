@@ -23,7 +23,7 @@ import {
 } from 'vue'
 
 import { config } from './config'
-import { MountingOptions, Slot } from './types'
+import { MountingOptions, Slot, TeleportTarget } from './types'
 import {
   isFunctionalComponent,
   isHTML,
@@ -409,7 +409,7 @@ export function mount(
   stubComponents(global.stubs, options?.shallow)
 
   // users expect stubs to work with globally registered
-  // compnents, too, such as <router-link> and <router-view>
+  // components, too, such as <router-link> and <router-view>
   // so we register those globally.
   // https://github.com/vuejs/vue-test-utils-next/issues/249
   if (global?.stubs) {
@@ -428,7 +428,7 @@ export function mount(
   // mount the app!
   const vm = app.mount(el)
 
-  // Ingore Avoid app logic that relies on enumerating keys on a component instance... warning
+  // Ignore Avoid app logic that relies on enumerating keys on a component instance... warning
   const warnSave = console.warn
   console.warn = () => {}
 
@@ -438,10 +438,27 @@ export function mount(
   // if `appRef` has keys, use that (vm always has keys like $el, $props etc).
   // if not, use the return value from app.mount.
   const appRef = vm.$refs[MOUNT_COMPONENT_REF] as ComponentPublicInstance
-  const $vm = Reflect.ownKeys(appRef).length ? appRef : vm
+  const $vm: ComponentPublicInstance = Reflect.ownKeys(appRef).length
+    ? appRef
+    : vm
+
+  const teleportTargets = options?.teleportTarget
+    ? Array.isArray(options.teleportTarget)
+      ? options.teleportTarget
+      : [options.teleportTarget]
+    : []
+
+  if (
+    !teleportTargets.every(
+      (target) => target instanceof HTMLElement || typeof target === 'string'
+    )
+  ) {
+    throw new Error('teleportTarget can only contain strings and HTMLElements')
+  }
+
   console.warn = warnSave
 
-  return createWrapper(app, $vm, setProps)
+  return createWrapper(app, $vm, setProps, teleportTargets)
 }
 
 export const shallowMount: typeof mount = (component: any, options?: any) => {

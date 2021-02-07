@@ -104,6 +104,14 @@ test('attribute is overridden by a prop with the same name', () => {
 })
 ```
 
+### teleportTarget
+
+An array or single item of html elements or query selector strings, where the test utils should locate your component when you're using the [<teleport>](https://v3.vuejs.org/guide/teleport.html) component.
+
+```js
+// todo - teleport
+```
+
 ### `data`
 
 Overrides a component's default `data`. Must be a function.
@@ -798,9 +806,7 @@ Finds a Vue Component instance and returns a `VueWrapper` if one is found, other
 
 ```vue
 <template>
-  <div class="foo">
-    Foo
-  </div>
+  <div class="foo">Foo</div>
 </template>
 
 <script>
@@ -924,9 +930,7 @@ Similar to `findComponent`, `getComponent` looks for a Vue Component instance an
 
 ```vue
 <template>
-  <div class="foo">
-    Foo
-  </div>
+  <div class="foo">Foo</div>
 </template>
 
 <script>
