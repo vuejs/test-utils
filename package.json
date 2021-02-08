@@ -30,7 +30,7 @@
     "jest": "25.5.4",
     "jsdom": "^16.4.0",
     "jsdom-global": "^3.0.2",
-    "lint-staged": "^10.5.3",
+    "lint-staged": "^10.5.4",
     "prettier": "^2.2.1",
     "reflect-metadata": "^0.1.13",
     "rollup": "^2.38.5",
