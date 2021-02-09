@@ -798,9 +798,7 @@ Finds a Vue Component instance and returns a `VueWrapper` if one is found, other
 
 ```vue
 <template>
-  <div class="foo">
-    Foo
-  </div>
+  <div class="foo">Foo</div>
 </template>
 
 <script>
@@ -924,9 +922,7 @@ Similar to `findComponent`, `getComponent` looks for a Vue Component instance an
 
 ```vue
 <template>
-  <div class="foo">
-    Foo
-  </div>
+  <div class="foo">Foo</div>
 </template>
 
 <script>
@@ -1274,3 +1270,44 @@ test('unmount', () => {
 ### `vm`
 
 This is the `Vue` instance. You can access all of the [instance methods and properties of a vm](https://v3.vuejs.org/api/instance-properties.html) with `wrapper.vm`. This only exists on `VueWrapper`.
+
+## Global Config
+
+### `config.global`
+
+Instead of configuring global mounting options on a per-test basis, you can configure them globally. These will be used by default every time you `mount` a component. You can override the defaults by via mounting options.
+
+An example might be globally mocking the `$t` variable from vue-i18n, globally stubbing out a component, or registering a global component:
+
+```js
+import { config, mount } from '@vue/test-utils'
+import { h } from 'vue'
+
+config.global.mocks = {
+  $t: message => message
+}
+
+config.global.stubs = {
+  'my-component': {
+    name: 'my-component'
+    render() {
+      return h('div')
+    }
+  }
+}
+
+const Component = {
+  components: {
+    MyComponent
+  },
+  template: `
+    <p>{{ $t('message') }}</p>
+    <my-component />
+  `
+}
+
+it('uses global config', () => {
+  const wrapper = mount(Component)
+  console.log(wrapper.html()) // <p>message</p><my-component-stub />
+})
+```
