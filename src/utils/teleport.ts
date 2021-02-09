@@ -5,7 +5,7 @@ import { isVNode } from 'vue'
  * The given vm is teleported.
  */
 export function isTeleported(vm: ComponentPublicInstance): boolean {
-  return vm?.$?.subTree?.props?.to && vm?.$?.subTree?.type?.['__isTeleport']
+  return vm?.$?.subTree?.props?.to && vm.$.subTree?.type?.['__isTeleport']
 }
 
 /**

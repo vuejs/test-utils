@@ -1,16 +1,11 @@
 import { nextTick } from 'vue'
-import type { ComponentPublicInstance, App, Teleport } from 'vue'
+import type { ComponentPublicInstance, App } from 'vue'
 import { ShapeFlags } from '@vue/shared'
-
 import { config } from './config'
 import { DOMWrapper } from './domWrapper'
-import {
-  FindAllComponentsSelector,
-  FindComponentSelector,
-  TeleportOrSuspenseInstance
-} from './types'
+import type { FindAllComponentsSelector, FindComponentSelector } from './types'
 import { createWrapperError } from './errorWrapper'
-import { TriggerOptions } from './createDomEvent'
+import type { TriggerOptions } from './createDomEvent'
 import { find, matches } from './utils/find'
 import { mergeDeep, textContent } from './utils'
 import { emitted } from './emit'

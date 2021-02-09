@@ -5,12 +5,7 @@ import type {
   Plugin,
   AppConfig,
   VNode,
-  VNodeProps,
-  VNodeTypes,
-  Text,
-  Static,
-  Fragment,
-  Comment
+  VNodeProps
 } from 'vue'
 
 interface RefSelector {
@@ -46,17 +41,6 @@ type RawProps = VNodeProps & {
   // used to differ from Array children
   [Symbol.iterator]?: never
 } & Record<string, any>
-
-export type TeleportOrSuspenseInstance = Exclude<
-  VNodeTypes,
-  | typeof Text
-  | string
-  | Component
-  | VNode
-  | typeof Static
-  | typeof Fragment
-  | typeof Comment
->
 
 export interface MountingOptions<Props, Data = {}> {
   /**
