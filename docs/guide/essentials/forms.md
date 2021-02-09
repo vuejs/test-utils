@@ -207,7 +207,7 @@ test('submits the form', async () => {
 
   await wrapper.find('form').trigger('submit.prevent')
 
-  expect(wrapper.emitted('submit')[0][0]).toBe({
+  expect(wrapper.emitted('submit')[0][0]).toStrictEqual({
     email,
     description,
     city,
