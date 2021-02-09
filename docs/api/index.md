@@ -1308,6 +1308,6 @@ const Component = {
 
 it('uses global config', () => {
   const wrapper = mount(Component)
-  console.log(wrapper.html()) // <p>message</p><my-component-stub />
+  console.log(wrapper.html()) // <p>message</p><div />
 })
 ```
