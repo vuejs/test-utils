@@ -1288,8 +1288,8 @@ config.global.mocks = {
 }
 
 config.global.stubs = {
-  'my-component': {
-    name: 'my-component'
+  MyComponent: {
+    name: 'MyComponent'
     render() {
       return h('div')
     }
