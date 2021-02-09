@@ -3,6 +3,7 @@
     <hello />
     <component-with-input />
     <component-without-name />
+    <script-setup />
     <with-props />
   </div>
 </template>
@@ -11,6 +12,7 @@
 import Hello from './Hello'
 import ComponentWithInput from './ComponentWithInput'
 import ComponentWithoutName from './ComponentWithoutName'
+import ScriptSetup from './ScriptSetup'
 import WithProps from './WithProps'
 
 export default {
@@ -19,9 +21,10 @@ export default {
     Hello,
     ComponentWithInput,
     ComponentWithoutName,
+    ScriptSetup,
     WithProps
   },
-  data () {
+  data() {
     return {}
   }
 }

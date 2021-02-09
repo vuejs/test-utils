@@ -1,6 +1,7 @@
 import { defineComponent } from 'vue'
 import { mount, shallowMount, VueWrapper } from '../src'
 import ComponentWithChildren from './components/ComponentWithChildren.vue'
+import ScriptSetupWithChildren from './components/ScriptSetupWithChildren.vue'
 
 describe('shallowMount', () => {
   it('renders props for stubbed component in a snapshot', () => {
@@ -43,6 +44,7 @@ describe('shallowMount', () => {
         '<hello-stub></hello-stub>' +
         '<component-with-input-stub></component-with-input-stub>' +
         '<component-without-name-stub></component-without-name-stub>' +
+        '<script-setup-stub></script-setup-stub>' +
         '<with-props-stub></with-props-stub>' +
         '</div>'
     )
@@ -55,6 +57,7 @@ describe('shallowMount', () => {
         '<hello-stub></hello-stub>' +
         '<component-with-input-stub></component-with-input-stub>' +
         '<component-without-name-stub></component-without-name-stub>' +
+        '<script-setup-stub></script-setup-stub>' +
         '<with-props-stub></with-props-stub>' +
         '</div>'
     )
@@ -74,8 +77,27 @@ describe('shallowMount', () => {
         '<div>Override</div>' +
         '<component-with-input-stub></component-with-input-stub>' +
         '<component-without-name-stub></component-without-name-stub>' +
+        '<script-setup-stub></script-setup-stub>' +
         '<with-props-stub></with-props-stub>' +
         '</div>'
+    )
+  })
+
+  it('stubs all components in a script setup component', () => {
+    const wrapper = mount(ScriptSetupWithChildren, {
+      shallow: true,
+      global: {
+        stubs: {
+          Hello: { template: '<div>Override</div>' }
+        }
+      }
+    })
+    expect(wrapper.html()).toEqual(
+      '<div>Override</div>' +
+        '<component-with-input-stub></component-with-input-stub>' +
+        '<stub></stub>' +
+        '<stub></stub>' +
+        '<with-props-stub></with-props-stub>'
     )
   })
 })

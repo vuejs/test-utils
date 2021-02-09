@@ -152,8 +152,8 @@ export function stubComponents(
           }
         }
       }
-      if (!name && !shallow) {
-        return args
+      if (!name) {
+        return shallow ? ['stub'] : args
       }
 
       const stub = resolveComponentStubByName(name, stubs)

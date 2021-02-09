@@ -1,4 +1,5 @@
 import { defineComponent, FunctionalComponent, h, SetupContext } from 'vue'
+import { Vue } from 'vue-class-component'
 
 import { mount } from '../src'
 
@@ -77,10 +78,9 @@ describe('emitted', () => {
     expect(wrapper.emitted().hello[1]).toEqual(['foo', 'bar'])
   })
 
-  it('should propagate the original event', () => {
-    const Component = defineComponent({
-      name: 'ContextEmit',
-
+  it('should not propagate child events', () => {
+    const Child = defineComponent({
+      name: 'Child',
       setup(props, { emit }) {
         return () =>
           h('div', [
@@ -91,21 +91,26 @@ describe('emitted', () => {
 
     const Parent = defineComponent({
       name: 'Parent',
-
       setup(props, { emit }) {
         return () =>
-          h(Component, { onHello: (...events) => emit('parent', ...events) })
+          h(Child, { onHello: (...events) => emit('parent', ...events) })
       }
     })
     const wrapper = mount(Parent)
+    const childWrapper = wrapper.findComponent(Child)
+
     expect(wrapper.emitted()).toEqual({})
-    expect(wrapper.emitted().hello).toEqual(undefined)
+    expect(childWrapper.emitted()).toEqual({})
 
     wrapper.find('button').trigger('click')
     expect(wrapper.emitted().parent[0]).toEqual(['foo', 'bar'])
+    expect(wrapper.emitted().hello).toEqual(undefined)
+    expect(childWrapper.emitted().hello[0]).toEqual(['foo', 'bar'])
 
     wrapper.find('button').trigger('click')
     expect(wrapper.emitted().parent[1]).toEqual(['foo', 'bar'])
+    expect(wrapper.emitted().hello).toEqual(undefined)
+    expect(childWrapper.emitted().hello[1]).toEqual(['foo', 'bar'])
   })
 
   it('should allow passing the name of an event', () => {
@@ -133,7 +138,7 @@ describe('emitted', () => {
     expect(wrapper.emitted('hello')).toHaveLength(2)
   })
 
-  it('gives a useful warning for functional components', () => {
+  it('captures events emitted by functional components', () => {
     const Component: FunctionalComponent<
       { bar: string; level: number },
       { hello: (foo: string, bar: string) => void }
@@ -149,6 +154,24 @@ describe('emitted', () => {
         level: 1
       }
     })
+
+    wrapper.find('h1').trigger('click')
+    expect(wrapper.emitted('hello')).toHaveLength(1)
+    expect(wrapper.emitted('hello')[0]).toEqual(['foo', 'bar'])
+  })
+
+  it('captures events emitted by class-style components', () => {
+    // Define the component in class-style
+    class Component extends Vue {
+      bar = 'bar'
+      render() {
+        return h(`h1`, {
+          onClick: () => this.$emit('hello', 'foo', this.bar)
+        })
+      }
+    }
+
+    const wrapper = mount(Component, {})
 
     wrapper.find('h1').trigger('click')
     expect(wrapper.emitted('hello')).toHaveLength(1)
