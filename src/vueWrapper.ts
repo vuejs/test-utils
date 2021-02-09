@@ -1,9 +1,5 @@
-import {
-  ComponentPublicInstance,
-  nextTick,
-  App,
-  ComponentInternalInstance
-} from 'vue'
+import { nextTick } from 'vue'
+import type { ComponentPublicInstance, App, Teleport } from 'vue'
 import { ShapeFlags } from '@vue/shared'
 
 import { config } from './config'
@@ -11,33 +7,31 @@ import { DOMWrapper } from './domWrapper'
 import {
   FindAllComponentsSelector,
   FindComponentSelector,
-  TeleportTarget
+  TeleportOrSuspenseInstance
 } from './types'
 import { createWrapperError } from './errorWrapper'
 import { TriggerOptions } from './createDomEvent'
 import { find, matches } from './utils/find'
 import { mergeDeep, textContent } from './utils'
 import { emitted } from './emit'
+import { buildDOM, isTeleported } from './utils/teleport'
 
 export class VueWrapper<T extends ComponentPublicInstance> {
   private componentVM: T
   private rootVM: ComponentPublicInstance
   private __app: App | null
   private __setProps: ((props: Record<string, any>) => void) | undefined
-  private teleportTargets?: TeleportTarget[]
 
   constructor(
     app: App | null,
     vm: ComponentPublicInstance,
-    setProps?: (props: Record<string, any>) => void,
-    teleportTargets?: TeleportTarget[]
+    setProps?: (props: Record<string, any>) => void
   ) {
     this.__app = app
     // root is null on functional components
     this.rootVM = vm?.$root
     this.componentVM = vm as T
     this.__setProps = setProps
-    this.teleportTargets = teleportTargets
     config.plugins.VueWrapper.extend(this)
   }
 
@@ -48,122 +42,6 @@ export class VueWrapper<T extends ComponentPublicInstance> {
 
   private get parentElement(): Element {
     return this.vm.$el.parentElement
-  }
-
-  /**
-   * Get all the target elements defined in the teleportTarget mount option.
-   *
-   * @private
-   *
-   * @return {Element[]|undefined}
-   */
-  private getTeleportElements(): Element[] | undefined | never {
-    if (!this.teleportTargets.length) {
-      return
-    }
-
-    const elements: Element[] = []
-
-    this.teleportTargets.forEach((target) => {
-      if (typeof target !== 'string') {
-        elements.push(target)
-        return
-      }
-
-      const element = document.querySelector(target)
-
-      if (!element) {
-        throw new Error("The teleport target '" + target + "' cannot be found.")
-      }
-
-      elements.push(element)
-    })
-
-    return elements
-  }
-
-  /**
-   * Get the teleport target element for the given vue instance.
-   *
-   * @param {ComponentPublicInstance} vm
-   *
-   * @private
-   *
-   * @return {Element}
-   */
-  private getTeleportElement(
-    vm: ComponentPublicInstance = this.componentVM
-  ): Element | never {
-    const elements = this.getTeleportElements()
-    const errorMsg =
-      vm.$.type.name +
-      "'s teleport target element cannot be found. Are you sure the target exits in the DOM?"
-
-    if (!elements || !elements.length) {
-      throw new Error(errorMsg)
-    }
-
-    const index = elements.findIndex((element) => {
-      // todo what if the component has nor been realised as it's hidden by <!--v-if-->
-      // get the element of which the given vm is its direct child
-      return Array.from(element.childNodes).some(
-        (
-          child: Element & { __vueParentComponent: ComponentInternalInstance }
-        ) => {
-          return (
-            child.hasOwnProperty('__vueParentComponent') &&
-            child.__vueParentComponent.uid === vm.$.uid
-          )
-        }
-      )
-    })
-
-    if (index === -1) {
-      throw new Error(errorMsg)
-    }
-
-    return elements[index]
-  }
-
-  private getTeleportedComponentElement(
-    vm: ComponentPublicInstance = this.componentVM
-  ): Element {
-    const parentElement = this.getTeleportElement(vm)
-
-    const elements = Array.from(parentElement.children).filter(
-      (
-        child: Element & { __vueParentComponent: ComponentInternalInstance }
-      ) => {
-        return (
-          child.hasOwnProperty('__vueParentComponent') &&
-          child.__vueParentComponent.uid === vm.$.uid
-        )
-      }
-    )
-
-    if (elements.length !== 1) {
-      // todo
-      // this is presumably an impossible path as error would have been thrown if the element not found in the getTeleportElement
-      // or vue `uid` is not that unique
-      throw new Error('¯\\_(ツ)_/¯')
-    }
-
-    // todo - does this work? given vue 3 template doesn't have to have a single element in the `<template>` tag
-    return elements[0]
-  }
-
-  private isTeleported(
-    vm: ComponentPublicInstance = this.componentVM
-  ): boolean {
-    // todo - with runtime-core.d.ts TeleportImpl we might be able to omit the teleportTargets all together
-    const type = vm.$.subTree.type
-
-    return (
-      type &&
-      typeof type === 'object' &&
-      type.hasOwnProperty('__isTeleport') &&
-      type['__isTeleport']
-    )
   }
 
   get element(): Element {
@@ -206,9 +84,9 @@ export class VueWrapper<T extends ComponentPublicInstance> {
   }
 
   html() {
-    // todo - teleport
-    if (this.isTeleported()) {
-      return this.getTeleportedComponentElement().innerHTML
+    // todo - this check is incorrect as there might be nested teleports but it will do while discussing the pr
+    if (isTeleported(this.componentVM)) {
+      return buildDOM(this.componentVM).innerHTML
     }
 
     // cover cases like <Suspense>, multiple root nodes.
@@ -373,8 +251,7 @@ export class VueWrapper<T extends ComponentPublicInstance> {
 export function createWrapper<T extends ComponentPublicInstance>(
   app: App | null,
   vm: ComponentPublicInstance,
-  setProps?: (props: Record<string, any>) => void,
-  teleportTargets?: TeleportTarget[]
+  setProps?: (props: Record<string, any>) => void
 ): VueWrapper<T> {
-  return new VueWrapper<T>(app, vm, setProps, teleportTargets)
+  return new VueWrapper<T>(app, vm, setProps)
 }

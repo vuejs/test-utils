@@ -1,11 +1,16 @@
-import {
+import type {
   Component,
   ComponentOptions,
   Directive,
   Plugin,
   AppConfig,
   VNode,
-  VNodeProps
+  VNodeProps,
+  VNodeTypes,
+  Text,
+  Static,
+  Fragment,
+  Comment
 } from 'vue'
 
 interface RefSelector {
@@ -42,7 +47,16 @@ type RawProps = VNodeProps & {
   [Symbol.iterator]?: never
 } & Record<string, any>
 
-export type TeleportTarget = Element | string
+export type TeleportOrSuspenseInstance = Exclude<
+  VNodeTypes,
+  | typeof Text
+  | string
+  | Component
+  | VNode
+  | typeof Static
+  | typeof Fragment
+  | typeof Comment
+>
 
 export interface MountingOptions<Props, Data = {}> {
   /**
@@ -89,13 +103,6 @@ export interface MountingOptions<Props, Data = {}> {
    * @see https://vue-test-utils.vuejs.org/v2/api/#slots
    */
   shallow?: boolean
-
-  /**
-   * Specify where to find the teleported component.
-   *
-   * @see https://vue-test-utils.vuejs.org/v2/api/#teleportTarget
-   */
-  teleportTarget?: TeleportTarget | TeleportTarget[]
 }
 
 export type GlobalMountOptions = {

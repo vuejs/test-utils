@@ -23,7 +23,7 @@ import {
 } from 'vue'
 
 import { config } from './config'
-import { MountingOptions, Slot, TeleportTarget } from './types'
+import { MountingOptions, Slot } from './types'
 import {
   isFunctionalComponent,
   isHTML,
@@ -442,23 +442,9 @@ export function mount(
     ? appRef
     : vm
 
-  const teleportTargets = options?.teleportTarget
-    ? Array.isArray(options.teleportTarget)
-      ? options.teleportTarget
-      : [options.teleportTarget]
-    : []
-
-  if (
-    !teleportTargets.every(
-      (target) => target instanceof HTMLElement || typeof target === 'string'
-    )
-  ) {
-    throw new Error('teleportTarget can only contain strings and HTMLElements')
-  }
-
   console.warn = warnSave
 
-  return createWrapper(app, $vm, setProps, teleportTargets)
+  return createWrapper(app, $vm, setProps)
 }
 
 export const shallowMount: typeof mount = (component: any, options?: any) => {
