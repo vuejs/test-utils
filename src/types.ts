@@ -141,3 +141,5 @@ export type GlobalMountOptions = {
    */
   renderStubDefaultSlot?: boolean
 }
+
+export type VueElement = Element & { __vue_app__?: any }

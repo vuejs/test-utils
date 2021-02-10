@@ -4,6 +4,7 @@
     "outDir": "dist",
     "module": "esnext",
     "lib": ["DOM", "ES2015", "ES2017"],
+    "strict": true,
     "moduleResolution": "node",
     "esModuleInterop": true,
     "experimentalDecorators": true,

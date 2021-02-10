@@ -21,15 +21,15 @@ interface Plugin<Instance, O> {
 class Pluggable<Instance = DOMWrapper<Element>> {
   installedPlugins: Plugin<Instance, any>[] = []
 
-  install<O>(handler: (instance: Instance) => Record<string, any>)
+  install<O>(handler: (instance: Instance) => Record<string, any>): void
   install<O>(
     handler: (instance: Instance, options: O) => Record<string, any>,
     options: O
-  )
+  ): void
   install<O>(
     handler: (instance: Instance, options?: O) => Record<string, any>,
     options?: O
-  ) {
+  ): void {
     if (typeof handler !== 'function') {
       console.error('plugin.install must receive a function')
       handler = () => ({})
