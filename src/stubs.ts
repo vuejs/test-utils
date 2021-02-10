@@ -17,7 +17,7 @@ import { matchName } from './utils/matchName'
 import { ComponentInternalInstance } from '@vue/runtime-core'
 
 interface StubOptions {
-  name?: string
+  name: string
   props?: any
   propsDeclaration?: any
 }

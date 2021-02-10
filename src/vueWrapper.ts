@@ -3,7 +3,11 @@ import { ShapeFlags } from '@vue/shared'
 
 import { config } from './config'
 import { DOMWrapper } from './domWrapper'
-import { FindAllComponentsSelector, FindComponentSelector } from './types'
+import {
+  FindAllComponentsSelector,
+  FindComponentSelector,
+  VueElement
+} from './types'
 import { createWrapperError } from './errorWrapper'
 import { TriggerOptions } from './createDomEvent'
 import { find, matches } from './utils/find'
@@ -12,7 +16,7 @@ import { emitted } from './emit'
 
 export class VueWrapper<T extends ComponentPublicInstance> {
   private componentVM: T
-  private rootVM: ComponentPublicInstance
+  private rootVM: ComponentPublicInstance | null
   private __app: App | null
   private __setProps: ((props: Record<string, any>) => void) | undefined
 
@@ -34,7 +38,7 @@ export class VueWrapper<T extends ComponentPublicInstance> {
     return this.vm.$.subTree.shapeFlag === ShapeFlags.ARRAY_CHILDREN
   }
 
-  private get parentElement(): Element {
+  private get parentElement(): VueElement {
     return this.vm.$el.parentElement
   }
 
@@ -148,7 +152,7 @@ export class VueWrapper<T extends ComponentPublicInstance> {
     // eg: mount(Comp).findComponent(Comp)
     // this is the same as doing `wrapper.vm`, but we keep this behavior for back compat.
     if (matches(this.vm.$.vnode, selector)) {
-      return createWrapper(null, this.vm.$.vnode.component.proxy)
+      return createWrapper(null, this.vm.$.vnode.component?.proxy!)
     }
 
     return createWrapperError('VueWrapper')

@@ -158,10 +158,10 @@ export class DOMWrapper<ElementType extends Element> {
     }
 
     element.selected = true
-    let parentElement = element.parentElement
+    let parentElement = element.parentElement!
 
     if (parentElement.tagName === 'OPTGROUP') {
-      parentElement = parentElement.parentElement
+      parentElement = parentElement.parentElement!
     }
 
     return new DOMWrapper(parentElement).trigger('change')

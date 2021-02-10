@@ -1,3 +1,4 @@
+// @ts-expect-error No DefinitelyTyped package exists
 import eventTypes from 'dom-event-types'
 
 interface TriggerOptions {
@@ -9,7 +10,7 @@ interface TriggerOptions {
 
 interface EventParams {
   eventType: string
-  modifiers: string[]
+  modifiers: KeyNameArray
   options?: TriggerOptions
 }
 
@@ -21,8 +22,8 @@ const mouseKeyModifiers = ['left', 'middle', 'right']
 /**
  * Groups modifiers into lists
  */
-function generateModifiers(modifiers: string[], isOnClick: boolean) {
-  const keyModifiers: string[] = []
+function generateModifiers(modifiers: KeyNameArray, isOnClick: boolean) {
+  const keyModifiers: KeyNameArray = []
   const systemModifiers: string[] = []
 
   for (let i = 0; i < modifiers.length; i++) {
@@ -50,6 +51,7 @@ function generateModifiers(modifiers: string[], isOnClick: boolean) {
   }
 }
 
+export type KeyNameArray = Array<keyof typeof keyCodesByKeyName>
 export const keyCodesByKeyName = {
   backspace: 8,
   tab: 9,
@@ -98,10 +100,13 @@ function getEventProperties(eventParams: EventParams) {
 
   // convert `shift, ctrl` to `shiftKey, ctrlKey`
   // allows trigger('keydown.shift.ctrl.n') directly
-  const systemModifiersMeta = systemModifiers.reduce((all, key) => {
-    all[`${key}Key`] = true
-    return all
-  }, {})
+  const systemModifiersMeta = systemModifiers.reduce(
+    (all: Record<string, boolean>, key) => {
+      all[`${key}Key`] = true
+      return all
+    },
+    {}
+  )
 
   // get the keyCode for backwards compat
   const keyCode =
@@ -148,8 +153,12 @@ function createDOMEvent(eventString: String, options?: TriggerOptions) {
   // split eventString like `keydown.ctrl.shift.c` into `keydown` and array of modifiers
   const [eventType, ...modifiers] = eventString.split('.')
 
-  const eventParams: EventParams = { eventType, modifiers, options }
-  const event: Event = createEvent(eventParams)
+  const eventParams: EventParams = {
+    eventType,
+    modifiers: modifiers as KeyNameArray,
+    options
+  }
+  const event: Event & TriggerOptions = createEvent(eventParams)
   const eventPrototype = Object.getPrototypeOf(event)
 
   // attach custom options to the event, like `relatedTarget` and so on.

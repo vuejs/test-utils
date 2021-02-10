@@ -42,8 +42,8 @@ export const mergeDeep = (
   target: Record<string, any>,
   source: Record<string, any>
 ) => {
-  const isObject = (obj: unknown): obj is Object =>
-    obj && typeof obj === 'object'
+  const isObject = (obj: unknown): obj is Record<string, any> =>
+    !!obj && typeof obj === 'object'
 
   if (!isObject(target) || !isObject(source)) {
     return source
@@ -101,6 +101,6 @@ export function textContent(element: Element): string {
   // we check if the element is a comment first
   // to return an empty string in that case, instead of the comment content
   return element.nodeType !== Node.COMMENT_NODE
-    ? element.textContent?.trim()
+    ? element.textContent?.trim() ?? ''
     : ''
 }
