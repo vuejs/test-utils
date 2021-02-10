@@ -1,6 +1,7 @@
 import { h, inject } from 'vue'
 import { config, mount } from '../src'
 import Hello from './components/Hello.vue'
+import ComponentWithSlots from './components/ComponentWithSlots.vue'
 
 describe('config', () => {
   beforeEach(() => {
@@ -17,6 +18,51 @@ describe('config', () => {
     }
 
     jest.clearAllMocks()
+  })
+
+  describe('config merger', () => {
+    it('should merge the configs in the correct order', () => {
+      config.global.config.globalProperties = {
+        myProp: 1
+      }
+      config.global.components = { Hello }
+
+      const comp = mount(ComponentWithSlots, {
+        slots: {
+          default: '<div id="default-slot" />'
+        },
+        shallow: true,
+        global: {
+          config: {
+            globalProperties: {
+              myProp: 2
+            }
+          },
+          renderStubDefaultSlot: true
+        }
+      })
+
+      // mount config overrides user defined config
+      expect(comp.vm.$.appContext.config.globalProperties.myProp).toBe(2)
+      // mount config overrides default config
+      expect(comp.find('#default-slot').exists()).toBe(true)
+      // user defined config overrides default config
+      expect(comp.vm.$.appContext.components['Hello']).not.toBeUndefined()
+    })
+  })
+
+  describe('renderStubDefaultSlot', () => {
+    const comp = mount(ComponentWithSlots, {
+      slots: {
+        default: '<div id="default-slot" />'
+      },
+      shallow: true,
+      global: {
+        renderStubDefaultSlot: true
+      }
+    })
+
+    expect(comp.find('#default-slot').exists()).toBe(true)
   })
 
   describe('components', () => {
