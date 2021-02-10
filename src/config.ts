@@ -4,7 +4,7 @@ import { VueWrapper } from './vueWrapper'
 import { DOMWrapper } from './domWrapper'
 
 interface GlobalConfigOptions {
-  global: Required<GlobalMountOptions>
+  global: Partial<GlobalMountOptions>
   plugins: {
     VueWrapper: Pluggable<VueWrapper<ComponentPublicInstance>>
     DOMWrapper: Pluggable<DOMWrapper<Element>>
