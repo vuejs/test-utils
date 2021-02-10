@@ -1,0 +1,84 @@
+import { textContent } from './utils'
+import { createDOMEvent } from './createDomEvent'
+import type { TriggerOptions } from './createDomEvent'
+import { nextTick } from 'vue'
+
+export default class BaseWrapper<ElementType extends Element> {
+  private readonly wrapperElement: ElementType
+
+  public get element() {
+    return this.wrapperElement
+  }
+
+  public constructor(element: ElementType) {
+    this.wrapperElement = element
+  }
+
+  classes(): string[]
+  classes(className: string): boolean
+  classes(className?: string): string[] | boolean {
+    const classes = this.element.classList
+
+    if (className) return classes.contains(className)
+
+    return Array.from(classes)
+  }
+
+  attributes(): { [key: string]: string }
+  attributes(key: string): string
+  attributes(key?: string): { [key: string]: string } | string {
+    const attributes = Array.from(this.element.attributes)
+    const attributeMap: Record<string, string> = {}
+    for (const attribute of attributes) {
+      attributeMap[attribute.localName] = attribute.value
+    }
+
+    return key ? attributeMap[key] : attributeMap
+  }
+
+  text() {
+    return textContent(this.element)
+  }
+
+  exists() {
+    return true
+  }
+
+  public async trigger(eventString: string, options?: TriggerOptions) {
+    if (options && options['target']) {
+      throw Error(
+        `[vue-test-utils]: you cannot set the target value of an event. See the notes section ` +
+          `of the docs for more details—` +
+          `https://vue-test-utils.vuejs.org/api/wrapper/trigger.html`
+      )
+    }
+
+    const isDisabled = () => {
+      const validTagsToBeDisabled = [
+        'BUTTON',
+        'COMMAND',
+        'FIELDSET',
+        'KEYGEN',
+        'OPTGROUP',
+        'OPTION',
+        'SELECT',
+        'TEXTAREA',
+        'INPUT'
+      ]
+      const hasDisabledAttribute = this.attributes().disabled !== undefined
+      const elementCanBeDisabled = validTagsToBeDisabled.includes(
+        this.element.tagName
+      )
+
+      return hasDisabledAttribute && elementCanBeDisabled
+    }
+
+    if (this.element && !isDisabled()) {
+      const event = createDOMEvent(eventString, options)
+      this.element.dispatchEvent(event)
+    }
+
+    await nextTick()
+    return
+  }
+}

@@ -169,13 +169,12 @@ describe('setValue', () => {
     })
   })
 
-  it('throws error if element is not valid', () => {
+  it('throws error if element is not valid', async () => {
     const message = 'wrapper.setValue() cannot be called on LABEL'
     const wrapper = mount(ComponentWithInput)
     const input = wrapper.find('#label-el')
 
-    const fn = () => input.setValue('')
-    expect(fn).toThrowError(message)
+    await expect(input.setValue('')).rejects.toThrowError(message)
   })
 
   describe('on component instance', () => {

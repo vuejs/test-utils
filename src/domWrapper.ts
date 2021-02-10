@@ -1,52 +1,20 @@
-import { nextTick } from 'vue'
-
-import { createWrapperError } from './errorWrapper'
-import { TriggerOptions, createDOMEvent } from './createDomEvent'
 import { config } from './config'
 import { isElementVisible } from './utils/isElementVisible'
-import { textContent } from './utils'
+import BaseWrapper from './BaseWrapper'
+import { createWrapperError } from './errorWrapper'
+import WrapperLike from './interfaces/WrapperLike'
 
-export class DOMWrapper<ElementType extends Element> {
-  element: ElementType
-
+export class DOMWrapper<ElementType extends Element>
+  extends BaseWrapper<ElementType>
+  implements WrapperLike {
   constructor(element: ElementType) {
-    this.element = element
+    super(element)
     // plugins hook
     config.plugins.DOMWrapper.extend(this)
   }
 
-  classes(): string[]
-  classes(className: string): boolean
-  classes(className?: string): string[] | boolean {
-    const classes = this.element.classList
-
-    if (className) return classes.contains(className)
-
-    return Array.from(classes)
-  }
-
-  attributes(): { [key: string]: string }
-  attributes(key: string): string
-  attributes(key?: string): { [key: string]: string } | string {
-    const attributes = Array.from(this.element.attributes)
-    const attributeMap: Record<string, string> = {}
-    for (const attribute of attributes) {
-      attributeMap[attribute.localName] = attribute.value
-    }
-
-    return key ? attributeMap[key] : attributeMap
-  }
-
-  exists() {
-    return true
-  }
-
   isVisible() {
     return isElementVisible(this.element)
-  }
-
-  text() {
-    return textContent(this.element)
   }
 
   html() {
@@ -121,7 +89,7 @@ export class DOMWrapper<ElementType extends Element> {
     return this.trigger('change')
   }
 
-  setValue(value?: any) {
+  async setValue(value?: any): Promise<void> {
     const element = (this.element as unknown) as HTMLInputElement
     const tagName = element.tagName
     const type = this.attributes().type
@@ -142,9 +110,11 @@ export class DOMWrapper<ElementType extends Element> {
       if (tagName === 'SELECT') {
         return this.trigger('change')
       }
-      this.trigger('input')
+      await this.trigger('input')
       // trigger `change` for `v-model.lazy`
-      return this.trigger('change')
+      await this.trigger('change')
+
+      return
     } else {
       throw Error(`wrapper.setValue() cannot be called on ${tagName}`)
     }
@@ -165,42 +135,5 @@ export class DOMWrapper<ElementType extends Element> {
     }
 
     return new DOMWrapper(parentElement).trigger('change')
-  }
-
-  async trigger(eventString: string, options?: TriggerOptions) {
-    if (options && options['target']) {
-      throw Error(
-        `[vue-test-utils]: you cannot set the target value of an event. See the notes section ` +
-          `of the docs for more details—` +
-          `https://vue-test-utils.vuejs.org/api/wrapper/trigger.html`
-      )
-    }
-
-    const isDisabled = () => {
-      const validTagsToBeDisabled = [
-        'BUTTON',
-        'COMMAND',
-        'FIELDSET',
-        'KEYGEN',
-        'OPTGROUP',
-        'OPTION',
-        'SELECT',
-        'TEXTAREA',
-        'INPUT'
-      ]
-      const hasDisabledAttribute = this.attributes().disabled !== undefined
-      const elementCanBeDisabled = validTagsToBeDisabled.includes(
-        this.element.tagName
-      )
-
-      return hasDisabledAttribute && elementCanBeDisabled
-    }
-
-    if (this.element && !isDisabled()) {
-      const event = createDOMEvent(eventString, options)
-      this.element.dispatchEvent(event)
-    }
-
-    return nextTick
   }
 }

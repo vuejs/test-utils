@@ -1,6 +1,4 @@
-export function createWrapperError<T extends object>(
-  wrapperType: 'DOMWrapper' | 'VueWrapper'
-) {
+export function createWrapperError<T extends object>(wrapperType: string) {
   return new Proxy<T>(Object.create(null), {
     get(obj, prop) {
       switch (prop) {
