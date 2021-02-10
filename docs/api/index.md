@@ -213,6 +213,12 @@ test('renders slots content', () => {
 
 ### `global.components`
 
+::: tip
+You can configure all the `global` options on both a per test basis and globally for all tests. [See here for how to configure project wide defaults](/api/#global-config-2).
+:::
+
+###
+
 Registers components globally to all components
 
 `Component.spec.js`:
@@ -1308,6 +1314,6 @@ const Component = {
 
 it('uses global config', () => {
   const wrapper = mount(Component)
-  console.log(wrapper.html()) // <p>message</p><div />
+  console.log(wrapper.html()) // <p>message</p><div></div>
 })
 ```
