@@ -3,7 +3,6 @@
   "version": "2.0.0-rc.0",
   "license": "MIT",
   "main": "dist/vue-test-utils.cjs.js",
-  "browser": "dist/vue-test-utils.browser.js",
   "unpkg": "dist/vue-test-utils.browser.js",
   "types": "dist/index.d.ts",
   "module": "dist/vue-test-utils.esm-bundler.js",
