@@ -74,9 +74,11 @@ export class VueWrapper<T extends ComponentPublicInstance> {
     return true
   }
 
-  emitted<T = unknown>(): Record<string, T[]>
-  emitted<T = unknown>(eventName?: string): T[]
-  emitted<T = unknown>(eventName?: string): T[] | Record<string, T[]> {
+  emitted<T = unknown>(): undefined | Record<string, T[]>
+  emitted<T = unknown>(eventName?: string): undefined | T[]
+  emitted<T = unknown>(
+    eventName?: string
+  ): undefined | T[] | Record<string, T[]> {
     return emitted(this.vm, eventName)
   }
 
