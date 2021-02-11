@@ -63,7 +63,7 @@ describe('mounting options: stubs', () => {
   })
 
   it('stubs a functional component by its variable declaration name', () => {
-    const FunctionalFoo = (props) => h('p', props, 'Foo Text')
+    const FunctionalFoo = (props: any) => h('p', props, 'Foo Text')
 
     const Component = {
       template: '<div><foo/></div>',

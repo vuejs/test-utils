@@ -1,4 +1,4 @@
-// @ts-expect-error No DefinitelyTyped package exists
+// @ts-ignore No DefinitelyTyped package exists
 import eventTypes from 'dom-event-types'
 
 interface TriggerOptions {

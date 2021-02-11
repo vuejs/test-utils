@@ -93,9 +93,11 @@ describe('isVisible', () => {
       `,
       methods: {
         add() {
+          // @ts-expect-error
           this.items.push(2)
         },
         remove() {
+          // @ts-expect-error
           this.items.splice(1) // back to [1]
         }
       },

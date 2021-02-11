@@ -1,4 +1,4 @@
-import { h, inject } from 'vue'
+import { ComponentPublicInstance, h, inject } from 'vue'
 import { config, mount } from '../src'
 import Hello from './components/Hello.vue'
 
@@ -114,7 +114,7 @@ describe('config', () => {
   describe('provide', () => {
     const Comp = {
       setup() {
-        const theme = inject('theme')
+        const theme = inject<string>('theme')
         return () => h('div', theme)
       }
     }
@@ -163,14 +163,14 @@ describe('config', () => {
       expect(createdHook).toHaveBeenCalledTimes(2)
     })
 
-    it('concats with locally defined mixins', () => {
+    it('concat with locally defined mixins', () => {
       config.global.mixins = [mixin]
       const localHook = jest.fn()
       const localMixin = {
         created() {
-          localHook(this.$options.name)
+          localHook(this.$options!.name)
         }
-      }
+      } as Partial<ComponentPublicInstance>
 
       mount(Component, {
         global: {

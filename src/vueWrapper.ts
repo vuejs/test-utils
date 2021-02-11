@@ -61,20 +61,20 @@ export class VueWrapper<T extends ComponentPublicInstance> {
   classes(): string[]
   classes(className: string): boolean
   classes(className?: string): string[] | boolean {
-    return new DOMWrapper(this.element).classes(className)
+    return new DOMWrapper(this.element).classes(className!)
   }
 
   attributes(): { [key: string]: string }
   attributes(key: string): string
   attributes(key?: string): { [key: string]: string } | string {
-    return new DOMWrapper(this.element).attributes(key)
+    return new DOMWrapper(this.element).attributes(key!)
   }
 
   exists() {
     return true
   }
 
-  emitted<T = unknown>(): undefined | Record<string, T[]>
+  emitted<T = unknown>(): Record<string, T[]>
   emitted<T = unknown>(eventName?: string): undefined | T[]
   emitted<T = unknown>(
     eventName?: string
