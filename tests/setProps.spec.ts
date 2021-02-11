@@ -65,6 +65,7 @@ describe('setProps', () => {
       },
       watch: {
         foo(val: string) {
+          // @ts-expect-error
           this.bar = val
         }
       },

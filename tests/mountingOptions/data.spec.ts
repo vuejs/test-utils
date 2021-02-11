@@ -11,7 +11,8 @@ describe('mounting options: data', () => {
           bar: 'bar'
         }
       },
-      render() {
+      render(): Function {
+        // @ts-expect-error
         return h('div', `Foo is ${this.foo} bar is ${this.bar}`)
       }
     }

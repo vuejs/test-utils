@@ -34,6 +34,7 @@ describe('setData', () => {
         myObject: {
           immediate: true,
           handler() {
+            // @ts-expect-error
             this.watchCounter += 1
           }
         }

@@ -17,7 +17,7 @@ describe('options.attachTo', () => {
     })
 
     const root = document.getElementById('root')
-    const rendered = document.getElementById('attach-to')
+    const rendered = document.getElementById('attach-to')!
     expect(wrapper.vm.$el.parentNode).not.toBeNull()
     expect(root).not.toBeNull()
     expect(rendered).not.toBeNull()
@@ -36,7 +36,7 @@ describe('options.attachTo', () => {
     })
 
     const root = document.getElementById('root')
-    const rendered = document.getElementById('attach-to')
+    const rendered = document.getElementById('attach-to')!
     expect(wrapper.vm.$el.parentNode).not.toBeNull()
     expect(root).not.toBeNull()
     expect(rendered).not.toBeNull()

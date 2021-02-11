@@ -1,5 +1,5 @@
 import { mount } from '../src'
-import { h } from 'vue'
+import { h, Slots } from 'vue'
 import Hello from './components/Hello.vue'
 
 describe('functionalComponents', () => {
@@ -17,7 +17,8 @@ describe('functionalComponents', () => {
   })
 
   it('renders the slots of a functional component', () => {
-    const Foo = (props, { slots }) => h('div', { class: 'foo' }, slots)
+    const Foo = (props: Record<string, any>, { slots }: { slots: Slots }) =>
+      h('div', { class: 'foo' }, slots)
 
     const wrapper = mount(Foo, {
       slots: {
@@ -29,7 +30,7 @@ describe('functionalComponents', () => {
   })
 
   it('asserts classes', () => {
-    const Foo = (props, { slots }) => h('div', { class: 'foo' }, slots)
+    const Foo = () => h('div', { class: 'foo' })
 
     const wrapper = mount(Foo, {
       attrs: {

@@ -37,15 +37,18 @@ describe('mocks', () => {
         </div>
       `,
       computed: {
-        url() {
+        url(): string {
+          // @ts-expect-error
           return `/posts/${this.$route.params.id}`
         },
-        id() {
+        id(): number {
+          // @ts-expect-error
           return this.$route.params.id
         }
       },
       methods: {
         submit() {
+          // @ts-expect-error
           this.$router.push(`/posts/${this.id}`)
         }
       }

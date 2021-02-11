@@ -55,7 +55,7 @@ describe('lifecycles', () => {
     expect(onUnmountFn).not.toHaveBeenCalled()
 
     const removeChildSpy = jest.spyOn(
-      wrapper.element.parentElement,
+      wrapper.element.parentElement!,
       'removeChild'
     )
 

@@ -30,7 +30,7 @@ describe('mounting options: plugins', () => {
     const installed = jest.fn()
 
     class Plugin {
-      static install(_app: App, ...options) {
+      static install(_app: App, ...options: any[]) {
         installed(...options)
       }
     }
@@ -62,7 +62,7 @@ test('installs plugins with and without options', () => {
 
   const installedWithOptions = jest.fn()
   class PluginWithOptions {
-    static install(_app: App, ...args) {
+    static install(_app: App, ...args: any[]) {
       installedWithOptions(...args)
     }
   }
