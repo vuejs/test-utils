@@ -13,6 +13,7 @@ import { TriggerOptions } from './createDomEvent'
 import { find, matches } from './utils/find'
 import { mergeDeep, textContent } from './utils'
 import { emitted } from './emit'
+import type { Events } from './emit'
 
 export class VueWrapper<T extends ComponentPublicInstance> {
   private componentVM: T
@@ -74,11 +75,13 @@ export class VueWrapper<T extends ComponentPublicInstance> {
     return true
   }
 
-  emitted<T = unknown>(): Record<string, T[]>
-  emitted<T = unknown>(eventName?: string): undefined | T[]
+  emitted<T = unknown>(): Events<T>[number]
   emitted<T = unknown>(
     eventName?: string
-  ): undefined | T[] | Record<string, T[]> {
+  ): undefined | Events<T>[number][string]
+  emitted<T = unknown>(
+    eventName?: string
+  ): undefined | Events<T>[number][string] | Events<T>[number] {
     return emitted(this.vm, eventName)
   }
 

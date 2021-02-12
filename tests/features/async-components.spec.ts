@@ -1,7 +1,5 @@
 import { defineAsyncComponent, defineComponent, h, AppConfig } from 'vue'
-
 import { mount, flushPromises } from '../../src'
-import { ComponentPublicInstance } from '@vue/runtime-core'
 
 const config: AppConfig = {
   optionMergeStrategies: {},
