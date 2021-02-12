@@ -157,6 +157,8 @@ export class DOMWrapper<ElementType extends Element> {
       return
     }
 
+    // todo - review all non-null assertion operators in project
+    // search globally for `!.` and with regex `!$`
     element.selected = true
     let parentElement = element.parentElement!
 

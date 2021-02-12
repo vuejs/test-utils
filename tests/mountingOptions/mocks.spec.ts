@@ -1,4 +1,5 @@
 import { mount, RouterLinkStub } from '../../src'
+import { defineComponent } from 'vue'
 
 describe('mocks', () => {
   it('mocks a vuex store', async () => {
@@ -29,7 +30,7 @@ describe('mocks', () => {
   })
 
   it('mocks vue-router', async () => {
-    const Foo = {
+    const Foo = defineComponent({
       template: `
         <div>
           <RouterLink :to="url">Go to post: {{ id }}</RouterLink>
@@ -37,22 +38,19 @@ describe('mocks', () => {
         </div>
       `,
       computed: {
-        url(): string {
-          // @ts-expect-error
+        url() {
           return `/posts/${this.$route.params.id}`
         },
-        id(): number {
-          // @ts-expect-error
+        id() {
           return this.$route.params.id
         }
       },
       methods: {
         submit() {
-          // @ts-expect-error
           this.$router.push(`/posts/${this.id}`)
         }
       }
-    }
+    })
 
     const $router = {
       push: jest.fn()

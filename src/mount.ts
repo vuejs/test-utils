@@ -268,8 +268,8 @@ export function mount(
         [name, slot]: [string, Slot]
       ): { [key: string]: Function } => {
         // case of an SFC getting passed
-        if (typeof slot === 'object' && 'render' in slot) {
-          acc[name] = slot.render!
+        if (typeof slot === 'object' && 'render' in slot && slot.render) {
+          acc[name] = slot.render
           return acc
         }
 

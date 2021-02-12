@@ -20,7 +20,7 @@ describe('setData', () => {
   // See: https://github.com/vuejs/vue-test-utils/issues/1756
   // Making sure it does not regress here.
   it('triggers a watcher', async () => {
-    const Comp = {
+    const Comp = defineComponent({
       template: `<div />`,
       data() {
         return {
@@ -34,12 +34,11 @@ describe('setData', () => {
         myObject: {
           immediate: true,
           handler() {
-            // @ts-expect-error
             this.watchCounter += 1
           }
         }
       }
-    }
+    })
 
     const initial = 'value'
     const expected = 'something else'

@@ -1,21 +1,20 @@
-import { h } from 'vue'
+import { defineComponent, h } from 'vue'
 
 import { mount } from '../../src'
 
 describe('mounting options: data', () => {
   it('merges data from mounting options with component', () => {
-    const Comp = {
+    const Comp = defineComponent({
       data() {
         return {
           foo: 'foo',
           bar: 'bar'
         }
       },
-      render(): Function {
-        // @ts-expect-error
+      render() {
         return h('div', `Foo is ${this.foo} bar is ${this.bar}`)
       }
-    }
+    })
 
     const wrapper = mount(Comp, {
       data() {

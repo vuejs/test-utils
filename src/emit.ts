@@ -5,7 +5,7 @@ import {
   ComponentInternalInstance
 } from 'vue'
 
-export type Events<T = unknown> = Record<number, Record<string, T[]>>
+type Events<T = unknown> = Record<number, Record<string, T[]>>
 
 const enum DevtoolsHooks {
   COMPONENT_EMIT = 'component:emit'
@@ -16,10 +16,10 @@ let events: Events
 export function emitted<T = unknown>(
   vm: ComponentPublicInstance,
   eventName?: string
-): undefined | Events<T>[number][string] | Events<T>[number] {
+): undefined | T[] | Record<string, T[]> {
   const cid = vm.$.uid
 
-  const vmEvents: Events<T>[number] = (events as Events<T>)[cid] || {}
+  const vmEvents: Record<string, T[]> = (events as Events<T>)[cid] || {}
   if (eventName) {
     return vmEvents ? vmEvents[eventName] : undefined
   }

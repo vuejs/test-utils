@@ -13,7 +13,6 @@ import { TriggerOptions } from './createDomEvent'
 import { find, matches } from './utils/find'
 import { mergeDeep, textContent } from './utils'
 import { emitted } from './emit'
-import type { Events } from './emit'
 
 export class VueWrapper<T extends ComponentPublicInstance> {
   private componentVM: T
@@ -62,26 +61,28 @@ export class VueWrapper<T extends ComponentPublicInstance> {
   classes(): string[]
   classes(className: string): boolean
   classes(className?: string): string[] | boolean {
-    return new DOMWrapper(this.element).classes(className!)
+    return className
+      ? new DOMWrapper(this.element).classes(className)
+      : new DOMWrapper(this.element).classes()
   }
 
   attributes(): { [key: string]: string }
   attributes(key: string): string
   attributes(key?: string): { [key: string]: string } | string {
-    return new DOMWrapper(this.element).attributes(key!)
+    return key
+      ? new DOMWrapper(this.element).attributes(key)
+      : new DOMWrapper(this.element).attributes()
   }
 
   exists() {
     return true
   }
 
-  emitted<T = unknown>(): Events<T>[number]
+  emitted<T = unknown>(): Record<string, T[]>
+  emitted<T = unknown>(eventName?: string): undefined | T[]
   emitted<T = unknown>(
     eventName?: string
-  ): undefined | Events<T>[number][string]
-  emitted<T = unknown>(
-    eventName?: string
-  ): undefined | Events<T>[number][string] | Events<T>[number] {
+  ): undefined | T[] | Record<string, T[]> {
     return emitted(this.vm, eventName)
   }
 
