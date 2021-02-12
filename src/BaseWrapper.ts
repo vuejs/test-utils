@@ -78,7 +78,6 @@ export default class BaseWrapper<ElementType extends Element> {
       this.element.dispatchEvent(event)
     }
 
-    await nextTick()
-    return
+    return nextTick()
   }
 }

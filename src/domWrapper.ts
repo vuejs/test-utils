@@ -89,7 +89,7 @@ export class DOMWrapper<ElementType extends Element>
     return this.trigger('change')
   }
 
-  async setValue(value?: any): Promise<void> {
+  setValue(value?: any): Promise<void> {
     const element = (this.element as unknown) as HTMLInputElement
     const tagName = element.tagName
     const type = this.attributes().type
@@ -110,11 +110,9 @@ export class DOMWrapper<ElementType extends Element>
       if (tagName === 'SELECT') {
         return this.trigger('change')
       }
-      await this.trigger('input')
+      this.trigger('input')
       // trigger `change` for `v-model.lazy`
-      await this.trigger('change')
-
-      return
+      return this.trigger('change')
     } else {
       throw Error(`wrapper.setValue() cannot be called on ${tagName}`)
     }
