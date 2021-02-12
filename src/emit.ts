@@ -1,27 +1,31 @@
-import { setDevtoolsHook, devtools, ComponentPublicInstance } from 'vue'
-import { ComponentInternalInstance } from '@vue/runtime-core'
+import {
+  setDevtoolsHook,
+  devtools,
+  ComponentPublicInstance,
+  ComponentInternalInstance
+} from 'vue'
+
+export type Events<T = unknown> = Record<number, Record<string, T[]>>
 
 const enum DevtoolsHooks {
   COMPONENT_EMIT = 'component:emit'
 }
 
-let componentEvents: Record<string, unknown[]>
-let events: Record<string, typeof componentEvents>
+let events: Events
 
 export function emitted<T = unknown>(
   vm: ComponentPublicInstance,
   eventName?: string
-): undefined | T[] | Record<string, T[]> {
+): undefined | Events<T>[number][string] | Events<T>[number] {
   const cid = vm.$.uid
 
-  const vmEvents = (events as Record<string, Record<string, T[]>>)[cid] || {}
+  const vmEvents: Events<T>[number] = (events as Events<T>)[cid] || {}
   if (eventName) {
-    return vmEvents ? (vmEvents as Record<string, T[]>)[eventName] : undefined
+    return vmEvents ? vmEvents[eventName] : undefined
   }
 
-  return vmEvents as Record<string, T[]>
+  return vmEvents
 }
-type Events = { [id: number]: Record<string, any> }
 
 export const attachEmitListener = () => {
   events = {}

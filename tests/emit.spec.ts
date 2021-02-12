@@ -93,7 +93,9 @@ describe('emitted', () => {
       name: 'Parent',
       setup(props, { emit }) {
         return () =>
-          h(Child, { onHello: (...events: any[]) => emit('parent', ...events) })
+          h(Child, {
+            onHello: (...events: unknown[]) => emit('parent', ...events)
+          })
       }
     })
     const wrapper = mount(Parent)
