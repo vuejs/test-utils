@@ -1,58 +1,8 @@
-// @ts-ignore No DefinitelyTyped package exists
+// @ts-ignore todo - No DefinitelyTyped package exists for this
 import eventTypes from 'dom-event-types'
+import { Key } from 'readline'
 
-interface TriggerOptions {
-  code?: String
-  key?: String
-  keyCode?: Number
-  [custom: string]: any
-}
-
-interface EventParams {
-  eventType: string
-  modifiers: KeyNameArray
-  options?: TriggerOptions
-}
-
-// modifiers to keep an eye on
-const ignorableKeyModifiers = ['stop', 'prevent', 'self', 'exact']
-const systemKeyModifiers = ['ctrl', 'shift', 'alt', 'meta']
-const mouseKeyModifiers = ['left', 'middle', 'right']
-
-/**
- * Groups modifiers into lists
- */
-function generateModifiers(modifiers: KeyNameArray, isOnClick: boolean) {
-  const keyModifiers: KeyNameArray = []
-  const systemModifiers: string[] = []
-
-  for (let i = 0; i < modifiers.length; i++) {
-    const modifier = modifiers[i]
-
-    // addEventListener() options, e.g. .passive & .capture, that we dont need to handle
-    if (ignorableKeyModifiers.includes(modifier)) {
-      continue
-    }
-    // modifiers that require special conversion
-    // if passed a left/right key modifier with onClick, add it here as well.
-    if (
-      systemKeyModifiers.includes(modifier) ||
-      (mouseKeyModifiers.includes(modifier) && isOnClick)
-    ) {
-      systemModifiers.push(modifier)
-    } else {
-      keyModifiers.push(modifier)
-    }
-  }
-
-  return {
-    keyModifiers,
-    systemModifiers
-  }
-}
-
-export type KeyNameArray = Array<keyof typeof keyCodesByKeyName>
-export const keyCodesByKeyName = {
+const keyCodesByKeyName = {
   backspace: 8,
   tab: 9,
   enter: 13,
@@ -68,6 +18,66 @@ export const keyCodesByKeyName = {
   down: 40,
   insert: 45,
   delete: 46
+} as const
+
+// modifiers to keep an eye on
+const ignorableKeyModifiers = ['stop', 'prevent', 'self', 'exact']
+const systemKeyModifiers = ['ctrl', 'shift', 'alt', 'meta'] as const
+const mouseKeyModifiers = ['left', 'middle', 'right'] as const
+
+type KeyName = keyof typeof keyCodesByKeyName
+type Modifier =
+  | typeof systemKeyModifiers[number]
+  | typeof mouseKeyModifiers[number]
+
+interface TriggerOptions {
+  code?: String
+  key?: String
+  keyCode?: Number
+  [custom: string]: any
+}
+
+interface EventParams {
+  eventType: string
+  modifiers: KeyName[]
+  options?: TriggerOptions
+}
+
+/**
+ * Groups modifiers into lists
+ */
+function generateModifiers(modifiers: KeyName[], isOnClick: boolean) {
+  const keyModifiers: KeyName[] = []
+  const systemModifiers: Modifier[] = []
+
+  for (let i = 0; i < modifiers.length; i++) {
+    const modifier: KeyName | Modifier = modifiers[i]
+
+    // addEventListener() options, e.g. .passive & .capture, that we dont need to handle
+    if (ignorableKeyModifiers.includes(modifier)) {
+      continue
+    }
+    // modifiers that require special conversion
+    // if passed a left/right key modifier with onClick, add it here as well.
+    if (
+      systemKeyModifiers.includes(
+        modifier as Exclude<typeof modifier, KeyName>
+      ) ||
+      (mouseKeyModifiers.includes(
+        modifier as Exclude<typeof modifier, KeyName>
+      ) &&
+        isOnClick)
+    ) {
+      systemModifiers.push(modifier as Modifier)
+    } else {
+      keyModifiers.push(modifier)
+    }
+  }
+
+  return {
+    keyModifiers,
+    systemModifiers
+  }
 }
 
 function getEventProperties(eventParams: EventParams) {
@@ -155,7 +165,7 @@ function createDOMEvent(eventString: String, options?: TriggerOptions) {
 
   const eventParams: EventParams = {
     eventType,
-    modifiers: modifiers as KeyNameArray,
+    modifiers: modifiers as KeyName[],
     options
   }
   const event: Event & TriggerOptions = createEvent(eventParams)
@@ -178,4 +188,4 @@ function createDOMEvent(eventString: String, options?: TriggerOptions) {
   return event
 }
 
-export { TriggerOptions, createDOMEvent }
+export { TriggerOptions, createDOMEvent, keyCodesByKeyName, KeyName }

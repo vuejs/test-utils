@@ -18,6 +18,7 @@
   },
   "include": [
     "tests",
-    "src"
+    "src",
+    "types"
   ]
 }

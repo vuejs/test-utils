@@ -1,7 +1,7 @@
 import { defineComponent, h, ref } from 'vue'
 
 import { mount } from '../src'
-import { keyCodesByKeyName, KeyNameArray } from '../src/createDomEvent'
+import { keyCodesByKeyName, KeyName } from '../src/createDomEvent'
 
 describe('trigger', () => {
   describe('on click', () => {
@@ -233,8 +233,7 @@ describe('trigger', () => {
       const wrapper = mount(Component, {})
 
       for (const keyName in keyCodesByKeyName) {
-        const keyCode =
-          keyCodesByKeyName[keyName as keyof typeof keyCodesByKeyName]
+        const keyCode = keyCodesByKeyName[keyName as KeyName]
         wrapper.trigger(`keydown.${keyName}`)
 
         const calls = keydownHandler.mock.calls
