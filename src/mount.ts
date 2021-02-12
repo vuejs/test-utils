@@ -405,10 +405,10 @@ export function mount(
   // stubs
   // even if we are using `mount`, we will still
   // stub out Transition and Transition Group by default.
-  stubComponents(global.stubs, options?.shallow)
+  stubComponents(global.stubs, global.renderStubDefaultSlot ? false : options?.shallow)
 
   // users expect stubs to work with globally registered
-  // compnents, too, such as <router-link> and <router-view>
+  // components, too, such as <router-link> and <router-view>
   // so we register those globally.
   // https://github.com/vuejs/vue-test-utils-next/issues/249
   if (global?.stubs) {

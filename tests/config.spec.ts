@@ -29,7 +29,7 @@ describe('config', () => {
 
       const comp = mount(ComponentWithSlots, {
         slots: {
-          default: '<div id="default-slot" />'
+          default: '<div id="default-slot" /><Hello />'
         },
         shallow: true,
         global: {
@@ -47,22 +47,24 @@ describe('config', () => {
       // mount config overrides default config
       expect(comp.find('#default-slot').exists()).toBe(true)
       // user defined config overrides default config
-      expect(comp.vm.$.appContext.components['Hello']).not.toBeUndefined()
+      expect(comp.findComponent(Hello).exists()).toBe(true);
     })
   })
 
   describe('renderStubDefaultSlot', () => {
-    const comp = mount(ComponentWithSlots, {
-      slots: {
-        default: '<div id="default-slot" />'
-      },
-      shallow: true,
-      global: {
-        renderStubDefaultSlot: true
-      }
-    })
+    it('should override shallow option when set to true', () => {
+      const comp = mount(ComponentWithSlots, {
+        slots: {
+          default: '<div id="default-slot" />'
+        },
+        shallow: true,
+        global: {
+          renderStubDefaultSlot: true
+        }
+      })
 
-    expect(comp.find('#default-slot').exists()).toBe(true)
+      expect(comp.find('#default-slot').exists()).toBe(true)
+    })
   })
 
   describe('components', () => {
