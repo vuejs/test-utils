@@ -47,7 +47,7 @@ describe('config', () => {
       // mount config overrides default config
       expect(comp.find('#default-slot').exists()).toBe(true)
       // user defined config overrides default config
-      expect(comp.findComponent(Hello).exists()).toBe(true);
+      expect(comp.findComponent(Hello).exists()).toBe(true)
     })
   })
 

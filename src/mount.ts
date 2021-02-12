@@ -406,7 +406,10 @@ export function mount(
   // stubs
   // even if we are using `mount`, we will still
   // stub out Transition and Transition Group by default.
-  stubComponents(global.stubs, global.renderStubDefaultSlot ? false : options?.shallow)
+  stubComponents(
+    global.stubs,
+    global.renderStubDefaultSlot ? false : options?.shallow
+  )
 
   // users expect stubs to work with globally registered
   // components, too, such as <router-link> and <router-view>
