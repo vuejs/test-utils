@@ -31,10 +31,9 @@ export function mergeGlobalProperties(
     mocks: { ...configGlobal.mocks, ...mountGlobal.mocks },
     config: { ...configGlobal.config, ...mountGlobal.config },
     directives: { ...configGlobal.directives, ...mountGlobal.directives },
-    renderStubDefaultSlot:
-      mountGlobal.renderStubDefaultSlot !== undefined
-        ? mountGlobal.renderStubDefaultSlot
-        : configGlobal.renderStubDefaultSlot
+    renderStubDefaultSlot: !!(mountGlobal.renderStubDefaultSlot !== undefined
+      ? mountGlobal.renderStubDefaultSlot
+      : configGlobal.renderStubDefaultSlot)
   }
 }
 

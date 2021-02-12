@@ -65,6 +65,34 @@ describe('config', () => {
 
       expect(comp.find('#default-slot').exists()).toBe(true)
     })
+
+    it('should evaluate given option as boolean', () => {
+      // @ts-expect-error
+      let comp = mount(ComponentWithSlots, {
+        slots: {
+          default: '<div id="default-slot" />'
+        },
+        shallow: true,
+        global: {
+          renderStubDefaultSlot: 'truthy'
+        }
+      })
+
+      expect(comp.find('#default-slot').exists()).toBe(true)
+
+      // @ts-expect-error
+      let comp = mount(ComponentWithSlots, {
+        slots: {
+          default: '<div id="default-slot" />'
+        },
+        shallow: true,
+        global: {
+          renderStubDefaultSlot: 0
+        }
+      })
+
+      expect(comp.find('#default-slot').exists()).toBe(false)
+    })
   })
 
   describe('components', () => {
