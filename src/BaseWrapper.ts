@@ -6,11 +6,11 @@ import { nextTick } from 'vue'
 export default class BaseWrapper<ElementType extends Element> {
   private readonly wrapperElement: ElementType
 
-  public get element() {
+  get element() {
     return this.wrapperElement
   }
 
-  public constructor(element: ElementType) {
+  constructor(element: ElementType) {
     this.wrapperElement = element
   }
 
@@ -44,7 +44,7 @@ export default class BaseWrapper<ElementType extends Element> {
     return true
   }
 
-  public async trigger(eventString: string, options?: TriggerOptions) {
+  async trigger(eventString: string, options?: TriggerOptions) {
     if (options && options['target']) {
       throw Error(
         `[vue-test-utils]: you cannot set the target value of an event. See the notes section ` +
