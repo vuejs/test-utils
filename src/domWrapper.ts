@@ -96,7 +96,7 @@ export class DOMWrapper<ElementType extends Element>
 
     if (tagName === 'OPTION') {
       this.setSelected()
-      return Promise.resolve();
+      return Promise.resolve()
     } else if (tagName === 'INPUT' && type === 'checkbox') {
       return this.setChecked(value)
     } else if (tagName === 'INPUT' && type === 'radio') {
