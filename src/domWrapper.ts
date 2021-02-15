@@ -39,12 +39,12 @@ export class DOMWrapper<ElementType extends Element>
 
   get<K extends keyof HTMLElementTagNameMap>(
     selector: K
-  ): DOMWrapper<HTMLElementTagNameMap[K]>
+  ): Omit<DOMWrapper<HTMLElementTagNameMap[K]>, 'exists'>
   get<K extends keyof SVGElementTagNameMap>(
     selector: K
-  ): DOMWrapper<SVGElementTagNameMap[K]>
-  get<T extends Element>(selector: string): DOMWrapper<T>
-  get(selector: string): DOMWrapper<Element> {
+  ): Omit<DOMWrapper<SVGElementTagNameMap[K]>, 'exists'>
+  get<T extends Element>(selector: string): Omit<DOMWrapper<T>, 'exists'>
+  get(selector: string): Omit<DOMWrapper<Element>, 'exists'> {
     const result = this.find(selector)
     if (result instanceof DOMWrapper) {
       return result

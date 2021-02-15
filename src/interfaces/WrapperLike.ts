@@ -19,6 +19,15 @@ export default interface WrapperLike {
   findAll<T extends Element>(selector: string): DOMWrapper<T>[]
   findAll(selector: string): DOMWrapper<Element>[]
 
+  get<K extends keyof HTMLElementTagNameMap>(
+    selector: K
+  ): Omit<DOMWrapper<HTMLElementTagNameMap[K]>, 'exists'>
+  get<K extends keyof SVGElementTagNameMap>(
+    selector: K
+  ): Omit<DOMWrapper<SVGElementTagNameMap[K]>, 'exists'>
+  get<T extends Element>(selector: string): Omit<DOMWrapper<T>, 'exists'>
+  get(selector: string): Omit<DOMWrapper<Element>, 'exists'>
+
   html(): string
 
   setValue(value: any): Promise<void>
