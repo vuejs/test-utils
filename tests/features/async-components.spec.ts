@@ -1,5 +1,4 @@
 import { defineAsyncComponent, defineComponent, h, AppConfig } from 'vue'
-
 import { mount, flushPromises } from '../../src'
 
 const config: AppConfig = {
@@ -7,11 +6,10 @@ const config: AppConfig = {
   globalProperties: {},
   isCustomElement: (tag: string) => false,
   performance: false,
-  errorHandler: (error: Error) => {
-    if (error.message.match(/Async component failed to load./)) {
+  errorHandler: (error: unknown) => {
+    if ((error as Error).message.match(/Async component failed to load./)) {
       return
     }
-    throw error
   }
 }
 

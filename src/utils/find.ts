@@ -35,7 +35,7 @@ export function matches(
       return true
     }
 
-    let componentName
+    let componentName: string | undefined
     if ('name' in nodeType || 'displayName' in nodeType) {
       // match normal component definitions or functional components
       componentName = nodeType.name || nodeType.displayName

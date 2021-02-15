@@ -93,7 +93,9 @@ describe('emitted', () => {
       name: 'Parent',
       setup(props, { emit }) {
         return () =>
-          h(Child, { onHello: (...events) => emit('parent', ...events) })
+          h(Child, {
+            onHello: (...events: unknown[]) => emit('parent', ...events)
+          })
       }
     })
     const wrapper = mount(Parent)
@@ -130,10 +132,10 @@ describe('emitted', () => {
     expect(wrapper.emitted('hello')).toEqual(undefined)
 
     wrapper.find('button').trigger('click')
-    expect(wrapper.emitted('hello')[0]).toEqual(['foo', 'bar'])
+    expect((wrapper.emitted('hello') as unknown[])[0]).toEqual(['foo', 'bar'])
 
     wrapper.find('button').trigger('click')
-    expect(wrapper.emitted('hello')[1]).toEqual(['foo', 'bar'])
+    expect((wrapper.emitted('hello') as unknown[])[1]).toEqual(['foo', 'bar'])
 
     expect(wrapper.emitted('hello')).toHaveLength(2)
   })
@@ -157,7 +159,7 @@ describe('emitted', () => {
 
     wrapper.find('h1').trigger('click')
     expect(wrapper.emitted('hello')).toHaveLength(1)
-    expect(wrapper.emitted('hello')[0]).toEqual(['foo', 'bar'])
+    expect((wrapper.emitted('hello') as unknown[])[0]).toEqual(['foo', 'bar'])
   })
 
   it('captures events emitted by class-style components', () => {
@@ -175,12 +177,12 @@ describe('emitted', () => {
 
     wrapper.find('h1').trigger('click')
     expect(wrapper.emitted('hello')).toHaveLength(1)
-    expect(wrapper.emitted('hello')[0]).toEqual(['foo', 'bar'])
+    expect((wrapper.emitted('hello') as unknown[])[0]).toEqual(['foo', 'bar'])
   })
 
   it('captures an event emitted in setup', () => {
     const Comp = {
-      setup(_, { emit }) {
+      setup(_: Record<string, any>, { emit }: { emit: SetupContext['emit'] }) {
         emit('foo')
       }
     }

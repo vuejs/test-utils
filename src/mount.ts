@@ -2,7 +2,6 @@ import {
   h,
   createApp,
   defineComponent,
-  VNodeNormalizedChildren,
   reactive,
   FunctionalComponent,
   ComponentPublicInstance,
@@ -230,7 +229,7 @@ export function mount(
   options?: MountingOptions<any>
 ): VueWrapper<any> {
   // normalise the incoming component
-  let component
+  let component: DefineComponent
 
   if (isFunctionalComponent(originalComponent)) {
     component = defineComponent({
@@ -261,7 +260,7 @@ export function mount(
   }
 
   // handle any slots passed via mounting options
-  const slots: VNodeNormalizedChildren =
+  const slots =
     options?.slots &&
     Object.entries(options.slots).reduce(
       (
@@ -269,7 +268,7 @@ export function mount(
         [name, slot]: [string, Slot]
       ): { [key: string]: Function } => {
         // case of an SFC getting passed
-        if (typeof slot === 'object' && 'render' in slot) {
+        if (typeof slot === 'object' && 'render' in slot && slot.render) {
           acc[name] = slot.render
           return acc
         }

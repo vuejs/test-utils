@@ -1,4 +1,5 @@
 import { mount } from '../src'
+import { defineComponent, ref } from 'vue'
 
 describe('isVisible', () => {
   const Comp = {
@@ -79,7 +80,7 @@ describe('isVisible', () => {
   })
 
   it('handles transition-group', async () => {
-    const Comp = {
+    const Comp = defineComponent({
       template: `
         <div id="list-demo">
           <button @click="add" id="add">Add</button>
@@ -91,20 +92,13 @@ describe('isVisible', () => {
           </transition-group>
         </div>
       `,
-      methods: {
-        add() {
-          this.items.push(2)
-        },
-        remove() {
-          this.items.splice(1) // back to [1]
-        }
-      },
-      data() {
-        return {
-          items: [1]
-        }
+      setup() {
+        const items = ref([1])
+        const add = () => items.value.push(2)
+        const remove = () => items.value.splice(1)
+        return { add, remove, items }
       }
-    }
+    })
     const wrapper = mount(Comp)
 
     expect(wrapper.html()).toContain('Item: 1')

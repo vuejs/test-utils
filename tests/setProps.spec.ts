@@ -56,7 +56,7 @@ describe('setProps', () => {
   })
 
   it('triggers a watcher', async () => {
-    const Foo = {
+    const Foo = defineComponent({
       props: ['foo'],
       data() {
         return {
@@ -70,7 +70,7 @@ describe('setProps', () => {
       },
       template: `
         <div>{{ bar }}</div>`
-    }
+    })
     const wrapper = mount(Foo)
     expect(wrapper.html()).toContain('original-bar')
 

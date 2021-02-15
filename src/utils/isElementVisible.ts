@@ -26,7 +26,7 @@ function isAttributeVisible<T extends Element>(element: T) {
   )
 }
 
-export function isElementVisible<T extends Element>(element: T) {
+export function isElementVisible<T extends Element>(element: T): boolean {
   return (
     element.nodeName !== '#comment' &&
     isStyleVisible(element) &&
