@@ -16,7 +16,7 @@ function mergeStubs(target: Record<string, any>, source: GlobalMountOptions) {
 export function mergeGlobalProperties(
   configGlobal: GlobalMountOptions = {},
   mountGlobal: GlobalMountOptions = {}
-): GlobalMountOptions {
+): Required<GlobalMountOptions> {
   const stubs: Record<string, any> = {}
 
   mergeStubs(stubs, configGlobal)
@@ -29,11 +29,11 @@ export function mergeGlobalProperties(
     components: { ...configGlobal.components, ...mountGlobal.components },
     provide: { ...configGlobal.provide, ...mountGlobal.provide },
     mocks: { ...configGlobal.mocks, ...mountGlobal.mocks },
-    config: { ...configGlobal.config, ...mountGlobal.config } as Omit<
-      AppConfig,
-      'isNativeTag'
-    >,
-    directives: { ...configGlobal.directives, ...mountGlobal.directives }
+    config: { ...configGlobal.config, ...mountGlobal.config },
+    directives: { ...configGlobal.directives, ...mountGlobal.directives },
+    renderStubDefaultSlot: !!(mountGlobal.renderStubDefaultSlot !== undefined
+      ? mountGlobal.renderStubDefaultSlot
+      : configGlobal.renderStubDefaultSlot)
   }
 }
 

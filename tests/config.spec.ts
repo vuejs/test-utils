@@ -1,6 +1,7 @@
 import { ComponentPublicInstance, h, inject } from 'vue'
 import { config, mount } from '../src'
 import Hello from './components/Hello.vue'
+import ComponentWithSlots from './components/ComponentWithSlots.vue'
 
 describe('config', () => {
   beforeEach(() => {
@@ -17,6 +18,81 @@ describe('config', () => {
     }
 
     jest.clearAllMocks()
+  })
+
+  describe('config merger', () => {
+    it('should merge the configs in the correct order', () => {
+      config.global.config.globalProperties = {
+        myProp: 1
+      }
+      config.global.components = { Hello }
+
+      const comp = mount(ComponentWithSlots, {
+        slots: {
+          default: '<div id="default-slot" /><Hello />'
+        },
+        shallow: true,
+        global: {
+          config: {
+            globalProperties: {
+              myProp: 2
+            }
+          },
+          renderStubDefaultSlot: true
+        }
+      })
+
+      // mount config overrides user defined config
+      expect(comp.vm.$.appContext.config.globalProperties.myProp).toBe(2)
+      // mount config overrides default config
+      expect(comp.find('#default-slot').exists()).toBe(true)
+      // user defined config overrides default config
+      expect(comp.findComponent(Hello).exists()).toBe(true)
+    })
+  })
+
+  describe('renderStubDefaultSlot', () => {
+    it('should override shallow option when set to true', () => {
+      const comp = mount(ComponentWithSlots, {
+        slots: {
+          default: '<div id="default-slot" />'
+        },
+        shallow: true,
+        global: {
+          renderStubDefaultSlot: true
+        }
+      })
+
+      expect(comp.find('#default-slot').exists()).toBe(true)
+    })
+
+    it('should evaluate given option as boolean', () => {
+      // @ts-expect-error
+      let comp = mount(ComponentWithSlots, {
+        slots: {
+          default: '<div id="default-slot" />'
+        },
+        shallow: true,
+        global: {
+          renderStubDefaultSlot: 'truthy'
+        }
+      })
+
+      expect(comp.find('#default-slot').exists()).toBe(true)
+
+      // @ts-expect-error
+      let comp = mount(ComponentWithSlots, {
+        slots: {
+          default: '<div id="default-slot" />'
+        },
+        shallow: true,
+        global: {
+          renderStubDefaultSlot: 0
+        }
+      })
+
+      expect(comp.find('#default-slot').exists()).toBe(false)
+    })
   })
 
   describe('components', () => {
