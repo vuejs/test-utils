@@ -1,6 +1,7 @@
 import { mount } from '../src'
 import WithProps from './components/WithProps.vue'
 import Hello from './components/Hello.vue'
+import { defineComponent } from 'vue'
 
 describe('props', () => {
   it('returns a single prop applied to a component', () => {
@@ -81,5 +82,33 @@ describe('props', () => {
       foo: 'foo',
       object: {}
     })
+  })
+
+  it('should return the updated props on 2 way binding', async () => {
+    const component = defineComponent({
+      template: '<button @click="increment"></button>',
+      props: {
+        modelValue: {
+          type: Number,
+          required: true
+        }
+      },
+      emits: ['update:modelValue'],
+      setup(props, ctx) {
+        return {
+          increment: () => ctx.emit('update:modelValue', props.modelValue + 1)
+        }
+      }
+    });
+
+    const wrapper = mount(component, {
+      props: {
+        modelValue: 1
+      }
+    })
+
+    expect(wrapper.props('modelValue')).toBe(1);
+    await wrapper.trigger('click');
+    expect(wrapper.props('modelValue')).toBe(2);
   })
 })
