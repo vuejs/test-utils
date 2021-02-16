@@ -99,7 +99,7 @@ describe('props', () => {
           increment: () => ctx.emit('update:modelValue', props.modelValue + 1)
         }
       }
-    });
+    })
 
     const wrapper = mount(component, {
       props: {
@@ -107,8 +107,8 @@ describe('props', () => {
       }
     })
 
-    expect(wrapper.props('modelValue')).toBe(1);
-    await wrapper.trigger('click');
-    expect(wrapper.props('modelValue')).toBe(2);
+    expect(wrapper.props('modelValue')).toBe(1)
+    await wrapper.trigger('click')
+    expect(wrapper.props('modelValue')).toBe(2)
   })
 })
