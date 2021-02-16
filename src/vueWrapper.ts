@@ -12,8 +12,8 @@ import { createWrapperError } from './errorWrapper'
 import { find, matches } from './utils/find'
 import { mergeDeep } from './utils'
 import { emitted } from './emit'
-import BaseWrapper from './BaseWrapper'
-import WrapperLike from './interfaces/WrapperLike'
+import BaseWrapper from './baseWrapper'
+import WrapperLike from './interfaces/wrapperLike'
 
 export class VueWrapper<T extends ComponentPublicInstance>
   extends BaseWrapper<T['$el']>

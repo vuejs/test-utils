@@ -1,8 +1,8 @@
 import { config } from './config'
 import { isElementVisible } from './utils/isElementVisible'
-import BaseWrapper from './BaseWrapper'
+import BaseWrapper from './baseWrapper'
 import { createWrapperError } from './errorWrapper'
-import WrapperLike from './interfaces/WrapperLike'
+import WrapperLike from './interfaces/wrapperLike'
 
 export class DOMWrapper<ElementType extends Element>
   extends BaseWrapper<ElementType>
