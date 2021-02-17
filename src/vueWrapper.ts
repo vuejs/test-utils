@@ -12,7 +12,7 @@ import { createWrapperError } from './errorWrapper'
 import { TriggerOptions } from './createDomEvent'
 import { find, matches } from './utils/find'
 import { mergeDeep, textContent } from './utils'
-import { emitted } from './emit'
+import { emitted, recordEvent } from './emit'
 
 export class VueWrapper<T extends ComponentPublicInstance> {
   private componentVM: T
@@ -30,6 +30,9 @@ export class VueWrapper<T extends ComponentPublicInstance> {
     this.rootVM = vm?.$root
     this.componentVM = vm as T
     this.__setProps = setProps
+
+    this.attachNativeEventListener()
+
     config.plugins.VueWrapper.extend(this)
   }
 
@@ -40,6 +43,21 @@ export class VueWrapper<T extends ComponentPublicInstance> {
 
   private get parentElement(): VueElement {
     return this.vm.$el.parentElement
+  }
+
+  private attachNativeEventListener(): void {
+    const vm = this.vm
+    if (!vm) return
+
+    const element = this.element
+    for (let key in element) {
+      if (/^on/.test(key)) {
+        const eventName = key.slice(2)
+        element.addEventListener(eventName, (...args) => {
+          recordEvent(vm.$, eventName, args)
+        })
+      }
+    }
   }
 
   get element(): Element {
@@ -79,7 +97,7 @@ export class VueWrapper<T extends ComponentPublicInstance> {
   }
 
   emitted<T = unknown>(): Record<string, T[]>
-  emitted<T = unknown>(eventName?: string): undefined | T[]
+  emitted<T = unknown>(eventName: string): undefined | T[]
   emitted<T = unknown>(
     eventName?: string
   ): undefined | T[] | Record<string, T[]> {

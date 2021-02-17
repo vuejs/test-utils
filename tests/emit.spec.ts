@@ -78,23 +78,73 @@ describe('emitted', () => {
     expect(wrapper.emitted().hello[1]).toEqual(['foo', 'bar'])
   })
 
-  it('should not propagate child events', () => {
+  it('should propagate child native events', async () => {
     const Child = defineComponent({
-      name: 'Child',
-      setup(props, { emit }) {
-        return () =>
-          h('div', [
-            h('button', { onClick: () => emit('hello', 'foo', 'bar') })
-          ])
+      name: 'Button',
+      setup(props) {
+        return () => h('div', [h('input')])
       }
     })
 
     const Parent = defineComponent({
       name: 'Parent',
+      setup() {
+        return () =>
+          h('div', [
+            h(Child, {
+              onClick: (event: Event) => event.stopPropagation()
+            })
+          ])
+      }
+    })
+
+    const GrandParent: FunctionalComponent<{ level: number }> = (
+      props,
+      ctx
+    ) => {
+      return h(`h${props.level}`, [h(Parent)])
+    }
+
+    const wrapper = mount(GrandParent)
+    const parentWrapper = wrapper.findComponent(Parent)
+    const childWrapper = wrapper.findComponent(Child)
+    const input = wrapper.find('input')
+
+    expect(wrapper.emitted()).toEqual({})
+    expect(parentWrapper.emitted()).toEqual({})
+    expect(childWrapper.emitted()).toEqual({})
+
+    await input.trigger('click')
+
+    // Propagation should stop at Parent
+    expect(childWrapper.emitted().click).toHaveLength(1)
+    expect(parentWrapper.emitted().click).toEqual(undefined)
+    expect(wrapper.emitted().click).toEqual(undefined)
+
+    input.setValue('hey')
+
+    expect(childWrapper.emitted().input).toHaveLength(1)
+    expect(parentWrapper.emitted().input).toHaveLength(1)
+    expect(wrapper.emitted().input).toHaveLength(1)
+  })
+
+  it('should not propagate child custom events', () => {
+    const Child = defineComponent({
+      name: 'Child',
+      emits: ['hi'],
+      setup(props, { emit }) {
+        return () =>
+          h('div', [h('button', { onClick: () => emit('hi', 'foo', 'bar') })])
+      }
+    })
+
+    const Parent = defineComponent({
+      name: 'Parent',
+      emits: ['hello'],
       setup(props, { emit }) {
         return () =>
           h(Child, {
-            onHello: (...events: unknown[]) => emit('parent', ...events)
+            onHi: (...events: unknown[]) => emit('hello', ...events)
           })
       }
     })
@@ -105,14 +155,18 @@ describe('emitted', () => {
     expect(childWrapper.emitted()).toEqual({})
 
     wrapper.find('button').trigger('click')
-    expect(wrapper.emitted().parent[0]).toEqual(['foo', 'bar'])
-    expect(wrapper.emitted().hello).toEqual(undefined)
-    expect(childWrapper.emitted().hello[0]).toEqual(['foo', 'bar'])
 
+    // Parent should emit custom event 'hello' but not 'hi'
+    expect(wrapper.emitted().hello[0]).toEqual(['foo', 'bar'])
+    expect(wrapper.emitted().hi).toEqual(undefined)
+    // Child should emit custom event 'hi'
+    expect(childWrapper.emitted().hi[0]).toEqual(['foo', 'bar'])
+
+    // Additional events should accumulate in the same format
     wrapper.find('button').trigger('click')
-    expect(wrapper.emitted().parent[1]).toEqual(['foo', 'bar'])
-    expect(wrapper.emitted().hello).toEqual(undefined)
-    expect(childWrapper.emitted().hello[1]).toEqual(['foo', 'bar'])
+    expect(wrapper.emitted().hello[1]).toEqual(['foo', 'bar'])
+    expect(wrapper.emitted().hi).toEqual(undefined)
+    expect(childWrapper.emitted().hi[1]).toEqual(['foo', 'bar'])
   })
 
   it('should allow passing the name of an event', () => {
