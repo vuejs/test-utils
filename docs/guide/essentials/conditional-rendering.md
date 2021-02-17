@@ -48,7 +48,9 @@ test('renders a profile link', () => {
 })
 ```
 
-If `get()` does not return an element matching the selector, it will raise an error, and your test will fail.
+If `get()` does not return an element matching the selector, it will raise an error, and your test will fail. `get()` returns a `DOMWrapper` if an element is found. A `DOMWrapper` is a thin wrapper around the DOM element that implements the [Wrapper API](/api/#wrapper-methods) - that's why we are able to do `profileLink.text()` and access the text. You can access the raw element using the `element` property. 
+
+There is another type of wrapper - a `VueWrapper` - that is returned from [`getComponent`](/api/#getcomponent) that works in the same manner.
 
 ## Using `find()` and `exists()`
 
