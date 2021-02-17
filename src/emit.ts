@@ -68,7 +68,7 @@ function recordEvent(
   if (event.startsWith('update:')) {
     if (args.length !== 1) {
       throw new Error(
-        'Two-way bound properties have to emit a single value.' +
+        'Two-way bound properties have to emit a single value. ' +
           args.length +
           ' values given.'
       )
