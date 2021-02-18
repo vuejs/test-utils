@@ -1,5 +1,7 @@
 import { ComponentPublicInstance, nextTick, App } from 'vue'
 import { ShapeFlags } from '@vue/shared'
+// @ts-ignore todo - No DefinitelyTyped package exists for this
+import eventTypes from 'dom-event-types'
 
 import { config } from './config'
 import { DOMWrapper } from './domWrapper'
@@ -50,13 +52,10 @@ export class VueWrapper<T extends ComponentPublicInstance> {
     if (!vm) return
 
     const element = this.element
-    for (let key in element) {
-      if (/^on/.test(key)) {
-        const eventName = key.slice(2)
-        element.addEventListener(eventName, (...args) => {
-          recordEvent(vm.$, eventName, args)
-        })
-      }
+    for (let eventName of Object.keys(eventTypes)) {
+      element.addEventListener(eventName, (...args) => {
+        recordEvent(vm.$, eventName, args)
+      })
     }
   }
 
