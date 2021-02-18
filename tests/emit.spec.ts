@@ -1,4 +1,10 @@
-import { defineComponent, FunctionalComponent, h, SetupContext } from 'vue'
+import {
+  defineComponent,
+  FunctionalComponent,
+  getCurrentInstance,
+  h,
+  SetupContext
+} from 'vue'
 import { Vue } from 'vue-class-component'
 
 import { mount } from '../src'
@@ -242,5 +248,30 @@ describe('emitted', () => {
     }
     const wrapper = mount(Comp)
     expect(wrapper.emitted().foo).toBeTruthy()
+  })
+
+  it('captures composition event', async () => {
+    const useCommonBindings = () => {
+      const onCompositionStart = (evt: CompositionEvent) => {
+        const instance = getCurrentInstance()!
+        instance.emit('compositionStart', evt)
+      }
+      return { onCompositionStart }
+    }
+    const IxInput = defineComponent({
+      setup() {
+        return useCommonBindings()
+      },
+      template: `<input @compositionstart="(evt) => $emit('compositionStart', evt)" />`
+    })
+
+    const wrapper = mount({
+      components: { IxInput },
+      template: `<ix-input />`
+    })
+
+    await wrapper.find('input').trigger('compositionstart')
+
+    expect(wrapper.emitted().compositionstart).not.toBe(undefined)
   })
 })
