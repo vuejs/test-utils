@@ -9,12 +9,15 @@ import {
   VueElement
 } from './types'
 import { createWrapperError } from './errorWrapper'
-import { TriggerOptions } from './createDomEvent'
 import { find, matches } from './utils/find'
-import { mergeDeep, textContent } from './utils'
+import { mergeDeep } from './utils'
 import { emitted } from './emit'
+import BaseWrapper from './baseWrapper'
+import WrapperLike from './interfaces/wrapperLike'
 
-export class VueWrapper<T extends ComponentPublicInstance> {
+export class VueWrapper<T extends ComponentPublicInstance>
+  extends BaseWrapper<T['$el']>
+  implements WrapperLike {
   private componentVM: T
   private rootVM: ComponentPublicInstance | null
   private __app: App | null
@@ -25,6 +28,7 @@ export class VueWrapper<T extends ComponentPublicInstance> {
     vm: ComponentPublicInstance,
     setProps?: (props: Record<string, any>) => void
   ) {
+    super(vm?.$el)
     this.__app = app
     // root is null on functional components
     this.rootVM = vm?.$root
@@ -58,26 +62,6 @@ export class VueWrapper<T extends ComponentPublicInstance> {
     return selector ? props[selector] : props
   }
 
-  classes(): string[]
-  classes(className: string): boolean
-  classes(className?: string): string[] | boolean {
-    return className
-      ? new DOMWrapper(this.element).classes(className)
-      : new DOMWrapper(this.element).classes()
-  }
-
-  attributes(): { [key: string]: string }
-  attributes(key: string): string
-  attributes(key?: string): { [key: string]: string } | string {
-    return key
-      ? new DOMWrapper(this.element).attributes(key)
-      : new DOMWrapper(this.element).attributes()
-  }
-
-  exists() {
-    return true
-  }
-
   emitted<T = unknown>(): Record<string, T[]>
   emitted<T = unknown>(eventName?: string): undefined | T[]
   emitted<T = unknown>(
@@ -93,10 +77,6 @@ export class VueWrapper<T extends ComponentPublicInstance> {
     }
 
     return this.element.outerHTML
-  }
-
-  text() {
-    return textContent(this.element)
   }
 
   find<K extends keyof HTMLElementTagNameMap>(
@@ -227,11 +207,6 @@ export class VueWrapper<T extends ComponentPublicInstance> {
     const propEvent = prop || 'modelValue'
     this.vm.$emit(`update:${propEvent}`, value)
     return this.vm.$nextTick()
-  }
-
-  trigger(eventString: string, options?: TriggerOptions) {
-    const rootElementWrapper = new DOMWrapper(this.element)
-    return rootElementWrapper.trigger(eventString, options)
   }
 
   unmount() {
