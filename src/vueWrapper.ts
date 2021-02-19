@@ -1,5 +1,7 @@
 import { ComponentPublicInstance, nextTick, App } from 'vue'
 import { ShapeFlags } from '@vue/shared'
+// @ts-ignore todo - No DefinitelyTyped package exists for this
+import eventTypes from 'dom-event-types'
 
 import { config } from './config'
 import { DOMWrapper } from './domWrapper'
@@ -11,7 +13,7 @@ import {
 import { createWrapperError } from './errorWrapper'
 import { find, matches } from './utils/find'
 import { mergeDeep } from './utils'
-import { emitted } from './emit'
+import { emitted, recordEvent } from './emit'
 import BaseWrapper from './baseWrapper'
 import WrapperLike from './interfaces/wrapperLike'
 
@@ -34,6 +36,9 @@ export class VueWrapper<T extends ComponentPublicInstance>
     this.rootVM = vm?.$root
     this.componentVM = vm as T
     this.__setProps = setProps
+
+    this.attachNativeEventListener()
+
     config.plugins.VueWrapper.extend(this)
   }
 
@@ -44,6 +49,18 @@ export class VueWrapper<T extends ComponentPublicInstance>
 
   private get parentElement(): VueElement {
     return this.vm.$el.parentElement
+  }
+
+  private attachNativeEventListener(): void {
+    const vm = this.vm
+    if (!vm) return
+
+    const element = this.element
+    for (let eventName of Object.keys(eventTypes)) {
+      element.addEventListener(eventName, (...args) => {
+        recordEvent(vm.$, eventName, args)
+      })
+    }
   }
 
   get element(): Element {
@@ -63,7 +80,7 @@ export class VueWrapper<T extends ComponentPublicInstance>
   }
 
   emitted<T = unknown>(): Record<string, T[]>
-  emitted<T = unknown>(eventName?: string): undefined | T[]
+  emitted<T = unknown>(eventName: string): undefined | T[]
   emitted<T = unknown>(
     eventName?: string
   ): undefined | T[] | Record<string, T[]> {

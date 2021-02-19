@@ -33,23 +33,23 @@ export const attachEmitListener = () => {
   setDevtoolsHook(createDevTools(events))
 }
 
+// devtools hook only catches Vue component custom events
 function createDevTools(events: Events): any {
   return {
     emit(eventType, ...payload) {
       if (eventType !== DevtoolsHooks.COMPONENT_EMIT) return
 
       const [rootVM, componentVM, event, eventArgs] = payload
-      recordEvent(events, componentVM, event, eventArgs)
+      recordEvent(componentVM, event, eventArgs)
     }
   } as Partial<typeof devtools>
 }
 
-function recordEvent(
-  events: Events,
+export const recordEvent = (
   vm: ComponentInternalInstance,
   event: string,
   args: unknown[]
-): void {
+): void => {
   // Functional component wrapper creates a parent component
   let wrapperVm = vm
   while (typeof wrapperVm?.type === 'function') wrapperVm = wrapperVm.parent!
