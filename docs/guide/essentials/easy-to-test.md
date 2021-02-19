@@ -22,7 +22,7 @@ Think in terms of inputs and outputs from a user perspective. Roughly, this is e
 | Events       | Emitted events (using `$emit`)                 |
 | Side Effects | Such as `console.log` or API calls             |
 
-### Everything else is implementation details
+**Everything else is implementation details**.
 
 Notice how this list does not include elements such as internal methods, intermediate states or even data.
 

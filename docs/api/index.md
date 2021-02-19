@@ -4,7 +4,7 @@ sidebar: auto
 
 # API Reference
 
-## mount()
+## mount
 
 Creates a Wrapper that contains the mounted and rendered Vue component to test.
 
@@ -1584,11 +1584,47 @@ The `Vue` app instance. You can access all of the [instance methods](https://v3.
 `vm` is only available on a `VueWrapper`.
 :::
 
-## Global Config
+## shallowMount
 
-### config
+Creates a Wrapper that contains the mounted and rendered Vue component to test with all children stubbed out.
 
-#### config.global
+**Signature:**
+
+```ts
+interface MountingOptions<Props, Data = {}> {
+  attachTo?: HTMLElement | string
+  attrs?: Record<string, unknown>
+  data?: () => {} extends Data ? any : Data extends object ? Partial<Data> : any
+  props?: (RawProps & Props) | ({} extends Props ? null : never)
+  slots?: { [key: string]: Slot } & { default?: Slot }
+  global?: GlobalMountOptions
+  shallow?: boolean
+}
+
+function mount(Component, options?: MountingOptions): VueWrapper
+```
+
+**Details:**
+
+`shallowMount` behaves exactly like `mount`, but it stubs all child components by default. Essentially, `shallowMount(Component)` is an alias of `mount(Component, { shallow: true })`.
+
+## flushPromises
+
+**Signature:**
+
+```ts
+flushPromises(): Promise<unknown>
+```
+
+**Details:**
+
+`flushPromises` flushes al resolved promise handlers. This helps make sure async operations such as promises or DOM updates have happened before asserting against them.
+
+Check out [Making HTTP requests](../guide/advanced/http-requests.md) to see an example of `flushPromises` in action.
+
+## config
+
+### config.global
 
 **Signature:**
 
