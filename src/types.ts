@@ -45,12 +45,12 @@ type RawProps = VNodeProps & {
 export interface MountingOptions<Props, Data = {}> {
   /**
    * Overrides component's default data. Must be a function.
-   * @see https://vue-test-utils.vuejs.org/v2/api/#data
+   * @see https://next.vue-test-utils.vuejs.org/api/#data
    */
   data?: () => {} extends Data ? any : Data extends object ? Partial<Data> : any
   /**
    * Sets component props when mounted.
-   * @see https://vue-test-utils.vuejs.org/v2/api/#props
+   * @see https://next.vue-test-utils.vuejs.org/api/#props
    */
   props?: (RawProps & Props) | ({} extends Props ? null : never)
   /**
@@ -59,14 +59,14 @@ export interface MountingOptions<Props, Data = {}> {
   propsData?: Props
   /**
    * Sets component attributes when mounted.
-   * @see https://vue-test-utils.vuejs.org/v2/api/#attrs
+   * @see https://next.vue-test-utils.vuejs.org/api/#attrs
    */
   attrs?: Record<string, unknown>
   /**
    * Provide values for slots on a component. Slots can be a component
    * imported from a .vue file or a render function. Providing an
    * object with a `template` key is not supported.
-   * @see https://vue-test-utils.vuejs.org/v2/api/#slots
+   * @see https://next.vue-test-utils.vuejs.org/api/#slots
    */
   slots?: SlotDictionary & {
     default?: Slot
@@ -78,13 +78,13 @@ export interface MountingOptions<Props, Data = {}> {
   /**
    * Specify where to mount the component.
    * Can be a valid CSS selector, or an Element connected to the document.
-   * @see https://vue-test-utils.vuejs.org/v2/api/#attachto
+   * @see https://next.vue-test-utils.vuejs.org/api/#attachto
    */
   attachTo?: HTMLElement | string
   /**
    * Automatically stub out all the child components.
    * @default false
-   * @see https://vue-test-utils.vuejs.org/v2/api/#slots
+   * @see https://next.vue-test-utils.vuejs.org/api/#slots
    */
   shallow?: boolean
 }
@@ -92,7 +92,7 @@ export interface MountingOptions<Props, Data = {}> {
 export type GlobalMountOptions = {
   /**
    * Installs plugins on the component.
-   * @see https://vue-test-utils.vuejs.org/v2/api/#plugins
+   * @see https://next.vue-test-utils.vuejs.org/api/#global-plugins
    */
   plugins?: (Plugin | [Plugin, ...any[]])[]
   /**
@@ -102,42 +102,42 @@ export type GlobalMountOptions = {
   config?: Partial<Omit<AppConfig, 'isNativeTag'>> // isNativeTag is readonly, so we omit it
   /**
    * Applies a mixin for components under testing.
-   * @see https://vue-test-utils.vuejs.org/v2/api/#mixins
+   * @see https://next.vue-test-utils.vuejs.org/api/#global-mixins
    */
   mixins?: ComponentOptions[]
   /**
    * Mocks a global instance property.
    * This is designed to mock variables injected by third party plugins, not
    * Vue's native properties such as $root, $children, etc.
-   * @see https://vue-test-utils.vuejs.org/v2/api/#mocks
+   * @see https://next.vue-test-utils.vuejs.org/api/#global-mocks
    */
   mocks?: Record<string, any>
   /**
    * Provides data to be received in a setup function via `inject`.
-   * @see https://vue-test-utils.vuejs.org/v2/api/#provide
+   * @see https://next.vue-test-utils.vuejs.org/api/#global-provide
    */
   provide?: Record<any, any>
   /**
    * Registers components globally for components under testing.
-   * @see https://vue-test-utils.vuejs.org/v2/api/#components
+   * @see https://next.vue-test-utils.vuejs.org/api/#global-components
    */
   components?: Record<string, Component | object>
   /**
    * Registers a directive globally for components under testing
-   * @see https://vue-test-utils.vuejs.org/v2/api/#directives
+   * @see https://next.vue-test-utils.vuejs.org/api/#global-directives
    */
   directives?: Record<string, Directive>
   /**
    * Stubs a component for components under testing.
    * @default "{ transition: true, 'transition-group': true }"
-   * @see https://vue-test-utils.vuejs.org/v2/api/#global-stubs
+   * @see https://next.vue-test-utils.vuejs.org/api/#global-stubs
    */
   stubs?: Record<any, any>
   /**
    * Allows rendering the default slot content, even when using
    * `shallow` or `shallowMount`.
    * @default false
-   * @see https://vue-test-utils.vuejs.org/v2/api/#renderstubdefaultslot
+   * @see https://next.vue-test-utils.vuejs.org/api/#global-renderstubdefaultslot
    */
   renderStubDefaultSlot?: boolean
 }
