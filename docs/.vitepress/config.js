@@ -8,7 +8,7 @@ const config = {
   locales: {
     '/': {
       lang: 'en-US',
-      title: 'Vue Test Utils (2.0.0-beta.14)'
+      title: 'Vue Test Utils (2.0.0-rc.0)'
     }
   },
   head: [['link', { rel: 'icon', href: `/logo.png` }]],
