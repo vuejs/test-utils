@@ -68,18 +68,21 @@ document.body.innerHTML = `
   </div>
 `
 
+const Component = {
+  template: `<p>Vue Component</p>`
+}
+
 test('mounts on a specific element', () => {
   const wrapper = mount(Component, {
     attachTo: document.getElementById('app')
   })
 
-  console.log(document.body.innerHTML)
-  /*
-   * <div>
-   *   <h1>Non Vue app</h1>
-   *   <div>Vue Component</div>
-   * </div>
-   */
+  expect(document.body.innerHTML).toBe(`
+  <div>
+    <h1>Non Vue app</h1>
+    <div id="app"><div data-v-app=""><p>Vue Component</p></div></div>
+  </div>
+`)
 })
 ```
 
@@ -96,7 +99,7 @@ attrs?: Record<string, unknown>
 **Details:**
 
 ```js
-test('assigns attributes', () => {
+test('attrs', () => {
   const wrapper = mount(Component, {
     attrs: {
       id: 'hello',
@@ -111,7 +114,7 @@ test('assigns attributes', () => {
 })
 ```
 
-Notice that setting a prop will always trump an attribute:
+Notice that setting a defined prop will always trump an attribute:
 
 ```js
 test('attribute is overridden by a prop with the same name', () => {
@@ -145,14 +148,14 @@ data?: () => {} extends Data ? any : Data extends object ? Partial<Data> : any
 
 ```vue
 <template>
-  <div>Foo is {{ foo }}</div>
+  <div>Hello {{ message }}</div>
 </template>
 
 <script>
 export default {
   data() {
     return {
-      foo: 'foo'
+      message: 'everyone'
     }
   }
 }
@@ -162,16 +165,16 @@ export default {
 `Component.spec.js`:
 
 ```js
-test('overrides data', () => {
+test('data', () => {
   const wrapper = mount(Component, {
     data() {
       return {
-        foo: 'bar'
+        message: 'world'
       }
     }
   })
 
-  expect(wrapper.html()).toContain('Foo is bar')
+  expect(wrapper.html()).toContain('Hello world')
 })
 ```
 
@@ -234,15 +237,15 @@ slots?: { [key: string]: Slot } & { default?: Slot }
 
 **Details:**
 
-Slots can be a component imported from a `.vue` file or a render function. Currently providing an object with a `template` key is not supported.
+Slots can be a string, a component imported from a `.vue` file or a render function. Currently providing an object with a `template` key is not supported.
 
 `Component.vue`:
 
 ```vue
 <template>
-  <slot name="foo" />
+  <slot name="first" />
   <slot />
-  <slot name="bar" />
+  <slot name="second" />
 </template>
 ```
 
@@ -255,13 +258,12 @@ test('renders slots content', () => {
   const wrapper = mount(Component, {
     slots: {
       default: 'Default',
-      foo: h('h1', {}, 'Named Slot'),
-      bar: Bar
+      first: h('h1', {}, 'Named Slot'),
+      second: Bar
     }
   })
 
-  console.log(wrapper.html())
-  // logs '<h1>Named Slot</h1>Default<div>Bar</div>'
+  expect(wrapper.html()).toBe('<h1>Named Slot</h1>Default<div>Bar</div>')
 })
 ```
 
