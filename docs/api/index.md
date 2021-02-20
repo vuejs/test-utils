@@ -308,7 +308,7 @@ const Component = {
   template: '<div><global-component/></div>'
 }
 
-test('installs a component globally', () => {
+test('global.components', () => {
   const wrapper = mount(Component, {
     global: {
       components: {
@@ -352,7 +352,7 @@ const Component = {
   template: '<div v-bar>Foo</div>'
 }
 
-test('installs a directive globally', () => {
+test('global.directives', () => {
   const wrapper = mount(Component, {
     global: {
       directives: {
@@ -378,7 +378,7 @@ mixins?: ComponentOptions[]
 `Component.spec.js`:
 
 ```js
-test('adds a mixin', () => {
+test('global.mixins', () => {
   const wrapper = mount(Component, {
     global: {
       mixins: [mixin]
@@ -424,7 +424,7 @@ export default {
 `Component.spec.js`:
 
 ```js
-test('mocks a vuex store', async () => {
+test('global.mocks', async () => {
   const $store = {
     dispatch: jest.fn()
   }
@@ -460,7 +460,7 @@ plugins?: (Plugin | [Plugin, ...any[]])[]
 ```js
 import myPlugin from '@/plugins/myPlugin'
 
-test('installs a plugin', () => {
+test('global.plugins', () => {
   mount(Component, {
     global: {
       plugins: [myPlugin]
@@ -474,7 +474,7 @@ To use plugin with options, an array of options can be passed.
 `Component.spec.js`:
 
 ```js
-test('installs plugins with and without options', () => {
+test('global.plugins with options', () => {
   mount(Component, {
     global: {
       plugins: [Plugin, [PluginWithOptions, 'argument 1', 'another argument']]
@@ -519,7 +519,7 @@ export default {
 `Component.spec.js`:
 
 ```js
-test('injects dark theme via provide mounting option', () => {
+test('global.provide', () => {
   const wrapper = mount(Component, {
     global: {
       provide: {
@@ -562,35 +562,52 @@ renderStubDefaultSlot?: boolean
 
 Defaults to **false**.
 
-Due to technical limitations, this behavior cannot be extended to slots other than the default one.
+`Component.vue`
+
+```vue
+<template>
+  <slot />
+  <another-component />
+</template>
+
+<script>
+export default {
+  components: {
+    AnotherComponent
+  }
+}
+</script>
+```
+
+`AnotherComponent.vue`
+
+```vue
+<template>
+  <p>Another component content</p>
+</template>
+```
+
+`Component.spec.js`
 
 ```js
-import { config, mount } from '@vue/test-utils'
-
-beforeAll(() => {
-  config.renderStubDefaultSlot = true
-})
-
-afterAll(() => {
-  config.renderStubDefaultSlot = false
-})
-
-test('shallow with stubs', () => {
-  const Component = {
-    template: `<div><slot /></div>`
-  }
-
-  const wrapper = mount(Component, {
-    shallow: true
+test('global.renderStubDefaultSlot', () => {
+  const wrapper = mount(ComponentWithSlots, {
+    slots: {
+      default: '<div>My slot content</div>'
+    },
+    shallow: true,
+    global: {
+      renderStubDefaultSlot: true
+    }
   })
 
-  expect(wrapper.html()).toContain('Content from the default slot')
+  expect(wrapper.html()).toBe(
+    '<div>My slot content</div><another-component-stub></another-component-stub>'
+  )
 })
 ```
 
-::: tip
-This behavior is global, not on a mount by mount basis. Remember to enable/disable it before and after each test.
-:::
+Due to technical limitations, **this behavior cannot be extended to slots other than the default one**.
 
 #### global.stubs
 
@@ -625,7 +642,7 @@ export default {
 `Component.spec.js`:
 
 ```js
-test('stubs a component using an array', () => {
+test('global.stubs using array syntax', () => {
   const wrapper = mount(Component, {
     global: {
       stubs: ['Foo']
@@ -635,7 +652,7 @@ test('stubs a component using an array', () => {
   expect(wrapper.html()).toEqual('<div><foo-stub></div>')
 })
 
-test('stubs a component using an Object boolean syntax', () => {
+test('global.stubs using object syntax', () => {
   const wrapper = mount(Component, {
     global: {
       stubs: { Foo: true }
@@ -645,18 +662,19 @@ test('stubs a component using an Object boolean syntax', () => {
   expect(wrapper.html()).toEqual('<div><foo-stub></div>')
 })
 
-test('stubs a component using a custom component', () => {
-  const FooMock = {
-    name: 'Foo',
-    template: '<p>FakeFoo</p>'
+test('global.stubs using a custom component', () => {
+  const CustomStub = {
+    name: 'CustomStub',
+    template: '<p>custom stub content</p>'
   }
+
   const wrapper = mount(Component, {
     global: {
-      stubs: { Foo: FooMock }
+      stubs: { Foo: CustomStub }
     }
   })
 
-  expect(wrapper.html()).toEqual('<div><p>FakeFoo</p></div>')
+  expect(wrapper.html()).toEqual('<div><p>custom stub content</p></div>')
 })
 ```
 
@@ -674,19 +692,28 @@ shallow?: boolean
 
 Defaults to **false**.
 
-```js
-test('stubs all components automatically using { shallow: true }', () => {
-  const Component = {
-    template: `
-      <a-component />
-      <another-component />
-    `,
-    components: {
-      AComponent,
-      AnotherComponent
-    }
-  }
+`Component.vue`
 
+```vue
+<template>
+  <a-component />
+  <another-component />
+</template>
+
+<script>
+export default {
+  components: {
+    AComponent,
+    AnotherComponent
+  }
+}
+</script>
+```
+
+`Component.spec.js`
+
+```js
+test('shallow', () => {
   const wrapper = mount(Component, { shallow: true })
 
   expect(wrapper.html()).toEqual(
@@ -776,7 +803,9 @@ Returns an array of classes on an element.
 test('classes', () => {
   const wrapper = mount(Component)
 
-  expect(wrapper.find('.my-span').classes()).toContain('my-span')
+  expect(wrapper.classes()).toContain('my-span')
+  expect(wrapper.classes('my-span')).toBe(true)
+  expect(wrapper.classes('not-existing')).toBe(false)
 })
 ```
 
@@ -815,12 +844,12 @@ export default {
 test('emitted', () => {
   const wrapper = mount(Component)
 
+  // wrapper.emitted() equals to { greet: [ ['hello'], ['goodbye'] ] }
+
   expect(wrapper.emitted()).toHaveProperty('greet')
-  expect(wrapper.emitted().greet).toHaveLength(2')
+  expect(wrapper.emitted().greet).toHaveLength(2)
   expect(wrapper.emitted().greet[0]).toEqual(['hello'])
   expect(wrapper.emitted().greet[1]).toEqual(['goodbye'])
-
-  // { greet: [ ['hello'], ['goodbye'] ] }
 })
 ```
 
@@ -836,13 +865,13 @@ exists(): boolean
 
 **Details:**
 
+You can use the same syntax `querySelector` implements.
+
 `Component.vue`:
 
 ```vue
 <template>
-  <div>
-    <span />
-  </div>
+  <span />
 </template>
 ```
 
@@ -1283,8 +1312,7 @@ setData(data: Record<string, any>): Promise<void>
 
 **Details:**
 
-Notice that `setData` does not allow setting new properties that are not
-defined in the component.
+`setData` does not allow setting new properties that are not defined in the component.
 
 Also, notice that `setData` does not modify composition API `setup()` data.
 
@@ -1681,3 +1709,7 @@ it('uses global config', () => {
   console.log(wrapper.html()) // <p>message</p><div></div>
 })
 ```
+
+::: tip
+Remember that this behavior is global, not on a mount by mount basis. You might need to enable/disable it before and after each test.
+:::
