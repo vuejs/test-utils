@@ -31,12 +31,12 @@ function mount(Component, options?: MountingOptions): VueWrapper
 ```js
 import { mount } from '@vue/test-utils'
 
-const Hello = {
+const Component = {
   template: '<div>Hello world</div>'
 }
 
 test('mounts a component', () => {
-  const wrapper = mount(Hello, {})
+  const wrapper = mount(Component, {})
 
   expect(wrapper.html()).toContain('Hello world')
 })
@@ -58,19 +58,26 @@ attachTo?: HTMLElement | string
 
 Can be a valid CSS selector, or an [`Element`](https://developer.mozilla.org/en-US/docs/Web/API/Element) connected to the document.
 
+`Component.vue`:
+
+```vue
+<template>
+  <p>Vue Component</p>
+</template>
+```
+
 `Component.spec.js`:
 
 ```js
+import { mount } from '@vue/test-utils'
+import Component from './Component.vue'
+
 document.body.innerHTML = `
   <div>
     <h1>Non Vue app</h1>
     <div id="app"></div>
   </div>
 `
-
-const Component = {
-  template: `<p>Vue Component</p>`
-}
 
 test('mounts on a specific element', () => {
   const wrapper = mount(Component, {
@@ -98,7 +105,12 @@ attrs?: Record<string, unknown>
 
 **Details:**
 
+`Component.spec.js`:
+
 ```js
+import { mount } from '@vue/test-utils'
+import Component from './Component.vue'
+
 test('attrs', () => {
   const wrapper = mount(Component, {
     attrs: {
@@ -117,6 +129,9 @@ test('attrs', () => {
 Notice that setting a defined prop will always trump an attribute:
 
 ```js
+import { mount } from '@vue/test-utils'
+import Component from './Component.vue'
+
 test('attribute is overridden by a prop with the same name', () => {
   const wrapper = mount(Component, {
     props: {
@@ -165,6 +180,9 @@ export default {
 `Component.spec.js`:
 
 ```js
+import { mount } from '@vue/test-utils'
+import Component from './Component.vue'
+
 test('data', () => {
   const wrapper = mount(Component, {
     data() {
@@ -212,6 +230,9 @@ export default {
 `Component.spec.js`:
 
 ```js
+import { mount } from '@vue/test-utils'
+import Component from './Component.vue'
+
 test('props', () => {
   const wrapper = mount(Component, {
     props: {
@@ -249,9 +270,19 @@ Slots can be a string, a component imported from a `.vue` file or a render funct
 </template>
 ```
 
+`Bar.vue`:
+
+```vue
+<template>
+  <div>Bar</div>
+</template>
+```
+
 `Component.spec.js`:
 
 ```js
+import { mount } from '@vue/test-utils'
+import Component from './Component.vue'
 import Bar from './Bar.vue'
 
 test('renders slots content', () => {
@@ -299,14 +330,42 @@ components?: Record<string, Component | object>
 
 **Details:**
 
+`Component.vue`:
+
+```vue
+<template>
+  <div>
+    <global-component />
+  </div>
+</template>
+
+<script>
+import GlobalComponent from '@/components/GlobalComponent'
+
+export default {
+  components: {
+    GlobalComponent
+  }
+}
+</script>
+```
+
+`GlobalComponent.vue`:
+
+```vue
+<template>
+  <div class="global-component">
+    My Global Component
+  </div>
+</template>
+```
+
 `Component.spec.js`:
 
 ```js
+import { mount } from '@vue/test-utils'
 import GlobalComponent from '@/components/GlobalComponent'
-
-const Component = {
-  template: '<div><global-component/></div>'
-}
+import Component from './Component.vue'
 
 test('global.components', () => {
   const wrapper = mount(Component, {
@@ -328,7 +387,7 @@ Configures [Vue's application global configuration](https://v3.vuejs.org/api/app
 **Signature:**
 
 ```ts
-config?: Partial<Omit<AppConfig, 'isNativeTag'>> // isNativeTag is readonly, so we omit it
+config?: Partial<Omit<AppConfig, 'isNativeTag'>>
 ```
 
 #### global.directives
@@ -346,6 +405,9 @@ directives?: Record<string, Directive>
 `Component.spec.js`:
 
 ```js
+import { mount } from '@vue/test-utils'
+import Component from './Component.vue'
+
 import Directive from '@/directives/Directive'
 
 const Component = {
@@ -378,6 +440,9 @@ mixins?: ComponentOptions[]
 `Component.spec.js`:
 
 ```js
+import { mount } from '@vue/test-utils'
+import Component from './Component.vue'
+
 test('global.mixins', () => {
   const wrapper = mount(Component, {
     global: {
@@ -410,7 +475,7 @@ This is designed to mock variables injected by third party plugins, not Vue's na
   <button @click="onClick" />
 </template>
 
-<script>
+<>
 export default {
   methods: {
     onClick() {
@@ -418,12 +483,15 @@ export default {
     }
   }
 }
-</script>
+</>
 ```
 
 `Component.spec.js`:
 
 ```js
+import { mount } from '@vue/test-utils'
+import Component from './Component.vue'
+
 test('global.mocks', async () => {
   const $store = {
     dispatch: jest.fn()
@@ -458,6 +526,9 @@ plugins?: (Plugin | [Plugin, ...any[]])[]
 `Component.spec.js`:
 
 ```js
+import { mount } from '@vue/test-utils'
+import Component from './Component.vue'
+
 import myPlugin from '@/plugins/myPlugin'
 
 test('global.plugins', () => {
@@ -474,6 +545,9 @@ To use plugin with options, an array of options can be passed.
 `Component.spec.js`:
 
 ```js
+import { mount } from '@vue/test-utils'
+import Component from './Component.vue'
+
 test('global.plugins with options', () => {
   mount(Component, {
     global: {
@@ -502,7 +576,7 @@ provide?: Record<any, any>
   <div>Theme is {{ theme }}</div>
 </template>
 
-<script>
+<>
 import { inject } from 'vue'
 
 export default {
@@ -513,12 +587,15 @@ export default {
     }
   }
 }
-</script>
+</>
 ```
 
 `Component.spec.js`:
 
 ```js
+import { mount } from '@vue/test-utils'
+import Component from './Component.vue'
+
 test('global.provide', () => {
   const wrapper = mount(Component, {
     global: {
@@ -537,6 +614,9 @@ If you are using a ES6 `Symbol` for your provide key, you can use it as a dynami
 `Component.spec.js`:
 
 ```js
+import { mount } from '@vue/test-utils'
+import Component from './Component.vue'
+
 const ThemeSymbol = Symbol()
 
 mount(Component, {
@@ -570,13 +650,13 @@ Defaults to **false**.
   <another-component />
 </template>
 
-<script>
+<>
 export default {
   components: {
     AnotherComponent
   }
 }
-</script>
+</>
 ```
 
 `AnotherComponent.vue`
@@ -590,6 +670,9 @@ export default {
 `Component.spec.js`
 
 ```js
+import { mount } from '@vue/test-utils'
+import Component from './Component.vue'
+
 test('global.renderStubDefaultSlot', () => {
   const wrapper = mount(ComponentWithSlots, {
     slots: {
@@ -630,18 +713,21 @@ It stubs `Transition` and `TransitionGroup` by default.
   <div><foo /></div>
 </template>
 
-<script>
+<>
 import Foo from '@/Foo.vue'
 
 export default {
   components: { Foo }
 }
-</script>
+</>
 ```
 
 `Component.spec.js`:
 
 ```js
+import { mount } from '@vue/test-utils'
+import Component from './Component.vue'
+
 test('global.stubs using array syntax', () => {
   const wrapper = mount(Component, {
     global: {
@@ -700,19 +786,22 @@ Defaults to **false**.
   <another-component />
 </template>
 
-<script>
+<>
 export default {
   components: {
     AComponent,
     AnotherComponent
   }
 }
-</script>
+</>
 ```
 
 `Component.spec.js`
 
 ```js
+import { mount } from '@vue/test-utils'
+import Component from './Component.vue'
+
 test('shallow', () => {
   const wrapper = mount(Component, { shallow: true })
 
@@ -753,7 +842,7 @@ attributes(key?: string): { [key: string]: string } | string
   <div id="foo" :class="className" />
 </template>
 
-<script>
+<>
 export default {
   data() {
     return {
@@ -761,12 +850,15 @@ export default {
     }
   }
 }
-</script>
+</>
 ```
 
 `Component.spec.js`:
 
 ```js
+import { mount } from '@vue/test-utils'
+import Component from './Component.vue'
+
 test('attributes', () => {
   const wrapper = mount(Component)
 
@@ -800,6 +892,9 @@ Returns an array of classes on an element.
 `Component.spec.js`:
 
 ```js
+import { mount } from '@vue/test-utils'
+import Component from './Component.vue'
+
 test('classes', () => {
   const wrapper = mount(Component)
 
@@ -828,19 +923,22 @@ The arguments are stored in an array, so you can verify which arguments were emi
 `Component.vue`:
 
 ```vue
-<script>
+<>
 export default {
   created() {
     this.$emit('greet', 'hello')
     this.$emit('greet', 'goodbye')
   }
 }
-</script>
+</>
 ```
 
 `Component.spec.js`:
 
 ```js
+import { mount } from '@vue/test-utils'
+import Component from './Component.vue'
+
 test('emitted', () => {
   const wrapper = mount(Component)
 
@@ -878,6 +976,9 @@ You can use the same syntax `querySelector` implements.
 `Component.spec.js`:
 
 ```js
+import { mount } from '@vue/test-utils'
+import Component from './Component.vue'
+
 test('exists', () => {
   const wrapper = mount(Component)
 
@@ -915,6 +1016,9 @@ You can use the same syntax `querySelector` implements. `find` is basically an a
 `Component.spec.js`:
 
 ```js
+import { mount } from '@vue/test-utils'
+import Component from './Component.vue'
+
 test('find', () => {
   const wrapper = mount(Component)
 
@@ -952,6 +1056,9 @@ findAll(selector: string): DOMWrapper<Element>[]
 `Component.spec.js`:
 
 ```js
+import { mount } from '@vue/test-utils'
+import Component from './Component.vue'
+
 test('findAll', () => {
   const wrapper = mount(Component)
 
@@ -989,11 +1096,11 @@ findComponent<T extends ComponentPublicInstance>(selector: any): VueWrapper<T>
   <div class="foo">Foo</div>
 </template>
 
-<script>
+<>
 export default {
   name: 'Foo'
 }
-</script>
+</>
 ```
 
 `Component.vue`:
@@ -1003,18 +1110,21 @@ export default {
   <Foo data-test="foo" ref="foo" class="foo" />
 </template>
 
-<script>
+<>
 import Foo from '@/Foo'
 
 export default {
   components: { Foo }
 }
-</script>
+</>
 ```
 
 `Component.spec.js`
 
 ```js
+import { mount } from '@vue/test-utils'
+import Component from './Component.vue'
+
 import Foo from '@/Foo.vue'
 
 test('findComponent', () => {
@@ -1062,6 +1172,9 @@ Similar to `findComponent` but finds all Vue Component instances that match the 
 `Component.spec.js`:
 
 ```js
+import { mount } from '@vue/test-utils'
+import Component from './Component.vue'
+
 test('findAllComponents', () => {
   const wrapper = mount(Component)
 
@@ -1100,6 +1213,9 @@ As a rule of thumb, always use get except when you are asserting something doesn
 `Component.spec.js`:
 
 ```js
+import { mount } from '@vue/test-utils'
+import Component from './Component.vue'
+
 test('get', () => {
   const wrapper = mount(Component)
 
@@ -1141,11 +1257,11 @@ It is similar to `findComponent`, but `getComponent` throws instead of returning
   <div class="foo">Foo</div>
 </template>
 
-<script>
+<>
 export default {
   name: 'Foo'
 }
-</script>
+</>
 ```
 
 `Component.vue`:
@@ -1155,18 +1271,21 @@ export default {
   <Foo />
 </template>
 
-<script>
+<>
 import Foo from '@/Foo'
 
 export default {
   components: { Foo }
 }
-</script>
+</>
 ```
 
 `Component.spec.js`
 
 ```js
+import { mount } from '@vue/test-utils'
+import Component from './Component.vue'
+
 import Foo from '@/Foo.vue'
 
 test('getComponent', () => {
@@ -1204,6 +1323,9 @@ html(): string
 `Component.spec.js`:
 
 ```js
+import { mount } from '@vue/test-utils'
+import Component from './Component.vue'
+
 test('html', () => {
   const wrapper = mount(Component)
 
@@ -1267,22 +1389,26 @@ export default {
   <Component truthy :object="{}" string="string" />
 </template>
 
-<script>
+<>
 import Component from '@/Component'
 
 export default {
   components: { Component }
 }
-</script>
+</>
 ```
 
 `Component.spec.js`:
 
 ```js
+import { mount } from '@vue/test-utils'
+import Component from './Component.vue'
+
 test('props', () => {
   const wrapper = mount(Component, {
     global: { stubs: ['Foo'] }
   })
+
   const foo = wrapper.getComponent({ name: 'Foo' })
 
   expect(foo.props('truthy')).toBe(true)
@@ -1323,7 +1449,7 @@ Also, notice that `setData` does not modify composition API `setup()` data.
   <div>Count: {{ count }}</div>
 </template>
 
-<script>
+<>
 export default {
   data() {
     return {
@@ -1331,12 +1457,15 @@ export default {
     }
   }
 }
-</script>
+</>
 ```
 
 `Component.spec.js`:
 
 ```js
+import { mount } from '@vue/test-utils'
+import Component from './Component.vue'
+
 test('setData', async () => {
   const wrapper = mount(Component)
   expect(wrapper.html()).toContain('Count: 0')
@@ -1347,7 +1476,7 @@ test('setData', async () => {
 })
 ```
 
-::: tip
+::: warning
 You should use `await` when you call `setData` to ensure that Vue updates the DOM before you make an assertion.
 :::
 
@@ -1370,16 +1499,19 @@ setProps(props: Record<string, any>): Promise<void>
   <div>{{ message }}</div>
 </template>
 
-<script>
+<>
 export default {
   props: ['message']
 }
-</script>
+</>
 ```
 
 `Component.spec.js`
 
 ```js
+import { mount } from '@vue/test-utils'
+import Component from './Component.vue'
+
 test('updates prop', async () => {
   const wrapper = mount(Component, {
     props: {
@@ -1395,7 +1527,7 @@ test('updates prop', async () => {
 })
 ```
 
-::: tip
+::: warning
 You should use `await` when you call `setProps` to ensure that Vue updates the DOM before you make an assertion.
 :::
 
@@ -1427,7 +1559,7 @@ setValue(value: any, prop?: string): Promise<void>
   <div v-if="checked">The input has been checked!</div>
 </template>
 
-<script>
+<>
 export default {
   data() {
     return {
@@ -1436,12 +1568,15 @@ export default {
     }
   }
 }
-</script>
+</>
 ```
 
 `Component.spec.js`:
 
 ```js
+import { mount } from '@vue/test-utils'
+import Component from './Component.vue'
+
 test('setValue on checkbox', async () => {
   const wrapper = mount(Component)
 
@@ -1460,7 +1595,7 @@ test('setValue on input text', () => {
 })
 ```
 
-::: tip
+::: warning
 You should use `await` when you call `setValue` to ensure that Vue updates the DOM before you make an assertion.
 :::
 
@@ -1487,6 +1622,9 @@ text(): string
 `Component.spec.js`:
 
 ```js
+import { mount } from '@vue/test-utils'
+import Component from './Component.vue'
+
 test('text', () => {
   const wrapper = mount(Component)
 
@@ -1521,7 +1659,7 @@ trigger(eventString: string, options?: TriggerOptions | undefined): Promise<void
   <button @click="count++">Click me</button>
 </template>
 
-<script>
+<>
 export default {
   data() {
     return {
@@ -1529,12 +1667,15 @@ export default {
     }
   }
 }
-</script>
+</>
 ```
 
 `Component.spec.js`:
 
 ```js
+import { mount } from '@vue/test-utils'
+import Component from './Component.vue'
+
 test('trigger', async () => {
   const wrapper = mount(Component)
 
@@ -1550,7 +1691,7 @@ Note that `trigger` accepts a second argument to pass options to the triggered E
 await wrapper.trigger('keydown', { keyCode: 65 })
 ```
 
-::: tip
+::: warning
 You should use `await` when you call `trigger` to ensure that Vue updates the DOM before you make an assertion.
 :::
 
@@ -1575,18 +1716,21 @@ It only works on the root `VueWrapper` returned from `mount`. Useful for manual 
   <div />
 </template>
 
-<script>
+<>
 export default {
   unmounted() {
     console.log('unmounted!')
   }
 }
-</script>
+</>
 ```
 
 `Component.spec.js`:
 
 ```js
+import { mount } from '@vue/test-utils'
+import Component from './Component.vue'
+
 test('unmount', () => {
   const wrapper = mount(Component)
 
@@ -1610,8 +1754,10 @@ vm: ComponentPublicInstance
 
 The `Vue` app instance. You can access all of the [instance methods](https://v3.vuejs.org/api/instance-methods.html) and [instance properties](https://v3.vuejs.org/api/instance-properties.html).
 
+Notice that `vm` is only available on a `VueWrapper`.
+
 :::tip
-`vm` is only available on a `VueWrapper`.
+As a rule of thumb, test against the effects of a passed prop (a DOM update, an emitted event, and so on). This will make tests more powerful than simply asserting that a prop is passed.
 :::
 
 ## shallowMount
@@ -1676,36 +1822,47 @@ Instead of configuring global mounting options on a per-test basis, you can conf
 
 An example might be globally mocking the `$t` variable from vue-i18n, globally stubbing out a component, or any other global item:
 
-```js {1,4-6,8-15}
-import { config, mount } from '@vue/test-utils'
-import { h } from 'vue'
+`Component.vue`:
 
-config.global.mocks = {
-  $t: message => message
-}
+```vue
+<template>
+  <p>{{ $t('message') }}</p>
+  <my-component />
+</template>
 
-config.global.stubs = {
-  MyComponent: {
-    name: 'MyComponent'
-    render() {
-      return h('div')
-    }
-  }
-}
+<>
+import MyComponent from '@/components/MyComponent'
 
-const Component = {
+export default {
   components: {
     MyComponent
-  },
-  template: `
-    <p>{{ $t('message') }}</p>
-    <my-component />
-  `
+  }
+}
+</>
+```
+
+`Component.spec.js`:
+
+```js {1,8-10,12-14}
+import { config, mount } from '@vue/test-utils'
+import { defineComponent } from 'vue'
+
+const MyComponent = defineComponent({
+  template: `<div>My component</div>`
+})
+
+config.global.stubs = {
+  MyComponent
 }
 
-it('uses global config', () => {
+config.global.mocks = {
+  $t: (text) => text
+}
+
+test('config.global', () => {
   const wrapper = mount(Component)
-  console.log(wrapper.html()) // <p>message</p><div></div>
+
+  expect(wrapper.html()).toBe('<p>message</p><div>My component</div>')
 })
 ```
 

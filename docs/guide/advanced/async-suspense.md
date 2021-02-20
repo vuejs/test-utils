@@ -41,7 +41,7 @@ test('increments by 1', () => {
 })
 ```
 
-Surprisingly, this fails! The reason is although `count` is increased, Vue will not update the DOM until the next event loop "tick. For this reason, the assertion (`expect()...`) will be called before Vue updates the DOM.
+Surprisingly, this fails! The reason is although `count` is increased, Vue will not update the DOM until the next event loop tick. For this reason, the assertion (`expect()...`) will be called before Vue updates the DOM.
 
 :::tip
 If you want to learn more about this core JavaScript behavior, read about the [Event Loop and its macrotasks and microtasks](https://javascript.info/event-loop#macrotasks-and-microtasks).
