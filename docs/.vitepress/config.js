@@ -2,7 +2,6 @@
 
 /** @type {UserConfig} */
 const config = {
-  // base: '/v2/',
   title: 'Vue Test Utils for Vue 3',
   description: 'The documentation for the official Vue Test Utils',
   locales: {

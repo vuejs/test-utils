@@ -118,7 +118,7 @@ Note: passing a component using `{ template: '<div /> }` is not supported. Use a
 
 ## Scoped Slots
 
-[Scoped slots](https://v3.vuejs.org/v2/guide/component-slots.html#scoped-slots) and bindings are also supported.
+[Scoped slots](https://v3.vuejs.org/guide/component-slots.html#scoped-slots) and bindings are also supported.
 
 ```js
 const ComponentWithSlots = {

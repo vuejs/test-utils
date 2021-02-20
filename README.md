@@ -11,7 +11,7 @@ Get started with the [documentation](https://next.vue-test-utils.vuejs.org/).
 
 ## Coming from Vue 2 + Vue Test Utils?
 
-We are working on [some documentation to help people migrate](https://vue-test-utils.vuejs.org/v2/guide/migration.html).
+We plan on work on [some documentation to help people migrate](https://next.vue-test-utils.vuejs.org/migration/).
 
 At this point you will have better luck trying this out with a brand new Vue 3 app, as opposed to upgrading an existing Vue 2 app. Feedback and bug reports are welcome!
 
