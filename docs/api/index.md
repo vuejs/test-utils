@@ -1628,10 +1628,9 @@ interface MountingOptions<Props, Data = {}> {
   props?: (RawProps & Props) | ({} extends Props ? null : never)
   slots?: { [key: string]: Slot } & { default?: Slot }
   global?: GlobalMountOptions
-  shallow?: boolean
 }
 
-function mount(Component, options?: MountingOptions): VueWrapper
+function shallowMount(Component, options?: MountingOptions): VueWrapper
 ```
 
 **Details:**
