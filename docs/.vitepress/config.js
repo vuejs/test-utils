@@ -1,13 +1,14 @@
+const package = require('../../package.json')
 /** @typedef {import('vitepress').UserConfig} UserConfig */
 
 /** @type {UserConfig} */
 const config = {
-  title: 'Vue Test Utils for Vue 3',
-  description: 'The documentation for the official Vue Test Utils',
+  title: `Vue Test Utils for Vue 3 (${package.version})`,
+  description: 'The documentation for the official Vue Test Utils for Vue 3',
   locales: {
     '/': {
       lang: 'en-US',
-      title: 'Vue Test Utils (2.0.0-rc.0)'
+      title: `Vue Test Utils for Vue 3 (${package.version})`
     }
   },
   head: [['link', { rel: 'icon', href: `/logo.png` }]],
