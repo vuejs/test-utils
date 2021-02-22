@@ -41,7 +41,7 @@
     "vue": "3.0.3",
     "vue-class-component": "^8.0.0-rc.1",
     "vue-jest": "^5.0.0-alpha.8",
-    "vue-router": "^4.0.3",
+    "vue-router": "^4.0.4",
     "vuex": "^4.0.0"
   },
   "peerDependencies": {
