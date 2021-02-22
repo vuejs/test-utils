@@ -21,6 +21,10 @@ export class DOMWrapper<ElementType extends Element>
     return this.element.outerHTML
   }
 
+  exists(): boolean {
+    return true
+  }
+
   find<K extends keyof HTMLElementTagNameMap>(
     selector: K
   ): DOMWrapper<HTMLElementTagNameMap[K]>

@@ -40,10 +40,6 @@ export default class BaseWrapper<ElementType extends Element> {
     return textContent(this.element)
   }
 
-  exists() {
-    return true
-  }
-
   async trigger(eventString: string, options?: TriggerOptions) {
     if (options && options['target']) {
       throw Error(

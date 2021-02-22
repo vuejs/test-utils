@@ -22,4 +22,24 @@ describe('exists', () => {
     const wrapper = mount(Component)
     expect(wrapper.find('#msg').exists()).toBe(true)
   })
+
+  it('returns false when wrapper is destroyed', () => {
+    const compiled = defineComponent({ template: '<div />' })
+    const wrapper = mount(compiled)
+
+    expect(wrapper.exists()).toEqual(true)
+
+    wrapper.unmount()
+
+    expect(wrapper.exists()).toEqual(false)
+  })
+
+  it('returns false when node is destroyed', () => {
+    const compiled = defineComponent({ template: '<div />' })
+    const wrapper = mount(compiled)
+
+    wrapper.unmount()
+
+    expect(wrapper.find('div').exists()).toEqual(false)
+  })
 })

@@ -87,6 +87,11 @@ export class VueWrapper<T extends ComponentPublicInstance>
     return emitted(this.vm, eventName)
   }
 
+  exists(): boolean {
+    if (!this.parentElement) return false
+    return true
+  }
+
   html() {
     // cover cases like <Suspense>, multiple root nodes.
     if (this.parentElement['__vue_app__']) {
@@ -104,8 +109,9 @@ export class VueWrapper<T extends ComponentPublicInstance>
   ): DOMWrapper<SVGElementTagNameMap[K]>
   find<T extends Element>(selector: string): DOMWrapper<T>
   find(selector: string): DOMWrapper<Element> {
-    // force using the parentElement to allow finding the root element
-    const result = this.parentElement.querySelector(selector)
+    // force using the parentElement to allow finding the root element.
+    // parentElement might not exist (for instance, after unmounting the component)
+    const result = this.parentElement?.querySelector(selector)
     if (result) {
       return new DOMWrapper(result)
     }

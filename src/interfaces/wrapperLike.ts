@@ -30,5 +30,7 @@ export default interface WrapperLike {
 
   html(): string
 
+  exists(): boolean
+
   setValue(value: any): Promise<void>
 }
