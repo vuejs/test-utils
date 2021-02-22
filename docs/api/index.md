@@ -475,7 +475,7 @@ This is designed to mock variables injected by third party plugins, not Vue's na
   <button @click="onClick" />
 </template>
 
-<>
+<script>
 export default {
   methods: {
     onClick() {
@@ -483,7 +483,7 @@ export default {
     }
   }
 }
-</>
+</script>
 ```
 
 `Component.spec.js`:
@@ -576,7 +576,7 @@ provide?: Record<any, any>
   <div>Theme is {{ theme }}</div>
 </template>
 
-<>
+<script>
 import { inject } from 'vue'
 
 export default {
@@ -587,7 +587,7 @@ export default {
     }
   }
 }
-</>
+</script>
 ```
 
 `Component.spec.js`:
@@ -650,13 +650,13 @@ Defaults to **false**.
   <another-component />
 </template>
 
-<>
+<script>
 export default {
   components: {
     AnotherComponent
   }
 }
-</>
+</script>
 ```
 
 `AnotherComponent.vue`
@@ -713,13 +713,13 @@ It stubs `Transition` and `TransitionGroup` by default.
   <div><foo /></div>
 </template>
 
-<>
+<script>
 import Foo from '@/Foo.vue'
 
 export default {
   components: { Foo }
 }
-</>
+</script>
 ```
 
 `Component.spec.js`:
@@ -786,14 +786,14 @@ Defaults to **false**.
   <another-component />
 </template>
 
-<>
+<script>
 export default {
   components: {
     AComponent,
     AnotherComponent
   }
 }
-</>
+</script>
 ```
 
 `Component.spec.js`
@@ -842,7 +842,7 @@ attributes(key?: string): { [key: string]: string } | string
   <div id="foo" :class="className" />
 </template>
 
-<>
+<script>
 export default {
   data() {
     return {
@@ -850,7 +850,7 @@ export default {
     }
   }
 }
-</>
+</script>
 ```
 
 `Component.spec.js`:
@@ -923,14 +923,14 @@ The arguments are stored in an array, so you can verify which arguments were emi
 `Component.vue`:
 
 ```vue
-<>
+<script>
 export default {
   created() {
     this.$emit('greet', 'hello')
     this.$emit('greet', 'goodbye')
   }
 }
-</>
+</script>
 ```
 
 `Component.spec.js`:
@@ -1096,11 +1096,11 @@ findComponent<T extends ComponentPublicInstance>(selector: any): VueWrapper<T>
   <div class="foo">Foo</div>
 </template>
 
-<>
+<script>
 export default {
   name: 'Foo'
 }
-</>
+</script>
 ```
 
 `Component.vue`:
@@ -1110,13 +1110,13 @@ export default {
   <Foo data-test="foo" ref="foo" class="foo" />
 </template>
 
-<>
+<script>
 import Foo from '@/Foo'
 
 export default {
   components: { Foo }
 }
-</>
+</script>
 ```
 
 `Component.spec.js`
@@ -1257,11 +1257,11 @@ It is similar to `findComponent`, but `getComponent` throws instead of returning
   <div class="foo">Foo</div>
 </template>
 
-<>
+<script>
 export default {
   name: 'Foo'
 }
-</>
+</script>
 ```
 
 `Component.vue`:
@@ -1271,13 +1271,13 @@ export default {
   <Foo />
 </template>
 
-<>
+<script>
 import Foo from '@/Foo'
 
 export default {
   components: { Foo }
 }
-</>
+</script>
 ```
 
 `Component.spec.js`
@@ -1389,13 +1389,13 @@ export default {
   <Component truthy :object="{}" string="string" />
 </template>
 
-<>
+<script>
 import Component from '@/Component'
 
 export default {
   components: { Component }
 }
-</>
+</script>
 ```
 
 `Component.spec.js`:
@@ -1449,7 +1449,7 @@ Also, notice that `setData` does not modify composition API `setup()` data.
   <div>Count: {{ count }}</div>
 </template>
 
-<>
+<script>
 export default {
   data() {
     return {
@@ -1457,7 +1457,7 @@ export default {
     }
   }
 }
-</>
+</script>
 ```
 
 `Component.spec.js`:
@@ -1499,11 +1499,11 @@ setProps(props: Record<string, any>): Promise<void>
   <div>{{ message }}</div>
 </template>
 
-<>
+<script>
 export default {
   props: ['message']
 }
-</>
+</script>
 ```
 
 `Component.spec.js`
@@ -1559,7 +1559,7 @@ setValue(value: any, prop?: string): Promise<void>
   <div v-if="checked">The input has been checked!</div>
 </template>
 
-<>
+<script>
 export default {
   data() {
     return {
@@ -1568,7 +1568,7 @@ export default {
     }
   }
 }
-</>
+</script>
 ```
 
 `Component.spec.js`:
@@ -1659,7 +1659,7 @@ trigger(eventString: string, options?: TriggerOptions | undefined): Promise<void
   <button @click="count++">Click me</button>
 </template>
 
-<>
+<script>
 export default {
   data() {
     return {
@@ -1667,7 +1667,7 @@ export default {
     }
   }
 }
-</>
+</script>
 ```
 
 `Component.spec.js`:
@@ -1712,17 +1712,13 @@ It only works on the root `VueWrapper` returned from `mount`. Useful for manual 
 `Component.vue`:
 
 ```vue
-<template>
-  <div />
-</template>
-
-<>
+<script>
 export default {
   unmounted() {
     console.log('unmounted!')
   }
 }
-</>
+</script>
 ```
 
 `Component.spec.js`:
@@ -1830,7 +1826,7 @@ An example might be globally mocking the `$t` variable from vue-i18n, globally s
   <my-component />
 </template>
 
-<>
+<script>
 import MyComponent from '@/components/MyComponent'
 
 export default {
@@ -1838,7 +1834,7 @@ export default {
     MyComponent
   }
 }
-</>
+</script>
 ```
 
 `Component.spec.js`:
