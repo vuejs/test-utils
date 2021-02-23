@@ -26,7 +26,7 @@ const config = {
       }
     },
     nav: [
-      { text: 'Guide', link: '/introduction/' },
+      { text: 'Guide', link: '/guide/' },
       { text: 'API Reference', link: '/api/' },
       { text: 'Migrating from Vue 2', link: '/migration/' },
       {
@@ -36,10 +36,6 @@ const config = {
     ],
     sidebar: [
       {
-        text: 'Introduction',
-        link: '/introduction/'
-      },
-      {
         text: 'Installation',
         link: '/installation/'
       },
@@ -47,6 +43,7 @@ const config = {
         text: 'Essentials',
         collapsable: false,
         children: [
+          { text: 'Getting Started', link: '/guide/' },
           { text: 'A Crash Course', link: '/guide/essentials/a-crash-course' },
           {
             text: 'Conditional Rendering',

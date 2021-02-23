@@ -1,8 +1,6 @@
-# Introduction
+# Getting Started
 
 Welcome to Vue Test Utils, the official testing utility library for Vue.js!
-
-<!-- content to be removed when we merge VTU repos -->
 
 This is the documentation for Vue Test Utils v2, which targets Vue 3.
 
