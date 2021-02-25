@@ -234,7 +234,7 @@ export class VueWrapper<T extends ComponentPublicInstance>
       )
     }
 
-    this.__app.unmount(this.parentElement)
+    this.__app.unmount()
   }
 }
 
