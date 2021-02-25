@@ -31,7 +31,10 @@ function createEntry(options) {
     ],
     plugins: [
       replace({
-        "process.env.NODE_ENV": true
+        values: {
+          "process.env.NODE_ENV": "true"
+        },
+        preventAssignment: true
       }),
       resolve(), commonjs(), json()
     ],
