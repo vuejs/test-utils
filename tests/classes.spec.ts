@@ -64,13 +64,9 @@ describe('classes', () => {
       })
 
       const wrapper = mount(Component)
-      try {
-        wrapper.find('.class-c').classes()
-      } catch (error) {
-        expect(error).toThrow(
-          'Cannot call classes on an empty DOMWrapper.'
-        )
-      }
+      expect(() => wrapper.find('.class-c').classes()).toThrowError(
+        'Cannot call classes on an empty DOMWrapper.'
+      )
     })
   })
 })
