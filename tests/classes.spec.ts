@@ -55,5 +55,22 @@ describe('classes', () => {
       expect(wrapper.classes('class-a')).toBe(true)
       expect(wrapper.classes('class-b')).toBe(false)
     })
+
+    it('returns error if the component does not have the class', () => {
+      const Component = defineComponent({
+        render() {
+          return h('div', { class: 'class-a' }, 'some text')
+        }
+      })
+
+      const wrapper = mount(Component)
+      try {
+        wrapper.find('.class-c').classes()
+      } catch (error) {
+        expect(error.message).toEqual(
+          'Cannot call classes on an empty DOMWrapper.'
+        )
+      }
+    })
   })
 })
