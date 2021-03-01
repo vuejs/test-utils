@@ -13,7 +13,7 @@
   ],
   "devDependencies": {
     "@babel/core": "^7.13.1",
-    "@babel/preset-env": "^7.13.5",
+    "@babel/preset-env": "^7.13.8",
     "@babel/types": "^7.12.12",
     "@rollup/plugin-commonjs": "^17.1.0",
     "@rollup/plugin-json": "^4.1.0",
