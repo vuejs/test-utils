@@ -337,11 +337,12 @@ export function mount(
     return vm.$nextTick()
   }
 
-  // add tracking for emitted events
-  attachEmitListener()
-
   // create the app
   const app = createApp(Parent)
+
+  // add tracking for emitted events
+  // this must be done after `createApp`: https://github.com/vuejs/vue-test-utils-next/issues/436
+  attachEmitListener()
 
   // global mocks mixin
   if (global?.mocks) {

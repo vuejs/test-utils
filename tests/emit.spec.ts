@@ -21,7 +21,7 @@ describe('emitted', () => {
     console.warn = consoleWarnSave
   })
 
-  it('captures events emitted via this.$emit', () => {
+  it('captures events emitted via this.$emit', async () => {
     const Component = defineComponent({
       render() {
         return h('div', [
@@ -33,7 +33,7 @@ describe('emitted', () => {
     expect(wrapper.emitted()).toEqual({})
     expect(wrapper.emitted().hello).toEqual(undefined)
 
-    wrapper.find('button').trigger('click')
+    await wrapper.find('button').trigger('click')
     expect(wrapper.emitted().hello[0]).toEqual(['foo', 'bar'])
 
     wrapper.find('button').trigger('click')
@@ -273,5 +273,28 @@ describe('emitted', () => {
     await wrapper.find('input').trigger('compositionstart')
 
     expect(wrapper.emitted().compositionstart).not.toBe(undefined)
+  })
+
+  it('https://github.com/vuejs/vue-test-utils-next/issues/436', async () => {
+    const Foo = defineComponent({
+      name: 'Foo',
+      emits: ['foo'],
+      setup(_, ctx) {
+        return () =>
+          h(
+            'div',
+            {
+              onClick: () => {
+                ctx.emit('foo', 'bar')
+              }
+            },
+            'hello world'
+          )
+      }
+    })
+
+    const wrapper = mount(Foo)
+    await wrapper.trigger('click')
+    expect(wrapper.emitted('foo')).toHaveLength(1)
   })
 })
