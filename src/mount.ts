@@ -413,16 +413,27 @@ export function mount(
   // users expect stubs to work with globally registered
   // components, too, such as <router-link> and <router-view>
   // so we register those globally.
-  // https://github.com/vuejs/vue-test-utils-next/issues/249
+  // ref: https://github.com/vuejs/vue-test-utils-next/issues/249
+  // we register both the hyphenated version and non-hyphenated
+  // version for good measure.
+  // ref: https://github.com/vuejs/vue-test-utils-next/issues/425
   if (global?.stubs) {
     for (const [name, stub] of Object.entries(global.stubs)) {
       const tag = hyphenate(name)
       if (stub === true) {
+        const stubbed = createStub({ name, props: {} })
         // default stub.
-        app.component(tag, createStub({ name, props: {} }))
+        app.component(tag, stubbed)
+
+        if (!name.includes('-') && !['transition', 'transition-group'].includes(name)) {
+          app.component(name, stubbed)
+        }
       } else {
         // user has provided a custom implementation.
         app.component(tag, stub)
+        if (!name.includes('-') && !['transition', 'transition-group'].includes(name)) {
+          app.component(name, stub)
+        }
       }
     }
   }
