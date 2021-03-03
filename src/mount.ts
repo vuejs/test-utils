@@ -425,13 +425,19 @@ export function mount(
         // default stub.
         app.component(tag, stubbed)
 
-        if (!name.includes('-') && !['transition', 'transition-group'].includes(name)) {
+        if (
+          !name.includes('-') &&
+          !['transition', 'transition-group'].includes(name)
+        ) {
           app.component(name, stubbed)
         }
       } else {
         // user has provided a custom implementation.
         app.component(tag, stub)
-        if (!name.includes('-') && !['transition', 'transition-group'].includes(name)) {
+        if (
+          !name.includes('-') &&
+          !['transition', 'transition-group'].includes(name)
+        ) {
           app.component(name, stub)
         }
       }

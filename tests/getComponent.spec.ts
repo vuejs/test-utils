@@ -61,7 +61,7 @@ describe('getComponent', () => {
     },
     global: {
       stubs: {
-        RouterLink: RouterLinkStub,
+        RouterLink: RouterLinkStub
       }
     }
   }
@@ -69,12 +69,12 @@ describe('getComponent', () => {
   // https://github.com/vuejs/vue-test-utils-next/issues/425
   it('works with router-link and mount', () => {
     const wrapper = mount(Issue425, options)
-    expect(wrapper.getComponent(".link").props("to")).toEqual({ name });
+    expect(wrapper.getComponent('.link').props('to')).toEqual({ name })
   })
 
   // https://github.com/vuejs/vue-test-utils-next/issues/425
   it('works with router-link and shallowMount', () => {
     const wrapper = shallowMount(Issue425, options)
-    expect(wrapper.getComponent(".link").props("to")).toEqual({ name });
+    expect(wrapper.getComponent('.link').props('to')).toEqual({ name })
   })
 })
