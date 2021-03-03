@@ -280,11 +280,16 @@ describe('emitted', () => {
       name: 'Foo',
       emits: ['foo'],
       setup(_, ctx) {
-        return () => h('div', {
-          onClick: () => {
-            ctx.emit('foo', 'bar')
-          },
-        }, 'hello world')
+        return () =>
+          h(
+            'div',
+            {
+              onClick: () => {
+                ctx.emit('foo', 'bar')
+              }
+            },
+            'hello world'
+          )
       }
     })
 
