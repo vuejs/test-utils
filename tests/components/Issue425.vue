@@ -1,10 +1,10 @@
 <template>
-<div>
-  <RouterLink class="link" :to="{ name: name }">
-    <slot>
-      A test link
-    </slot>
-  </RouterLink>
+  <div>
+    <RouterLink class="link" :to="{ name: name }">
+      <slot>
+        A test link
+      </slot>
+    </RouterLink>
   </div>
 </template>
 
