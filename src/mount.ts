@@ -419,27 +419,13 @@ export function mount(
   // ref: https://github.com/vuejs/vue-test-utils-next/issues/425
   if (global?.stubs) {
     for (const [name, stub] of Object.entries(global.stubs)) {
-      const tag = hyphenate(name)
       if (stub === true) {
         const stubbed = createStub({ name, props: {} })
         // default stub.
-        app.component(tag, stubbed)
-
-        if (
-          !name.includes('-') &&
-          !['transition', 'transition-group'].includes(name)
-        ) {
-          app.component(name, stubbed)
-        }
+        app.component(name, stubbed)
       } else {
         // user has provided a custom implementation.
-        app.component(tag, stub)
-        if (
-          !name.includes('-') &&
-          !['transition', 'transition-group'].includes(name)
-        ) {
-          app.component(name, stub)
-        }
+        app.component(name, stub)
       }
     }
   }
