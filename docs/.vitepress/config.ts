@@ -1,14 +1,13 @@
-const package = require('../../package.json')
-/** @typedef {import('vitepress').UserConfig} UserConfig */
+import { defineConfig } from 'vitepress'
+import packageJSON from '../../package.json'
 
-/** @type {UserConfig} */
-const config = {
-  title: `Vue Test Utils for Vue 3 (${package.version})`,
+export default defineConfig({
+  title: `Vue Test Utils for Vue 3 (${packageJSON.version})`,
   description: 'The documentation for the official Vue Test Utils for Vue 3',
   locales: {
     '/': {
       lang: 'en-US',
-      title: `Vue Test Utils for Vue 3 (${package.version})`
+      title: `Vue Test Utils for Vue 3 (${packageJSON.version})`
     }
   },
   head: [['link', { rel: 'icon', href: `/logo.png` }]],
@@ -120,6 +119,4 @@ const config = {
       }
     ]
   }
-}
-
-module.exports = config
+})
