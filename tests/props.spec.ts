@@ -111,4 +111,70 @@ describe('props', () => {
     await wrapper.trigger('click')
     expect(wrapper.props('modelValue')).toBe(2)
   })
+
+  it('returns reactive props on a stubbed component', async () => {
+    const Foo = {
+      name: 'Foo',
+      template: 'Foo',
+      props: {
+        foo: String,
+      }
+    }
+    const Component = defineComponent({
+        data: () => ({ foo: "old value" }),
+        template: '<div><foo :foo="foo" /><button @click="buttonClick">Click me</button></div>',
+        methods: { buttonClick() { this.foo = "new value" } },
+        components: { Foo }
+      }
+    )
+
+    const wrapper = mount(Component, {
+      global: {
+        stubs: ['Foo']
+      }
+    })
+    let fooCmp = wrapper.findComponent({ name: 'Foo' })
+
+    expect(fooCmp.props()).toEqual({
+      foo: 'old value'
+    })
+
+    await wrapper.find('button').trigger('click')
+
+    expect(fooCmp.props()).toEqual({
+      foo: 'new value'
+    })
+  })
+
+  it('returns reactive props on a stubbed component shallow case', async () => {
+    const Foo = {
+      name: 'Foo',
+      template: 'Foo',
+      props: {
+        foo: String,
+      }
+    }
+    const Component = defineComponent({
+        data: () => ({ foo: "old value" }),
+        template: '<div><foo :foo="foo" /><button @click="buttonClick">Click me</button></div>',
+        methods: { buttonClick() { this.foo = "new value" } },
+        components: { Foo }
+      }
+    )
+
+    const wrapper = mount(Component, {
+      shallow: true
+    })
+    let fooCmp = wrapper.findComponent({ name: 'Foo' })
+
+    expect(fooCmp.props()).toEqual({
+      foo: 'old value'
+    })
+
+    await wrapper.find('button').trigger('click')
+
+    expect(fooCmp.props()).toEqual({
+      foo: 'new value'
+    })
+  })
 })
