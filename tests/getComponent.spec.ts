@@ -1,5 +1,6 @@
 import { defineComponent } from 'vue'
-import { mount } from '../src'
+import { mount, MountingOptions, RouterLinkStub, shallowMount } from '../src'
+import Issue425 from './components/Issue425.vue'
 
 const compA = defineComponent({
   template: `<div class="A"></div>`
@@ -51,5 +52,29 @@ describe('getComponent', () => {
     expect(() => wrapper.getComponent(compA)).toThrowError(
       'Unable to get specified component within: <div class="A"></div>'
     )
+  })
+
+  const name = 'some-route'
+  const options = {
+    props: {
+      name
+    },
+    global: {
+      stubs: {
+        RouterLink: RouterLinkStub
+      }
+    }
+  }
+
+  // https://github.com/vuejs/vue-test-utils-next/issues/425
+  it('works with router-link and mount', () => {
+    const wrapper = mount(Issue425, options)
+    expect(wrapper.getComponent('.link').props('to')).toEqual({ name })
+  })
+
+  // https://github.com/vuejs/vue-test-utils-next/issues/425
+  it('works with router-link and shallowMount', () => {
+    const wrapper = shallowMount(Issue425, options)
+    expect(wrapper.getComponent('.link').props('to')).toEqual({ name })
   })
 })
