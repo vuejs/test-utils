@@ -414,8 +414,8 @@ export function mount(
   // components, too, such as <router-link> and <router-view>
   // so we register those globally.
   // ref: https://github.com/vuejs/vue-test-utils-next/issues/249
-  // we register both the hyphenated version and non-hyphenated
-  // version for good measure.
+  // we register the component as named in the stubs to avoid not being
+  // able to resolve the component later due to casing
   // ref: https://github.com/vuejs/vue-test-utils-next/issues/425
   if (global?.stubs) {
     for (const [name, stub] of Object.entries(global.stubs)) {
