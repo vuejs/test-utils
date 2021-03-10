@@ -109,4 +109,19 @@ describe('isVisible', () => {
     expect(wrapper.html()).toContain('Item: 1')
     expect(wrapper.html()).not.toContain('Item: 2')
   })
+
+  it('should take css into account', async () => {
+    const style = document.createElement('style')
+    style.type = 'text/css'
+    document.head.appendChild(style)
+    style.sheet!.insertRule('.opacity-0 { opacity: 0; }')
+
+    const wrapper = mount({
+      template: '<div id="my-div" class="opacity-0" />'
+    })
+
+    expect(wrapper.get('#my-div').isVisible()).toBe(false)
+
+    document.head.removeChild(style)
+  })
 })
