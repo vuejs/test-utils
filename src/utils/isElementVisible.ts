@@ -9,7 +9,7 @@ function isStyleVisible<T extends Element>(element: T) {
     return false
   }
 
-  const { display, visibility, opacity } = element.style
+  const { display, visibility, opacity } = getComputedStyle(element)
 
   return (
     display !== 'none' &&
