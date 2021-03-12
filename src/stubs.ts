@@ -169,13 +169,9 @@ export function stubComponents(
       // case 1: default stub
       if (stub === true || shallow) {
         const propsDeclaration = type?.props || {}
-        return [
-          createStub({ name, propsDeclaration, props }),
-          props,
-          children,
-          patchFlag,
-          dynamicProps
-        ]
+        const newStub = createStub({ name, propsDeclaration, props })
+        stubs[name] = newStub
+        return [newStub, props, children, patchFlag, dynamicProps]
       }
     }
 
