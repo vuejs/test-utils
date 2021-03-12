@@ -171,13 +171,7 @@ export function stubComponents(
         const propsDeclaration = type?.props || {}
         const newStub = createStub({ name, propsDeclaration, props })
         stubs[name] = newStub
-        return [
-          newStub,
-          props,
-          children,
-          patchFlag,
-          dynamicProps
-        ]
+        return [newStub, props, children, patchFlag, dynamicProps]
       }
     }
 

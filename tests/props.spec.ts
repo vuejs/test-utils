@@ -117,16 +117,20 @@ describe('props', () => {
       name: 'Foo',
       template: 'Foo',
       props: {
-        foo: String,
+        foo: String
       }
     }
     const Component = defineComponent({
-        data: () => ({ foo: "old value" }),
-        template: '<div><foo :foo="foo" /><button @click="buttonClick">Click me</button></div>',
-        methods: { buttonClick() { this.foo = "new value" } },
-        components: { Foo }
-      }
-    )
+      data: () => ({ foo: 'old value' }),
+      template:
+        '<div><foo :foo="foo" /><button @click="buttonClick">Click me</button></div>',
+      methods: {
+        buttonClick() {
+          this.foo = 'new value'
+        }
+      },
+      components: { Foo }
+    })
 
     const wrapper = mount(Component, {
       global: {
@@ -151,16 +155,20 @@ describe('props', () => {
       name: 'Foo',
       template: 'Foo',
       props: {
-        foo: String,
+        foo: String
       }
     }
     const Component = defineComponent({
-        data: () => ({ foo: "old value" }),
-        template: '<div><foo :foo="foo" /><button @click="buttonClick">Click me</button></div>',
-        methods: { buttonClick() { this.foo = "new value" } },
-        components: { Foo }
-      }
-    )
+      data: () => ({ foo: 'old value' }),
+      template:
+        '<div><foo :foo="foo" /><button @click="buttonClick">Click me</button></div>',
+      methods: {
+        buttonClick() {
+          this.foo = 'new value'
+        }
+      },
+      components: { Foo }
+    })
 
     const wrapper = mount(Component, {
       shallow: true
