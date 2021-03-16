@@ -64,16 +64,4 @@ export const recordEvent = (
 
   // Record the event message sent by the emit
   events[cid][event].push(args)
-
-  if (event.startsWith('update:')) {
-    if (args.length !== 1) {
-      throw new Error(
-        'Two-way bound properties have to emit a single value. ' +
-          args.length +
-          ' values given.'
-      )
-    }
-
-    vm.props[event.slice('update:'.length)] = args[0]
-  }
 }

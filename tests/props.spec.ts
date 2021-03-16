@@ -1,7 +1,7 @@
 import { mount } from '../src'
 import WithProps from './components/WithProps.vue'
 import Hello from './components/Hello.vue'
-import { defineComponent } from 'vue'
+import { defineComponent, h } from 'vue'
 
 describe('props', () => {
   it('returns a single prop applied to a component', () => {
@@ -103,7 +103,9 @@ describe('props', () => {
 
     const wrapper = mount(component, {
       props: {
-        modelValue: 1
+        modelValue: 1,
+        'onUpdate:modelValue': async (modelValue: number) =>
+          wrapper.setProps({ modelValue })
       }
     })
 
@@ -184,5 +186,39 @@ describe('props', () => {
     expect(fooCmp.props()).toEqual({
       foo: 'new value'
     })
+  })
+
+  it('https://github.com/vuejs/vue-test-utils-next/issues/440', async () => {
+    const Foo = defineComponent({
+      name: 'Foo',
+      props: {
+        foo: String
+      },
+      emits: ['update:foo'],
+      setup(props, ctx) {
+        return () =>
+          h(
+            'div',
+            {
+              onClick: () => {
+                ctx.emit('update:foo', 'world')
+              }
+            },
+            props.foo
+          )
+      }
+    })
+
+    const wrapper = mount(Foo, {
+      props: {
+        foo: 'hello'
+      }
+    })
+
+    expect(wrapper.text()).toEqual('hello')
+
+    await wrapper.trigger('click')
+
+    expect(wrapper.text()).toEqual('hello')
   })
 })
