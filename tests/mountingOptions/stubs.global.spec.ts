@@ -4,6 +4,7 @@ import { config, mount, RouterLinkStub } from '../../src'
 import Hello from '../components/Hello.vue'
 import ComponentWithoutName from '../components/ComponentWithoutName.vue'
 import ComponentWithSlots from '../components/ComponentWithSlots.vue'
+import { createRouter, createWebHistory } from 'vue-router'
 
 describe('mounting options: stubs', () => {
   let configStubsSave = config.global.stubs
@@ -81,6 +82,34 @@ describe('mounting options: stubs', () => {
     expect(wrapper.html()).toEqual(
       '<div><functional-foo-stub></functional-foo-stub></div>'
     )
+  })
+
+  it('does not warn if stubbing an already registered component', () => {
+    // a component with RouterView
+    const Comp = defineComponent({
+      template: '<RouterView />'
+    })
+    // we want to check if Vue does not log a warning because we register RouterView twice
+    jest.spyOn(console, 'warn')
+
+    // let's register the router as a plugin (which registers the RouterView component once)
+    const router = createRouter({
+      history: createWebHistory(),
+      routes: [{ path: '/', component: Comp }]
+    })
+    // and let's stub RouterView, which registers RouterView a second time
+    const wrapper = mount(Comp, {
+      global: {
+        plugins: [router],
+        stubs: {
+          RouterView: true
+        }
+      }
+    })
+
+    expect(wrapper.html()).toBe('<router-view-stub></router-view-stub>')
+    // check that no warning was emitted
+    expect(console.warn).not.toHaveBeenCalled()
   })
 
   it('stubs a component without a name', () => {

@@ -420,6 +420,10 @@ export function mount(
   // ref: https://github.com/vuejs/vue-test-utils-next/issues/425
   if (global?.stubs) {
     for (const [name, stub] of Object.entries(global.stubs)) {
+      // removes a previously component with the same name if it exists
+      // and avoids the warning from vue-next
+      // "Component has already been registered in target app."
+      delete app._context.components[name]
       if (stub === true) {
         const stubbed = createStub({ name, props: {} })
         // default stub.
