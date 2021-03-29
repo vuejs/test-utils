@@ -36,9 +36,13 @@ export function matches(
     }
 
     let componentName: string | undefined
-    if ('name' in nodeType || 'displayName' in nodeType) {
-      // match normal component definitions or functional components
-      componentName = nodeType.name || nodeType.displayName
+    if ('name' in nodeType) {
+      // match normal component definitions
+      componentName = nodeType.name
+    }
+    if (!componentName && 'displayName' in nodeType) {
+      // match functional components
+      componentName = nodeType.displayName
     }
     let selectorName = selector.name
 
