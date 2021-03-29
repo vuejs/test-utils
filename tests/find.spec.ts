@@ -26,6 +26,32 @@ describe('find', () => {
     expect(wrapper.find('#my-span').exists()).toBe(true)
   })
 
+  test('find using current node after findAllComponents', () => {
+    const ComponentB = defineComponent({
+      name: 'ComponentB',
+      template: '<div><slot></slot></div>'
+    })
+
+    const ComponentA = defineComponent({
+      name: 'ComponentA',
+      template: `
+        <div>
+          <component-b v-for="item in [1, 2]" :key="item">
+            <input type="text" :value="item">
+          </component-b>
+        </div> 
+      `,
+      components: { ComponentB }
+    })
+
+    const wrapper = mount(ComponentA)
+    const firstCompB = wrapper.findComponent({ name: 'ComponentB' })
+    const lastCompB = wrapper.findAllComponents({ name: 'ComponentB' })[1]
+
+    expect(firstCompB.find('input').element.value).toBe('1')
+    expect(lastCompB.find('input').element.value).toBe('2')
+  })
+
   it('returns the root element in single root element', () => {
     const Component = defineComponent({
       render() {
@@ -83,6 +109,32 @@ describe('findAll', () => {
 
     const wrapper = mount(Component)
     expect(wrapper.findAll('.span')).toHaveLength(2)
+  })
+
+  test('findAll using current node after findAllComponents', () => {
+    const ComponentB = defineComponent({
+      name: 'ComponentB',
+      template: '<div><slot></slot></div>'
+    })
+
+    const ComponentA = defineComponent({
+      name: 'ComponentA',
+      template: `
+        <div>
+          <component-b v-for="item in [1, 2]" :key="item">
+            <input type="text" :value="item">
+          </component-b>
+        </div>
+      `,
+      components: { ComponentB }
+    })
+
+    const wrapper = mount(ComponentA)
+    const firstCompB = wrapper.findComponent({ name: 'ComponentB' })
+    const lastCompB = wrapper.findAllComponents({ name: 'ComponentB' })[1]
+
+    expect(firstCompB.findAll('input')[0].element.value).toBe('1')
+    expect(lastCompB.findAll('input')[0].element.value).toBe('2')
   })
 
   test('works with suspense', async () => {
