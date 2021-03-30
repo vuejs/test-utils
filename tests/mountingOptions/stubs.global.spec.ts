@@ -34,10 +34,7 @@ describe('mounting options: stubs', () => {
       }
     })
 
-    expect(wrapper.html()).toBe(
-      '<div></div>\n' +
-        '<foo-stub></foo-stub>'
-    )
+    expect(wrapper.html()).toBe('<div></div>\n' + '<foo-stub></foo-stub>')
   })
 
   // https://github.com/vuejs/vue-test-utils-next/issues/249
@@ -60,9 +57,7 @@ describe('mounting options: stubs', () => {
     })
 
     expect(wrapper.html()).toBe(
-      '<div>\n' +
-        '  <foo-stub></foo-stub><a></a><span></span>\n' +
-        '</div>'
+      '<div>\n' + '  <foo-stub></foo-stub><a></a><span></span>\n' + '</div>'
     )
     expect(wrapper.getComponent(RouterLinkStub).vm.to).toBe('/foo')
   })
@@ -84,9 +79,7 @@ describe('mounting options: stubs', () => {
     })
 
     expect(wrapper.html()).toEqual(
-      '<div>\n' +
-        '  <functional-foo-stub></functional-foo-stub>\n' +
-        '</div>'
+      '<div>\n' + '  <functional-foo-stub></functional-foo-stub>\n' + '</div>'
     )
   })
 
@@ -102,9 +95,7 @@ describe('mounting options: stubs', () => {
     })
 
     expect(wrapper.html()).toEqual(
-      '<div>\n' +
-        '  <foo-stub></foo-stub>\n' +
-        '</div>'
+      '<div>\n' + '  <foo-stub></foo-stub>\n' + '</div>'
     )
   })
 
@@ -154,10 +145,7 @@ describe('mounting options: stubs', () => {
       }
     })
 
-    expect(wrapper.html()).toBe(
-      '<div></div>\n' +
-        '<foo-stub></foo-stub>'
-    )
+    expect(wrapper.html()).toBe('<div></div>\n' + '<foo-stub></foo-stub>')
   })
 
   it('prevents lifecycle hooks triggering in a stub', () => {
@@ -252,9 +240,7 @@ describe('mounting options: stubs', () => {
 
     expect(created).not.toHaveBeenCalled()
     expect(wrapper.html()).toBe(
-      '<div id="root">\n' +
-        '  <div id="msg">Hello world</div>\n' +
-        '</div>'
+      '<div id="root">\n' + '  <div id="msg">Hello world</div>\n' + '</div>'
     )
   })
 
@@ -292,10 +278,7 @@ describe('mounting options: stubs', () => {
       }
     })
 
-    expect(wrapper.html()).toBe(
-      '<span></span>\n' +
-        '<div></div>'
-    )
+    expect(wrapper.html()).toBe('<span></span>\n' + '<div></div>')
   })
 
   it('stubs a component with a kabeb-case name', () => {

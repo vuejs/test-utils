@@ -25,9 +25,7 @@ describe('html', () => {
     const wrapper = mount(Component)
 
     expect(wrapper.html()).toBe(
-      '<div>foo</div>\n' +
-        '<div>bar</div>\n' +
-        '<div>baz</div>'
+      '<div>foo</div>\n' + '<div>bar</div>\n' + '<div>baz</div>'
     )
   })
 
