@@ -56,7 +56,7 @@ There is another type of wrapper - a `VueWrapper` - that is returned from [`getC
 
 `get()` works on the assumption that elements do exist and throws an error when they do not. It is _not_ recommended to use it for asserting existence.
 
-To do so, we use `find()` and `exists()`. The next test asserts that if `admin` is `false` (which is it by default), the admin link is not present:
+To do so, we use `find()` and `exists()`. The next test asserts that if `admin` is `false` (which it is by default), the admin link is not present:
 
 ```js
 test('does not render an admin link', () => {
