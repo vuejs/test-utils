@@ -260,4 +260,4 @@ Almost all test will follow these three phases. You don't need to separate them 
 - Use `get()` and `findAll()` to query the DOM.
 - `trigger()` and `setValue()` are helpers to simulate user input.
 - Updating the DOM is an async operation, so make sure to use `async` and `await`.
-- Testing usually consists of 3 phases; act, arrange and assert.
+- Testing usually consists of 3 phases; arrange, act and assert.
