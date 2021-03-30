@@ -347,7 +347,7 @@ describe('mounting options: stubs', () => {
 
   it('opts out of stubbing transition by default', () => {
     const Comp = {
-      template: `<transition><div id="content" /></transition>`
+      template: `<transition><div id="content">content</div></transition>`
     }
     const wrapper = mount(Comp, {
       global: {
@@ -359,7 +359,7 @@ describe('mounting options: stubs', () => {
 
     // Vue removes <transition> at run-time and does it's magic, so <transition> should not
     // appear in the html when it isn't stubbed.
-    expect(wrapper.html()).toBe('<div id="content"></div>')
+    expect(wrapper.html()).toBe('<div id="content">content</div>')
   })
 
   it('opts out of stubbing transition-group by default', () => {
