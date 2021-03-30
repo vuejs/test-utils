@@ -1,4 +1,4 @@
-import { expectError, expectType } from 'tsd'
+import { expectError, expectType } from './index'
 import { defineComponent } from 'vue'
 import { Options, Vue } from 'vue-class-component'
 import { shallowMount } from '../src'
@@ -26,8 +26,8 @@ shallowMount(AppWithDefine, {
   props: { a: 'Hello', c: 2 }
 })
 
-// wrong prop type should not compile
 expectError(
+  // @ts-expect-error wrong prop type should not compile
   shallowMount(AppWithDefine, {
     props: { a: 2 }
   })
@@ -56,9 +56,9 @@ shallowMount(AppWithProps, {
   props: { a: 'Hello', b: 2 }
 })
 
-// wrong prop type should not compile
 expectError(
   shallowMount(AppWithProps, {
+    // @ts-expect-error wrong prop type should not compile
     props: { a: 2 }
   })
 )
@@ -107,5 +107,6 @@ class ClassComponent extends Vue {
   }
 }
 
+// @ts-expect-error changeMessage expects an argument
 expectError(shallowMount(ClassComponent, {}).vm.changeMessage())
 shallowMount(ClassComponent, {}).vm.changeMessage('')

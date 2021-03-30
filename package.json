@@ -35,7 +35,6 @@
     "rollup": "^2.44.0",
     "rollup-plugin-typescript2": "^0.30.0",
     "ts-jest": "25.3.1",
-    "tsd": "0.14.0",
     "typescript": "^4.2.3",
     "vitepress": "^0.12.2",
     "vue": "3.0.7",
@@ -54,7 +53,7 @@
   "scripts": {
     "test": "yarn jest --runInBand tests",
     "test:build": "yarn jest --runInBand tests -use-build",
-    "tsd": "tsd",
+    "tsd": "tsc -p test-dts/tsconfig.tsd.json",
     "build": "yarn rollup -c rollup.config.js",
     "lint": "prettier -c --parser typescript \"(src|tests)/**/*.ts?(x)\"",
     "lint:fix": "yarn lint --write",
