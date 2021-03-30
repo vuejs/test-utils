@@ -1,0 +1,16 @@
+{
+  "extends": "../tsconfig.json",
+  "compilerOptions": {
+    "noEmit": false,
+    "skipLibCheck": true,
+    "experimentalDecorators": true,
+    "strictNullChecks": false
+  },
+  "exclude": [
+    "../src",
+  ],
+  "include": [
+    "../dist",
+    "../test-dts"
+  ]
+}

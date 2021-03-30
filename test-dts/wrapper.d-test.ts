@@ -1,4 +1,4 @@
-import { expectType } from 'tsd'
+import { expectType } from './index'
 import { defineComponent } from 'vue'
 import { mount } from '../src'
 

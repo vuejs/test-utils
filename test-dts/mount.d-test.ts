@@ -1,9 +1,8 @@
-import { expectError, expectType } from 'tsd'
+import { expectError, expectType } from './index'
 import {
   DefineComponent,
   defineComponent,
-  FunctionalComponent,
-  reactive
+  FunctionalComponent
 } from 'vue'
 import { Options, Vue } from 'vue-class-component'
 import { mount } from '../src'
@@ -49,8 +48,8 @@ mount(AppWithDefine, {
   props: { a: 'Hello', c: 2 }
 })
 
-// wrong prop type should not compile
 expectError(
+  // @ts-expect-error wrong prop type should not compile
   mount(AppWithDefine, {
     props: { a: 2 }
   })
@@ -77,9 +76,9 @@ mount(AppWithProps, {
   props: { a: 'Hello', b: 2 }
 })
 
-// wrong prop type should not compile
 expectError(
   mount(AppWithProps, {
+    // @ts-expect-error wrong prop type should not compile
     props: { a: 2 }
   })
 )
@@ -127,7 +126,7 @@ mount(AppWithoutProps, {
 
 // Functional tests
 
-// wrong props
+// @ts-expect-error wrong props
 expectError((props: { a: 1 }) => {}, {
   props: {
     a: '222'
@@ -208,6 +207,7 @@ class ClassComponent extends Vue {
   }
 }
 
+// @ts-expect-error changeMessage expects an argument
 expectError(mount(ClassComponent, {}).vm.changeMessage())
 mount(ClassComponent, {}).vm.changeMessage('')
 
@@ -234,6 +234,7 @@ mount(Foo, {
 
 expectError(
   mount(
+    // @ts-expect-error
     defineComponent({
       props: {
         baz: String,
