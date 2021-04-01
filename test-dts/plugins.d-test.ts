@@ -1,4 +1,4 @@
-import { expectError, expectType } from 'tsd'
+import { expectError } from './index'
 import { ComponentPublicInstance } from 'vue'
 import { config, VueWrapper } from '../src'
 
@@ -40,7 +40,11 @@ config.plugins.VueWrapper.install(PluginWithOptionalOptions2, { msg: 'hello' })
 
 // uncertain if it is possible to forbid this usage
 // expectError(config.plugins.VueWrapper.install(PluginWithoutOptions, {}))
+// @ts-expect-error option has the wrong type
 expectError(config.plugins.VueWrapper.install(PluginWithOptions, { msg: true }))
+// @ts-expect-error option is mandatory
 expectError(config.plugins.VueWrapper.install(PluginWithOptions, {}))
+// @ts-expect-error option is mandatory
 expectError(config.plugins.VueWrapper.install(PluginWithOptionalOptions, {}))
+// @ts-expect-error option is mandatory
 expectError(config.plugins.VueWrapper.install(PluginWithOptionalOptions2, {}))
