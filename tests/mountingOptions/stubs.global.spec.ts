@@ -1,6 +1,6 @@
-import { h, ComponentOptions, defineComponent } from 'vue'
+import { h, ComponentOptions, defineComponent, defineAsyncComponent } from 'vue'
 
-import { config, mount, RouterLinkStub } from '../../src'
+import { config, flushPromises, mount, RouterLinkStub } from '../../src'
 import Hello from '../components/Hello.vue'
 import ComponentWithoutName from '../components/ComponentWithoutName.vue'
 import ComponentWithSlots from '../components/ComponentWithSlots.vue'
@@ -391,6 +391,31 @@ describe('mounting options: stubs', () => {
     }
     const wrapper = mount(Comp)
     expect(wrapper.find('#content').exists()).toBe(true)
+  })
+
+  it('stubs async component with name', async () => {
+    const AsyncComponent = defineComponent({
+      name: 'AsyncComponent',
+      template: '<span>AsyncComponent</span>'
+    })
+    const TestComponent = defineComponent({
+      components: {
+        MyComponent: defineAsyncComponent(async () => AsyncComponent)
+      },
+      template: '<MyComponent/>'
+    })
+
+    const wrapper = mount(TestComponent, {
+      global: {
+        stubs: {
+          AsyncComponent: true
+        }
+      }
+    })
+
+    await flushPromises()
+
+    expect(wrapper.html()).toBe('<async-component-stub></async-component-stub>')
   })
 
   describe('stub slots', () => {

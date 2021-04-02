@@ -135,6 +135,42 @@ test('shallow stubs out all child components', () => {
 If you used VTU V1, you may remember this as `shallowMount`. That method is still available, too - it's the same as writing `shallow: true`.
 :::
 
+## Stubbing an async component
+
+In case you want to stub out an async component, then make sure to provide a name for the component and use this name as stubs key.
+
+```js
+// AsyncComponent.js
+export default defineComponent({
+  name: 'AsyncComponent',
+  template: '<span>AsyncComponent</span>'
+})
+
+// App.js
+const App = defineComponent({
+  components: {
+    MyComponent: defineAsyncComponent(() => import('./AsyncComponent'))
+  },
+  template: '<MyComponent/>'
+})
+
+// App.spec.js
+test('stubs async component', async () => {
+  const wrapper = mount(App, {
+    global: {
+      stubs: {
+        // Besure to use the name from AsyncComponent and not "MyComponent"
+        AsyncComponent: true
+      }
+    }
+  })
+
+  await flushPromises()
+
+  expect(wrapper.html()).toBe('<async-component-stub></async-component-stub>')
+})
+```
+
 ## Default Slots and `shallow`
 
 Since `shallow` stubs out all the content of a components, any `<slot>` won't get rendered when using `shallow`. While this is not a problem in most cases, there are some scenarios where this isn't ideal.
