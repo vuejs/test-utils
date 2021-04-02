@@ -41,7 +41,9 @@ describe('global.components', () => {
     expect(spy).not.toHaveBeenCalled()
     spy.mockRestore()
     expect(wrapper.html()).toBe(
-      `<div><global-component-stub></global-component-stub></div>`
+      '<div>\n' +
+        '  <global-component-stub></global-component-stub>\n' +
+        '</div>'
     )
   })
 

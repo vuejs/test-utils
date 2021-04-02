@@ -24,7 +24,9 @@ describe('html', () => {
 
     const wrapper = mount(Component)
 
-    expect(wrapper.html()).toBe('<div>foo</div><div>bar</div><div>baz</div>')
+    expect(wrapper.html()).toBe(
+      '<div>foo</div>\n' + '<div>bar</div>\n' + '<div>baz</div>'
+    )
   })
 
   it('returns the html when mounting a Suspense component', () => {

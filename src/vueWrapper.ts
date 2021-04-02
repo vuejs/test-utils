@@ -2,6 +2,7 @@ import { ComponentPublicInstance, nextTick, App } from 'vue'
 import { ShapeFlags } from '@vue/shared'
 // @ts-ignore todo - No DefinitelyTyped package exists for this
 import eventTypes from 'dom-event-types'
+import pretty from 'pretty'
 
 import { config } from './config'
 import { DOMWrapper } from './domWrapper'
@@ -90,10 +91,10 @@ export class VueWrapper<T extends ComponentPublicInstance>
   html() {
     // cover cases like <Suspense>, multiple root nodes.
     if (this.parentElement['__vue_app__']) {
-      return this.parentElement.innerHTML
+      return pretty(this.parentElement.innerHTML)
     }
 
-    return this.element.outerHTML
+    return pretty(this.element.outerHTML)
   }
 
   find<K extends keyof HTMLElementTagNameMap>(

@@ -34,7 +34,7 @@ describe('mounting options: stubs', () => {
       }
     })
 
-    expect(wrapper.html()).toBe('<div></div><foo-stub></foo-stub>')
+    expect(wrapper.html()).toBe('<div></div>\n' + '<foo-stub></foo-stub>')
   })
 
   // https://github.com/vuejs/vue-test-utils-next/issues/249
@@ -57,7 +57,7 @@ describe('mounting options: stubs', () => {
     })
 
     expect(wrapper.html()).toBe(
-      '<div><foo-stub></foo-stub><a></a><span></span></div>'
+      '<div>\n' + '  <foo-stub></foo-stub><a></a><span></span>\n' + '</div>'
     )
     expect(wrapper.getComponent(RouterLinkStub).vm.to).toBe('/foo')
   })
@@ -79,7 +79,7 @@ describe('mounting options: stubs', () => {
     })
 
     expect(wrapper.html()).toEqual(
-      '<div><functional-foo-stub></functional-foo-stub></div>'
+      '<div>\n' + '  <functional-foo-stub></functional-foo-stub>\n' + '</div>'
     )
   })
 
@@ -94,7 +94,9 @@ describe('mounting options: stubs', () => {
       }
     })
 
-    expect(wrapper.html()).toEqual('<div><foo-stub></foo-stub></div>')
+    expect(wrapper.html()).toEqual(
+      '<div>\n' + '  <foo-stub></foo-stub>\n' + '</div>'
+    )
   })
 
   it('passes all attributes to stubbed components', () => {
@@ -116,7 +118,9 @@ describe('mounting options: stubs', () => {
     })
 
     expect(wrapper.html()).toEqual(
-      '<div><foo-stub class="bar" test-id="foo" dynamic="[object Object]"></foo-stub></div>'
+      '<div>\n' +
+        '  <foo-stub class="bar" test-id="foo" dynamic="[object Object]"></foo-stub>\n' +
+        '</div>'
     )
   })
 
@@ -141,7 +145,7 @@ describe('mounting options: stubs', () => {
       }
     })
 
-    expect(wrapper.html()).toBe('<div></div><foo-stub></foo-stub>')
+    expect(wrapper.html()).toBe('<div></div>\n' + '<foo-stub></foo-stub>')
   })
 
   it('prevents lifecycle hooks triggering in a stub', () => {
@@ -236,7 +240,7 @@ describe('mounting options: stubs', () => {
 
     expect(created).not.toHaveBeenCalled()
     expect(wrapper.html()).toBe(
-      '<div id="root"><div id="msg">Hello world</div></div>'
+      '<div id="root">\n' + '  <div id="msg">Hello world</div>\n' + '</div>'
     )
   })
 
@@ -274,7 +278,7 @@ describe('mounting options: stubs', () => {
       }
     })
 
-    expect(wrapper.html()).toBe('<span></span><div></div>')
+    expect(wrapper.html()).toBe('<span></span>\n' + '<div></div>')
   })
 
   it('stubs a component with a kabeb-case name', () => {
@@ -341,7 +345,9 @@ describe('mounting options: stubs', () => {
     const wrapper = mount(Comp)
 
     expect(wrapper.html()).toBe(
-      '<transition-stub><div id="content"></div></transition-stub>'
+      '<transition-stub>\n' +
+        '  <div id="content"></div>\n' +
+        '</transition-stub>'
     )
   })
 
@@ -440,7 +446,9 @@ describe('mounting options: stubs', () => {
         }
       })
       expect(wrapper.html()).toBe(
-        `<div><component-with-slots-stub>Default</component-with-slots-stub></div>`
+        '<div>\n' +
+          '  <component-with-slots-stub>Default</component-with-slots-stub>\n' +
+          '</div>'
       )
     })
 
@@ -452,7 +460,9 @@ describe('mounting options: stubs', () => {
         }
       })
       expect(wrapper.html()).toBe(
-        '<div><component-with-slots-stub></component-with-slots-stub></div>'
+        '<div>\n' +
+          '  <component-with-slots-stub></component-with-slots-stub>\n' +
+          '</div>'
       )
     })
 
@@ -485,10 +495,10 @@ describe('mounting options: stubs', () => {
       })
 
       expect(wrapper.html()).toEqual(
-        '<component-with-slots-stub>' +
-          '<component-with-slots-stub>' +
-          '<simple-slot-stub>nested content</simple-slot-stub>' +
-          '</component-with-slots-stub>' +
+        '<component-with-slots-stub>\n' +
+          '  <component-with-slots-stub>\n' +
+          '    <simple-slot-stub>nested content</simple-slot-stub>\n' +
+          '  </component-with-slots-stub>\n' +
           '</component-with-slots-stub>'
       )
     })
