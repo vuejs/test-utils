@@ -15,10 +15,13 @@ export function processSlot(source = '', Vue = vue) {
     `<SlotWrapper v-bind="$attrs">${template}</SlotWrapper>`,
     {
       mode: 'function',
-      prefixIdentifiers: true
+      prefixIdentifiers: __BROWSER__
     }
   )
-  const createRenderFunction = new Function('Vue', `'use strict';\n${code}`)
+  const createRenderFunction = new Function(
+    'Vue',
+    __BROWSER__ ? `'use strict';\n${code}` : code
+  )
 
   return {
     inheritAttrs: false,
