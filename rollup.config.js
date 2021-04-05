@@ -15,11 +15,7 @@ const banner = `
 `
 
 function createEntry(options) {
-  const {
-    format,
-    input,
-    isBrowser
-  } = options
+  const { format, input, isBrowser } = options
 
   const isEsmBrowser = format === 'es' && isBrowser
 
@@ -27,16 +23,21 @@ function createEntry(options) {
     input,
     external: [
       'vue',
-      isEsmBrowser ? '@vue/compiler-dom/dist/compiler-dom.esm-browser'  : '@vue/compiler-dom',
+      isEsmBrowser
+        ? '@vue/compiler-dom/dist/compiler-dom.esm-browser'
+        : '@vue/compiler-dom'
     ],
     plugins: [
       replace({
         values: {
-          "process.env.NODE_ENV": "true"
+          'process.env.NODE_ENV': 'true',
+          __BROWSER__: isEsmBrowser
         },
         preventAssignment: true
       }),
-      resolve(), commonjs(), json()
+      resolve(),
+      commonjs(),
+      json()
     ],
     output: {
       banner,
@@ -45,7 +46,7 @@ function createEntry(options) {
       format,
       globals: {
         vue: 'Vue',
-        '@vue/compiler-dom': 'VueCompilerDOM',
+        '@vue/compiler-dom': 'VueCompilerDOM'
       }
     }
   }
@@ -82,5 +83,5 @@ export default [
   createEntry({ format: 'es', input: 'src/index.ts', isBrowser: false }),
   createEntry({ format: 'es', input: 'src/index.ts', isBrowser: true }),
   createEntry({ format: 'iife', input: 'src/index.ts', isBrowser: true }),
-  createEntry({ format: 'cjs', input: 'src/index.ts', isBrowser: false }),
+  createEntry({ format: 'cjs', input: 'src/index.ts', isBrowser: false })
 ]
