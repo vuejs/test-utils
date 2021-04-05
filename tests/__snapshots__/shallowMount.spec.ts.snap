@@ -1,3 +1,8 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`shallowMount renders props for stubbed component in a snapshot 1`] = `<my-label-stub val="username"></my-label-stub>`;
+exports[`shallowMount renders props for stubbed component in a snapshot 1`] = `
+<div>
+  <my-label-stub val="username"></my-label-stub>
+  <async-component-stub></async-component-stub>
+</div>
+`;

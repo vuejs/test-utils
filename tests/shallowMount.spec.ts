@@ -1,4 +1,4 @@
-import { defineComponent } from 'vue'
+import { defineAsyncComponent, defineComponent } from 'vue'
 import { mount, shallowMount, VueWrapper } from '../src'
 import ComponentWithChildren from './components/ComponentWithChildren.vue'
 import ScriptSetupWithChildren from './components/ScriptSetupWithChildren.vue'
@@ -19,9 +19,14 @@ describe('shallowMount', () => {
       template: '<label :for="val">{{ val }}</label>'
     })
 
+    const AsyncComponent = defineAsyncComponent(async () => ({
+      name: 'AsyncComponentName',
+      template: '<span>AsyncComponent</span>'
+    }))
+
     const Component = defineComponent({
-      components: { MyLabel },
-      template: '<MyLabel val="username" />',
+      components: { MyLabel, AsyncComponent },
+      template: '<div><MyLabel val="username" /><AsyncComponent /></div>',
       data() {
         return {
           foo: 'bar'
@@ -32,7 +37,10 @@ describe('shallowMount', () => {
     const wrapper = shallowMount(Component)
 
     expect(wrapper.html()).toBe(
-      '<my-label-stub val="username"></my-label-stub>'
+      '<div>\n' +
+        '  <my-label-stub val="username"></my-label-stub>\n' +
+        '  <async-component-stub></async-component-stub>\n' +
+        '</div>'
     )
     expect(wrapper).toMatchSnapshot()
   })

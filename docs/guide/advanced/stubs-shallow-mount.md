@@ -83,6 +83,10 @@ test('stubs component', () => {
 
 This will stub out _all_ the `<FetchDataFromApi />` components in the entire render tree, regardless of what level they appear at. That's why it is in the `global` mounting option.
 
+::: tip
+To stub out you can either use the key in `components` or the name of your component. If both are given in `global.stubs` the key will be used first.
+:::
+
 ## Stubbing all children components
 
 Sometimes you might want to stub out _all_ the custom components. For example you might have a component like this:
@@ -137,7 +141,7 @@ If you used VTU V1, you may remember this as `shallowMount`. That method is stil
 
 ## Stubbing an async component
 
-In case you want to stub out an async component, then make sure to provide a name for the component and use this name as stubs key.
+In case you want to stub out an async component, then there are two behaviours. For example, you might have components like this:
 
 ```js
 // AsyncComponent.js
@@ -153,13 +157,35 @@ const App = defineComponent({
   },
   template: '<MyComponent/>'
 })
+```
 
-// App.spec.js
-test('stubs async component', async () => {
+The first behaviour is using the key defined in your component which loads the async component. In this example we used to key "MyComponent".
+It is not required to use `async/await` in the test case, because the component has been stubbed out before resolving.
+
+```js
+test('stubs async component without resolving', () => {
   const wrapper = mount(App, {
     global: {
       stubs: {
-        // Besure to use the name from AsyncComponent and not "MyComponent"
+        MyComponent: true
+      }
+    }
+  })
+
+  expect(wrapper.html()).toBe('<my-component-stub></my-component-stub>')
+})
+```
+
+The second behaviour is using the name of the async component. In this example we used to name "AsyncComponent".
+Now it is required to use `async/await`, because the async component needs to be resolved and then can be stubbed out by the name defined in the async component.
+
+**Make sure you define a name in your async component!**
+
+```js
+test('stubs async component with resolving', async () => {
+  const wrapper = mount(App, {
+    global: {
+      stubs: {
         AsyncComponent: true
       }
     }
