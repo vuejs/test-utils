@@ -6,7 +6,7 @@ In this section, we explore the `data` and `props` mounting options, as well as 
 
 ## The Password Component
 
-We will demonstrate the above features by building a `<Password>` component. This component verifies a password means certain criteria, such as length and complexity. We will start with the following and add features, as well as tests to make sure the features are working correctly:
+We will demonstrate the above features by building a `<Password>` component. This component verifies a password meets certain criteria, such as length and complexity. We will start with the following and add features, as well as tests to make sure the features are working correctly:
 
 ```js
 const Password = {
