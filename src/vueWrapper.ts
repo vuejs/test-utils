@@ -56,8 +56,14 @@ export class VueWrapper<T extends ComponentPublicInstance>
     const vm = this.vm
     if (!vm) return
 
+    const emits = vm.$options.emits || []
     const element = this.element
     for (let eventName of Object.keys(eventTypes)) {
+      // if a component includes events in 'emits' with the same name as native
+      // events, the native events with that name should be ignored
+      // @see https://github.com/vuejs/rfcs/blob/master/active-rfcs/0030-emits-option.md#fallthrough-control
+      if (emits.includes(eventName)) continue
+
       element.addEventListener(eventName, (...args) => {
         recordEvent(vm.$, eventName, args)
       })
