@@ -6,7 +6,7 @@ In this section, we explore the `data` and `props` mounting options, as well as 
 
 ## The Password Component
 
-We will demonstrate the above features by building a `<Password>` component. This component verifies a password means certain criteria, such as length and complexity. We will start with the following and add features, as well as tests to make sure the features are working correctly:
+We will demonstrate the above features by building a `<Password>` component. This component verifies a password meets certain criteria, such as length and complexity. We will start with the following and add features, as well as tests to make sure the features are working correctly:
 
 ```js
 const Password = {
@@ -29,7 +29,7 @@ The first requirement we will add is a minimum length.
 
 We want to reuse this component in all our projects, each of which may have different requirements. For this reason, we will make the `minLength` a **prop** which we pass to `<Password>`:
 
-We will show an error is `password` is less than `minLength`. We can do this by creating an `error` computed property, and conditionally rendering it using `v-if`:
+We will show an error if `password` is less than `minLength`. We can do this by creating an `error` computed property, and conditionally rendering it using `v-if`:
 
 ```js
 const Password = {
@@ -74,7 +74,7 @@ test('renders an error if length is too short', () => {
 })
 ```
 
-Writing a test for a `maxLength` rule is left as an exercise for the reader! Another way to write this would be using `setValue` to update the input with a password that is too short. You can learn more in [Forms]./forms).
+Writing a test for a `maxLength` rule is left as an exercise for the reader! Another way to write this would be using `setValue` to update the input with a password that is too short. You can learn more in [Forms](./forms).
 
 ## Using `setProps`
 
