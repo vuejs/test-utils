@@ -393,29 +393,170 @@ describe('mounting options: stubs', () => {
     expect(wrapper.find('#content').exists()).toBe(true)
   })
 
-  it('stubs async component with name', async () => {
-    const AsyncComponent = defineComponent({
-      name: 'AsyncComponent',
-      template: '<span>AsyncComponent</span>'
+  it('stubs component by key prior before name', () => {
+    const MyComponent = defineComponent({
+      name: 'MyComponent',
+      template: '<span>MyComponent</span>'
     })
+
     const TestComponent = defineComponent({
       components: {
-        MyComponent: defineAsyncComponent(async () => AsyncComponent)
+        MyComponentKey: MyComponent
       },
-      template: '<MyComponent/>'
+      template: '<MyComponentKey/>'
     })
 
     const wrapper = mount(TestComponent, {
       global: {
         stubs: {
-          AsyncComponent: true
+          MyComponentKey: {
+            template: '<span>MyComponentKey stubbed</span>'
+          },
+          MyComponent: {
+            template: '<span>MyComponent stubbed</span>'
+          }
         }
       }
     })
 
-    await flushPromises()
+    expect(wrapper.html()).toBe('<span>MyComponentKey stubbed</span>')
+  })
 
-    expect(wrapper.html()).toBe('<async-component-stub></async-component-stub>')
+  describe('stub async component', () => {
+    const AsyncComponent = defineAsyncComponent(async () => ({
+      name: 'AsyncComponent',
+      template: '<span>AsyncComponent</span>'
+    }))
+
+    const AsyncComponentWithoutName = defineAsyncComponent(async () => ({
+      template: '<span>AsyncComponent</span>'
+    }))
+
+    it('stubs async component with name', async () => {
+      const TestComponent = defineComponent({
+        components: {
+          MyComponent: AsyncComponent
+        },
+        template: '<MyComponent/>'
+      })
+
+      const wrapper = mount(TestComponent, {
+        global: {
+          stubs: {
+            AsyncComponent: true
+          }
+        }
+      })
+
+      // flushPromises required to resolve async component
+      expect(wrapper.html()).not.toBe(
+        '<async-component-stub></async-component-stub>'
+      )
+      await flushPromises()
+
+      expect(wrapper.html()).toBe(
+        '<async-component-stub></async-component-stub>'
+      )
+    })
+
+    it('stubs async component with name by alias', () => {
+      const TestComponent = defineComponent({
+        components: {
+          MyComponent: AsyncComponent
+        },
+        template: '<MyComponent/>'
+      })
+
+      const wrapper = mount(TestComponent, {
+        global: {
+          stubs: {
+            MyComponent: true
+          }
+        }
+      })
+
+      // flushPromises no longer required
+      expect(wrapper.html()).toBe('<my-component-stub></my-component-stub>')
+    })
+
+    it('stubs async component without name', () => {
+      const TestComponent = defineComponent({
+        components: {
+          Foo: {
+            template: '<div />'
+          },
+          MyComponent: AsyncComponentWithoutName
+        },
+        template: '<MyComponent/>'
+      })
+
+      const wrapper = mount(TestComponent, {
+        global: {
+          stubs: {
+            MyComponent: true
+          }
+        }
+      })
+
+      expect(wrapper.html()).toBe('<my-component-stub></my-component-stub>')
+    })
+
+    it('stubs async component without name and kebab-case', () => {
+      const TestComponent = defineComponent({
+        components: {
+          MyComponent: AsyncComponentWithoutName
+        },
+        template: '<MyComponent/>'
+      })
+
+      const wrapper = mount(TestComponent, {
+        global: {
+          stubs: {
+            'my-component': true
+          }
+        }
+      })
+
+      expect(wrapper.html()).toBe('<my-component-stub></my-component-stub>')
+    })
+
+    it('stubs async component with string', () => {
+      const TestComponent = defineComponent({
+        components: {
+          MyComponent: AsyncComponentWithoutName
+        },
+        template: '<my-component/>'
+      })
+
+      const wrapper = mount(TestComponent, {
+        global: {
+          stubs: ['MyComponent']
+        }
+      })
+
+      expect(wrapper.html()).toBe('<my-component-stub></my-component-stub>')
+    })
+
+    it('stubs async component with other component', () => {
+      const TestComponent = defineComponent({
+        components: {
+          MyComponent: AsyncComponentWithoutName
+        },
+        template: '<my-component/>'
+      })
+
+      const wrapper = mount(TestComponent, {
+        global: {
+          stubs: {
+            MyComponent: defineComponent({
+              template: '<span>StubComponent</span>'
+            })
+          }
+        }
+      })
+
+      expect(wrapper.html()).toBe('<span>StubComponent</span>')
+    })
   })
 
   describe('stub slots', () => {

@@ -75,6 +75,23 @@ const resolveComponentStubByName = (
   }
 }
 
+const getComponentRegisteredName = (
+  instance: ComponentInternalInstance | null,
+  type: VNodeTypes
+): string | null => {
+  if (!instance || !instance.parent) return null
+
+  // try to infer the name based on local resolution
+  const registry = (instance.type as any).components
+  for (const key in registry) {
+    if (registry[key] === type) {
+      return key
+    }
+  }
+
+  return null
+}
+
 const isHTMLElement = (type: VNodeTypes) => typeof type === 'string'
 
 const isCommentOrFragment = (type: VNodeTypes) => typeof type === 'symbol'
@@ -139,27 +156,35 @@ export function stubComponents(
     }
 
     if (isComponent(type) || isFunctionalComponent(type)) {
-      let name = type['name'] || type['displayName']
+      const registeredName = getComponentRegisteredName(instance, type)
+      const componentName = type['name'] || type['displayName']
 
-      // if no name, then check the locally registered components in the parent
-      if (!name && instance && instance.parent) {
-        // try to infer the name based on local resolution
-        const registry = (instance.type as any).components
-        for (const key in registry) {
-          if (registry[key] === type) {
-            name = key
-            break
-          }
-        }
-      }
-      if (!name) {
+      // No name found?
+      if (!registeredName && !componentName) {
         return shallow ? ['stub'] : args
       }
 
-      const stub = resolveComponentStubByName(name, stubs)
+      let stub = null
+      let name = null
+
+      // Prio 1 using the key in locally registered components in the parent
+      if (registeredName) {
+        stub = resolveComponentStubByName(registeredName, stubs)
+        if (stub) {
+          name = registeredName
+        }
+      }
+
+      // Prio 2 using the name attribute in the component
+      if (!stub && componentName) {
+        stub = resolveComponentStubByName(componentName, stubs)
+        if (stub) {
+          name = componentName
+        }
+      }
 
       // case 2: custom implementation
-      if (typeof stub === 'object') {
+      if (stub && typeof stub === 'object') {
         // pass the props and children, for advanced stubbing
         return [stubs[name], props, children, patchFlag, dynamicProps]
       }
@@ -168,6 +193,11 @@ export function stubComponents(
       // where the signature is h(Component, props, slots)
       // case 1: default stub
       if (stub === true || shallow) {
+        // Set name when using shallow without stub
+        if (!name) {
+          name = registeredName || componentName
+        }
+
         const propsDeclaration = type?.props || {}
         const newStub = createStub({ name, propsDeclaration, props })
         stubs[name] = newStub
