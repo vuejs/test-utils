@@ -29,7 +29,7 @@ The first requirement we will add is a minimum length.
 
 We want to reuse this component in all our projects, each of which may have different requirements. For this reason, we will make the `minLength` a **prop** which we pass to `<Password>`:
 
-We will show an error is `password` is less than `minLength`. We can do this by creating an `error` computed property, and conditionally rendering it using `v-if`:
+We will show an error if `password` is less than `minLength`. We can do this by creating an `error` computed property, and conditionally rendering it using `v-if`:
 
 ```js
 const Password = {
