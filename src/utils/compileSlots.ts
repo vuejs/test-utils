@@ -1,8 +1,25 @@
 import { compile } from '@vue/compiler-dom'
-import * as vue from 'vue'
+import {
+  toDisplayString,
+  createVNode,
+  resolveComponent,
+  withCtx,
+  openBlock,
+  createBlock
+} from 'vue'
 import type { SetupContext } from 'vue'
 
-export function processSlot(source = '', Vue = vue) {
+export function processSlot(
+  source = '',
+  Vue = {
+    toDisplayString,
+    createVNode,
+    resolveComponent,
+    withCtx,
+    openBlock,
+    createBlock
+  }
+) {
   let template = source.trim()
   const hasWrappingTemplate = template && template.startsWith('<template')
 
@@ -18,6 +35,7 @@ export function processSlot(source = '', Vue = vue) {
       prefixIdentifiers: __BROWSER__
     }
   )
+
   const createRenderFunction = new Function(
     'Vue',
     __BROWSER__ ? `'use strict';\n${code}` : code
