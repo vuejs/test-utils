@@ -11,7 +11,9 @@ import type { SetupContext } from 'vue'
 
 export function processSlot(
   source = '',
-  Vue = {
+  // this parameter is only used for testing
+  // typing it does not matter much
+  Vue: unknown = {
     toDisplayString,
     createVNode,
     resolveComponent,
