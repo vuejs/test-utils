@@ -13,9 +13,9 @@ export function processSlot(
   source = '',
   // this parameter is only used for testing
   // typing it does not matter much
-  Vue: unknown = {
+  Vue = {
     toDisplayString,
-    createVNode,
+    createVNode: createVNode as unknown,
     resolveComponent,
     withCtx,
     openBlock,
