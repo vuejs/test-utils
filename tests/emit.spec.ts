@@ -175,6 +175,26 @@ describe('emitted', () => {
     expect(childWrapper.emitted().hi[1]).toEqual(['foo', 'bar'])
   })
 
+  it('should not propagate native events defined in emits', () => {
+    const HiButton = defineComponent({
+      name: 'HiButton',
+      emits: ['hi', 'click'],
+      setup(props, { emit }) {
+        return () =>
+          h('div', [h('button', { onClick: () => emit('hi', 'foo', 'bar') })])
+      }
+    })
+
+    const wrapper = mount(HiButton)
+
+    expect(wrapper.emitted()).toEqual({})
+
+    wrapper.find('button').trigger('click')
+
+    expect(wrapper.emitted().hi[0]).toEqual(['foo', 'bar'])
+    expect(wrapper.emitted().click).toEqual(undefined)
+  })
+
   it('should allow passing the name of an event', () => {
     const Component = defineComponent({
       name: 'ContextEmit',
