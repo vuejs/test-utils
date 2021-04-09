@@ -227,7 +227,7 @@ We then make a simple assertion, whether the form emitted the correct event and 
 
 #### Native form submission
 
-Triggering a `submit` event on a `<form>` element mimics browser behavior during form submission. If we wanted to trigger form submission more naturally, we could trigger a `click` event on the submit button instead. Since form elements not connected to the `document` cannot be submitted, as per the [HTML specification](https://html.spec.whatwg.org/multipage/form-control-infrastructure.html#form-submission-algorithm), we need to use [`attachTo`](../api/#attachto) to connect the wrapper's element.
+Triggering a `submit` event on a `<form>` element mimics browser behavior during form submission. If we wanted to trigger form submission more naturally, we could trigger a `click` event on the submit button instead. Since form elements not connected to the `document` cannot be submitted, as per the [HTML specification](https://html.spec.whatwg.org/multipage/form-control-infrastructure.html#form-submission-algorithm), we need to use [`attachTo`](../../api/#attachto) to connect the wrapper's element.
 
 #### Multiple modifiers on the same event
 
