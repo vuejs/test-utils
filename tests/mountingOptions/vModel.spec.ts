@@ -12,7 +12,7 @@ describe('vModel', () => {
         {{ foo }}
       `,
       methods: {
-      handle($event: KeyboardEvent) {
+        handle($event: KeyboardEvent) {
           this.$emit('update:foo', ($event.target as HTMLInputElement).value)
         }
       }
@@ -30,4 +30,3 @@ describe('vModel', () => {
     expect(wrapper.html()).toContain('bar')
   })
 })
-
