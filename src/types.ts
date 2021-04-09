@@ -54,9 +54,14 @@ export interface MountingOptions<Props, Data = {}> {
    */
   props?: (RawProps & Props) | ({} extends Props ? null : never)
   /**
-   * @deprecated use `data` instead.
+   * @deprecated use `props` instead.
    */
   propsData?: Props
+  /**
+   * Sets props to be updated with v-model `update` syntax sugar.
+   * @see https://next.vue-test-utils.vuejs.org/api/#vModel
+   */
+  vModel?: Props
   /**
    * Sets component attributes when mounted.
    * @see https://next.vue-test-utils.vuejs.org/api/#attrs

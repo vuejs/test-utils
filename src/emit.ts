@@ -27,20 +27,20 @@ export function emitted<T = unknown>(
   return vmEvents
 }
 
-export const attachEmitListener = () => {
+export const attachEmitListener = (vModelProps: string[]) => {
   events = {}
   // use devtools to capture this "emit"
-  setDevtoolsHook(createDevTools(events))
+  setDevtoolsHook(createDevTools(events, vModelProps))
 }
 
 // devtools hook only catches Vue component custom events
-function createDevTools(events: Events): any {
+function createDevTools(events: Events, vModelProps: string[]): any {
   return {
     emit(eventType, ...payload) {
       if (eventType !== DevtoolsHooks.COMPONENT_EMIT) return
 
       const [rootVM, componentVM, event, eventArgs] = payload
-      recordEvent(componentVM, event, eventArgs)
+      recordEvent(componentVM, event, eventArgs, vModelProps)
     }
   } as Partial<typeof devtools>
 }
@@ -48,7 +48,8 @@ function createDevTools(events: Events): any {
 export const recordEvent = (
   vm: ComponentInternalInstance,
   event: string,
-  args: unknown[]
+  args: unknown[],
+  vModelProps: string[]
 ): void => {
   // Functional component wrapper creates a parent component
   let wrapperVm = vm
@@ -64,4 +65,19 @@ export const recordEvent = (
 
   // Record the event message sent by the emit
   events[cid][event].push(args)
+
+  // see if we are emitting a v-model syntax sugar update:prop event
+  const match = event.match(/^(update:)(.*)/)
+
+  if (match && match[1] === 'update:' && vModelProps.includes(match[2])) {
+    if (args.length !== 1) {
+      throw new Error(
+        'Two-way bound properties have to emit a single value. ' +
+          args.length +
+          ' values given.'
+      )
+    }
+
+    vm.props[event.slice('update:'.length)] = args[0]
+  }
 }

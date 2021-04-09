@@ -65,7 +65,7 @@ export class VueWrapper<T extends ComponentPublicInstance>
       if (emits.includes(eventName)) continue
 
       element.addEventListener(eventName, (...args) => {
-        recordEvent(vm.$, eventName, args)
+        recordEvent(vm.$, eventName, args, [])
       })
     }
   }

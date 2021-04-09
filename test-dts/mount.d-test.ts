@@ -55,6 +55,31 @@ expectError(
   })
 )
 
+const AppWithVModel = defineComponent({
+  props: {
+    a: {
+      type: String,
+      required: true
+    },
+    b: Number
+  },
+  template: ''
+})
+
+// accept props - vm is properly typed
+expectType<string>(
+  mount(AppWithVModel, {
+    vModel: { a: 'Hello', b: 2 }
+  }).vm.a
+)
+
+// accept props - vm is properly typed
+expectType<number>(
+  mount(AppWithVModel, {
+    vModel: { a: 'Hello', b: 2 }
+  }).vm.b
+)
+
 const AppWithProps = {
   props: {
     a: {

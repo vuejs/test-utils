@@ -16,6 +16,7 @@ interface MountingOptions<Props, Data = {}> {
   attrs?: Record<string, unknown>
   data?: () => {} extends Data ? any : Data extends object ? Partial<Data> : any
   props?: (RawProps & Props) | ({} extends Props ? null : never)
+  vModel?: (RawProps & Props) | ({} extends Props ? null : never)
   slots?: { [key: string]: Slot } & { default?: Slot }
   global?: GlobalMountOptions
   shallow?: boolean
@@ -198,7 +199,7 @@ test('data', () => {
 
 ### props
 
-Sets props on a component when mounted.
+Sets props on a component when mounted. Note that if you want to update a prop passed as `v-model`, [you should use `vModel`](/api/#vmodel).
 
 **Signature:**
 
@@ -241,6 +242,62 @@ test('props', () => {
   })
 
   expect(wrapper.html()).toContain('Count: 5')
+})
+```
+
+### vModel
+
+Similar to `props`, but values passed to `vModel` will be updated when using the [`update:modelValue` syntax](https://v3.vuejs.org/guide/component-custom-events.html#v-model-arguments).
+
+**Signature:**
+
+```ts
+vModel?: (RawProps & Props) | ({} extends Props ? null : never)
+```
+
+**Details:**
+
+`Component.vue`:
+
+```vue
+<template>
+  <input @input="updateValue" />
+  {{ color }}
+</template>
+
+<script>
+export default {
+  props: {
+    color: String
+  },
+  methods: {
+    handle($event) {
+      this.$emit('update:color', $event.target.value)
+    }
+  }
+}
+</script>
+```
+
+`Component.spec.js`:
+
+```js
+it('updates v-model automatically', async () => {
+  const wrapper = mount(Component, {
+    vModel: {
+      color: 'red'
+    }
+  })
+
+  expect(wrapper.html()).toContain('red')
+
+  // update the input value
+  wrapper.find('input').element.value = 'blue'
+  // trigger the input event
+  await wrapper.find('input').trigger('input')
+
+  // value is updated and reflected in the DOM
+  expect(wrapper.html()).toContain('blue')
 })
 ```
 

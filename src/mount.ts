@@ -315,6 +315,7 @@ export function mount(
     ...options?.attrs,
     ...options?.propsData,
     ...options?.props,
+    ...options?.vModel,
     ref: MOUNT_COMPONENT_REF
   })
 
@@ -342,7 +343,7 @@ export function mount(
 
   // add tracking for emitted events
   // this must be done after `createApp`: https://github.com/vuejs/vue-test-utils-next/issues/436
-  attachEmitListener()
+  attachEmitListener((options?.vModel && Object.keys(options.vModel)) ?? [])
 
   // global mocks mixin
   if (global?.mocks) {
