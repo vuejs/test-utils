@@ -5,6 +5,7 @@ import { VueWrapper } from './vueWrapper'
 import { DOMWrapper } from './domWrapper'
 import { config } from './config'
 import { flushPromises } from './utils/flushPromises'
+import { vmodel } from './vmodel'
 
 export {
   mount,
@@ -14,5 +15,6 @@ export {
   DOMWrapper,
   config,
   flushPromises,
-  MountingOptions
+  MountingOptions,
+  vmodel
 }

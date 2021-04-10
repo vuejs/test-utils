@@ -1,4 +1,4 @@
-import { mount } from '../src'
+import { mount, vmodel } from '../src'
 import WithProps from './components/WithProps.vue'
 import Hello from './components/Hello.vue'
 import { defineComponent, h } from 'vue'
@@ -101,11 +101,12 @@ describe('props', () => {
       }
     })
 
+    // @ts-expect-error TODO fix the type
     const wrapper = mount(component, {
       props: {
-        modelValue: 1,
-        'onUpdate:modelValue': async (modelValue: number) =>
-          wrapper.setProps({ modelValue })
+        modelValue: vmodel(1)
+        // 'onUpdate:modelValue': async (modelValue: number) =>
+        //   wrapper.setProps({ modelValue })
       }
     })
 

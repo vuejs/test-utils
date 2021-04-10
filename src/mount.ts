@@ -36,6 +36,7 @@ import { createDataMixin } from './dataMixin'
 import { MOUNT_COMPONENT_REF, MOUNT_PARENT_NAME } from './constants'
 import { createStub, stubComponents } from './stubs'
 import { hyphenate } from './utils/vueShared'
+import { isVModel, VModel } from './vmodel'
 
 // NOTE this should come from `vue`
 type PublicProps = VNodeProps & AllowedComponentProps & ComponentCustomProps
@@ -309,12 +310,25 @@ export function mount(
     ]
   }
 
+  const vmodels: Map<string, VModel<any>> = new Map()
+
+  const treatedProps: Record<string, any> = {}
+  for (const k in options?.props) {
+    const v = options!.props[k]
+    if (isVModel(v)) {
+      vmodels.set(k, v)
+      treatedProps[k] = v.value
+    } else {
+      treatedProps[k] = v
+    }
+  }
+
   // we define props as reactive so that way when we update them with `setProps`
   // Vue's reactivity system will cause a rerender.
   const props = reactive({
     ...options?.attrs,
     ...options?.propsData,
-    ...options?.props,
+    ...treatedProps,
     ref: MOUNT_COMPONENT_REF
   })
 
@@ -342,7 +356,7 @@ export function mount(
 
   // add tracking for emitted events
   // this must be done after `createApp`: https://github.com/vuejs/vue-test-utils-next/issues/436
-  attachEmitListener()
+  attachEmitListener(vmodels)
 
   // global mocks mixin
   if (global?.mocks) {
