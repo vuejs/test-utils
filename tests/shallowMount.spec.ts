@@ -124,7 +124,12 @@ describe('shallowMount', () => {
       }
     })
 
-    expect(wrapper.html()).toBe('<div><test-component-stub class="component 1"></test-component-stub><test-component-stub class="component 2"></test-component-stub></div>')
+    expect(wrapper.html()).toBe(
+      '<div>' +
+        '<test-component-stub class="component 1"></test-component-stub>' +
+        '<test-component-stub class="component 2"></test-component-stub>' +
+      '</div>'
+    )
 
   })
 })
