@@ -41,12 +41,12 @@ describe('shallowMount', () => {
     const wrapper = mount(ComponentWithChildren, { shallow: true })
     expect(wrapper.html()).toEqual(
       '<div class="ComponentWithChildren">' +
-        '<hello-stub></hello-stub>' +
-        '<component-with-input-stub></component-with-input-stub>' +
-        '<component-without-name-stub></component-without-name-stub>' +
-        '<script-setup-stub></script-setup-stub>' +
-        '<with-props-stub></with-props-stub>' +
-        '</div>'
+      '<hello-stub></hello-stub>' +
+      '<component-with-input-stub></component-with-input-stub>' +
+      '<component-without-name-stub></component-without-name-stub>' +
+      '<script-setup-stub></script-setup-stub>' +
+      '<with-props-stub></with-props-stub>' +
+      '</div>'
     )
   })
 
@@ -54,12 +54,12 @@ describe('shallowMount', () => {
     const wrapper = shallowMount(ComponentWithChildren)
     expect(wrapper.html()).toEqual(
       '<div class="ComponentWithChildren">' +
-        '<hello-stub></hello-stub>' +
-        '<component-with-input-stub></component-with-input-stub>' +
-        '<component-without-name-stub></component-without-name-stub>' +
-        '<script-setup-stub></script-setup-stub>' +
-        '<with-props-stub></with-props-stub>' +
-        '</div>'
+      '<hello-stub></hello-stub>' +
+      '<component-with-input-stub></component-with-input-stub>' +
+      '<component-without-name-stub></component-without-name-stub>' +
+      '<script-setup-stub></script-setup-stub>' +
+      '<with-props-stub></with-props-stub>' +
+      '</div>'
     )
   })
 
@@ -74,12 +74,12 @@ describe('shallowMount', () => {
     })
     expect(wrapper.html()).toEqual(
       '<div class="ComponentWithChildren">' +
-        '<div>Override</div>' +
-        '<component-with-input-stub></component-with-input-stub>' +
-        '<component-without-name-stub></component-without-name-stub>' +
-        '<script-setup-stub></script-setup-stub>' +
-        '<with-props-stub></with-props-stub>' +
-        '</div>'
+      '<div>Override</div>' +
+      '<component-with-input-stub></component-with-input-stub>' +
+      '<component-without-name-stub></component-without-name-stub>' +
+      '<script-setup-stub></script-setup-stub>' +
+      '<with-props-stub></with-props-stub>' +
+      '</div>'
     )
   })
 
@@ -94,10 +94,37 @@ describe('shallowMount', () => {
     })
     expect(wrapper.html()).toEqual(
       '<div>Override</div>' +
-        '<component-with-input-stub></component-with-input-stub>' +
-        '<stub></stub>' +
-        '<stub></stub>' +
-        '<with-props-stub></with-props-stub>'
+      '<component-with-input-stub></component-with-input-stub>' +
+      '<stub></stub>' +
+      '<stub></stub>' +
+      '<with-props-stub></with-props-stub>'
     )
+  })
+
+  it('should render stubs correctly', () => {
+
+    const ComponentToMount = defineComponent({
+      template: `<div>
+        <test-component class='component 1' />
+        <test-component class='component 2' />
+      </div>`
+    })
+
+    const TestComponent = defineComponent({
+      template: `<div>
+        this is just a test component
+      </div>`
+    })
+
+    const wrapper = shallowMount(ComponentToMount, {
+      global: {
+        components: {
+          TestComponent
+        }
+      }
+    })
+
+    expect(wrapper.html()).toBe('<div><test-component-stub class="component 1"></test-component-stub><test-component-stub class="component 2"></test-component-stub></div>')
+
   })
 })
