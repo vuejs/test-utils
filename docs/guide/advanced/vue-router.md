@@ -216,7 +216,7 @@ const router = createRouter({
   // omitted for brevity
 })
 
-test('routing', () => {
+test('routing', async () => {
   router.push('/')
 
   // After this line, router is ready
