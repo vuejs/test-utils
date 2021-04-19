@@ -155,10 +155,12 @@ describe('setData', () => {
     })
 
     expect(wrapper.vm.isFieldNull).toBe(true)
+    expect(wrapper.html()).toContain('It is null')
 
     await wrapper.setData({ field: 10 })
     await wrapper.vm.$nextTick()
 
+    expect(wrapper.html()).toContain('It is not null')
     expect(wrapper.vm.field).toEqual(10)
     expect(wrapper.vm.isFieldNull).toBe(false)
   })
