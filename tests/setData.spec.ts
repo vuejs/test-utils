@@ -124,7 +124,8 @@ describe('setData', () => {
     )
   })
 
-  it('https://github.com/vuejs/vue-test-utils-next/issues/538', async () => {
+  // https://github.com/vuejs/vue-test-utils-next/issues/538
+  it('updates data set via data mounting option using setData', async () => {
     const Comp = defineComponent<
       {},
       {},
