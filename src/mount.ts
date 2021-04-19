@@ -35,7 +35,6 @@ import { attachEmitListener } from './emit'
 import { createDataMixin } from './dataMixin'
 import { MOUNT_COMPONENT_REF, MOUNT_PARENT_NAME } from './constants'
 import { createStub, stubComponents } from './stubs'
-import { hyphenate } from './utils/vueShared'
 
 // NOTE this should come from `vue`
 type PublicProps = VNodeProps & AllowedComponentProps & ComponentCustomProps

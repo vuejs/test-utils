@@ -95,7 +95,7 @@ describe('setData', () => {
   })
 
   it('does not set new properties', async () => {
-    jest.spyOn(console, 'warn').mockImplementationOnce(() => {})
+    jest.spyOn(console, 'warn').mockImplementationOnce(() => { })
 
     const Component = {
       template: `<div>{{ foo || 'fallback' }}</div>`
@@ -122,5 +122,39 @@ describe('setData', () => {
     expect(() => wrapper.setData({ count: 2 })).toThrowError(
       'Cannot add property count'
     )
+  })
+
+  it('https://github.com/vuejs/vue-test-utils-next/issues/538', async () => {
+    const Comp = defineComponent<{}, {}, { field: number | null }, { isFieldNull: any }>({
+      template: `
+        <div>{{ isFieldNull ? 'It is null' : 'It is not null' }}</div> 
+      `,
+      data() {
+        return {
+          field: null
+        }
+      },
+      computed: {
+        isFieldNull() {
+          return this.field === null
+        }
+      }
+    })
+
+    const wrapper = mount(Comp, {
+      data() {
+        return {
+          field: null
+        }
+      }
+    })
+
+    expect(wrapper.vm.isFieldNull).toBe(true)
+
+    await wrapper.setData({ field: 10 })
+    await wrapper.vm.$nextTick()
+
+    expect(wrapper.vm.field).toEqual(10)
+    expect(wrapper.vm.isFieldNull).toBe(false)
   })
 })
