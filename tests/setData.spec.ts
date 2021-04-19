@@ -95,7 +95,7 @@ describe('setData', () => {
   })
 
   it('does not set new properties', async () => {
-    jest.spyOn(console, 'warn').mockImplementationOnce(() => { })
+    jest.spyOn(console, 'warn').mockImplementationOnce(() => {})
 
     const Component = {
       template: `<div>{{ foo || 'fallback' }}</div>`
@@ -125,7 +125,12 @@ describe('setData', () => {
   })
 
   it('https://github.com/vuejs/vue-test-utils-next/issues/538', async () => {
-    const Comp = defineComponent<{}, {}, { field: number | null }, { isFieldNull: any }>({
+    const Comp = defineComponent<
+      {},
+      {},
+      { field: number | null },
+      { isFieldNull: any }
+    >({
       template: `
         <div>{{ isFieldNull ? 'It is null' : 'It is not null' }}</div> 
       `,
