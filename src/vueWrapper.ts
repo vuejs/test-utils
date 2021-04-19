@@ -56,7 +56,15 @@ export class VueWrapper<T extends ComponentPublicInstance>
     const vm = this.vm
     if (!vm) return
 
-    const emits = vm.$options.emits || []
+    const emits = vm.$options.emits
+      ? // if emits is declared as an array
+        Array.isArray(vm.$options.emits)
+        ? // use it
+          vm.$options.emits
+        : // otherwise it's declared as an object
+          // and we only need the keys
+          Object.keys(vm.$options.emits)
+      : []
     const element = this.element
     for (let eventName of Object.keys(eventTypes)) {
       // if a component includes events in 'emits' with the same name as native

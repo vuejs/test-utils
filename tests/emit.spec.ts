@@ -137,7 +137,9 @@ describe('emitted', () => {
   it('should not propagate child custom events', () => {
     const Child = defineComponent({
       name: 'Child',
-      emits: ['hi'],
+      emits: {
+        hi: (foo: 'foo', bar: 'bar') => true
+      },
       setup(props, { emit }) {
         return () =>
           h('div', [h('button', { onClick: () => emit('hi', 'foo', 'bar') })])
