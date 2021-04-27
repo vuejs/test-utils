@@ -1,6 +1,4 @@
-// @ts-ignore todo - No DefinitelyTyped package exists for this
-import eventTypes from 'dom-event-types'
-import { Key } from 'readline'
+import domEvents, { DomEvent, DomEventName, EventInterface } from './constants/dom-event-types'
 
 const keyCodesByKeyName = {
   backspace: 8,
@@ -38,7 +36,7 @@ interface TriggerOptions {
 }
 
 interface EventParams {
-  eventType: string
+  eventType: DomEventName | string
   modifiers: KeyName[]
   options?: TriggerOptions
 }
@@ -102,7 +100,7 @@ function getEventProperties(eventParams: EventParams) {
     }
   }
 
-  const meta = eventTypes[eventType] || {
+  const meta: DomEvent = domEvents[eventType as DomEventName] || {
     eventInterface: 'Event',
     cancelable: true,
     bubbles: true
@@ -146,7 +144,8 @@ function createEvent(eventParams: EventParams) {
   const { eventProperties, meta, eventType } = getEventProperties(eventParams)
 
   // user defined eventInterface
-  const metaEventInterface = window[meta.eventInterface]
+  // @ts-expect-error
+  const metaEventInterface: Event = window[meta.eventInterface]
 
   const SupportedEventInterface =
     typeof metaEventInterface === 'function' ? metaEventInterface : window.Event
@@ -159,7 +158,10 @@ function createEvent(eventParams: EventParams) {
   )
 }
 
-function createDOMEvent(eventString: String, options?: TriggerOptions) {
+function createDOMEvent(
+  eventString: DomEventName | string,
+  options?: TriggerOptions
+) {
   // split eventString like `keydown.ctrl.shift.c` into `keydown` and array of modifiers
   const [eventType, ...modifiers] = eventString.split('.')
 

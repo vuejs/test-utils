@@ -2,6 +2,7 @@ import { textContent } from './utils'
 import { createDOMEvent } from './createDomEvent'
 import type { TriggerOptions } from './createDomEvent'
 import { nextTick } from 'vue'
+import { DomEventName } from './constants/dom-event-types'
 
 export default class BaseWrapper<ElementType extends Element> {
   private readonly wrapperElement: ElementType
@@ -44,7 +45,7 @@ export default class BaseWrapper<ElementType extends Element> {
     return true
   }
 
-  async trigger(eventString: string, options?: TriggerOptions) {
+  async trigger(eventString: DomEventName | string, options?: TriggerOptions) {
     if (options && options['target']) {
       throw Error(
         `[vue-test-utils]: you cannot set the target value of an event. See the notes section ` +
