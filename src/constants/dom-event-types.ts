@@ -1,59 +1,58 @@
 export type EventInterface =
-'AnimationEvent' |
-'AudioProcessingEvent' |
-'BeforeInputEvent' |
-'BeforeUnloadEvent' |
-'BlobEvent' |
-'CSSFontFaceLoadEvent' |
-'ClipboardEvent' |
-'CloseEvent' |
-'CompositionEvent' |
-'CustomEvent' |
-'DOMTransactionEvent' |
-'DeviceLightEvent' |
-'DeviceMotionEvent' |
-'DeviceOrientationEvent' |
-'DeviceProximityEvent' |
-'DragEvent' |
-'EditingBeforeInputEvent' |
-'ErrorEvent' |
-'Event' |
-'FetchEvent' |
-'FocusEvent' |
-'GamepadEvent' |
-'HashChangeEvent' |
-'IDBVersionChangeEvent' |
-'InputEvent' |
-'KeyboardEvent' |
-'MediaStreamEvent' |
-'MessageEvent' |
-'MouseEvent' |
-'MutationEvent' |
-'OfflineAudioCompletionEvent' |
-'OverconstrainedError' |
-'PageTransitionEvent' |
-'PaymentRequestUpdateEvent' |
-'PointerEvent' |
-'PopStateEvent' |
-'ProgressEvent' |
-'RTCDataChannelEvent' |
-'RTCIdentityErrorEvent' |
-'RTCIdentityEvent' |
-'RTCPeerConnectionIceEvent' |
-'RelatedEvent' |
-'SVGEvent' |
-'SVGZoomEvent' |
-'SensorEvent' |
-'StorageEvent' |
-'TimeEvent' |
-'TouchEvent' |
-'TrackEvent' |
-'TransitionEvent' |
-'UIEvent' |
-'UserProximityEvent' |
-'WebGLContextEvent' |
-'WheelEvent'
-
+  | 'AnimationEvent'
+  | 'AudioProcessingEvent'
+  | 'BeforeInputEvent'
+  | 'BeforeUnloadEvent'
+  | 'BlobEvent'
+  | 'CSSFontFaceLoadEvent'
+  | 'ClipboardEvent'
+  | 'CloseEvent'
+  | 'CompositionEvent'
+  | 'CustomEvent'
+  | 'DOMTransactionEvent'
+  | 'DeviceLightEvent'
+  | 'DeviceMotionEvent'
+  | 'DeviceOrientationEvent'
+  | 'DeviceProximityEvent'
+  | 'DragEvent'
+  | 'EditingBeforeInputEvent'
+  | 'ErrorEvent'
+  | 'Event'
+  | 'FetchEvent'
+  | 'FocusEvent'
+  | 'GamepadEvent'
+  | 'HashChangeEvent'
+  | 'IDBVersionChangeEvent'
+  | 'InputEvent'
+  | 'KeyboardEvent'
+  | 'MediaStreamEvent'
+  | 'MessageEvent'
+  | 'MouseEvent'
+  | 'MutationEvent'
+  | 'OfflineAudioCompletionEvent'
+  | 'OverconstrainedError'
+  | 'PageTransitionEvent'
+  | 'PaymentRequestUpdateEvent'
+  | 'PointerEvent'
+  | 'PopStateEvent'
+  | 'ProgressEvent'
+  | 'RTCDataChannelEvent'
+  | 'RTCIdentityErrorEvent'
+  | 'RTCIdentityEvent'
+  | 'RTCPeerConnectionIceEvent'
+  | 'RelatedEvent'
+  | 'SVGEvent'
+  | 'SVGZoomEvent'
+  | 'SensorEvent'
+  | 'StorageEvent'
+  | 'TimeEvent'
+  | 'TouchEvent'
+  | 'TrackEvent'
+  | 'TransitionEvent'
+  | 'UIEvent'
+  | 'UserProximityEvent'
+  | 'WebGLContextEvent'
+  | 'WheelEvent'
 
 export interface DomEvent {
   eventInterface: EventInterface | string

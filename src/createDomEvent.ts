@@ -1,4 +1,8 @@
-import domEvents, { DomEvent, DomEventName, EventInterface } from './constants/dom-event-types'
+import domEvents, {
+  DomEvent,
+  DomEventName,
+  EventInterface
+} from './constants/dom-event-types'
 
 const keyCodesByKeyName = {
   backspace: 8,
