@@ -148,8 +148,7 @@ function createEvent(eventParams: EventParams) {
   const { eventProperties, meta, eventType } = getEventProperties(eventParams)
 
   // user defined eventInterface
-  // @ts-expect-error
-  const metaEventInterface: Event = window[meta.eventInterface]
+  const metaEventInterface: Event = window[meta.eventInterface as keyof Window]
 
   const SupportedEventInterface =
     typeof metaEventInterface === 'function' ? metaEventInterface : window.Event
