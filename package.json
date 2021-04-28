@@ -38,7 +38,7 @@
     "rollup-plugin-typescript2": "^0.30.0",
     "ts-jest": "25.3.1",
     "typescript": "^4.2.4",
-    "vitepress": "^0.13.0",
+    "vitepress": "^0.13.2",
     "vue": "3.0.11",
     "vue-class-component": "^8.0.0-rc.1",
     "vue-jest": "^5.0.0-alpha.8",
