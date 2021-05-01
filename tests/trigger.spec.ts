@@ -314,10 +314,11 @@ describe('trigger', () => {
   describe('custom data', () => {
     it('adds custom data to events', () => {
       const updateHandler = jest.fn()
-      const Component = {
+      const Component = defineComponent({
         template: '<div @update="updateHandler" />',
-        methods: { updateHandler }
-      }
+        methods: { updateHandler },
+        emits: ['update']
+      })
       const wrapper = mount(Component, {})
 
       wrapper.trigger('update', { customData: 123 })

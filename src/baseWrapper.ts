@@ -1,10 +1,8 @@
 import { textContent } from './utils'
-import { createDOMEvent } from './createDomEvent'
 import type { TriggerOptions } from './createDomEvent'
 import { nextTick } from 'vue'
-import { DomEventName } from './constants/dom-event-types'
 
-export default class BaseWrapper<ElementType extends Element> {
+export default abstract class BaseWrapper<ElementType extends Element> {
   private readonly wrapperElement: ElementType
 
   get element() {
@@ -45,40 +43,28 @@ export default class BaseWrapper<ElementType extends Element> {
     return true
   }
 
-  async trigger(eventString: DomEventName | string, options?: TriggerOptions) {
-    if (options && options['target']) {
-      throw Error(
-        `[vue-test-utils]: you cannot set the target value of an event. See the notes section ` +
-          `of the docs for more details—` +
-          `https://vue-test-utils.vuejs.org/api/wrapper/trigger.html`
-      )
-    }
+  protected isDisabled = () => {
+    const validTagsToBeDisabled = [
+      'BUTTON',
+      'COMMAND',
+      'FIELDSET',
+      'KEYGEN',
+      'OPTGROUP',
+      'OPTION',
+      'SELECT',
+      'TEXTAREA',
+      'INPUT'
+    ]
+    const hasDisabledAttribute = this.attributes().disabled !== undefined
+    const elementCanBeDisabled = validTagsToBeDisabled.includes(
+      this.element.tagName
+    )
 
-    const isDisabled = () => {
-      const validTagsToBeDisabled = [
-        'BUTTON',
-        'COMMAND',
-        'FIELDSET',
-        'KEYGEN',
-        'OPTGROUP',
-        'OPTION',
-        'SELECT',
-        'TEXTAREA',
-        'INPUT'
-      ]
-      const hasDisabledAttribute = this.attributes().disabled !== undefined
-      const elementCanBeDisabled = validTagsToBeDisabled.includes(
-        this.element.tagName
-      )
-
-      return hasDisabledAttribute && elementCanBeDisabled
-    }
-
-    if (this.element && !isDisabled()) {
-      const event = createDOMEvent(eventString, options)
-      this.element.dispatchEvent(event)
-    }
-
-    return nextTick()
+    return hasDisabledAttribute && elementCanBeDisabled
   }
+
+  abstract trigger(
+    eventString: string,
+    options?: TriggerOptions
+  ): ReturnType<typeof nextTick>
 }
