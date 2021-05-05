@@ -4,7 +4,7 @@ import { ShapeFlags } from '@vue/shared'
 import pretty from 'pretty'
 
 import { config } from './config'
-import domEvents from './constants/dom-event-types'
+import domEvents, { DomEventName } from './constants/dom-event-types'
 import { DOMWrapper } from './domWrapper'
 import {
   FindAllComponentsSelector,
@@ -262,7 +262,13 @@ export class VueWrapper<T extends ComponentPublicInstance>
   async trigger(
     eventString: Parameters<T['$emit']>[0],
     options?: TriggerOptions
-  ) {
+  ): Promise<void>
+  async trigger(
+    eventString: DomEventName,
+    options?: TriggerOptions
+  ): Promise<void>
+  async trigger(eventString: string, options?: TriggerOptions): Promise<void>
+  async trigger(eventString: string, options?: TriggerOptions) {
     if (options && options['target']) {
       throw Error(
         `[vue-test-utils]: you cannot set the target value of an event. See the notes section ` +

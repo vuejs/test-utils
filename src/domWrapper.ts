@@ -141,7 +141,11 @@ export class DOMWrapper<ElementType extends Element>
     return new DOMWrapper(parentElement).trigger('change')
   }
 
-  async trigger(eventString: DomEventName | string, options?: TriggerOptions) {
+  async trigger(
+    eventString: DomEventName,
+    options?: TriggerOptions
+  ): Promise<void>
+  async trigger(eventString: string, options?: TriggerOptions) {
     if (options && options['target']) {
       throw Error(
         `[vue-test-utils]: you cannot set the target value of an event. See the notes section ` +

@@ -110,7 +110,7 @@ describe('props', () => {
     })
 
     expect(wrapper.props('modelValue')).toBe(1)
-    await wrapper.get('button').trigger('click')
+    await wrapper.trigger('click')
     expect(wrapper.props('modelValue')).toBe(2)
   })
 
@@ -217,7 +217,7 @@ describe('props', () => {
 
     expect(wrapper.text()).toEqual('hello')
 
-    await wrapper.get('div').trigger('click')
+    await wrapper.trigger('click')
 
     expect(wrapper.text()).toEqual('hello')
   })

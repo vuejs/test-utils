@@ -316,7 +316,7 @@ describe('emitted', () => {
     })
 
     const wrapper = mount(Foo)
-    await wrapper.get('div').trigger('click')
+    await wrapper.trigger('click')
     expect(wrapper.emitted('foo')).toHaveLength(1)
   })
 })
