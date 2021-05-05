@@ -17,7 +17,7 @@ import { mergeDeep } from './utils'
 import { emitted, recordEvent } from './emit'
 import BaseWrapper from './baseWrapper'
 import WrapperLike from './interfaces/wrapperLike'
-import { createDOMEvent, TriggerOptions } from './createDomEvent'
+import { TriggerOptions } from './createDomEvent'
 
 export class VueWrapper<T extends ComponentPublicInstance>
   extends BaseWrapper<T['$el']>
@@ -269,20 +269,7 @@ export class VueWrapper<T extends ComponentPublicInstance>
   ): Promise<void>
   async trigger(eventString: string, options?: TriggerOptions): Promise<void>
   async trigger(eventString: string, options?: TriggerOptions) {
-    if (options && options['target']) {
-      throw Error(
-        `[vue-test-utils]: you cannot set the target value of an event. See the notes section ` +
-          `of the docs for more details—` +
-          `https://vue-test-utils.vuejs.org/api/wrapper/trigger.html`
-      )
-    }
-
-    if (this.element && !this.isDisabled()) {
-      const event = createDOMEvent(eventString, options)
-      this.element.dispatchEvent(event)
-    }
-
-    return nextTick()
+    return super.trigger(eventString, options);
   }
 }
 

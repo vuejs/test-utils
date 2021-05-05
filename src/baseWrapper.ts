@@ -1,6 +1,7 @@
 import { textContent } from './utils'
 import type { TriggerOptions } from './createDomEvent'
 import { nextTick } from 'vue'
+import { createDOMEvent } from './createDomEvent'
 
 export default abstract class BaseWrapper<ElementType extends Element> {
   private readonly wrapperElement: ElementType
@@ -63,5 +64,20 @@ export default abstract class BaseWrapper<ElementType extends Element> {
     return hasDisabledAttribute && elementCanBeDisabled
   }
 
-  abstract trigger(eventString: string, options?: TriggerOptions): Promise<void>
+  async trigger(eventString: string, options?: TriggerOptions) {
+    if (options && options['target']) {
+      throw Error(
+        `[vue-test-utils]: you cannot set the target value of an event. See the notes section ` +
+        `of the docs for more details—` +
+        `https://vue-test-utils.vuejs.org/api/wrapper/trigger.html`
+      )
+    }
+
+    if (this.element && !this.isDisabled()) {
+      const event = createDOMEvent(eventString, options)
+      this.element.dispatchEvent(event)
+    }
+
+    return nextTick()
+  }
 }
