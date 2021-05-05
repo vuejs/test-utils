@@ -63,8 +63,5 @@ export default abstract class BaseWrapper<ElementType extends Element> {
     return hasDisabledAttribute && elementCanBeDisabled
   }
 
-  abstract trigger(
-    eventString: string,
-    options?: TriggerOptions
-  ): ReturnType<typeof nextTick>
+  abstract trigger(eventString: string, options?: TriggerOptions): Promise<void>
 }
