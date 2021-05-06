@@ -77,6 +77,26 @@ describe('slots', () => {
           '</div>'
       )
     })
+
+    it('supports providing an array to a slot', () => {
+      const defaultSlotTemplate = '<div><p class="defaultTemplate">Content</p></div>'
+
+      const wrapper = mount(ComponentWithSlots, {
+        slots: {
+          default: [
+            'plain string slot',
+            defaultSlotTemplate,
+            Hello,
+            h('span', {}, 'Default')
+          ],
+        }
+      })
+
+      expect(wrapper.text().includes('plain string slot')).toBe(true)
+      expect(wrapper.find('.defaultTemplate').exists()).toBe(true)
+      expect(wrapper.find('#msg').exists()).toBe(true)
+      expect(wrapper.find('span').text()).toBe('Default')
+    })
   })
 
   describe('scoped slots', () => {

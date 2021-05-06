@@ -258,42 +258,46 @@ export function mount(
     to.appendChild(el)
   }
 
+  function handleSlot(slot: Slot): Function {
+    // case of an SFC getting passed
+    if (typeof slot === 'object' && 'render' in slot && slot.render) {
+      return slot.render
+    }
+
+    if (typeof slot === 'function') {
+      return slot
+    }
+
+    if (typeof slot === 'object') {
+      return () => slot
+    }
+
+    if (typeof slot === 'string') {
+      // if it is HTML we process and render it using h
+      if (isHTML(slot)) {
+        return (props: VNodeProps) => h(processSlot(slot), props)
+      }
+      // otherwise it is just a string so we just return it as-is
+      else {
+        return () => slot
+      }
+    }
+    return () => ''
+  }
+
   // handle any slots passed via mounting options
   const slots =
     options?.slots &&
     Object.entries(options.slots).reduce(
       (
-        acc: { [key: string]: Function },
+        acc: { [key: string]: any },
         [name, slot]: [string, Slot]
       ): { [key: string]: Function } => {
-        // case of an SFC getting passed
-        if (typeof slot === 'object' && 'render' in slot && slot.render) {
-          acc[name] = slot.render
-          return acc
+        if (Array.isArray(slot)) {
+          acc[name] = slot.map(handleSlot)
+        } else {
+          acc[name] = handleSlot(slot)
         }
-
-        if (typeof slot === 'function') {
-          acc[name] = slot
-          return acc
-        }
-
-        if (typeof slot === 'object') {
-          acc[name] = () => slot
-          return acc
-        }
-
-        if (typeof slot === 'string') {
-          // if it is HTML we process and render it using h
-          if (isHTML(slot)) {
-            acc[name] = (props: VNodeProps) => h(processSlot(slot), props)
-          }
-          // otherwise it is just a string so we just return it as-is
-          else {
-            acc[name] = () => slot
-          }
-          return acc
-        }
-
         return acc
       },
       {}
