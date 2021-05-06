@@ -44,12 +44,11 @@ Our first goal is to test this component **without actually reaching the API**. 
 
 Secondly, we need to assert that the component made the right call with the appropriate parameters. We won't be getting results from that API, but we still need to ensure we requested the right resources.
 
-Also, we need to make sure that the DOM has updated accordingly and displays the data. We do so by using `flushPromises()` from the npm package [flush-promises](https://github.com/kentor/flush-promises).
+Also, we need to make sure that the DOM has updated accordingly and displays the data. We do so by using the `flushPromises()` function from `@vue/test-utils`.
 
 ```js
-import { mount } from '@vue/test-utils'
+import { mount, flushPromises } from '@vue/test-utils'
 import axios from 'axios'
-import flushPromises from 'flush-promises'
 import PostList from './PostList.vue'
 
 const fakePostList = [
