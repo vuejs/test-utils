@@ -1,11 +1,7 @@
 import { defineAsyncComponent, defineComponent, h, AppConfig } from 'vue'
 import { mount, flushPromises } from '../../src'
 
-const config: AppConfig = {
-  optionMergeStrategies: {},
-  globalProperties: {},
-  isCustomElement: (tag: string) => false,
-  performance: false,
+const config: Partial<AppConfig> = {
   errorHandler: (error: unknown) => {
     if ((error as Error).message.match(/Async component failed to load./)) {
       return
