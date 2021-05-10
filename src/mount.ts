@@ -232,7 +232,10 @@ export function mount(
 
   if (isFunctionalComponent(originalComponent)) {
     component = defineComponent({
-      setup: (_, { attrs, slots }) => () => h(originalComponent, attrs, slots)
+      setup:
+        (_, { attrs, slots }) =>
+        () =>
+          h(originalComponent, attrs, slots)
     })
   } else if (isObjectComponent(originalComponent)) {
     component = { ...originalComponent }
