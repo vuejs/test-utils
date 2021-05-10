@@ -41,7 +41,7 @@
     "vitepress": "^0.13.2",
     "vue": "3.0.11",
     "vue-class-component": "^8.0.0-rc.1",
-    "vue-jest": "^5.0.0-alpha.8",
+    "vue-jest": "^5.0.0-alpha.9",
     "vue-router": "^4.0.6",
     "vuex": "^4.0.0"
   },
