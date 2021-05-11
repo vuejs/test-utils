@@ -6,8 +6,7 @@ import WrapperLike from './interfaces/wrapperLike'
 
 export class DOMWrapper<ElementType extends Element>
   extends BaseWrapper<ElementType>
-  implements WrapperLike
-{
+  implements WrapperLike {
   constructor(element: ElementType) {
     super(element)
     // plugins hook
@@ -69,7 +68,7 @@ export class DOMWrapper<ElementType extends Element>
 
   private async setChecked(checked: boolean = true) {
     // typecast so we get type safety
-    const element = this.element as unknown as HTMLInputElement
+    const element = (this.element as unknown) as HTMLInputElement
     const type = this.attributes().type
 
     if (type === 'radio' && !checked) {
@@ -91,7 +90,7 @@ export class DOMWrapper<ElementType extends Element>
   }
 
   setValue(value?: any): Promise<void> {
-    const element = this.element as unknown as HTMLInputElement
+    const element = (this.element as unknown) as HTMLInputElement
     const tagName = element.tagName
     const type = this.attributes().type
 
@@ -121,7 +120,7 @@ export class DOMWrapper<ElementType extends Element>
   }
 
   private setSelected() {
-    const element = this.element as unknown as HTMLOptionElement
+    const element = (this.element as unknown) as HTMLOptionElement
 
     if (element.selected) {
       return

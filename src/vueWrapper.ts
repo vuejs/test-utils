@@ -20,8 +20,7 @@ import WrapperLike from './interfaces/wrapperLike'
 
 export class VueWrapper<T extends ComponentPublicInstance>
   extends BaseWrapper<T['$el']>
-  implements WrapperLike
-{
+  implements WrapperLike {
   private componentVM: T
   private rootVM: ComponentPublicInstance | null
   private __app: App | null

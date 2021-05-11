@@ -62,6 +62,12 @@ export interface DomEvent {
 
 export type DomEventName = keyof typeof domEvents
 
+export type DomEventNameWithModifiers =
+  | DomEventName
+  | `${DomEventName}.stop`
+  | `${DomEventName}.prevent`
+  | `${DomEventName}.capture`
+
 const domEvents = {
   abort: {
     eventInterface: 'Event',
