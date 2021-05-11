@@ -1,10 +1,10 @@
 import { ComponentPublicInstance, nextTick, App } from 'vue'
 import { ShapeFlags } from '@vue/shared'
 // @ts-ignore todo - No DefinitelyTyped package exists for this
-import eventTypes from 'dom-event-types'
 import pretty from 'pretty'
 
 import { config } from './config'
+import domEvents from './constants/dom-event-types'
 import { DOMWrapper } from './domWrapper'
 import {
   FindAllComponentsSelector,
@@ -67,7 +67,7 @@ export class VueWrapper<T extends ComponentPublicInstance>
           Object.keys(vm.$options.emits)
       : []
     const element = this.element
-    for (let eventName of Object.keys(eventTypes)) {
+    for (let eventName of Object.keys(domEvents)) {
       // if a component includes events in 'emits' with the same name as native
       // events, the native events with that name should be ignored
       // @see https://github.com/vuejs/rfcs/blob/master/active-rfcs/0030-emits-option.md#fallthrough-control
