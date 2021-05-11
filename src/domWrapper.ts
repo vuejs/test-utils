@@ -3,8 +3,6 @@ import { isElementVisible } from './utils/isElementVisible'
 import BaseWrapper from './baseWrapper'
 import { createWrapperError } from './errorWrapper'
 import WrapperLike from './interfaces/wrapperLike'
-import { DomEventName } from './constants/dom-event-types'
-import { TriggerOptions } from './createDomEvent'
 
 export class DOMWrapper<ElementType extends Element>
   extends BaseWrapper<ElementType>
@@ -138,13 +136,5 @@ export class DOMWrapper<ElementType extends Element>
     }
 
     return new DOMWrapper(parentElement).trigger('change')
-  }
-
-  async trigger(
-    eventString: DomEventName,
-    options?: TriggerOptions
-  ): Promise<void>
-  async trigger(eventString: string, options?: TriggerOptions) {
-    return super.trigger(eventString, options);
   }
 }

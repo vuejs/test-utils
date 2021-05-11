@@ -316,8 +316,7 @@ describe('trigger', () => {
       const updateHandler = jest.fn()
       const Component = defineComponent({
         template: '<div @update="updateHandler" />',
-        methods: { updateHandler },
-        emits: ['update']
+        methods: { updateHandler }
       })
       const wrapper = mount(Component, {})
 

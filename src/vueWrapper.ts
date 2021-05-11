@@ -4,7 +4,7 @@ import { ShapeFlags } from '@vue/shared'
 import pretty from 'pretty'
 
 import { config } from './config'
-import domEvents, { DomEventName } from './constants/dom-event-types'
+import domEvents from './constants/dom-event-types'
 import { DOMWrapper } from './domWrapper'
 import {
   FindAllComponentsSelector,
@@ -17,7 +17,6 @@ import { mergeDeep } from './utils'
 import { emitted, recordEvent } from './emit'
 import BaseWrapper from './baseWrapper'
 import WrapperLike from './interfaces/wrapperLike'
-import { TriggerOptions } from './createDomEvent'
 
 export class VueWrapper<T extends ComponentPublicInstance>
   extends BaseWrapper<T['$el']>
@@ -257,19 +256,6 @@ export class VueWrapper<T extends ComponentPublicInstance>
     }
 
     this.__app.unmount()
-  }
-
-  async trigger(
-    eventString: Parameters<T['$emit']>[0],
-    options?: TriggerOptions
-  ): Promise<void>
-  async trigger(
-    eventString: DomEventName,
-    options?: TriggerOptions
-  ): Promise<void>
-  async trigger(eventString: string, options?: TriggerOptions): Promise<void>
-  async trigger(eventString: string, options?: TriggerOptions) {
-    return super.trigger(eventString, options);
   }
 }
 
