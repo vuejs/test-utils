@@ -4,7 +4,7 @@ import { nextTick } from 'vue'
 import { createDOMEvent } from './createDomEvent'
 import { DomEventName } from './constants/dom-event-types'
 
-export default abstract class BaseWrapper<ElementType extends Element> {
+export default class BaseWrapper<ElementType extends Element> {
   private readonly wrapperElement: ElementType
 
   get element() {
