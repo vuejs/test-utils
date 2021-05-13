@@ -91,6 +91,26 @@ test('layout full page layout', () => {
 })
 ```
 
+## Multiple Slots
+
+You can pass an array of slots, too:
+
+```js
+test('layout full page layout', () => {
+  const wrapper = mount(Layout, {
+    slots: {
+      default: [
+        '<div id="one">One</div>',
+        '<div id="two">Two</div>'
+      ]
+    }
+  })
+
+  expect(wrapper.find('#one').exists()).toBe(true)
+  expect(wrapper.find('#two').exists()).toBe(true)
+})
+```
+
 ## Advanced Usage
 
 You can also pass a render function to a slot mounting option, or even an SFC imported from a `vue` file:
@@ -104,7 +124,7 @@ test('layout full page layout', () => {
     slots: {
       header: Header
       main: h('div', 'Main content')
-      footer: '<div>Footer</div>'
+      footer: '<div>Footer</div>',
     }
   })
 
