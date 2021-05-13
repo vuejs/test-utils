@@ -264,7 +264,6 @@ export function mount(
     to.appendChild(el)
   }
 
-
   function slotToFunction(slot: Slot): Function {
     if (typeof slot === 'object' && 'render' in slot && slot.render) {
       return slot.render
@@ -285,7 +284,7 @@ export function mount(
       }
       // otherwise it is just a string so we just return it as-is
       else {
-        return  () => slot
+        return () => slot
       }
     }
 
@@ -300,21 +299,23 @@ export function mount(
         acc: { [key: string]: Function },
         [name, slot]: [string, Slot]
       ): { [key: string]: Function } => {
-
         if (Array.isArray(slot)) {
-          const normalized = slot.reduce<Array<Function | VNode>>((acc, curr) => {
-            const toF = slotToFunction(curr)
-            if (isObject(curr) && 'render' in curr) {
-              const rendered = h(toF as any)
-              return acc.concat(rendered)
-            }
-            return acc.concat(toF())
-          }, [])
+          const normalized = slot.reduce<Array<Function | VNode>>(
+            (acc, curr) => {
+              const toF = slotToFunction(curr)
+              if (isObject(curr) && 'render' in curr) {
+                const rendered = h(toF as any)
+                return acc.concat(rendered)
+              }
+              return acc.concat(toF())
+            },
+            []
+          )
           acc[name] = () => normalized
 
           return acc
         }
-        
+
         acc[name] = slotToFunction(slot)
 
         return acc

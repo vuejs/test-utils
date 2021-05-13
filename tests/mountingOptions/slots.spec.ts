@@ -27,7 +27,7 @@ describe('slots', () => {
 
       const wrapper = mount(ComponentWithSlots, {
         slots: {
-          default: defaultSlot,
+          default: defaultSlot
           // named: namedSlot
         }
       })
@@ -175,12 +175,12 @@ describe('slots', () => {
     const wrapper = mount(DivWithDefaultSlot, {
       slots: {
         default: [
-          'plain string slot', 
-          '<p class="foo">foo</p>', 
-          Hello, 
+          'plain string slot',
+          '<p class="foo">foo</p>',
+          Hello,
           h('span', {}, 'Default'),
           h(WithProps, { msg: 'props-msg' })
-        ] 
+        ]
       }
     })
 
