@@ -27,13 +27,13 @@ describe('slots', () => {
 
       const wrapper = mount(ComponentWithSlots, {
         slots: {
-          default: defaultSlot
-          // named: namedSlot
+          default: defaultSlot,
+          named: namedSlot
         }
       })
 
       expect(wrapper.find('.defaultNested').exists()).toBe(true)
-      // expect(wrapper.find('.namedNested').exists()).toBe(true)
+      expect(wrapper.find('.namedNested').exists()).toBe(true)
     })
 
     it('supports providing a render function to slot', () => {
