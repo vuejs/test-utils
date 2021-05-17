@@ -42,7 +42,7 @@ In Vue 2, it was common for plugins to mutate the global Vue instance and attach
 
 To avoid polluting the global Vue instance in Vue Test Utils v1, we provided a `createLocalVue` function and `localVue` mounting option. This would let you have an isolated Vue instance for each test, avoiding cross test contamination. This is no longer an issue in Vue 3, since plugins, mixins etc do not mutate the global Vue instance.
 
-For most cases where you would previously use `createLocalVue` and the `localVue` mounting option to install a plugin, mixin or directive, you now use the [`global` mounting option](/v2/api/#global-components). Here is an example of a component and test that used `localVue`, and how it now looks (using `global.plugins`, since Vuex is a plugin):
+For most cases where you would previously use `createLocalVue` and the `localVue` mounting option to install a plugin, mixin or directive, you now use the [`global` mounting option](/api/#global-components). Here is an example of a component and test that used `localVue`, and how it now looks (using `global.plugins`, since Vuex is a plugin):
 
 **Before**:
 
