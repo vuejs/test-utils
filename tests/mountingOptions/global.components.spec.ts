@@ -1,4 +1,5 @@
 import { mount } from '../../src'
+import {defineComponent} from "vue";
 
 describe('global.components', () => {
   it('registers a component to all components', () => {
@@ -69,5 +70,30 @@ describe('global.components', () => {
     expect(spy).not.toHaveBeenCalled()
     spy.mockRestore()
     expect(wrapper.text()).toBe('Global')
+  })
+  it('shallow with renderStubDefaultSlot', () => {
+    const Child = defineComponent({
+      template: '<div><p>child</p><slot /></div>'
+    })
+    const Component = defineComponent({
+      template: '<div><Child><div>hello</div></Child></div>',
+      components: {
+        Child
+      },
+    })
+    const wrapper = mount(Component, {
+      shallow: true,
+      global: {
+        renderStubDefaultSlot: true
+      }
+    })
+
+    expect(wrapper.html()).toEqual(
+       '<div>\n' +
+                '  <child-stub>\n' +
+                '    <div>hello</div>\n' +
+                '  </child-stub>\n' +
+                '</div>'
+  )
   })
 })
