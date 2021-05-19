@@ -26,7 +26,7 @@ export const createStub = ({
   name,
   props,
   propsDeclaration,
-  renderStubDefaultSlot,
+  renderStubDefaultSlot
 }: StubOptions): ComponentOptions => {
   const anonName = 'anonymous-stub'
   const tag = name ? `${hyphenate(name)}-stub` : anonName
@@ -159,7 +159,7 @@ export function stubComponents(
 
       // No name found?
       if (!registeredName && !componentName) {
-        return (renderStubDefaultSlot || !shallow) ? args : ['stub']
+        return renderStubDefaultSlot || !shallow ? args : ['stub']
       }
 
       let stub = null
@@ -197,7 +197,12 @@ export function stubComponents(
         }
 
         const propsDeclaration = type?.props || {}
-        const newStub = createStub({ name, propsDeclaration, props, renderStubDefaultSlot })
+        const newStub = createStub({
+          name,
+          propsDeclaration,
+          props,
+          renderStubDefaultSlot
+        })
         stubs[name] = newStub
         return [newStub, props, children, patchFlag, dynamicProps]
       }

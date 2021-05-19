@@ -1,5 +1,5 @@
 import { mount } from '../../src'
-import {defineComponent} from "vue";
+import { defineComponent } from 'vue'
 
 describe('global.components', () => {
   it('registers a component to all components', () => {
@@ -79,7 +79,7 @@ describe('global.components', () => {
       template: '<div><Child><div>hello</div></Child></div>',
       components: {
         Child
-      },
+      }
     })
     const wrapper = mount(Component, {
       shallow: true,
@@ -89,11 +89,11 @@ describe('global.components', () => {
     })
 
     expect(wrapper.html()).toEqual(
-       '<div>\n' +
-                '  <child-stub>\n' +
-                '    <div>hello</div>\n' +
-                '  </child-stub>\n' +
-                '</div>'
+      '<div>\n' +
+        '  <child-stub>\n' +
+        '    <div>hello</div>\n' +
+        '  </child-stub>\n' +
+        '</div>'
     )
   })
 })

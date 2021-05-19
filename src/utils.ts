@@ -1,6 +1,6 @@
 import { GlobalMountOptions } from './types'
 import { AppConfig } from 'vue'
-import {config} from "./config";
+import { config } from './config'
 
 function mergeStubs(target: Record<string, any>, source: GlobalMountOptions) {
   if (source.stubs) {
@@ -22,7 +22,10 @@ export function mergeGlobalProperties(
   mergeStubs(stubs, configGlobal)
   mergeStubs(stubs, mountGlobal)
 
-  const renderStubDefaultSlot = mountGlobal.renderStubDefaultSlot ?? config?.renderStubDefaultSlot ?? configGlobal?.renderStubDefaultSlot
+  const renderStubDefaultSlot =
+    mountGlobal.renderStubDefaultSlot ??
+    config?.renderStubDefaultSlot ??
+    configGlobal?.renderStubDefaultSlot
 
   return {
     mixins: [...(configGlobal.mixins || []), ...(mountGlobal.mixins || [])],
