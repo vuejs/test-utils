@@ -607,7 +607,7 @@ describe('mounting options: stubs', () => {
       )
     })
 
-    it('renders the default slot of deeply nested stubs when renderStubDefaultSlot=true', () => {
+    it('renders the default slot of deeply nested stubs when renderStubDefaultSlot=true', async() => {
       config.renderStubDefaultSlot = true
 
       const SimpleSlot = {

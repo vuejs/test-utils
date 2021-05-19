@@ -71,7 +71,7 @@ describe('global.components', () => {
     spy.mockRestore()
     expect(wrapper.text()).toBe('Global')
   })
-  it('shallow with renderStubDefaultSlot', () => {
+  it('render children with shallow and renderStubDefaultSlot', () => {
     const Child = defineComponent({
       template: '<div><p>child</p><slot /></div>'
     })
@@ -94,6 +94,6 @@ describe('global.components', () => {
                 '    <div>hello</div>\n' +
                 '  </child-stub>\n' +
                 '</div>'
-  )
+    )
   })
 })

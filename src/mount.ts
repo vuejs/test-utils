@@ -319,8 +319,7 @@ export function mount(
     ...options?.props,
     ref: MOUNT_COMPONENT_REF
   })
-
-  const global = mergeGlobalProperties(config.global, options?.global)
+  const global = mergeGlobalProperties(options?.global)
   component.components = { ...component.components, ...global.components }
 
   // create the wrapper component
@@ -426,7 +425,7 @@ export function mount(
   if (global?.stubs) {
     for (const [name, stub] of Object.entries(global.stubs)) {
       if (stub === true) {
-        const stubbed = createStub({ name, props: {} })
+        const stubbed = createStub({ name, props: {}, renderStubDefaultSlot: global?.renderStubDefaultSlot })
         // default stub.
         app.component(name, stubbed)
       } else {

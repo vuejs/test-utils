@@ -12,7 +12,6 @@ import {
 } from 'vue'
 import { hyphenate } from './utils/vueShared'
 import { MOUNT_COMPONENT_REF, MOUNT_PARENT_NAME } from './constants'
-import { config } from './config'
 import { matchName } from './utils/matchName'
 import { ComponentInternalInstance } from '@vue/runtime-core'
 
@@ -33,7 +32,7 @@ export const createStub = ({
   const tag = name ? `${hyphenate(name)}-stub` : anonName
 
   const render = (ctx: ComponentPublicInstance) => {
-    return h(tag, props, (renderStubDefaultSlot || config.renderStubDefaultSlot) ? ctx.$slots : undefined)
+    return h(tag, props, renderStubDefaultSlot ? ctx.$slots : undefined)
   }
 
   return defineComponent({
@@ -160,7 +159,7 @@ export function stubComponents(
 
       // No name found?
       if (!registeredName && !componentName) {
-        return shallow ? ['stub'] : args
+        return (renderStubDefaultSlot || !shallow) ? args : ['stub']
       }
 
       let stub = null
