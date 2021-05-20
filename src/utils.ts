@@ -37,14 +37,14 @@ export function mergeGlobalProperties(
   }
 }
 
+export const isObject = (obj: unknown): obj is Record<string, any> =>
+  !!obj && typeof obj === 'object'
+
 // https://stackoverflow.com/a/48218209
 export const mergeDeep = (
   target: Record<string, any>,
   source: Record<string, any>
 ) => {
-  const isObject = (obj: unknown): obj is Record<string, any> =>
-    !!obj && typeof obj === 'object'
-
   if (!isObject(target) || !isObject(source)) {
     return source
   }

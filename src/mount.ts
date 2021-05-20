@@ -18,7 +18,9 @@ import {
   MethodOptions,
   AllowedComponentProps,
   ComponentCustomProps,
-  ExtractDefaultPropTypes
+  ExtractDefaultPropTypes,
+  Component,
+  VNode
 } from 'vue'
 
 import { config } from './config'
@@ -27,7 +29,8 @@ import {
   isFunctionalComponent,
   isHTML,
   isObjectComponent,
-  mergeGlobalProperties
+  mergeGlobalProperties,
+  isObject
 } from './utils'
 import { processSlot } from './utils/compileSlots'
 import { createWrapper, VueWrapper } from './vueWrapper'
@@ -261,6 +264,33 @@ export function mount(
     to.appendChild(el)
   }
 
+  function slotToFunction(slot: Slot) {
+    if (typeof slot === 'object') {
+      if ('render' in slot && slot.render) {
+        return slot.render
+      }
+
+      return () => slot
+    }
+
+    if (typeof slot === 'function') {
+      return slot
+    }
+
+    if (typeof slot === 'string') {
+      // if it is HTML we process and render it using h
+      if (isHTML(slot)) {
+        return (props: VNodeProps) => h(processSlot(slot), props)
+      }
+      // otherwise it is just a string so we just return it as-is
+      else {
+        return () => slot
+      }
+    }
+
+    throw Error(`Invalid slot received.`)
+  }
+
   // handle any slots passed via mounting options
   const slots =
     options?.slots &&
@@ -269,33 +299,24 @@ export function mount(
         acc: { [key: string]: Function },
         [name, slot]: [string, Slot]
       ): { [key: string]: Function } => {
-        // case of an SFC getting passed
-        if (typeof slot === 'object' && 'render' in slot && slot.render) {
-          acc[name] = slot.render
+        if (Array.isArray(slot)) {
+          const normalized = slot.reduce<Array<Function | VNode>>(
+            (acc, curr) => {
+              const slotAsFn = slotToFunction(curr)
+              if (isObject(curr) && 'render' in curr) {
+                const rendered = h(slotAsFn as any)
+                return acc.concat(rendered)
+              }
+              return acc.concat(slotAsFn())
+            },
+            []
+          )
+          acc[name] = () => normalized
+
           return acc
         }
 
-        if (typeof slot === 'function') {
-          acc[name] = slot
-          return acc
-        }
-
-        if (typeof slot === 'object') {
-          acc[name] = () => slot
-          return acc
-        }
-
-        if (typeof slot === 'string') {
-          // if it is HTML we process and render it using h
-          if (isHTML(slot)) {
-            acc[name] = (props: VNodeProps) => h(processSlot(slot), props)
-          }
-          // otherwise it is just a string so we just return it as-is
-          else {
-            acc[name] = () => slot
-          }
-          return acc
-        }
+        acc[name] = slotToFunction(slot)
 
         return acc
       },

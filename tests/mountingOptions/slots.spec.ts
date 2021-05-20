@@ -2,6 +2,7 @@ import { h } from 'vue'
 
 import { mount } from '../../src'
 import Hello from '../components/Hello.vue'
+import WithProps from '../components/WithProps.vue'
 import ComponentWithSlots from '../components/ComponentWithSlots.vue'
 
 describe('slots', () => {
@@ -164,5 +165,29 @@ describe('slots', () => {
 
       expect(wrapper.find('.scoped').text()).toEqual('Just a plain true string')
     })
+  })
+
+  it('supports an array of components', () => {
+    const DivWithDefaultSlot = {
+      template: `<div><slot /></div>`
+    }
+
+    const wrapper = mount(DivWithDefaultSlot, {
+      slots: {
+        default: [
+          'plain string slot',
+          '<p class="foo">foo</p>',
+          Hello,
+          h('span', {}, 'Default'),
+          h(WithProps, { msg: 'props-msg' })
+        ]
+      }
+    })
+
+    expect(wrapper.find('#msg').exists()).toBe(true)
+    expect(wrapper.text().includes('plain string slot')).toBe(true)
+    expect(wrapper.find('.foo').exists()).toBe(true)
+    expect(wrapper.find('span').text()).toBe('Default')
+    expect(wrapper.find('#with-props').text()).toBe('props-msg')
   })
 })
