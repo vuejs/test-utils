@@ -340,8 +340,7 @@ export function mount(
     ...options?.props,
     ref: MOUNT_COMPONENT_REF
   })
-
-  const global = mergeGlobalProperties(config.global, options?.global)
+  const global = mergeGlobalProperties(options?.global)
   component.components = { ...component.components, ...global.components }
 
   // create the wrapper component
@@ -433,10 +432,7 @@ export function mount(
   // stubs
   // even if we are using `mount`, we will still
   // stub out Transition and Transition Group by default.
-  stubComponents(
-    global.stubs,
-    global.renderStubDefaultSlot ? false : options?.shallow
-  )
+  stubComponents(global.stubs, options?.shallow, global?.renderStubDefaultSlot)
 
   // users expect stubs to work with globally registered
   // components, too, such as <router-link> and <router-view>
@@ -448,7 +444,11 @@ export function mount(
   if (global?.stubs) {
     for (const [name, stub] of Object.entries(global.stubs)) {
       if (stub === true) {
-        const stubbed = createStub({ name, props: {} })
+        const stubbed = createStub({
+          name,
+          props: {},
+          renderStubDefaultSlot: global?.renderStubDefaultSlot
+        })
         // default stub.
         app.component(name, stubbed)
       } else {

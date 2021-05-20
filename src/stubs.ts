@@ -12,7 +12,6 @@ import {
 } from 'vue'
 import { hyphenate } from './utils/vueShared'
 import { MOUNT_COMPONENT_REF, MOUNT_PARENT_NAME } from './constants'
-import { config } from './config'
 import { matchName } from './utils/matchName'
 import { ComponentInternalInstance } from '@vue/runtime-core'
 
@@ -20,22 +19,20 @@ interface StubOptions {
   name: string
   props?: any
   propsDeclaration?: any
-}
-
-function getSlots(ctx: ComponentPublicInstance): Slots | undefined {
-  return !config.renderStubDefaultSlot ? undefined : ctx.$slots
+  renderStubDefaultSlot?: boolean
 }
 
 export const createStub = ({
   name,
   props,
-  propsDeclaration
+  propsDeclaration,
+  renderStubDefaultSlot
 }: StubOptions): ComponentOptions => {
   const anonName = 'anonymous-stub'
   const tag = name ? `${hyphenate(name)}-stub` : anonName
 
   const render = (ctx: ComponentPublicInstance) => {
-    return h(tag, props, getSlots(ctx))
+    return h(tag, props, renderStubDefaultSlot ? ctx.$slots : undefined)
   }
 
   return defineComponent({
@@ -112,7 +109,8 @@ const isFunctionalComponent = (type: VNodeTypes): type is ComponentOptions =>
 
 export function stubComponents(
   stubs: Record<any, any> = {},
-  shallow: boolean = false
+  shallow: boolean = false,
+  renderStubDefaultSlot: boolean = false
 ) {
   transformVNodeArgs((args, instance: ComponentInternalInstance | null) => {
     const [nodeType, props, children, patchFlag, dynamicProps] = args
@@ -161,7 +159,7 @@ export function stubComponents(
 
       // No name found?
       if (!registeredName && !componentName) {
-        return shallow ? ['stub'] : args
+        return renderStubDefaultSlot || !shallow ? args : ['stub']
       }
 
       let stub = null
@@ -199,7 +197,12 @@ export function stubComponents(
         }
 
         const propsDeclaration = type?.props || {}
-        const newStub = createStub({ name, propsDeclaration, props })
+        const newStub = createStub({
+          name,
+          propsDeclaration,
+          props,
+          renderStubDefaultSlot
+        })
         stubs[name] = newStub
         return [newStub, props, children, patchFlag, dynamicProps]
       }
