@@ -134,8 +134,8 @@ describe('shallowMount', () => {
 
     expect(wrapper.html()).toBe(
       '<div>\n' +
-        '<test-component-stub class="component 1"></test-component-stub>' +
-        '<test-component-stub class="component 2"></test-component-stub>' +
+        '  <test-component-stub class="component 1"></test-component-stub>\n' +
+        '  <test-component-stub class="component 2"></test-component-stub>\n' +
       '</div>'
     )
 
