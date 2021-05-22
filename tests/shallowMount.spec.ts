@@ -110,7 +110,6 @@ describe('shallowMount', () => {
   })
 
   it('should render stubs correctly', () => {
-
     const ComponentToMount = defineComponent({
       template: `<div>
         <test-component class='component 1' />
@@ -136,8 +135,7 @@ describe('shallowMount', () => {
       '<div>\n' +
         '  <test-component-stub class="component 1"></test-component-stub>\n' +
         '  <test-component-stub class="component 2"></test-component-stub>\n' +
-      '</div>'
+        '</div>'
     )
-
   })
 })
