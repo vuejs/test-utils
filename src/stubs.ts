@@ -24,7 +24,6 @@ interface StubOptions {
 
 export const createStub = ({
   name,
-  props,
   propsDeclaration,
   renderStubDefaultSlot
 }: StubOptions): ComponentOptions => {
@@ -32,7 +31,7 @@ export const createStub = ({
   const tag = name ? `${hyphenate(name)}-stub` : anonName
 
   const render = (ctx: ComponentPublicInstance) => {
-    return h(tag, props, renderStubDefaultSlot ? ctx.$slots : undefined)
+    return h(tag, ctx.$props, renderStubDefaultSlot ? ctx.$slots : undefined)
   }
 
   return defineComponent({
@@ -112,6 +111,7 @@ export function stubComponents(
   shallow: boolean = false,
   renderStubDefaultSlot: boolean = false
 ) {
+  const component: {[key: string]: ComponentOptions} = {}
   transformVNodeArgs((args, instance: ComponentInternalInstance | null) => {
     const [nodeType, props, children, patchFlag, dynamicProps] = args
     const type = nodeType as VNodeTypes
@@ -197,13 +197,15 @@ export function stubComponents(
         }
 
         const propsDeclaration = type?.props || {}
-        const newStub = createStub({
-          name,
-          propsDeclaration,
-          props,
-          renderStubDefaultSlot
-        })
-        stubs[name] = newStub
+        let newStub = component[name]
+        if (!newStub) {
+          newStub = createStub({
+            name,
+            propsDeclaration,
+            renderStubDefaultSlot
+          })
+          component[name] = newStub
+        }
         return [newStub, props, children, patchFlag, dynamicProps]
       }
     }

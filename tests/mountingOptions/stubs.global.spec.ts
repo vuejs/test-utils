@@ -119,7 +119,7 @@ describe('mounting options: stubs', () => {
 
     expect(wrapper.html()).toEqual(
       '<div>\n' +
-        '  <foo-stub class="bar" test-id="foo" dynamic="[object Object]"></foo-stub>\n' +
+        '  <foo-stub dynamic="[object Object]" class="bar" test-id="foo"></foo-stub>\n' +
         '</div>'
     )
   })
