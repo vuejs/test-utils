@@ -108,4 +108,36 @@ describe('shallowMount', () => {
         '<with-props-stub></with-props-stub>'
     )
   })
+
+  it('should render stubs correctly', () => {
+
+    const ComponentToMount = defineComponent({
+      template: `<div>
+        <test-component class='component 1' />
+        <test-component class='component 2' />
+      </div>`
+    })
+
+    const TestComponent = defineComponent({
+      template: `<div>
+        this is just a test component
+      </div>`
+    })
+
+    const wrapper = shallowMount(ComponentToMount, {
+      global: {
+        components: {
+          TestComponent
+        }
+      }
+    })
+
+    expect(wrapper.html()).toBe(
+      '<div>\n' +
+        '<test-component-stub class="component 1"></test-component-stub>' +
+        '<test-component-stub class="component 2"></test-component-stub>' +
+      '</div>'
+    )
+
+  })
 })
