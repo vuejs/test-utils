@@ -18,7 +18,9 @@ import {
   MethodOptions,
   AllowedComponentProps,
   ComponentCustomProps,
-  ExtractDefaultPropTypes
+  ExtractDefaultPropTypes,
+  Component,
+  VNode
 } from 'vue'
 
 import { config } from './config'
@@ -27,7 +29,8 @@ import {
   isFunctionalComponent,
   isHTML,
   isObjectComponent,
-  mergeGlobalProperties
+  mergeGlobalProperties,
+  isObject
 } from './utils'
 import { processSlot } from './utils/compileSlots'
 import { createWrapper, VueWrapper } from './vueWrapper'
@@ -35,7 +38,6 @@ import { attachEmitListener } from './emit'
 import { createDataMixin } from './dataMixin'
 import { MOUNT_COMPONENT_REF, MOUNT_PARENT_NAME } from './constants'
 import { createStub, stubComponents } from './stubs'
-import { hyphenate } from './utils/vueShared'
 
 // NOTE this should come from `vue`
 type PublicProps = VNodeProps & AllowedComponentProps & ComponentCustomProps
@@ -233,7 +235,10 @@ export function mount(
 
   if (isFunctionalComponent(originalComponent)) {
     component = defineComponent({
-      setup: (_, { attrs, slots }) => () => h(originalComponent, attrs, slots)
+      setup:
+        (_, { attrs, slots }) =>
+        () =>
+          h(originalComponent, attrs, slots)
     })
   } else if (isObjectComponent(originalComponent)) {
     component = { ...originalComponent }
@@ -259,6 +264,33 @@ export function mount(
     to.appendChild(el)
   }
 
+  function slotToFunction(slot: Slot) {
+    if (typeof slot === 'object') {
+      if ('render' in slot && slot.render) {
+        return slot.render
+      }
+
+      return () => slot
+    }
+
+    if (typeof slot === 'function') {
+      return slot
+    }
+
+    if (typeof slot === 'string') {
+      // if it is HTML we process and render it using h
+      if (isHTML(slot)) {
+        return (props: VNodeProps) => h(processSlot(slot), props)
+      }
+      // otherwise it is just a string so we just return it as-is
+      else {
+        return () => slot
+      }
+    }
+
+    throw Error(`Invalid slot received.`)
+  }
+
   // handle any slots passed via mounting options
   const slots =
     options?.slots &&
@@ -267,33 +299,24 @@ export function mount(
         acc: { [key: string]: Function },
         [name, slot]: [string, Slot]
       ): { [key: string]: Function } => {
-        // case of an SFC getting passed
-        if (typeof slot === 'object' && 'render' in slot && slot.render) {
-          acc[name] = slot.render
+        if (Array.isArray(slot)) {
+          const normalized = slot.reduce<Array<Function | VNode>>(
+            (acc, curr) => {
+              const slotAsFn = slotToFunction(curr)
+              if (isObject(curr) && 'render' in curr) {
+                const rendered = h(slotAsFn as any)
+                return acc.concat(rendered)
+              }
+              return acc.concat(slotAsFn())
+            },
+            []
+          )
+          acc[name] = () => normalized
+
           return acc
         }
 
-        if (typeof slot === 'function') {
-          acc[name] = slot
-          return acc
-        }
-
-        if (typeof slot === 'object') {
-          acc[name] = () => slot
-          return acc
-        }
-
-        if (typeof slot === 'string') {
-          // if it is HTML we process and render it using h
-          if (isHTML(slot)) {
-            acc[name] = (props: VNodeProps) => h(processSlot(slot), props)
-          }
-          // otherwise it is just a string so we just return it as-is
-          else {
-            acc[name] = () => slot
-          }
-          return acc
-        }
+        acc[name] = slotToFunction(slot)
 
         return acc
       },
@@ -317,8 +340,7 @@ export function mount(
     ...options?.props,
     ref: MOUNT_COMPONENT_REF
   })
-
-  const global = mergeGlobalProperties(config.global, options?.global)
+  const global = mergeGlobalProperties(options?.global)
   component.components = { ...component.components, ...global.components }
 
   // create the wrapper component
@@ -410,10 +432,7 @@ export function mount(
   // stubs
   // even if we are using `mount`, we will still
   // stub out Transition and Transition Group by default.
-  stubComponents(
-    global.stubs,
-    global.renderStubDefaultSlot ? false : options?.shallow
-  )
+  stubComponents(global.stubs, options?.shallow, global?.renderStubDefaultSlot)
 
   // users expect stubs to work with globally registered
   // components, too, such as <router-link> and <router-view>
@@ -425,7 +444,11 @@ export function mount(
   if (global?.stubs) {
     for (const [name, stub] of Object.entries(global.stubs)) {
       if (stub === true) {
-        const stubbed = createStub({ name, props: {} })
+        const stubbed = createStub({
+          name,
+          props: {},
+          renderStubDefaultSlot: global?.renderStubDefaultSlot
+        })
         // default stub.
         app.component(name, stubbed)
       } else {

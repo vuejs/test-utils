@@ -316,7 +316,7 @@ type GlobalMountOptions = {
 }
 ```
 
-You can configure all the `global` options on both a per test basis and globally for all tests. [See here for how to configure project wide defaults](/api/#global-config-2).
+You can configure all the `global` options on both a per test basis and globally for all tests. [See here for how to configure project wide defaults](#global-config).
 
 #### global.components
 

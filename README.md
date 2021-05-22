@@ -1,4 +1,4 @@
-# vue-test-utils-next
+# Vue Test Utils (next)
 
 The next iteration of Vue Test Utils. It targets Vue 3.
 
@@ -11,15 +11,7 @@ Get started with the [documentation](https://next.vue-test-utils.vuejs.org/).
 
 ## Coming from Vue 2 + Vue Test Utils?
 
-We plan on work on [some documentation to help people migrate](https://next.vue-test-utils.vuejs.org/migration/).
-
-At this point you will have better luck trying this out with a brand new Vue 3 app, as opposed to upgrading an existing Vue 2 app. Feedback and bug reports are welcome!
-
-## Working with `.vue` files
-
-There is [`vue-jest`](https://github.com/vuejs/vue-jest) for loading `.vue` files into Jest. The `next` branch contains support for Vue 3. Install it with `yarn add vue-jest@next`. It lacks support for some things, namely JSX.
-
-If you don't want to configure things, you can download a repository with Vue 3, `@vue/test-utils@next`, `vue-jest@next` and TypeScript configured [here](https://github.com/lmiller1990/vtu-next-demo).
+[Check the migration guide](https://next.vue-test-utils.vuejs.org/migration/). It's still a work in progress. If you find a problem or something that doesn't work that previously did in Vue Test Utils v1, please open an issue.
 
 ## Documentation
 
@@ -27,17 +19,9 @@ See the [docs](https://next.vue-test-utils.vuejs.org/).
 
 ## Development
 
-It's a pretty small codebase at the moment. Get started by running `yarn install`. You can run the tests with `yarn test`. That's it!
+Get started by running `yarn install`. You can run the tests with `yarn test`. That's it!
 
-There is still some work left to do. See issues for some basic TODOs, or the table at the bottom of this page.
-
-## Contributing
-
-We plan on moving to RC sooner than later. If you want to add a feature, have a hack or ping someone in Discord to chat, or check out the issues and project board.
-
-There's also some [work left to do in docs](https://github.com/vuejs/vue-test-utils-next/issues?q=is%3Aopen+is%3Aissue+label%3Adocumentation).
-
-## Comparison with Vue Test Utils beta (targeting Vue 2)
+## Comparison with Vue Test Utils v1 (targeting Vue 2)
 
 This is table for those coming from VTU 1, comparing the two APIs. Some things are still a work in progress.
 
@@ -50,7 +34,7 @@ This is table for those coming from VTU 1, comparing the two APIs. Some things a
 | option           | status | notes                                                                               |
 | ---------------- | ------ | ----------------------------------------------------------------------------------- |
 | data             | ✅     |
-| slots            | ✅     | has not been tested vigorously. Please try it out.                                  |
+| slots            | ✅     | 
 | mocks            | ✅     | nested in `global`                                                                  |
 | propsData        | ✅     | now called `props`                                                                  |
 | provide          | ✅     | nested in `global`                                                                  |
@@ -63,7 +47,7 @@ This is table for those coming from VTU 1, comparing the two APIs. Some things a
 | attrs            | ✅     |
 | scopedSlots      | ⚰️     | scopedSlots are merged with `slots` in Vue 3                                        |
 | context          | ⚰️     | different from Vue 2, does not make sense anymore.                                  |
-| localVue         | ⚰️     | may not make sense anymore since we do not mutate the global Vue instance in Vue 3. |
+| localVue         | ⚰️     | no longer required - Vue 3 there is no global Vue instance to mutate. |
 | listeners        | ⚰️     | no longer exists in Vue 3                                                           |
 | parentComponent  | ⚰️     |
 

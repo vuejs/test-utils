@@ -1,5 +1,6 @@
 import { GlobalMountOptions } from './types'
 import { AppConfig } from 'vue'
+import { config } from './config'
 
 function mergeStubs(target: Record<string, any>, source: GlobalMountOptions) {
   if (source.stubs) {
@@ -14,13 +15,17 @@ function mergeStubs(target: Record<string, any>, source: GlobalMountOptions) {
 }
 
 export function mergeGlobalProperties(
-  configGlobal: GlobalMountOptions = {},
   mountGlobal: GlobalMountOptions = {}
 ): Required<GlobalMountOptions> {
   const stubs: Record<string, any> = {}
-
+  const configGlobal: GlobalMountOptions = config?.global ?? {}
   mergeStubs(stubs, configGlobal)
   mergeStubs(stubs, mountGlobal)
+
+  const renderStubDefaultSlot =
+    mountGlobal.renderStubDefaultSlot ??
+    config?.renderStubDefaultSlot ??
+    configGlobal?.renderStubDefaultSlot
 
   return {
     mixins: [...(configGlobal.mixins || []), ...(mountGlobal.mixins || [])],
@@ -31,20 +36,18 @@ export function mergeGlobalProperties(
     mocks: { ...configGlobal.mocks, ...mountGlobal.mocks },
     config: { ...configGlobal.config, ...mountGlobal.config },
     directives: { ...configGlobal.directives, ...mountGlobal.directives },
-    renderStubDefaultSlot: !!(mountGlobal.renderStubDefaultSlot !== undefined
-      ? mountGlobal.renderStubDefaultSlot
-      : configGlobal.renderStubDefaultSlot)
+    renderStubDefaultSlot
   }
 }
+
+export const isObject = (obj: unknown): obj is Record<string, any> =>
+  !!obj && typeof obj === 'object'
 
 // https://stackoverflow.com/a/48218209
 export const mergeDeep = (
   target: Record<string, any>,
   source: Record<string, any>
 ) => {
-  const isObject = (obj: unknown): obj is Record<string, any> =>
-    !!obj && typeof obj === 'object'
-
   if (!isObject(target) || !isObject(source)) {
     return source
   }

@@ -1,7 +1,8 @@
 import { textContent } from './utils'
-import { createDOMEvent } from './createDomEvent'
 import type { TriggerOptions } from './createDomEvent'
 import { nextTick } from 'vue'
+import { createDOMEvent } from './createDomEvent'
+import { DomEventName } from './constants/dom-event-types'
 
 export default class BaseWrapper<ElementType extends Element> {
   private readonly wrapperElement: ElementType
@@ -44,6 +45,31 @@ export default class BaseWrapper<ElementType extends Element> {
     return true
   }
 
+  protected isDisabled = () => {
+    const validTagsToBeDisabled = [
+      'BUTTON',
+      'COMMAND',
+      'FIELDSET',
+      'KEYGEN',
+      'OPTGROUP',
+      'OPTION',
+      'SELECT',
+      'TEXTAREA',
+      'INPUT'
+    ]
+    const hasDisabledAttribute = this.attributes().disabled !== undefined
+    const elementCanBeDisabled = validTagsToBeDisabled.includes(
+      this.element.tagName
+    )
+
+    return hasDisabledAttribute && elementCanBeDisabled
+  }
+
+  async trigger(
+    eventString: DomEventName,
+    options?: TriggerOptions
+  ): Promise<void>
+  async trigger(eventString: string, options?: TriggerOptions): Promise<void>
   async trigger(eventString: string, options?: TriggerOptions) {
     if (options && options['target']) {
       throw Error(
@@ -53,27 +79,7 @@ export default class BaseWrapper<ElementType extends Element> {
       )
     }
 
-    const isDisabled = () => {
-      const validTagsToBeDisabled = [
-        'BUTTON',
-        'COMMAND',
-        'FIELDSET',
-        'KEYGEN',
-        'OPTGROUP',
-        'OPTION',
-        'SELECT',
-        'TEXTAREA',
-        'INPUT'
-      ]
-      const hasDisabledAttribute = this.attributes().disabled !== undefined
-      const elementCanBeDisabled = validTagsToBeDisabled.includes(
-        this.element.tagName
-      )
-
-      return hasDisabledAttribute && elementCanBeDisabled
-    }
-
-    if (this.element && !isDisabled()) {
+    if (this.element && !this.isDisabled()) {
       const event = createDOMEvent(eventString, options)
       this.element.dispatchEvent(event)
     }
