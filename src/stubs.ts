@@ -111,7 +111,7 @@ export function stubComponents(
   shallow: boolean = false,
   renderStubDefaultSlot: boolean = false
 ) {
-  const component: {[key: string]: ComponentOptions} = {}
+  const component: { [key: string]: ComponentOptions } = {}
   transformVNodeArgs((args, instance: ComponentInternalInstance | null) => {
     const [nodeType, props, children, patchFlag, dynamicProps] = args
     const type = nodeType as VNodeTypes
