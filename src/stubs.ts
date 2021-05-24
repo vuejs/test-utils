@@ -111,7 +111,7 @@ export function stubComponents(
   shallow: boolean = false,
   renderStubDefaultSlot: boolean = false
 ) {
-  const component: { [key: string]: ComponentOptions } = {}
+  const components: Record<string, ComponentOptions> = {}
   transformVNodeArgs((args, instance: ComponentInternalInstance | null) => {
     const [nodeType, props, children, patchFlag, dynamicProps] = args
     const type = nodeType as VNodeTypes
@@ -197,14 +197,14 @@ export function stubComponents(
         }
 
         const propsDeclaration = type?.props || {}
-        let newStub = component[name]
+        let newStub = components[name]
         if (!newStub) {
           newStub = createStub({
             name,
             propsDeclaration,
             renderStubDefaultSlot
           })
-          component[name] = newStub
+          components[name] = newStub
         }
         return [newStub, props, children, patchFlag, dynamicProps]
       }
