@@ -446,7 +446,6 @@ export function mount(
       if (stub === true) {
         const stubbed = createStub({
           name,
-          props: {},
           renderStubDefaultSlot: global?.renderStubDefaultSlot
         })
         // default stub.
