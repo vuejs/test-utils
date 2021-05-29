@@ -131,6 +131,10 @@ export class VueWrapper<T extends ComponentPublicInstance>
 
     return createWrapperError('DOMWrapper')
   }
+  isVisible(): boolean {
+    const domWrapper = new DOMWrapper(this.element)
+    return domWrapper.isVisible()
+  }
 
   get<K extends keyof HTMLElementTagNameMap>(
     selector: K
