@@ -165,7 +165,7 @@ describe('isVisible', () => {
         template: '<div>show</div>'
       })
       const Root = defineComponent({
-        template: '<div><HiddenInner/><ShowInner /></div>',
+        template: '<div><Hidden /><Show /></div>',
         components: {
           Hidden,
           Show
