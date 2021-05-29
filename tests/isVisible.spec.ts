@@ -128,7 +128,7 @@ describe('isVisible', () => {
   describe('isVisible with find Component', () => {
     describe('root component has v-show', () => {
       const Hidden = defineComponent({
-        template: '<div>hidden</div>',
+        template: '<div>hidden</div>'
       })
       const Show = defineComponent({
         template: '<div>show</div>'
@@ -137,7 +137,7 @@ describe('isVisible', () => {
         template: '<div><Hidden v-show="false" /><Show /></div>',
         components: {
           Hidden,
-          Show,
+          Show
         }
       })
       it('mount:returns false when root has v-show=false', () => {
@@ -149,7 +149,7 @@ describe('isVisible', () => {
       })
       it('shallowMount:returns false when root has v-show=false', () => {
         const wrapper = mount(Root, {
-          shallow: true,
+          shallow: true
         })
         const hidden = wrapper.findComponent(Hidden)
         const show = wrapper.findComponent(Show)
@@ -180,7 +180,7 @@ describe('isVisible', () => {
       })
       it('shallowMount: returns true when child has v-show=false, because of shallow mount', () => {
         const wrapper = mount(Root, {
-          shallow: true,
+          shallow: true
         })
         const hidden = wrapper.findComponent(Hidden)
         const show = wrapper.findComponent(Show)
