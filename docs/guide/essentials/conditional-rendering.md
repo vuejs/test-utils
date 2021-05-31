@@ -67,7 +67,7 @@ test('does not render an admin link', () => {
 })
 ```
 
-Notice we are calling `exists()` on the value returned from `.find()`. `find()`, like `mount()`, also returns a `wrapper`, similar to `mount()`. `mount()` has a few extra methods, because it's wrapping a Vue component, and `find()` only returns a regular DOM node, but many of the methods are shared between both. Some other methods include `classes()`, which gets the classes a DOM node has, and `trigger()` for simulating user interaction. You can find a list of methods supported [here](../../api/#wrapper-methods).
+Notice we are calling `exists()` on the value returned from `.find()`. `find()`, like `mount()`, also returns a `wrapper`. `mount()` has a few extra methods, because it's wrapping a Vue component, and `find()` only returns a regular DOM node, but many of the methods are shared between both. Some other methods include `classes()`, which gets the classes a DOM node has, and `trigger()` for simulating user interaction. You can find a list of methods supported [here](../../api/#wrapper-methods).
 
 ## Using `data`
 
