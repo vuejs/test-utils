@@ -228,7 +228,7 @@ const App = {
 
 If you are using `shallow`, the slot will not be rendered, since the render function in `<custom-button />` is stubbed out. That means you won't be able to verify the correct text is rendered!
 
-For this use case, you can use `config.renderDefaultStub`, which will render the default slot content, even when using `shallow`:
+For this use case, you can use `config.renderStubDefaultSlot`, which will render the default slot content, even when using `shallow`:
 
 ```js {1,4,8}
 import { config, mount } from '@vue/test-utils'
@@ -275,4 +275,4 @@ So regardless of which mounting method you choose, we suggest keeping these guid
 
 - use `global.stubs` to replace a component with a dummy one to simplify your tests
 - use `shallow: true` (or `shallowMount`) to stub out all child components
-- use `config.stubRenderDefaultSlot` to render the default `<slot>` for a stubbed component
+- use `config.renderStubDefaultSlot` to render the default `<slot>` for a stubbed component
