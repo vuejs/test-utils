@@ -1789,7 +1789,7 @@ flushPromises(): Promise<unknown>
 
 **Details:**
 
-`flushPromises` flushes al resolved promise handlers. This helps make sure async operations such as promises or DOM updates have happened before asserting against them.
+`flushPromises` flushes all resolved promise handlers. This helps make sure async operations such as promises or DOM updates have happened before asserting against them.
 
 Check out [Making HTTP requests](../guide/advanced/http-requests.md) to see an example of `flushPromises` in action.
 
@@ -1814,7 +1814,7 @@ type GlobalMountOptions = {
 
 **Details:**
 
-Instead of configuring global mounting options on a per-test basis, you can configure them globally. These will be used by default every time you `mount` a component. You can then override the defaults by via mounting options.
+Instead of configuring global mounting options on a per-test basis, you can configure them globally. These will be used by default every time you `mount` a component. You can then override the defaults via mounting options.
 
 An example might be globally mocking the `$t` variable from vue-i18n, globally stubbing out a component, or any other global item:
 
