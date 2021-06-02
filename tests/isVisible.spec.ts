@@ -188,5 +188,27 @@ describe('isVisible', () => {
         expect(show.isVisible()).toBe(true)
       })
     })
+    describe('child has two nodes', () => {
+      const Foo = defineComponent({
+        template: `<div />
+                     <span />`
+      })
+      const Root = defineComponent({
+        template: '<Foo v-show="false" />',
+        components: {
+          Foo
+        }
+      })
+      it('mount: returns false', () => {
+        const wrapper = mount(Root)
+        expect(wrapper.isVisible()).toBe(false)
+      })
+      it('shallowMount: return false', () => {
+        const wrapper = mount(Root, {
+          shallow: true
+        })
+        expect(wrapper.isVisible()).toBe(false)
+      })
+    })
   })
 })
