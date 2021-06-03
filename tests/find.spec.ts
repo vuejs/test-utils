@@ -1,6 +1,6 @@
-import { defineComponent, h } from 'vue'
+import { defineComponent, h, nextTick } from 'vue'
 
-import { mount } from '../src'
+import { mount, VueWrapper } from '../src'
 import SuspenseComponent from './components/Suspense.vue'
 
 describe('find', () => {
@@ -79,6 +79,25 @@ describe('find', () => {
 
     expect(wrapper.html()).toContain('Fallback content')
     expect(wrapper.find('div').exists()).toBeTruthy()
+  })
+
+  test('can wrap `find` in an async function', async () => {
+    async function findAfterNextTick(
+      wrapper: VueWrapper<any>,
+      selector: string
+    ) {
+      await nextTick()
+      return wrapper.find(selector)
+    }
+
+    const wrapper = mount({
+      template: `<div>My component</div>`
+    })
+    const foundElement = await findAfterNextTick(
+      wrapper,
+      '.something-that-does-not-exist'
+    )
+    expect(foundElement.exists()).toBeFalsy()
   })
 })
 
