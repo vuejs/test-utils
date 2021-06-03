@@ -32,3 +32,4 @@ jobs:
         CI: true
     - run: yarn test:build
     - run: yarn tsd
+    - run: yarn vue-tsc
