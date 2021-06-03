@@ -19,11 +19,11 @@ import {
   AllowedComponentProps,
   ComponentCustomProps,
   ExtractDefaultPropTypes,
-  Component,
-  VNode
+  VNode,
+  EmitsOptions,
+  ComputedOptions
 } from 'vue'
 
-import { config } from './config'
 import { MountingOptions, Slot } from './types'
 import {
   isFunctionalComponent,
@@ -41,16 +41,6 @@ import { createStub, stubComponents } from './stubs'
 
 // NOTE this should come from `vue`
 type PublicProps = VNodeProps & AllowedComponentProps & ComponentCustomProps
-
-export type ComputedOptions = Record<
-  string,
-  ((ctx?: any) => any) | WritableComputedOptions<any>
->
-export type ObjectEmitsOptions = Record<
-  string,
-  ((...args: any[]) => any) | null
->
-export type EmitsOptions = ObjectEmitsOptions | string[]
 
 // Class component - no props
 export function mount<V>(
