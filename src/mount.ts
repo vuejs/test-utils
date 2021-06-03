@@ -9,7 +9,6 @@ import {
   ComponentOptionsWithArrayProps,
   ComponentOptionsWithoutProps,
   ExtractPropTypes,
-  WritableComputedOptions,
   ComponentPropsOptions,
   AppConfig,
   VNodeProps,
