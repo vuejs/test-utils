@@ -112,7 +112,7 @@ describe('find', () => {
     })
 
     const wrapper = mount(Component)
-    const etc = wrapper.findComponent({ name: 'EmptyTestComponent'})
+    const etc = wrapper.findComponent({ name: 'EmptyTestComponent' })
     expect(etc.find('p').exists()).toBe(false)
   })
 })
@@ -207,7 +207,7 @@ describe('findAll', () => {
     })
 
     const wrapper = mount(Component)
-    const etc = wrapper.findComponent({ name: 'EmptyTestComponent'})
+    const etc = wrapper.findComponent({ name: 'EmptyTestComponent' })
     expect(etc.findAll('p')).toHaveLength(0)
   })
 })
