@@ -99,6 +99,22 @@ describe('find', () => {
     )
     expect(foundElement.exists()).toBeFalsy()
   })
+
+  test('handle empty root node', () => {
+    const EmptyTestComponent = {
+      name: 'EmptyTestComponent',
+      render: () => null
+    }
+    const Component = defineComponent({
+      render() {
+        return h('div', [h(EmptyTestComponent)])
+      }
+    })
+
+    const wrapper = mount(Component)
+    const etc = wrapper.findComponent({ name: 'EmptyTestComponent' })
+    expect(etc.find('p').exists()).toBe(false)
+  })
 })
 
 describe('findAll', () => {
@@ -177,5 +193,21 @@ describe('findAll', () => {
     const wrapper = mount(Foo)
 
     expect(wrapper.find('#foo').find('#bar').exists()).toBe(true)
+  })
+
+  test('handle empty/comment root node', () => {
+    const EmptyTestComponent = {
+      name: 'EmptyTestComponent',
+      render: () => null
+    }
+    const Component = defineComponent({
+      render() {
+        return h('div', [h(EmptyTestComponent)])
+      }
+    })
+
+    const wrapper = mount(Component)
+    const etc = wrapper.findComponent({ name: 'EmptyTestComponent' })
+    expect(etc.findAll('p')).toHaveLength(0)
   })
 })

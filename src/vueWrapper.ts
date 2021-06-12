@@ -123,7 +123,7 @@ export class VueWrapper<T extends ComponentPublicInstance>
     const result = this.parentElement['__vue_app__']
       ? // force using the parentElement to allow finding the root element
         this.parentElement.querySelector(selector)
-      : this.element.querySelector(selector)
+      : this.element.querySelector && this.element.querySelector(selector)
 
     if (result) {
       return new DOMWrapper(result)
@@ -223,7 +223,9 @@ export class VueWrapper<T extends ComponentPublicInstance>
   findAll(selector: string): DOMWrapper<Element>[] {
     const results = this.parentElement['__vue_app__']
       ? this.parentElement.querySelectorAll(selector)
-      : this.element.querySelectorAll(selector)
+      : this.element.querySelectorAll
+      ? this.element.querySelectorAll(selector)
+      : ([] as unknown as NodeListOf<Element>)
 
     return Array.from(results).map((element) => new DOMWrapper(element))
   }
