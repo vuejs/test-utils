@@ -225,7 +225,7 @@ export class VueWrapper<T extends ComponentPublicInstance>
       ? this.parentElement.querySelectorAll(selector)
       : this.element.querySelectorAll
       ? this.element.querySelectorAll(selector)
-      : ([] as unknown as NodeListOf<Element>)
+      : []
 
     return Array.from(results).map((element) => new DOMWrapper(element))
   }
