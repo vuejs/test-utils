@@ -131,10 +131,6 @@ export class VueWrapper<T extends ComponentPublicInstance>
 
     return createWrapperError('DOMWrapper')
   }
-  isVisible(): boolean {
-    const domWrapper = new DOMWrapper(this.element)
-    return domWrapper.isVisible()
-  }
 
   get<K extends keyof HTMLElementTagNameMap>(
     selector: K
@@ -230,6 +226,11 @@ export class VueWrapper<T extends ComponentPublicInstance>
       : this.element.querySelectorAll(selector)
 
     return Array.from(results).map((element) => new DOMWrapper(element))
+  }
+
+  isVisible(): boolean {
+    const domWrapper = new DOMWrapper(this.element)
+    return domWrapper.isVisible()
   }
 
   setData(data: Record<string, any>): Promise<void> {

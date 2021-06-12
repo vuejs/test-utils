@@ -130,9 +130,11 @@ describe('isVisible', () => {
       const Hidden = defineComponent({
         template: '<div>hidden</div>'
       })
+
       const Show = defineComponent({
         template: '<div>show</div>'
       })
+
       const Root = defineComponent({
         template: '<div><Hidden v-show="false" /><Show /></div>',
         components: {
@@ -140,14 +142,16 @@ describe('isVisible', () => {
           Show
         }
       })
-      it('mount:returns false when root has v-show=false', () => {
+
+      it('mount: returns false when root has v-show=false', () => {
         const wrapper = mount(Root)
         const hidden = wrapper.findComponent(Hidden)
         const show = wrapper.findComponent(Show)
         expect(hidden.isVisible()).toBe(false)
         expect(show.isVisible()).toBe(true)
       })
-      it('shallowMount:returns false when root has v-show=false', () => {
+
+      it('shallowMount: returns false when root has v-show=false', () => {
         const wrapper = mount(Root, {
           shallow: true
         })
@@ -157,13 +161,16 @@ describe('isVisible', () => {
         expect(show.isVisible()).toBe(true)
       })
     })
+
     describe('child component has v-show', () => {
       const Hidden = defineComponent({
         template: '<div v-show="false">hidden</div>'
       })
+
       const Show = defineComponent({
         template: '<div>show</div>'
       })
+
       const Root = defineComponent({
         template: '<div><Hidden /><Show /></div>',
         components: {
@@ -171,13 +178,15 @@ describe('isVisible', () => {
           Show
         }
       })
-      it('mount:returns false when child has v-show=false', () => {
+
+      it('mount: returns false when child has v-show=false', () => {
         const wrapper = mount(Root)
         const hidden = wrapper.findComponent(Hidden)
         const show = wrapper.findComponent(Show)
         expect(hidden.isVisible()).toBe(false)
         expect(show.isVisible()).toBe(true)
       })
+
       it('shallowMount: returns true when child has v-show=false, because of shallow mount', () => {
         const wrapper = mount(Root, {
           shallow: true
@@ -188,21 +197,24 @@ describe('isVisible', () => {
         expect(show.isVisible()).toBe(true)
       })
     })
+
     describe('child has two nodes', () => {
       const Foo = defineComponent({
-        template: `<div />
-                     <span />`
+        template: `<div /><span />`
       })
+
       const Root = defineComponent({
         template: '<Foo v-show="false" />',
         components: {
           Foo
         }
       })
+
       it('mount: returns false', () => {
         const wrapper = mount(Root)
         expect(wrapper.isVisible()).toBe(false)
       })
+
       it('shallowMount: return false', () => {
         const wrapper = mount(Root, {
           shallow: true
