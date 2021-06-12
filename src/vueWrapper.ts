@@ -230,6 +230,11 @@ export class VueWrapper<T extends ComponentPublicInstance>
     return Array.from(results).map((element) => new DOMWrapper(element))
   }
 
+  isVisible(): boolean {
+    const domWrapper = new DOMWrapper(this.element)
+    return domWrapper.isVisible()
+  }
+
   setData(data: Record<string, any>): Promise<void> {
     mergeDeep(this.componentVM.$data, data)
     return nextTick()
