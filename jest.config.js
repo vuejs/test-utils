@@ -2,7 +2,8 @@ module.exports = {
   preset: 'ts-jest',
   globals: {
     __USE_BUILD__: process.argv.indexOf('-use-build') >= 0,
-    __BROWSER__: true
+    __BROWSER__: true,
+    __USE_PREFIX_IDENTIFIERS__: true,
   },
   testEnvironment: 'jsdom',
   transform: {
