@@ -31,7 +31,8 @@ function createEntry(options) {
       replace({
         values: {
           'process.env.NODE_ENV': 'true',
-          __BROWSER__: isEsmBrowser
+          __BROWSER__: isEsmBrowser,
+          __USE_PREFIX_IDENTIFIERS__: isEsmBrowser || format === 'cjs'
         },
         preventAssignment: true
       }),

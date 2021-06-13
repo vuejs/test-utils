@@ -15,7 +15,7 @@ export function processSlot(source = '', Vue = vue) {
     `<SlotWrapper v-bind="$attrs">${template}</SlotWrapper>`,
     {
       mode: 'function',
-      prefixIdentifiers: __BROWSER__
+      prefixIdentifiers: __USE_PREFIX_IDENTIFIERS__
     }
   )
   const createRenderFunction = new Function(
