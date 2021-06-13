@@ -20,7 +20,8 @@ import {
   ExtractDefaultPropTypes,
   VNode,
   EmitsOptions,
-  ComputedOptions
+  ComputedOptions,
+  ComponentPropsOptions
 } from 'vue'
 
 import { MountingOptions, Slot } from './types'
