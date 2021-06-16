@@ -1797,10 +1797,10 @@
     "@vue/compiler-dom" "3.1.1"
     "@vue/shared" "3.1.1"
 
-"@vue/devtools-api@^6.0.0-beta.10", "@vue/devtools-api@^6.0.0-beta.11":
-  version "6.0.0-beta.11"
-  resolved "https://registry.yarnpkg.com/@vue/devtools-api/-/devtools-api-6.0.0-beta.11.tgz#4fb4161ee41ba75f3f5198d4bfd80e4ffb7f2462"
-  integrity sha512-vpw61AkW9U8c2upjJCljHq9eh1KkD4FJ7DYbRzIETpj9WAw2VESudJZosAk4M+7npBo1Zu1jNQY03HUMVO/czQ==
+"@vue/devtools-api@^6.0.0-beta.11", "@vue/devtools-api@^6.0.0-beta.14":
+  version "6.0.0-beta.14"
+  resolved "https://registry.yarnpkg.com/@vue/devtools-api/-/devtools-api-6.0.0-beta.14.tgz#6ed2d6f8d66a9256c9ad04bfff08309ba87b9723"
+  integrity sha512-44fPrrN1cqcs6bFkT0C+yxTM6PZXLbR+ESh1U1j8UD22yO04gXvxH62HApMjLbS3WqJO/iCNC+CYT+evPQh2EQ==
 
 "@vue/reactivity@3.1.1":
   version "3.1.1"
@@ -8091,12 +8091,12 @@ vue-jest@^5.0.0-alpha.10:
     source-map "0.5.6"
     tsconfig "^7.0.0"
 
-vue-router@^4.0.8:
-  version "4.0.8"
-  resolved "https://registry.yarnpkg.com/vue-router/-/vue-router-4.0.8.tgz#55d4290a3122444edbc91a3cd2492bb1d0cef494"
-  integrity sha512-42mWSQaH7CCBQDspQTHv63f34VEnZC20g9QNK4WJ/zW8SdIUeT6TQ2i/78fjF/pVBUPLBWrGhvB7uDnaz7O/pA==
+vue-router@^4.0.9:
+  version "4.0.9"
+  resolved "https://registry.yarnpkg.com/vue-router/-/vue-router-4.0.9.tgz#248496941b79c4c1010f6ebfcf235cd4267d85da"
+  integrity sha512-i3IaZJ57YeMbRHQlqKyXdUMr5NzTCcJkn3f8u38TsZjYWtGcd3IX2zRd3389SCOwuRf11mgfHAyngR6FVDE9og==
   dependencies:
-    "@vue/devtools-api" "^6.0.0-beta.10"
+    "@vue/devtools-api" "^6.0.0-beta.14"
 
 vue-tsc@0.1.7:
   version "0.1.7"
