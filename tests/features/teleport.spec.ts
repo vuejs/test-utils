@@ -1,5 +1,9 @@
 import { defineComponent, h, Teleport } from 'vue'
 import { mount } from '../../src'
+import WithTeleportPropsComp from '../components/WithTeleportPropsComp.vue'
+import WithTeleportEmitsComp from '../components/WithTeleportEmitsComp.vue'
+import WithProps from '../components/WithProps.vue'
+import EmitsEvent from '../components/EmitsEvent.vue'
 
 describe('teleport', () => {
   beforeEach(() => {
@@ -111,5 +115,32 @@ describe('teleport', () => {
     expect(document.body.outerHTML).toBe(
       `<body><div id="far-away"><button>Hello!!!</button></div></body>`
     )
+  })
+
+  it('works with SFC and gets props', async () => {
+    const destination = document.createElement('div')
+    destination.id = 'somewhere'
+    document.body.appendChild(destination)
+
+    const wrapper = mount(WithTeleportPropsComp)
+
+    const withProps = wrapper.getComponent(WithProps)
+
+    expect(withProps.props()).toEqual({
+      msg: 'hi there'
+    })
+  })
+
+  it('works with SFC and captures emitted events', async () => {
+    const destination = document.createElement('div')
+    destination.id = 'somewhere'
+    document.body.appendChild(destination)
+
+    const wrapper = mount(WithTeleportEmitsComp)
+
+    const withProps = wrapper.getComponent(EmitsEvent)
+    withProps.trigger('click')
+
+    expect(withProps.emitted().greet[0]).toEqual(['Hey!'])
   })
 })
