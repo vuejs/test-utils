@@ -20,7 +20,9 @@ describe('teleport', () => {
 
     const wrapper = mount(Comp)
 
-    expect(document.body.outerHTML).toBe(`<body><div id="far-away"><div>teleported</div></div></body>`)
+    expect(document.body.outerHTML).toBe(
+      `<body><div id="far-away"><div>teleported</div></div></body>`
+    )
   })
 
   it('teleports a component with props', async () => {
@@ -28,8 +30,15 @@ describe('teleport', () => {
     destination.id = 'far-away'
     document.body.appendChild(destination)
 
-    const Greeter: FunctionalComponent<{ msg: string }, { greet: (msg: string) => void }> = ({ msg }, { emit }) => {
-      return h('button', { onClick: () => emit('greet', `${msg.toUpperCase()}!!!`) }, `${msg}!!!`)
+    const Greeter: FunctionalComponent<
+      { msg: string },
+      { greet: (msg: string) => void }
+    > = ({ msg }, { emit }) => {
+      return h(
+        'button',
+        { onClick: () => emit('greet', `${msg.toUpperCase()}!!!`) },
+        `${msg}!!!`
+      )
     }
 
     const onGreet = jest.fn()
@@ -37,7 +46,13 @@ describe('teleport', () => {
     const Comp = defineComponent({
       setup() {
         return () =>
-          h(() => h(Teleport, { to: '#far-away' }, h(Greeter, { onGreet, msg: 'Hello' })))
+          h(() =>
+            h(
+              Teleport,
+              { to: '#far-away' },
+              h(Greeter, { onGreet, msg: 'Hello' })
+            )
+          )
       }
     })
 
@@ -46,6 +61,8 @@ describe('teleport', () => {
 
     expect(onGreet).toHaveBeenCalledWith('HELLO!!!')
 
-    expect(document.body.outerHTML).toBe(`<body><div id="far-away"><button>Hello!!!</button></div></body>`)
+    expect(document.body.outerHTML).toBe(
+      `<body><div id="far-away"><button>Hello!!!</button></div></body>`
+    )
   })
 })
