@@ -5,7 +5,7 @@
   "main": "dist/vue-test-utils.cjs.js",
   "unpkg": "dist/vue-test-utils.browser.js",
   "types": "dist/index.d.ts",
-  "module": "dist/vue-test-utils.esm-bundler.js",
+  "module": "dist/vue-test-utils.esm-bundler.mjs",
   "files": [
     "dist",
     "README.md",
