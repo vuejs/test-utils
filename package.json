@@ -44,7 +44,7 @@
     "vue-jest": "^5.0.0-alpha.10",
     "vue-router": "^4.0.9",
     "vue-tsc": "0.1.7",
-    "vuex": "^4.0.1"
+    "vuex": "^4.0.2"
   },
   "peerDependencies": {
     "vue": "^3.0.1"
