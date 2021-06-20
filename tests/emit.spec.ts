@@ -6,6 +6,8 @@ import {
   SetupContext
 } from 'vue'
 import { Vue } from 'vue-class-component'
+import EmitsEventSFC from './components/EmitsEventSFC.vue'
+import EmitsEventScriptSetup from './components/EmitsEventScriptSetup.vue'
 
 import { mount } from '../src'
 
@@ -319,4 +321,17 @@ describe('emitted', () => {
     await wrapper.trigger('click')
     expect(wrapper.emitted('foo')).toHaveLength(1)
   })
+
+  it.each([EmitsEventSFC, EmitsEventScriptSetup])(
+    'captures emitted events',
+    async (component) => {
+      const wrapper = mount(component)
+      await wrapper.trigger('click')
+
+      expect(wrapper.emitted().click).toHaveLength(1)
+      expect(wrapper.emitted().bar).toHaveLength(2)
+      expect(wrapper.emitted().bar[0]).toEqual(['mounted'])
+      expect(wrapper.emitted().bar[1]).toEqual(['click'])
+    }
+  )
 })
