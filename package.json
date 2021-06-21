@@ -62,7 +62,8 @@
     "lint:fix": "yarn lint --write",
     "docs:dev": "vitepress dev docs",
     "docs:build": "vitepress build docs",
-    "vue-tsc": "vue-tsc --noEmit -p tsconfig.volar.json"
+    "vue-tsc": "vue-tsc --noEmit -p tsconfig.volar.json",
+    "prepublishOnly": "yarn build"
   },
   "husky": {
     "hooks": {
