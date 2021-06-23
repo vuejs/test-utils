@@ -88,7 +88,7 @@ test('redirect an unauthenticated user to 404', () => {
 
   await wrapper.find('button').trigger('click')
 
-  expect(mockRouter.push).toHaveBeenCalledTimes(1')
+  expect(mockRouter.push).toHaveBeenCalledTimes(1)
   expect(mockRouter.push).toHaveBeenCalledWith('/404')
 })
 ```

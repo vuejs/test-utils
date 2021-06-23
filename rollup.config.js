@@ -55,7 +55,7 @@ function createEntry(options) {
   if (format === 'es') {
     config.output.file = pkg.module
     if (isBrowser) {
-      config.output.file = 'dist/vue-test-utils.esm-browser.js'
+      config.output.file = 'dist/vue-test-utils.esm-browser.mjs'
     }
   }
   if (format === 'cjs') {
