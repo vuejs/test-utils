@@ -6,7 +6,7 @@ Here are some strategies and techniques for testing components using `<Teleport>
 
 ## Example
 
-In this example we are testing a `<Navbar>` component. It renders a `<Sigup>` component inside of a `<Teleport>`. The `target` prop of `<Teleport>` is an element located outside of the `<Navbar>` component.
+In this example we are testing a `<Navbar>` component. It renders a `<Signup>` component inside of a `<Teleport>`. The `target` prop of `<Teleport>` is an element located outside of the `<Navbar>` component.
 
 This is the `Navbar.vue` component:
 
