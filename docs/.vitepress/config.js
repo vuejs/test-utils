@@ -88,6 +88,7 @@ const config = {
           },
           { text: 'Testing Vuex', link: '/guide/advanced/vuex' },
           { text: 'Testing Vue Router', link: '/guide/advanced/vue-router' },
+          { text: 'Testing Teleport', link: '/guide/advanced/teleport' },
           {
             text: 'Third-party integration',
             link: '/guide/advanced/third-party'
