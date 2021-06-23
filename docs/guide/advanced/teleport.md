@@ -2,11 +2,11 @@
 
 Vue 3 comes with a new built-in component: `<Teleport>`, which allows components to "teleport" their content far outside of their own `<template>`. Most tests written with Vue Test Utils are scoped to the component passed to `mount`, which introduces some complexity when it comes to testing a component that is teleported outside of the component where it is initially rendered.
 
-Here are some strategies and techniques for testing components using `<teleport>`.
+Here are some strategies and techniques for testing components using `<Teleport>`.
 
 ## Example
 
-In this example we are testing a `<navbar>` component. It renders a `<sign-up>` component inside of a `<teleport>`. The `target` prop of `<teleport>` is an element located outside of the `<navbar`> component.
+In this example we are testing a `<Navbar>` component. It renders a `<Sigup>` component inside of a `<Teleport>`. The `target` prop of `<Teleport>` is an element located outside of the `<Navbar>` component.
 
 This is the `Navbar.vue` component:
 
@@ -82,7 +82,7 @@ test('emits a signup event when valid', async () => {
 
 Running this test will give you a warning: `[Vue warn]: Failed to locate Teleport target with selector "#modal"`. Let's create it:
 
-```ts {4-14}
+```ts {5-15}
 import { mount } from '@vue/test-utils'
 import Navbar from './Navbar.vue'
 import Signup from './Signup.vue'
@@ -139,7 +139,7 @@ test('teleport', async () => {
 
 Let's finish the test:
 
-```ts
+```ts {4-8}
 test('teleport', async () => {
   const wrapper = mount(Navbar)
 
