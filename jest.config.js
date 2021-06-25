@@ -4,6 +4,9 @@ module.exports = {
     __USE_BUILD__: process.argv.indexOf('-use-build') >= 0,
     __BROWSER__: true,
     __USE_PREFIX_IDENTIFIERS__: true,
+    'ts-jest': {
+      babelConfig: true
+    }
   },
   testEnvironment: 'jsdom',
   transform: {
