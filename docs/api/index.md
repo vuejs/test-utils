@@ -1143,6 +1143,20 @@ test('findComponent', () => {
 })
 ```
 
+**NOTE** `getComponent` and `findComponent` will not work on functional components, because they do not have an internal Vue instance (this is what makes functional components more performant). That means the following will **not** work:
+
+```js
+const Foo = () => h('div')
+
+const wrapper = mount(Foo)
+// doesn't work! You get a wrapper, but since there is not
+// associated Vue instance, you cannot use methods like
+// exists() and text()
+wrapper.findComponent(Foo) 
+```
+
+For tests using functional component, consider using `get` or `find` and treating them like standard DOM nodes.
+
 ### findAllComponents
 
 **Signature:**
@@ -1421,6 +1435,20 @@ test('props', () => {
   })
 })
 ```
+
+**NOTE** `getComponent` and `findComponent` will not work on functional components, because they do not have an internal Vue instance (this is what makes functional components more performant). That means the following will **not** work:
+
+```js
+const Foo = () => h('div')
+
+const wrapper = mount(Foo)
+// doesn't work! You get a wrapper, but since there is not
+// associated Vue instance, you cannot use methods like
+// exists() and text()
+wrapper.findComponent(Foo) 
+```
+
+For tests using functional component, consider using `get` or `find` and treating them like standard DOM nodes.
 
 :::tip
 As a rule of thumb, test against the effects of a passed prop (a DOM update, an emitted event, and so on). This will make tests more powerful than simply asserting that a prop is passed.
