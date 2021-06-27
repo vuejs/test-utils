@@ -265,6 +265,10 @@ export function mount(
         return slot.render
       }
 
+      if ('template' in slot && slot.template) {
+        return () => h(slot, props)
+      }
+
       return () => slot
     }
 

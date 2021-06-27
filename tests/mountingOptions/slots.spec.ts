@@ -52,6 +52,22 @@ describe('slots', () => {
       )
     })
 
+    it('supports providing an object with template to slot', () => {
+      const wrapper = mount(ComponentWithSlots, {
+        slots: {
+          default: { template: '<span>Default</span>' },
+          named: { template: '<span>Named</span>' }
+        }
+      })
+
+      expect(wrapper.find('.default').html()).toEqual(
+        '<div class="default"><span>Default</span></div>'
+      )
+      expect(wrapper.find('.named').html()).toEqual(
+        '<div class="named"><span>Named</span></div>'
+      )
+    })
+
     it('does not render slots that do not exist', () => {
       const wrapper = mount(ComponentWithSlots, {
         slots: {

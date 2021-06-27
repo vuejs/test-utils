@@ -134,8 +134,6 @@ test('layout full page layout', () => {
 })
 ```
 
-Note: passing a component using `{ template: '<div /> }` is not supported. Use a HTML string, render function, plain text, or an SFC.
-
 [Refer to the tests](https://github.com/vuejs/vue-test-utils-next/blob/9d3c2a6526f3d8751d29b2f9112ad2a3332bbf52/tests/mountingOptions/slots.spec.ts#L124-L167) for more examples and use cases.
 
 ## Scoped Slots
