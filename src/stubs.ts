@@ -24,10 +24,14 @@ interface StubOptions {
 }
 
 const stubsMap: WeakMap<ComponentOptions, VNodeTypes> = new WeakMap()
-
 export const getOriginalVNodeTypeFromStub = (
   type: ComponentOptions
 ): VNodeTypes | undefined => stubsMap.get(type)
+
+const doNotStubComponents: WeakSet<ComponentOptions> = new WeakSet()
+const shouldNotStub = (type: ComponentOptions) => doNotStubComponents.has(type)
+export const addToDoNotStubComponents = (type: ComponentOptions) =>
+  doNotStubComponents.add(type)
 
 export const createStub = ({
   name,
@@ -155,6 +159,10 @@ export function stubComponents(
     }
 
     if (isComponent(type) || isFunctionalComponent(type)) {
+      if (shouldNotStub(type)) {
+        return args
+      }
+
       const registeredName = getComponentRegisteredName(instance, type)
       const componentName = type['name'] || type['displayName']
 

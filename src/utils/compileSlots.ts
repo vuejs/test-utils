@@ -1,6 +1,23 @@
 import { compile } from '@vue/compiler-dom'
 import * as vue from 'vue'
 import type { SetupContext } from 'vue'
+import { addToDoNotStubComponents } from '../stubs'
+
+const SlotWrapper = {
+  inheritAttrs: false,
+  setup(_: Record<string, any>, ctx: SetupContext) {
+    return () => {
+      const names = Object.keys(ctx.slots)
+      if (names.length === 0) {
+        return []
+      } else {
+        const slotName = names[0]
+        return ctx.slots[slotName]!(ctx.attrs)
+      }
+    }
+  }
+}
+addToDoNotStubComponents(SlotWrapper)
 
 export function processSlot(source = '', Vue = vue) {
   let template = source.trim()
@@ -23,24 +40,13 @@ export function processSlot(source = '', Vue = vue) {
     __BROWSER__ ? `'use strict';\n${code}` : code
   )
 
-  return {
+  const Component = {
     inheritAttrs: false,
     render: createRenderFunction(Vue),
     components: {
-      SlotWrapper: {
-        inheritAttrs: false,
-        setup(_: Record<string, any>, ctx: SetupContext) {
-          return () => {
-            const names = Object.keys(ctx.slots)
-            if (names.length === 0) {
-              return []
-            } else {
-              const slotName = names[0]
-              return ctx.slots[slotName]!(ctx.attrs)
-            }
-          }
-        }
-      }
+      SlotWrapper
     }
   }
+  addToDoNotStubComponents(Component)
+  return Component
 }
