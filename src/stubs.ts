@@ -182,7 +182,7 @@ export function stubComponents(
       }
 
       // case 2: custom implementation
-      if (stub && typeof stub === 'object') {
+      if (stub && stub !== true) {
         // pass the props and children, for advanced stubbing
         return [stubs[name], props, children, patchFlag, dynamicProps]
       }

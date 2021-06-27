@@ -212,6 +212,32 @@ describe('mounting options: stubs', () => {
     expect(wrapper.html()).toBe('<div>foo stub</div>')
   })
 
+  it('uses functional component as a custom stub', () => {
+    const FooStub = () => h('div', 'foo stub')
+    const Foo = {
+      name: 'Foo',
+      render() {
+        return h('div', 'real foo')
+      }
+    }
+
+    const Comp = {
+      render() {
+        return h(Foo)
+      }
+    }
+
+    const wrapper = mount(Comp, {
+      global: {
+        stubs: {
+          Foo: FooStub
+        }
+      }
+    })
+
+    expect(wrapper.html()).toBe('<div>foo stub</div>')
+  })
+
   it('uses an sfc as a custom stub', () => {
     const created = jest.fn()
     const HelloComp = {
