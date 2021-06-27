@@ -13,6 +13,7 @@ import {
 import { hyphenate } from './utils/vueShared'
 import { MOUNT_COMPONENT_REF, MOUNT_PARENT_NAME } from './constants'
 import { matchName } from './utils/matchName'
+import { isComponent, isFunctionalComponent } from './utils'
 import { ComponentInternalInstance } from '@vue/runtime-core'
 
 interface StubOptions {
@@ -21,6 +22,12 @@ interface StubOptions {
   propsDeclaration?: any
   renderStubDefaultSlot?: boolean
 }
+
+const stubsMap: WeakMap<ComponentOptions, VNodeTypes> = new WeakMap()
+
+export const getOriginalVNodeTypeFromStub = (
+  type: ComponentOptions
+): VNodeTypes | undefined => stubsMap.get(type)
 
 export const createStub = ({
   name,
@@ -99,12 +106,6 @@ const isMountedComponent = (
   type: VNodeTypes,
   props: ({ [key: string]: unknown } & VNodeProps) | null | undefined
 ) => isComponent(type) && props && props['ref'] === MOUNT_COMPONENT_REF
-
-const isComponent = (type: VNodeTypes): type is ComponentOptions =>
-  typeof type === 'object'
-
-const isFunctionalComponent = (type: VNodeTypes): type is ComponentOptions =>
-  typeof type === 'function' && ('name' in type || 'displayName' in type)
 
 export function stubComponents(
   stubs: Record<any, any> = {},
@@ -196,7 +197,11 @@ export function stubComponents(
           name = registeredName || componentName
         }
 
-        const propsDeclaration = type?.props || {}
+        if (!isComponent(type)) {
+          throw new Error('Attempted to stub a non-component')
+        }
+
+        const propsDeclaration = type.props || {}
         let newStub = components[name]
         if (!newStub) {
           newStub = createStub({
@@ -205,6 +210,7 @@ export function stubComponents(
             renderStubDefaultSlot
           })
           components[name] = newStub
+          stubsMap.set(newStub, type)
         }
         return [newStub, props, children, patchFlag, dynamicProps]
       }
