@@ -8,6 +8,7 @@ import { FindAllComponentsSelector } from '../types'
 import { getOriginalVNodeTypeFromStub } from '../stubs'
 import { isComponent } from '../utils'
 import { matchName } from './matchName'
+import { convertLegacyVueExtendSelector } from './vueCompatSupport'
 
 /**
  * Detect whether a selector matches a VNode
@@ -17,8 +18,10 @@ import { matchName } from './matchName'
  */
 export function matches(
   node: VNode,
-  selector: FindAllComponentsSelector
+  rawSelector: FindAllComponentsSelector
 ): boolean {
+  const selector = convertLegacyVueExtendSelector(rawSelector)
+
   // do not return none Vue components
   if (!node.component) return false
 

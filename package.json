@@ -23,6 +23,7 @@
     "@types/node": "15.12.4",
     "@types/pretty": "^2.0.0",
     "@vue/babel-plugin-jsx": "^1.0.6",
+    "@vue/compat": "^3.1.2",
     "@vue/compiler-dom": "^3.1.2",
     "@vue/compiler-sfc": "3.1.2",
     "babel-jest": "^26.6.3",
@@ -55,8 +56,10 @@
     "email": "lachlan.miller.1990@outlook.com"
   },
   "scripts": {
-    "test": "yarn jest --runInBand tests",
-    "test:build": "yarn jest --runInBand tests -use-build",
+    "test": "yarn jest --runInBand tests/",
+    "test:compat": "yarn jest -c tests-compat/jest-compat.config.js --runInBand tests-compat/",
+    "test:build": "yarn jest --runInBand tests/ -use-build",
+    "test:compat:build": "yarn jest -c tests-compat/jest-compat.config.js --runInBand tests-compat/ -use-build",
     "tsd": "tsc -p test-dts/tsconfig.tsd.json",
     "build": "yarn rollup -c rollup.config.js",
     "lint": "prettier -c --parser typescript \"(src|tests)/**/*.ts?(x)\"",
