@@ -1,3 +1,5 @@
+const path = require('path')
+
 module.exports = {
   preset: 'ts-jest',
   globals: {
@@ -14,5 +16,5 @@ module.exports = {
     '^.+\\js$': 'babel-jest'
   },
   moduleFileExtensions: ['vue', 'js', 'json', 'jsx', 'ts', 'tsx', 'node'],
-  setupFiles: ['./setup.js']
+  setupFiles: [path.resolve(__dirname, './setup.js')]
 }

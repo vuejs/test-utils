@@ -61,7 +61,12 @@ const createTransitionStub = ({
     return h(name, {}, ctx.$slots)
   }
 
-  return defineComponent({ name, render, props })
+  return defineComponent({
+    name,
+    compatConfig: { MODE: 3, RENDER_FUNCTION: false },
+    render,
+    props
+  })
 }
 
 const resolveComponentStubByName = (

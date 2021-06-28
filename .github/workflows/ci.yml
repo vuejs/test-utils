@@ -27,9 +27,11 @@ jobs:
     - run: yarn install
     - run: yarn lint
     - run: yarn test
+    - run: yarn test:compat
     - run: yarn build
       env:
         CI: true
     - run: yarn test:build
+    - run: yarn test:compat:build
     - run: yarn tsd
     - run: yarn vue-tsc
