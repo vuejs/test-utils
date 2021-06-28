@@ -8,7 +8,8 @@ import {
   ComponentOptions,
   defineComponent,
   VNodeProps,
-  VNodeTypes
+  VNodeTypes,
+  ConcreteComponent
 } from 'vue'
 import { hyphenate } from './utils/vueShared'
 import { MOUNT_COMPONENT_REF, MOUNT_PARENT_NAME } from './constants'
@@ -24,10 +25,14 @@ interface StubOptions {
 }
 
 const stubsMap: WeakMap<ComponentOptions, VNodeTypes> = new WeakMap()
-
 export const getOriginalVNodeTypeFromStub = (
   type: ComponentOptions
 ): VNodeTypes | undefined => stubsMap.get(type)
+
+const doNotStubComponents: WeakSet<ConcreteComponent> = new WeakSet()
+const shouldNotStub = (type: ConcreteComponent) => doNotStubComponents.has(type)
+export const addToDoNotStubComponents = (type: ConcreteComponent) =>
+  doNotStubComponents.add(type)
 
 export const createStub = ({
   name,
@@ -155,6 +160,10 @@ export function stubComponents(
     }
 
     if (isComponent(type) || isFunctionalComponent(type)) {
+      if (shouldNotStub(type)) {
+        return args
+      }
+
       const registeredName = getComponentRegisteredName(instance, type)
       const componentName = type['name'] || type['displayName']
 

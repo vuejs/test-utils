@@ -71,6 +71,41 @@ describe('shallowMount', () => {
     )
   })
 
+  it('correctly renders slot content', () => {
+    const ComponentWithSlot = defineComponent({
+      template: '<div><slot></slot></div>'
+    })
+
+    const wrapper = shallowMount(ComponentWithSlot, {
+      slots: {
+        default: '<span class="slot-content">test</span>'
+      }
+    })
+    expect(wrapper.find('.slot-content').exists()).toBe(true)
+  })
+
+  it('correctly stubs components inside slot', () => {
+    const ComponentWithSlot = defineComponent({
+      template: '<div><slot></slot></div>'
+    })
+
+    const Foo = defineComponent({
+      name: 'Foo',
+      template: '<div class="unstubbed-foo">OK</div>'
+    })
+
+    const wrapper = shallowMount(ComponentWithSlot, {
+      global: {
+        components: { Foo }
+      },
+      slots: {
+        default: '<Foo />'
+      }
+    })
+
+    expect(wrapper.find('.unstubbed-foo').exists()).toBe(false)
+  })
+
   it('stubs all components, but allows providing custom stub', () => {
     const wrapper = mount(ComponentWithChildren, {
       shallow: true,

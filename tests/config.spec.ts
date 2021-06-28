@@ -1,4 +1,4 @@
-import { ComponentPublicInstance, h, inject } from 'vue'
+import { defineComponent, ComponentPublicInstance, h, inject } from 'vue'
 import { config, mount } from '../src'
 import Hello from './components/Hello.vue'
 import ComponentWithSlots from './components/ComponentWithSlots.vue'
@@ -67,11 +67,13 @@ describe('config', () => {
     })
 
     it('should evaluate given option as boolean', () => {
+      const Child = defineComponent({ template: '<div><slot></slot></div>' })
+      const Component = defineComponent({
+        components: { Child },
+        template: '<child><div id="default-slot" /></child>'
+      })
       // @ts-expect-error
-      let comp = mount(ComponentWithSlots, {
-        slots: {
-          default: '<div id="default-slot" />'
-        },
+      let comp = mount(Component, {
         shallow: true,
         global: {
           renderStubDefaultSlot: 'truthy'
@@ -81,10 +83,7 @@ describe('config', () => {
       expect(comp.find('#default-slot').exists()).toBe(true)
 
       // @ts-expect-error
-      let comp = mount(ComponentWithSlots, {
-        slots: {
-          default: '<div id="default-slot" />'
-        },
+      let comp = mount(Component, {
         shallow: true,
         global: {
           renderStubDefaultSlot: 0
