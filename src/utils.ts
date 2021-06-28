@@ -109,3 +109,10 @@ export function textContent(element: Element): string {
     ? element.textContent?.trim() ?? ''
     : ''
 }
+
+export function hasOwnProperty<O extends {}, P extends PropertyKey>(
+  obj: O,
+  prop: P
+): obj is O & Record<P, unknown> {
+  return obj.hasOwnProperty(prop)
+}
