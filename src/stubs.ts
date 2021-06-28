@@ -188,6 +188,11 @@ export function stubComponents(
         return [stubs[name], props, children, patchFlag, dynamicProps]
       }
 
+      if (stub === false) {
+        // we explicitly opt out of stubbing this component
+        return args
+      }
+
       // we return a stub by matching Vue's `h` function
       // where the signature is h(Component, props, slots)
       // case 1: default stub
