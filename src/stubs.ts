@@ -31,7 +31,7 @@ interface StubOptions {
 const stubsMap: WeakMap<ConcreteComponent, VNodeTypes> = new WeakMap()
 
 export const getOriginalVNodeTypeFromStub = (
-  type: ComponentOptions
+  type: ConcreteComponent
 ): VNodeTypes | undefined => stubsMap.get(type)
 
 const doNotStubComponents: WeakSet<ConcreteComponent> = new WeakSet()
@@ -213,10 +213,17 @@ export function stubComponents(
       }
 
       // case 2: custom implementation
-      if (stub && stub !== true) {
-        stubsMap.set(stub, type)
+      if (isComponent(stub)) {
+        const stubFn = isFunctionalComponent(stub) ? stub : null
+
+        const specializedStub: ConcreteComponent = stubFn
+          ? (...args) => stubFn(...args)
+          : { ...stub }
+
+        specializedStub.props = stub.props
+        stubsMap.set(specializedStub, type)
         // pass the props and children, for advanced stubbing
-        return [stub, props, children, patchFlag, dynamicProps]
+        return [specializedStub, props, children, patchFlag, dynamicProps]
       }
 
       if (stub === false) {

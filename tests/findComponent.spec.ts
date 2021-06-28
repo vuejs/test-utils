@@ -140,6 +140,22 @@ describe('findComponent', () => {
     expect(wrapper.findComponent(Hello).exists()).toBe(true)
   })
 
+  it('finds a component by its definition when stub is reused', () => {
+    const reusedStub = { template: '<div>universal stub</div>' }
+
+    const wrapper = mount(compA, {
+      global: {
+        stubs: {
+          Hello: reusedStub,
+          compB: reusedStub
+        }
+      }
+    })
+
+    expect(wrapper.findComponent(Hello).exists()).toBe(true)
+    expect(wrapper.findComponent(compB).exists()).toBe(true)
+  })
+
   it('finds a component without a name by its locally assigned name', () => {
     const Component = {
       template: '<div><component-without-name/></div>',

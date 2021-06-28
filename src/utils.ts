@@ -1,11 +1,5 @@
 import { GlobalMountOptions } from './types'
-import {
-  Component,
-  ComponentOptions,
-  ComputedOptions,
-  FunctionalComponent,
-  VNodeTypes
-} from 'vue'
+import { ComponentOptions, ConcreteComponent, FunctionalComponent } from 'vue'
 import { config } from './config'
 
 function mergeStubs(target: Record<string, any>, source: GlobalMountOptions) {
@@ -78,8 +72,13 @@ export function isClassComponent(component: unknown) {
   return typeof component === 'function' && '__vccOpts' in component
 }
 
-export function isComponent(component: unknown): component is ComponentOptions {
-  return typeof component === 'object' || typeof component === 'function'
+export function isComponent(
+  component: unknown
+): component is ConcreteComponent {
+  return Boolean(
+    component &&
+      (typeof component === 'object' || typeof component === 'function')
+  )
 }
 
 export function isFunctionalComponent(
