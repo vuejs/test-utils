@@ -139,6 +139,45 @@ test('shallow stubs out all child components', () => {
 If you used VTU V1, you may remember this as `shallowMount`. That method is still available, too - it's the same as writing `shallow: true`.
 :::
 
+## Stubbing all children components with exceptions
+
+Sometimes you want to stub out _all_ the custom components, _except_ specific one. Let's consider an example:
+
+```js
+const ComplexA = {
+  template: '<h2>Hello from real component!</h2>'
+}
+
+const ComplexComponent = {
+  components: { ComplexA, ComplexB, ComplexC },
+  template: `
+    <h1>Welcome to Vue.js 3</h1>
+    <ComplexA />
+    <ComplexB />
+    <ComplexC />
+  `
+}
+```
+
+By using `shallow` mounting option that will automatically stub out all the child components. If we want to explicitly opt-out of stubbing specific component, we could provide its name in `stubs` with value set to `false`
+
+```js {3}
+test('shallow allows opt-out of stubbing specific component', () => {
+  const wrapper = mount(ComplexComponent, {
+    shallow: true,
+    stubs: { ComplexA: false }
+  })
+
+  console.log(wrapper.html())
+  /*
+    <h1>Welcome to Vue.js 3</h1>
+    <h2>Hello from real component!</h2>
+    <complex-b-stub></complex-b-stub>
+    <complex-c-stub></complex-c-stub>
+  */
+})
+```
+
 ## Stubbing an async component
 
 In case you want to stub out an async component, then there are two behaviours. For example, you might have components like this:

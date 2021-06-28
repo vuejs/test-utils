@@ -91,6 +91,28 @@ describe('shallowMount', () => {
     )
   })
 
+  it('stubs all components, but allows disabling stub by passing false', () => {
+    const wrapper = mount(ComponentWithChildren, {
+      shallow: true,
+      global: {
+        stubs: {
+          Hello: false
+        }
+      }
+    })
+    expect(wrapper.html()).toEqual(
+      '<div class="ComponentWithChildren">\n' +
+        '  <div id="root">\n' +
+        '    <div id="msg">Hello world</div>\n' +
+        '  </div>\n' +
+        '  <component-with-input-stub></component-with-input-stub>\n' +
+        '  <component-without-name-stub></component-without-name-stub>\n' +
+        '  <script-setup-stub></script-setup-stub>\n' +
+        '  <with-props-stub></with-props-stub>\n' +
+        '</div>'
+    )
+  })
+
   it('stubs all components in a script setup component', () => {
     const wrapper = mount(ScriptSetupWithChildren, {
       shallow: true,
