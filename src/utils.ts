@@ -1,5 +1,5 @@
 import { GlobalMountOptions } from './types'
-import { AppConfig } from 'vue'
+import { ComponentOptions, VNodeTypes } from 'vue'
 import { config } from './config'
 
 function mergeStubs(target: Record<string, any>, source: GlobalMountOptions) {
@@ -68,17 +68,19 @@ export const mergeDeep = (
   return target
 }
 
-export function isClassComponent(component: any) {
-  // TypeScript
-  return (
-    component.toString().includes('_super.apply(this, arguments) || this') ||
-    // native ES6
-    (typeof component === 'function' &&
-      /^\s*class\s+/.test(component.toString()))
-  )
+export function isClassComponent(component: VNodeTypes) {
+  return typeof component === 'function' && '__vccOpts' in component
 }
 
-export function isFunctionalComponent(component: any) {
+export function isComponent(
+  component: VNodeTypes
+): component is ComponentOptions {
+  return typeof component === 'object' || typeof component === 'function'
+}
+
+export function isFunctionalComponent(
+  component: VNodeTypes
+): component is ComponentOptions {
   return typeof component === 'function' && !isClassComponent(component)
 }
 

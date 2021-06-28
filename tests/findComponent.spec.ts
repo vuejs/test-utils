@@ -111,6 +111,17 @@ describe('findComponent', () => {
     expect(wrapper.findComponent(ComponentWithoutName).exists()).toBe(true)
   })
 
+  it('finds a component by its definition with shallow', () => {
+    const Component = {
+      template: '<div><other-name /></div>',
+      components: {
+        OtherName: Hello
+      }
+    }
+    const wrapper = mount(Component, { shallow: true })
+    expect(wrapper.findComponent(Hello).exists()).toBe(true)
+  })
+
   it('finds a component without a name by its locally assigned name', () => {
     const Component = {
       template: '<div><component-without-name/></div>',

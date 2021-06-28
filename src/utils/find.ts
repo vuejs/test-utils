@@ -5,6 +5,8 @@ import {
   VNodeNormalizedChildren
 } from 'vue'
 import { FindAllComponentsSelector } from '../types'
+import { getOriginalVNodeTypeFromStub } from '../stubs'
+import { isComponent } from '../utils'
 import { matchName } from './matchName'
 
 /**
@@ -20,6 +22,9 @@ export function matches(
   // do not return none Vue components
   if (!node.component) return false
 
+  const nodeType = node.type
+  if (!isComponent(nodeType)) return false
+
   if (node.type === selector) {
     return true
   }
@@ -28,46 +33,46 @@ export function matches(
     return node.el?.matches?.(selector)
   }
 
-  const nodeType = node.type
-  if (typeof selector === 'object' && typeof nodeType === 'object') {
-    // we are looking for this exact component
-    if (selector === nodeType) {
-      return true
-    }
+  if (
+    typeof selector === 'object' &&
+    getOriginalVNodeTypeFromStub(nodeType) === selector
+  ) {
+    // we are looking at stub of this exact component
+    return true
+  }
 
-    let componentName: string | undefined
-    if ('name' in nodeType) {
-      // match normal component definitions
-      componentName = nodeType.name
-    }
-    if (!componentName && 'displayName' in nodeType) {
-      // match functional components
-      componentName = nodeType.displayName
-    }
-    let selectorName = selector.name
+  let componentName: string | undefined
+  if ('name' in nodeType) {
+    // match normal component definitions
+    componentName = nodeType.name
+  }
+  if (!componentName && 'displayName' in nodeType) {
+    // match functional components
+    componentName = nodeType.displayName
+  }
+  let selectorName = selector.name
 
-    // the component and selector both have a name
-    if (componentName && selectorName) {
+  // the component and selector both have a name
+  if (componentName && selectorName) {
+    return matchName(selectorName, componentName)
+  }
+
+  // if a name is missing, then check the locally registered components in the parent
+  if (node.component.parent) {
+    const registry = (node.component.parent as any).type.components
+    for (const key in registry) {
+      // is it the selector
+      if (!selectorName && registry[key] === selector) {
+        selectorName = key
+      }
+      // is it the component
+      if (!componentName && registry[key] === nodeType) {
+        componentName = key
+      }
+    }
+    // we may have one or both missing names
+    if (selectorName && componentName) {
       return matchName(selectorName, componentName)
-    }
-
-    // if a name is missing, then check the locally registered components in the parent
-    if (node.component.parent) {
-      const registry = (node.component.parent as any).type.components
-      for (const key in registry) {
-        // is it the selector
-        if (!selectorName && registry[key] === selector) {
-          selectorName = key
-        }
-        // is it the component
-        if (!componentName && registry[key] === nodeType) {
-          componentName = key
-        }
-      }
-      // we may have one or both missing names
-      if (selectorName && componentName) {
-        return matchName(selectorName, componentName)
-      }
     }
   }
 
