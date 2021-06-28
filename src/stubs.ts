@@ -24,7 +24,8 @@ interface StubOptions {
   renderStubDefaultSlot?: boolean
 }
 
-const stubsMap: WeakMap<ComponentOptions, VNodeTypes> = new WeakMap()
+const stubsMap: WeakMap<ConcreteComponent, VNodeTypes> = new WeakMap()
+
 export const getOriginalVNodeTypeFromStub = (
   type: ComponentOptions
 ): VNodeTypes | undefined => stubsMap.get(type)
@@ -198,6 +199,7 @@ export function stubComponents(
 
       // case 2: custom implementation
       if (stub && stub !== true) {
+        stubsMap.set(stubs[name], type)
         // pass the props and children, for advanced stubbing
         return [stubs[name], props, children, patchFlag, dynamicProps]
       }

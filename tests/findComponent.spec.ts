@@ -122,6 +122,24 @@ describe('findComponent', () => {
     expect(wrapper.findComponent(Hello).exists()).toBe(true)
   })
 
+  it('finds a component by its definition when using stub without name', () => {
+    const StubWithoutName = {
+      template: '<div>stub-without-name</div>'
+    }
+
+    const Component = {
+      template: '<div><other-name /></div>',
+      components: {
+        OtherName: Hello
+      }
+    }
+
+    const wrapper = mount(Component, {
+      global: { stubs: { Hello: StubWithoutName } }
+    })
+    expect(wrapper.findComponent(Hello).exists()).toBe(true)
+  })
+
   it('finds a component without a name by its locally assigned name', () => {
     const Component = {
       template: '<div><component-without-name/></div>',
