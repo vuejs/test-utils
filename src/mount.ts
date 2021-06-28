@@ -21,7 +21,8 @@ import {
   VNode,
   EmitsOptions,
   ComputedOptions,
-  ComponentPropsOptions
+  ComponentPropsOptions,
+  ConcreteComponent
 } from 'vue'
 
 import { MountingOptions, Slot } from './types'
@@ -221,7 +222,7 @@ export function mount(
   options?: MountingOptions<any>
 ): VueWrapper<any> {
   // normalise the incoming component
-  let component: DefineComponent
+  let component: ConcreteComponent
 
   if (isFunctionalComponent(originalComponent)) {
     component = defineComponent({
@@ -331,7 +332,9 @@ export function mount(
     ref: MOUNT_COMPONENT_REF
   })
   const global = mergeGlobalProperties(options?.global)
-  component.components = { ...component.components, ...global.components }
+  if (isObjectComponent(component)) {
+    component.components = { ...component.components, ...global.components }
+  }
 
   // create the wrapper component
   const Parent = defineComponent({
@@ -345,7 +348,9 @@ export function mount(
       // correctly captured.
       // TODO: figure out why this is happening and understand the implications of
       // the expose rfc for Test Utils.
-      delete component.expose
+      if (isObjectComponent(component)) {
+        delete component.expose
+      }
       return h(component, props, slots)
     }
   })

@@ -1,5 +1,11 @@
 import { GlobalMountOptions } from './types'
-import { ComponentOptions, VNodeTypes } from 'vue'
+import {
+  Component,
+  ComponentOptions,
+  ComputedOptions,
+  FunctionalComponent,
+  VNodeTypes
+} from 'vue'
 import { config } from './config'
 
 function mergeStubs(target: Record<string, any>, source: GlobalMountOptions) {
@@ -68,24 +74,24 @@ export const mergeDeep = (
   return target
 }
 
-export function isClassComponent(component: VNodeTypes) {
+export function isClassComponent(component: unknown) {
   return typeof component === 'function' && '__vccOpts' in component
 }
 
-export function isComponent(
-  component: VNodeTypes
-): component is ComponentOptions {
+export function isComponent(component: unknown): component is ComponentOptions {
   return typeof component === 'object' || typeof component === 'function'
 }
 
 export function isFunctionalComponent(
-  component: VNodeTypes
-): component is ComponentOptions {
+  component: unknown
+): component is FunctionalComponent {
   return typeof component === 'function' && !isClassComponent(component)
 }
 
-export function isObjectComponent(component: any) {
-  return typeof component !== 'function' && !isClassComponent(component)
+export function isObjectComponent(
+  component: unknown
+): component is ComponentOptions {
+  return typeof component !== 'function'
 }
 
 // https://stackoverflow.com/questions/15458876/check-if-a-string-is-html-or-not/15458987#answer-15458968
