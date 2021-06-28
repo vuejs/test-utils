@@ -63,4 +63,34 @@ describe('@vue/compat build', () => {
 
     expect(wrapper.html()).toBe('<div>test</div>')
   })
+
+  it('correctly stubs legacy component wrapped in Vue.extend', () => {
+    configureCompat({
+      MODE: 3,
+      GLOBAL_EXTEND: true
+    })
+
+    const Foo = extend({
+      name: 'Foo',
+      template: '<div>original</div>'
+    })
+
+    const FooStub = { template: '<div>stubbed</div>' }
+
+    const Component = {
+      components: { NamedAsNotFoo: Foo },
+      template: '<named-as-not-foo />'
+    }
+
+    debugger
+    const wrapper = mount(Component, {
+      global: {
+        stubs: {
+          Foo: FooStub
+        }
+      }
+    })
+
+    expect(wrapper.html()).toBe('<div>stubbed</div>')
+  })
 })

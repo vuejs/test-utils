@@ -91,7 +91,7 @@ export function isFunctionalComponent(
 export function isObjectComponent(
   component: unknown
 ): component is ComponentOptions {
-  return typeof component !== 'function'
+  return Boolean(component && typeof component === 'object')
 }
 
 // https://stackoverflow.com/questions/15458876/check-if-a-string-is-html-or-not/15458987#answer-15458968

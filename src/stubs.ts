@@ -14,8 +14,12 @@ import {
 import { hyphenate } from './utils/vueShared'
 import { MOUNT_COMPONENT_REF, MOUNT_PARENT_NAME } from './constants'
 import { matchName } from './utils/matchName'
-import { isComponent, isFunctionalComponent } from './utils'
+import { isComponent, isFunctionalComponent, isObjectComponent } from './utils'
 import { ComponentInternalInstance } from '@vue/runtime-core'
+import {
+  isLegacyExtendedComponent,
+  unwrapLegacyVueExtendComponent
+} from './utils/vueCompatSupport'
 
 interface StubOptions {
   name: string
@@ -106,6 +110,22 @@ const getComponentRegisteredName = (
   return null
 }
 
+const getComponentName = (type: VNodeTypes): string => {
+  if (isObjectComponent(type)) {
+    return type.name || ''
+  }
+
+  if (isLegacyExtendedComponent(type)) {
+    return unwrapLegacyVueExtendComponent(type).name || ''
+  }
+
+  if (isFunctionalComponent(type)) {
+    return type.displayName || type.name
+  }
+
+  return ''
+}
+
 const isHTMLElement = (type: VNodeTypes) => typeof type === 'string'
 
 const isCommentOrFragment = (type: VNodeTypes) => typeof type === 'symbol'
@@ -171,7 +191,7 @@ export function stubComponents(
       }
 
       const registeredName = getComponentRegisteredName(instance, type)
-      const componentName = type['name'] || type['displayName']
+      const componentName = getComponentName(type)
 
       let stub = null
       let name = null
@@ -194,9 +214,9 @@ export function stubComponents(
 
       // case 2: custom implementation
       if (stub && stub !== true) {
-        stubsMap.set(stubs[name], type)
+        stubsMap.set(stub, type)
         // pass the props and children, for advanced stubbing
-        return [stubs[name], props, children, patchFlag, dynamicProps]
+        return [stub, props, children, patchFlag, dynamicProps]
       }
 
       if (stub === false) {
