@@ -63,9 +63,7 @@ export interface MountingOptions<Props, Data = {}> {
    */
   attrs?: Record<string, unknown>
   /**
-   * Provide values for slots on a component. Slots can be a component
-   * imported from a .vue file or a render function. Providing an
-   * object with a `template` key is not supported.
+   * Provide values for slots on a component.
    * @see https://next.vue-test-utils.vuejs.org/api/#slots
    */
   slots?: SlotDictionary & {
