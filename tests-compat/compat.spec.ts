@@ -4,17 +4,38 @@ import { mount } from '../src'
 const { configureCompat, extend, defineComponent, h } = Vue as any
 
 describe('@vue/compat build', () => {
-  it.each([true, false])(
-    'correctly renders transition when RENDER_FUNCTION compat is %p',
+  describe.each([true, false])(
+    'when RENDER_FUNCTION compat is %p',
     (RENDER_FUNCTION) => {
-      configureCompat({ MODE: 3, RENDER_FUNCTION })
-
-      const Component = defineComponent({
-        template: '<transition><div class="hello"></div></transition>'
+      beforeEach(() => {
+        configureCompat({ MODE: 3, RENDER_FUNCTION })
       })
-      const wrapper = mount(Component)
 
-      expect(wrapper.find('.hello').exists()).toBe(true)
+      it('renders default slot content when renderStubDefaultSlot is true', () => {
+        const Foo = { template: '<div><slot></slot></div>' }
+        const Component = {
+          components: { Foo },
+          template: '<foo>test</foo>'
+        }
+
+        const wrapper = mount(Component, {
+          global: {
+            stubs: { Foo: true },
+            renderStubDefaultSlot: true
+          }
+        })
+
+        expect(wrapper.html()).toBe('<foo-stub>test</foo-stub>')
+      })
+
+      it('correctly renders transition', () => {
+        const Component = defineComponent({
+          template: '<transition><div class="hello"></div></transition>'
+        })
+        const wrapper = mount(Component)
+
+        expect(wrapper.find('.hello').exists()).toBe(true)
+      })
     }
   )
 
@@ -82,7 +103,6 @@ describe('@vue/compat build', () => {
       template: '<named-as-not-foo />'
     }
 
-    debugger
     const wrapper = mount(Component, {
       global: {
         stubs: {

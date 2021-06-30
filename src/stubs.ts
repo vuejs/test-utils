@@ -53,6 +53,7 @@ export const createStub = ({
 
   return defineComponent({
     name: name || anonName,
+    compatConfig: { MODE: 3, RENDER_FUNCTION: false },
     render,
     props: propsDeclaration
   })
