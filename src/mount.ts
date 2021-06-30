@@ -38,7 +38,7 @@ import { createWrapper, VueWrapper } from './vueWrapper'
 import { attachEmitListener } from './emit'
 import { createDataMixin } from './dataMixin'
 import { MOUNT_COMPONENT_REF, MOUNT_PARENT_NAME } from './constants'
-import { createStub, stubComponents } from './stubs'
+import { createStub, stubComponents, addToDoNotStubComponents } from './stubs'
 import { isLegacyFunctionalComponent } from './utils/vueCompatSupport'
 
 // NOTE this should come from `vue`
@@ -235,12 +235,14 @@ export function mount(
         () =>
           h(originalComponent, attrs, slots)
     })
+    addToDoNotStubComponents(originalComponent)
   } else if (isObjectComponent(originalComponent)) {
     component = { ...originalComponent }
   } else {
     component = originalComponent
   }
 
+  addToDoNotStubComponents(component)
   const el = document.createElement('div')
 
   if (options?.attachTo) {
@@ -362,6 +364,7 @@ export function mount(
       return h(component, props, slots)
     }
   })
+  addToDoNotStubComponents(Parent)
 
   const setProps = (newProps: Record<string, unknown>) => {
     for (const [k, v] of Object.entries(newProps)) {

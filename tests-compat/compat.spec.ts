@@ -48,6 +48,23 @@ describe('@vue/compat build', () => {
     expect(wrapper.html()).toBe('<div>test</div>')
   })
 
+  it('does not stub root legacy functional component when shallow', () => {
+    configureCompat({
+      MODE: 3,
+      GLOBAL_EXTEND: true,
+      COMPONENT_FUNCTIONAL: true
+    })
+
+    const Foo = {
+      name: 'Foo',
+      functional: true,
+      render: () => h('div', 'test')
+    }
+    const wrapper = mount(Foo, { shallow: true })
+
+    expect(wrapper.html()).toBe('<div>test</div>')
+  })
+
   it('correctly mounts legacy functional component wrapped in Vue.extend', () => {
     configureCompat({
       MODE: 3,
