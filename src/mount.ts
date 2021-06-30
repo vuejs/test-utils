@@ -39,6 +39,7 @@ import { attachEmitListener } from './emit'
 import { createDataMixin } from './dataMixin'
 import { MOUNT_COMPONENT_REF, MOUNT_PARENT_NAME } from './constants'
 import { createStub, stubComponents } from './stubs'
+import { isLegacyFunctionalComponent } from './utils/vueCompatSupport'
 
 // NOTE this should come from `vue`
 type PublicProps = VNodeProps & AllowedComponentProps & ComponentCustomProps
@@ -224,7 +225,10 @@ export function mount(
   // normalise the incoming component
   let component: ConcreteComponent
 
-  if (isFunctionalComponent(originalComponent)) {
+  if (
+    isFunctionalComponent(originalComponent) ||
+    isLegacyFunctionalComponent(originalComponent)
+  ) {
     component = defineComponent({
       setup:
         (_, { attrs, slots }) =>

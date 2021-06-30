@@ -1,7 +1,7 @@
 import * as Vue from '@vue/compat'
 import { mount } from '../src'
 
-const { configureCompat, extend, defineComponent } = Vue as any
+const { configureCompat, extend, defineComponent, h } = Vue as any
 
 describe('@vue/compat build', () => {
   it.each([true, false])(
@@ -34,5 +34,33 @@ describe('@vue/compat build', () => {
     const wrapper = mount(Component)
 
     expect(wrapper.findComponent(LegacyComponent).exists()).toBe(true)
+  })
+
+  it('correctly mounts legacy functional component', () => {
+    configureCompat({ MODE: 3, COMPONENT_FUNCTIONAL: true })
+
+    const Component = defineComponent({
+      functional: true,
+      render: () => h('div', 'test')
+    })
+    const wrapper = mount(Component)
+
+    expect(wrapper.html()).toBe('<div>test</div>')
+  })
+
+  it('correctly mounts legacy functional component wrapped in Vue.extend', () => {
+    configureCompat({
+      MODE: 3,
+      GLOBAL_EXTEND: true,
+      COMPONENT_FUNCTIONAL: true
+    })
+
+    const Component = extend({
+      functional: true,
+      render: () => h('div', 'test')
+    })
+    const wrapper = mount(Component)
+
+    expect(wrapper.html()).toBe('<div>test</div>')
   })
 })
