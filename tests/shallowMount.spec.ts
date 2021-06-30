@@ -160,8 +160,8 @@ describe('shallowMount', () => {
     expect(wrapper.html()).toEqual(
       '<div>Override</div>\n' +
         '<component-with-input-stub></component-with-input-stub>\n' +
-        '<stub></stub>\n' +
-        '<stub></stub>\n' +
+        '<anonymous-stub></anonymous-stub>\n' +
+        '<anonymous-stub></anonymous-stub>\n' +
         '<with-props-stub></with-props-stub>'
     )
   })

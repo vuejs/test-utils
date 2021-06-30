@@ -670,4 +670,28 @@ describe('mounting options: stubs', () => {
       )
     })
   })
+
+  it('renders stub for anonymous component when using shallow mount', () => {
+    const AnonymousComponent = defineComponent({
+      template: `<div class="original"><slot></slot></div>`
+    })
+
+    const WrapperComponent = defineComponent({
+      computed: {
+        cmp() {
+          return AnonymousComponent
+        }
+      },
+      template: `<component :is="cmp">test</component>`
+    })
+
+    const wrapper = mount(WrapperComponent, {
+      shallow: true,
+      global: {
+        renderStubDefaultSlot: true
+      }
+    })
+
+    expect(wrapper.html()).toBe('<anonymous-stub>test</anonymous-stub>')
+  })
 })
