@@ -258,7 +258,7 @@ slots?: { [key: string]: Slot } & { default?: Slot }
 
 **Details:**
 
-Slots can be a string, a component imported from a `.vue` file or a render function. Currently providing an object with a `template` key is not supported.
+Slots can be a string or any valid component definition either imported from a `.vue` file or provided inline
 
 `Component.vue`:
 
