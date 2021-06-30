@@ -37,7 +37,6 @@ import { processSlot } from './utils/compileSlots'
 import { createWrapper, VueWrapper } from './vueWrapper'
 import { attachEmitListener } from './emit'
 import { createDataMixin } from './dataMixin'
-import { MOUNT_COMPONENT_REF, MOUNT_PARENT_NAME } from './constants'
 import { createStub, stubComponents, addToDoNotStubComponents } from './stubs'
 import { isLegacyFunctionalComponent } from './utils/vueCompatSupport'
 
@@ -333,6 +332,7 @@ export function mount(
     ]
   }
 
+  const MOUNT_COMPONENT_REF = 'VTU_COMPONENT'
   // we define props as reactive so that way when we update them with `setProps`
   // Vue's reactivity system will cause a rerender.
   const props = reactive({
@@ -348,7 +348,7 @@ export function mount(
 
   // create the wrapper component
   const Parent = defineComponent({
-    name: MOUNT_PARENT_NAME,
+    name: 'VTU_ROOT',
     render() {
       // https://github.com/vuejs/vue-test-utils-next/issues/651
       // script setup components include an empty `expose` array as part of the

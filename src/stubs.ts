@@ -12,7 +12,6 @@ import {
   ConcreteComponent
 } from 'vue'
 import { hyphenate } from './utils/vueShared'
-import { MOUNT_COMPONENT_REF, MOUNT_PARENT_NAME } from './constants'
 import { matchName } from './utils/matchName'
 import { isComponent, isFunctionalComponent, isObjectComponent } from './utils'
 import { ComponentInternalInstance } from '@vue/runtime-core'
