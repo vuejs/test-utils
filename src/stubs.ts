@@ -172,11 +172,6 @@ export function stubComponents(
       const registeredName = getComponentRegisteredName(instance, type)
       const componentName = type['name'] || type['displayName']
 
-      // No name found?
-      if (!registeredName && !componentName) {
-        return renderStubDefaultSlot || !shallow ? args : ['stub']
-      }
-
       let stub = null
       let name = null
 
