@@ -126,18 +126,6 @@ const getComponentName = (type: VNodeTypes): string => {
   return ''
 }
 
-const isHTMLElement = (type: VNodeTypes) => typeof type === 'string'
-
-const isCommentOrFragment = (type: VNodeTypes) => typeof type === 'symbol'
-
-const isParent = (type: VNodeTypes) =>
-  isComponent(type) && type['name'] === MOUNT_PARENT_NAME
-
-const isMountedComponent = (
-  type: VNodeTypes,
-  props: ({ [key: string]: unknown } & VNodeProps) | null | undefined
-) => isComponent(type) && props && props['ref'] === MOUNT_COMPONENT_REF
-
 export function stubComponents(
   stubs: Record<any, any> = {},
   shallow: boolean = false,
@@ -170,19 +158,6 @@ export function stubComponents(
         undefined,
         children
       ]
-    }
-
-    // args[0] can either be:
-    // 1. a HTML tag (div, span...)
-    // 2. An object of component options, such as { name: 'foo', render: [Function], props: {...} }
-    // Depending what it is, we do different things.
-    if (
-      isHTMLElement(type) ||
-      isCommentOrFragment(type) ||
-      isParent(type) ||
-      isMountedComponent(type, props)
-    ) {
-      return args
     }
 
     if (isComponent(type) || isFunctionalComponent(type)) {
@@ -259,6 +234,7 @@ export function stubComponents(
       }
     }
 
+    // do not stub anything what is not a component
     return args
   })
 }
