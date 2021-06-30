@@ -113,7 +113,7 @@ test('layout full page layout', () => {
 
 ## Advanced Usage
 
-You can also pass a render function to a slot mounting option, or even an SFC imported from a `vue` file:
+You can also pass a render function, an object with template or even an SFC imported from a `vue` file to a slot mounting option:
 
 ```js
 import { h } from 'vue'
@@ -123,7 +123,8 @@ test('layout full page layout', () => {
   const wrapper = mount(Layout, {
     slots: {
       header: Header
-      main: h('div', 'Main content')
+      main: h('div', 'Main content'),
+      sidebar: { template: '<div>Sidebar</div>' },
       footer: '<div>Footer</div>',
     }
   })
