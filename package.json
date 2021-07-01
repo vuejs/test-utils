@@ -20,7 +20,7 @@
     "@rollup/plugin-node-resolve": "^13.0.0",
     "@rollup/plugin-replace": "^2.4.2",
     "@types/jest": "26.0.23",
-    "@types/node": "15.12.5",
+    "@types/node": "15.14.0",
     "@types/pretty": "^2.0.0",
     "@vue/babel-plugin-jsx": "^1.0.6",
     "@vue/compat": "^3.1.2",
