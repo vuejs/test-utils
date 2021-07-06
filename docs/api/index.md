@@ -1056,12 +1056,13 @@ findAll(selector: string): DOMWrapper<Element>[]
 
 ```js
 import { mount } from '@vue/test-utils'
-import Component from './Component.vue'
+import BaseTable from './BaseTable.vue'
 
 test('findAll', () => {
-  const wrapper = mount(Component)
+  const wrapper = mount(BaseTable);
 
-  wrapper.findAll('[data-test="number"]') //=> found; returns array of DOMWrapper
+  // .findAll() returns an array of DOMWrappers
+  const thirdRow = wrapper.findAll('tr')[2];
 })
 ```
 
