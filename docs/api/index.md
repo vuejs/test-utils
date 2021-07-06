@@ -406,7 +406,6 @@ directives?: Record<string, Directive>
 
 ```js
 import { mount } from '@vue/test-utils'
-import Component from './Component.vue'
 
 import Directive from '@/directives/Directive'
 
