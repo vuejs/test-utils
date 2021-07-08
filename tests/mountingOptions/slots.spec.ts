@@ -1,6 +1,6 @@
-import { h } from 'vue'
+import { defineComponent, h } from 'vue'
 
-import { mount } from '../../src'
+import { flushPromises, mount } from '../../src'
 import Hello from '../components/Hello.vue'
 import WithProps from '../components/WithProps.vue'
 import ComponentWithSlots from '../components/ComponentWithSlots.vue'
@@ -89,7 +89,7 @@ describe('slots', () => {
         '' +
           '<div class="named">' +
           '<div id="root">' +
-          '<div id="msg"></div>' +
+          '<div id="msg">Hello world</div>' +
           '</div>' +
           '</div>'
       )
@@ -205,5 +205,42 @@ describe('slots', () => {
     expect(wrapper.find('.foo').exists()).toBe(true)
     expect(wrapper.find('span').text()).toBe('Default')
     expect(wrapper.find('#with-props').text()).toBe('props-msg')
+  })
+
+  it('triggers child component lifecycles', async () => {
+    const parentMounted = jest.fn()
+    const childMounted = jest.fn()
+
+    const Parent = defineComponent({
+      mounted() {
+        parentMounted()
+      },
+      render() {
+        return h(this.$slots.default!)
+      }
+    })
+
+    const Child = defineComponent({
+      render() {
+        return h('span')
+      },
+      mounted() {
+        childMounted()
+      }
+    })
+
+    const wrapper = mount(Parent, {
+      global: {
+        components: { Child }
+      },
+      slots: {
+        default: Child
+      }
+    })
+
+    await flushPromises()
+
+    expect(parentMounted).toHaveBeenCalled()
+    expect(childMounted).toHaveBeenCalled()
   })
 })
