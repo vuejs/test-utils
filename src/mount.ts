@@ -263,7 +263,7 @@ export function mount(
   function slotToFunction(slot: Slot) {
     if (typeof slot === 'object') {
       if ('render' in slot && slot.render) {
-        return slot.render
+        return () => h(slot)
       }
 
       if ('template' in slot && slot.template) {

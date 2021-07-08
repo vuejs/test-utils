@@ -89,7 +89,7 @@ describe('slots', () => {
         '' +
           '<div class="named">' +
           '<div id="root">' +
-          '<div id="msg"></div>' +
+          '<div id="msg">Hello world</div>' +
           '</div>' +
           '</div>'
       )
@@ -214,16 +214,25 @@ describe('slots', () => {
     const Parent = defineComponent({
       mounted() {
         parentMounted()
+      },
+      render() {
+        return h(this.$slots.default!)
       }
     })
 
     const Child = defineComponent({
+      render() {
+        return h('span')
+      },
       mounted() {
         childMounted()
       }
     })
 
     const wrapper = mount(Parent, {
+      global: {
+        components: { Child }
+      },
       slots: {
         default: Child
       }
