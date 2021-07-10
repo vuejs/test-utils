@@ -1,7 +1,6 @@
 import domEvents, {
   DomEvent,
-  DomEventName,
-  EventInterface
+  DomEventNameWithModifiers
 } from './constants/dom-event-types'
 
 const keyCodesByKeyName = {
@@ -40,7 +39,7 @@ interface TriggerOptions {
 }
 
 interface EventParams {
-  eventType: DomEventName | string
+  eventType: DomEventNameWithModifiers | string
   modifiers: KeyName[]
   options?: TriggerOptions
 }
@@ -104,7 +103,7 @@ function getEventProperties(eventParams: EventParams) {
     }
   }
 
-  const meta: DomEvent = domEvents[eventType as DomEventName] || {
+  const meta: DomEvent = domEvents[eventType as DomEventNameWithModifiers] || {
     eventInterface: 'Event',
     cancelable: true,
     bubbles: true
@@ -163,7 +162,7 @@ function createEvent(eventParams: EventParams) {
 }
 
 function createDOMEvent(
-  eventString: DomEventName | string,
+  eventString: DomEventNameWithModifiers | string,
   options?: TriggerOptions
 ) {
   // split eventString like `keydown.ctrl.shift.c` into `keydown` and array of modifiers
