@@ -4,8 +4,8 @@ import { nextTick } from 'vue'
 import { createDOMEvent } from './createDomEvent'
 import {
   DomEventName,
-  DomEventNameWithModifiers
-} from './constants/dom-event-types'
+  DomEventNameWithModifier
+} from './constants/dom-events'
 
 export default class BaseWrapper<ElementType extends Element> {
   private readonly wrapperElement: ElementType
@@ -69,7 +69,7 @@ export default class BaseWrapper<ElementType extends Element> {
   }
 
   async trigger(
-    eventString: DomEventNameWithModifiers,
+    eventString: DomEventNameWithModifier,
     options?: TriggerOptions
   ): Promise<void>
   async trigger(eventString: string, options?: TriggerOptions): Promise<void>

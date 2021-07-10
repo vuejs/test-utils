@@ -171,6 +171,7 @@ describe('trigger', () => {
       expect(keydownHandler).toHaveBeenCalledTimes(2)
       expect(keydownHandler.mock.calls[1][0].key).toBe('Enter')
 
+      // is correctly parsed when using modifier
       await wrapper.trigger('keydown.enter')
       expect(keydownHandler).toHaveBeenCalledTimes(3)
       expect(keydownHandler.mock.calls[2][0].key).toBe('enter')
