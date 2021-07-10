@@ -91,9 +91,29 @@ test('layout full page layout', () => {
 })
 ```
 
+## Multiple Slots
+
+You can pass an array of slots, too:
+
+```js
+test('layout full page layout', () => {
+  const wrapper = mount(Layout, {
+    slots: {
+      default: [
+        '<div id="one">One</div>',
+        '<div id="two">Two</div>'
+      ]
+    }
+  })
+
+  expect(wrapper.find('#one').exists()).toBe(true)
+  expect(wrapper.find('#two').exists()).toBe(true)
+})
+```
+
 ## Advanced Usage
 
-You can also pass a render function to a slot mounting option, or even an SFC imported from a `vue` file:
+You can also pass a render function, an object with template or even an SFC imported from a `vue` file to a slot mounting option:
 
 ```js
 import { h } from 'vue'
@@ -103,8 +123,9 @@ test('layout full page layout', () => {
   const wrapper = mount(Layout, {
     slots: {
       header: Header
-      main: h('div', 'Main content')
-      footer: '<div>Footer</div>'
+      main: h('div', 'Main content'),
+      sidebar: { template: '<div>Sidebar</div>' },
+      footer: '<div>Footer</div>',
     }
   })
 
@@ -113,8 +134,6 @@ test('layout full page layout', () => {
   expect(wrapper.html()).toContain('<div>Footer</div>')
 })
 ```
-
-Note: passing a component using `{ template: '<div /> }` is not supported. Use a HTML string, render function, plain text, or an SFC.
 
 [Refer to the tests](https://github.com/vuejs/vue-test-utils-next/blob/9d3c2a6526f3d8751d29b2f9112ad2a3332bbf52/tests/mountingOptions/slots.spec.ts#L124-L167) for more examples and use cases.
 

@@ -123,12 +123,12 @@ describe('props', () => {
       }
     }
     const Component = defineComponent({
-      data: () => ({ foo: 'old value' }),
+      data: () => ({ foo1: 'old value', foo2: 'foo2 value' }),
       template:
-        '<div><foo :foo="foo" /><button @click="buttonClick">Click me</button></div>',
+        '<div><foo id="foo1" :foo="foo1" /><foo id="foo2" :foo="foo2"/><button @click="buttonClick">Click me</button></div>',
       methods: {
         buttonClick() {
-          this.foo = 'new value'
+          this.foo1 = 'new value'
         }
       },
       components: { Foo }
@@ -139,17 +139,20 @@ describe('props', () => {
         stubs: ['Foo']
       }
     })
-    let fooCmp = wrapper.findComponent({ name: 'Foo' })
 
-    expect(fooCmp.props()).toEqual({
-      foo: 'old value'
-    })
+    const [fooCmp1, barCmp1] = wrapper.findAllComponents({ name: 'Foo' })
+    expect(fooCmp1.props()).toEqual({ foo: 'old value' })
+    expect(barCmp1.props()).toEqual({ foo: 'foo2 value' })
+    expect(wrapper.find('#foo1').attributes().foo).toBe('old value')
+    expect(wrapper.find('#foo2').attributes().foo).toBe('foo2 value')
 
     await wrapper.find('button').trigger('click')
 
-    expect(fooCmp.props()).toEqual({
-      foo: 'new value'
-    })
+    const [fooCmp2, barCmp2] = wrapper.findAllComponents({ name: 'Foo' })
+    expect(fooCmp2.props()).toEqual({ foo: 'new value' })
+    expect(barCmp2.props()).toEqual({ foo: 'foo2 value' })
+    expect(wrapper.find('#foo1').attributes().foo).toBe('new value')
+    expect(wrapper.find('#foo2').attributes().foo).toBe('foo2 value')
   })
 
   it('returns reactive props on a stubbed component shallow case', async () => {

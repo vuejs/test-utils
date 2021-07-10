@@ -1,5 +1,5 @@
 <template>
-  <p>
+  <p id="with-props">
     {{ msg }}
   </p>
 </template>

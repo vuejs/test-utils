@@ -258,7 +258,7 @@ slots?: { [key: string]: Slot } & { default?: Slot }
 
 **Details:**
 
-Slots can be a string, a component imported from a `.vue` file or a render function. Currently providing an object with a `template` key is not supported.
+Slots can be a string or any valid component definition either imported from a `.vue` file or provided inline
 
 `Component.vue`:
 
@@ -316,7 +316,7 @@ type GlobalMountOptions = {
 }
 ```
 
-You can configure all the `global` options on both a per test basis and globally for all tests. [See here for how to configure project wide defaults](/api/#global-config-2).
+You can configure all the `global` options on both a per test basis and globally for all tests. [See here for how to configure project wide defaults](#global-config).
 
 #### global.components
 
@@ -406,7 +406,6 @@ directives?: Record<string, Directive>
 
 ```js
 import { mount } from '@vue/test-utils'
-import Component from './Component.vue'
 
 import Directive from '@/directives/Directive'
 
@@ -1057,12 +1056,13 @@ findAll(selector: string): DOMWrapper<Element>[]
 
 ```js
 import { mount } from '@vue/test-utils'
-import Component from './Component.vue'
+import BaseTable from './BaseTable.vue'
 
 test('findAll', () => {
-  const wrapper = mount(Component)
+  const wrapper = mount(BaseTable);
 
-  wrapper.findAll('[data-test="number"]') //=> found; returns array of DOMWrapper
+  // .findAll() returns an array of DOMWrappers
+  const thirdRow = wrapper.findAll('tr')[2];
 })
 ```
 
@@ -1142,6 +1142,20 @@ test('findComponent', () => {
   wrapper.findComponent(Foo)
 })
 ```
+
+**NOTE** `getComponent` and `findComponent` will not work on functional components, because they do not have an internal Vue instance (this is what makes functional components more performant). That means the following will **not** work:
+
+```js
+const Foo = () => h('div')
+
+const wrapper = mount(Foo)
+// doesn't work! You get a wrapper, but since there is not
+// associated Vue instance, you cannot use methods like
+// exists() and text()
+wrapper.findComponent(Foo) 
+```
+
+For tests using functional component, consider using `get` or `find` and treating them like standard DOM nodes.
 
 ### findAllComponents
 
@@ -1421,6 +1435,20 @@ test('props', () => {
   })
 })
 ```
+
+**NOTE** `getComponent` and `findComponent` will not work on functional components, because they do not have an internal Vue instance (this is what makes functional components more performant). That means the following will **not** work:
+
+```js
+const Foo = () => h('div')
+
+const wrapper = mount(Foo)
+// doesn't work! You get a wrapper, but since there is not
+// associated Vue instance, you cannot use methods like
+// exists() and text()
+wrapper.findComponent(Foo) 
+```
+
+For tests using functional component, consider using `get` or `find` and treating them like standard DOM nodes.
 
 :::tip
 As a rule of thumb, test against the effects of a passed prop (a DOM update, an emitted event, and so on). This will make tests more powerful than simply asserting that a prop is passed.
@@ -1789,7 +1817,7 @@ flushPromises(): Promise<unknown>
 
 **Details:**
 
-`flushPromises` flushes al resolved promise handlers. This helps make sure async operations such as promises or DOM updates have happened before asserting against them.
+`flushPromises` flushes all resolved promise handlers. This helps make sure async operations such as promises or DOM updates have happened before asserting against them.
 
 Check out [Making HTTP requests](../guide/advanced/http-requests.md) to see an example of `flushPromises` in action.
 
@@ -1814,7 +1842,7 @@ type GlobalMountOptions = {
 
 **Details:**
 
-Instead of configuring global mounting options on a per-test basis, you can configure them globally. These will be used by default every time you `mount` a component. You can then override the defaults by via mounting options.
+Instead of configuring global mounting options on a per-test basis, you can configure them globally. These will be used by default every time you `mount` a component. You can then override the defaults via mounting options.
 
 An example might be globally mocking the `$t` variable from vue-i18n, globally stubbing out a component, or any other global item:
 

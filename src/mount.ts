@@ -10,7 +10,6 @@ import {
   ComponentOptionsWithoutProps,
   ExtractPropTypes,
   WritableComputedOptions,
-  ComponentPropsOptions,
   AppConfig,
   VNodeProps,
   ComponentOptionsMixin,
@@ -18,36 +17,31 @@ import {
   MethodOptions,
   AllowedComponentProps,
   ComponentCustomProps,
-  ExtractDefaultPropTypes
+  ExtractDefaultPropTypes,
+  VNode,
+  EmitsOptions,
+  ComputedOptions,
+  ComponentPropsOptions,
+  ConcreteComponent
 } from 'vue'
 
-import { config } from './config'
 import { MountingOptions, Slot } from './types'
 import {
   isFunctionalComponent,
   isHTML,
   isObjectComponent,
-  mergeGlobalProperties
+  mergeGlobalProperties,
+  isObject
 } from './utils'
 import { processSlot } from './utils/compileSlots'
 import { createWrapper, VueWrapper } from './vueWrapper'
 import { attachEmitListener } from './emit'
 import { createDataMixin } from './dataMixin'
-import { MOUNT_COMPONENT_REF, MOUNT_PARENT_NAME } from './constants'
-import { createStub, stubComponents } from './stubs'
+import { createStub, stubComponents, addToDoNotStubComponents } from './stubs'
+import { isLegacyFunctionalComponent } from './utils/vueCompatSupport'
 
 // NOTE this should come from `vue`
 type PublicProps = VNodeProps & AllowedComponentProps & ComponentCustomProps
-
-export type ComputedOptions = Record<
-  string,
-  ((ctx?: any) => any) | WritableComputedOptions<any>
->
-export type ObjectEmitsOptions = Record<
-  string,
-  ((...args: any[]) => any) | null
->
-export type EmitsOptions = ObjectEmitsOptions | string[]
 
 // Class component - no props
 export function mount<V>(
@@ -228,18 +222,23 @@ export function mount(
   options?: MountingOptions<any>
 ): VueWrapper<any> {
   // normalise the incoming component
-  let component: DefineComponent
+  let component: ConcreteComponent
 
-  if (isFunctionalComponent(originalComponent)) {
+  if (
+    isFunctionalComponent(originalComponent) ||
+    isLegacyFunctionalComponent(originalComponent)
+  ) {
     component = defineComponent({
       setup: (_, { attrs, slots }) => () => h(originalComponent, attrs, slots)
     })
+    addToDoNotStubComponents(originalComponent)
   } else if (isObjectComponent(originalComponent)) {
     component = { ...originalComponent }
   } else {
     component = originalComponent
   }
 
+  addToDoNotStubComponents(component)
   const el = document.createElement('div')
 
   if (options?.attachTo) {
@@ -258,6 +257,37 @@ export function mount(
     to.appendChild(el)
   }
 
+  function slotToFunction(slot: Slot) {
+    if (typeof slot === 'object') {
+      if ('render' in slot && slot.render) {
+        return () => h(slot)
+      }
+
+      if ('template' in slot && slot.template) {
+        return () => h(slot, props)
+      }
+
+      return () => slot
+    }
+
+    if (typeof slot === 'function') {
+      return slot
+    }
+
+    if (typeof slot === 'string') {
+      // if it is HTML we process and render it using h
+      if (isHTML(slot)) {
+        return (props: VNodeProps) => h(processSlot(slot), props)
+      }
+      // otherwise it is just a string so we just return it as-is
+      else {
+        return () => slot
+      }
+    }
+
+    throw Error(`Invalid slot received.`)
+  }
+
   // handle any slots passed via mounting options
   const slots =
     options?.slots &&
@@ -266,33 +296,24 @@ export function mount(
         acc: { [key: string]: Function },
         [name, slot]: [string, Slot]
       ): { [key: string]: Function } => {
-        // case of an SFC getting passed
-        if (typeof slot === 'object' && 'render' in slot && slot.render) {
-          acc[name] = slot.render
+        if (Array.isArray(slot)) {
+          const normalized = slot.reduce<Array<Function | VNode>>(
+            (acc, curr) => {
+              const slotAsFn = slotToFunction(curr)
+              if (isObject(curr) && 'render' in curr) {
+                const rendered = h(slotAsFn as any)
+                return acc.concat(rendered)
+              }
+              return acc.concat(slotAsFn())
+            },
+            []
+          )
+          acc[name] = () => normalized
+
           return acc
         }
 
-        if (typeof slot === 'function') {
-          acc[name] = slot
-          return acc
-        }
-
-        if (typeof slot === 'object') {
-          acc[name] = () => slot
-          return acc
-        }
-
-        if (typeof slot === 'string') {
-          // if it is HTML we process and render it using h
-          if (isHTML(slot)) {
-            acc[name] = (props: VNodeProps) => h(processSlot(slot), props)
-          }
-          // otherwise it is just a string so we just return it as-is
-          else {
-            acc[name] = () => slot
-          }
-          return acc
-        }
+        acc[name] = slotToFunction(slot)
 
         return acc
       },
@@ -308,6 +329,7 @@ export function mount(
     ]
   }
 
+  const MOUNT_COMPONENT_REF = 'VTU_COMPONENT'
   // we define props as reactive so that way when we update them with `setProps`
   // Vue's reactivity system will cause a rerender.
   const props = reactive({
@@ -316,17 +338,30 @@ export function mount(
     ...options?.props,
     ref: MOUNT_COMPONENT_REF
   })
-
-  const global = mergeGlobalProperties(config.global, options?.global)
-  component.components = { ...component.components, ...global.components }
+  const global = mergeGlobalProperties(options?.global)
+  if (isObjectComponent(component)) {
+    component.components = { ...component.components, ...global.components }
+  }
 
   // create the wrapper component
   const Parent = defineComponent({
-    name: MOUNT_PARENT_NAME,
+    name: 'VTU_ROOT',
     render() {
+      // https://github.com/vuejs/vue-test-utils-next/issues/651
+      // script setup components include an empty `expose` array as part of the
+      // code generated by the SFC compiler. Eg a component might look like
+      // { expose: [], setup: [Function], render: [Function] }
+      // not sure why (yet), but the empty expose array causes events to not be
+      // correctly captured.
+      // TODO: figure out why this is happening and understand the implications of
+      // the expose rfc for Test Utils.
+      if (isObjectComponent(component)) {
+        delete component.expose
+      }
       return h(component, props, slots)
     }
   })
+  addToDoNotStubComponents(Parent)
 
   const setProps = (newProps: Record<string, unknown>) => {
     for (const [k, v] of Object.entries(newProps)) {
@@ -409,10 +444,7 @@ export function mount(
   // stubs
   // even if we are using `mount`, we will still
   // stub out Transition and Transition Group by default.
-  stubComponents(
-    global.stubs,
-    global.renderStubDefaultSlot ? false : options?.shallow
-  )
+  stubComponents(global.stubs, options?.shallow, global?.renderStubDefaultSlot)
 
   // users expect stubs to work with globally registered
   // components, too, such as <router-link> and <router-view>
@@ -424,7 +456,10 @@ export function mount(
   if (global?.stubs) {
     for (const [name, stub] of Object.entries(global.stubs)) {
       if (stub === true) {
-        const stubbed = createStub({ name, props: {} })
+        const stubbed = createStub({
+          name,
+          renderStubDefaultSlot: global?.renderStubDefaultSlot
+        })
         // default stub.
         app.component(name, stubbed)
       } else {

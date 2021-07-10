@@ -1,5 +1,6 @@
 import { GlobalMountOptions } from './types'
-import { AppConfig } from 'vue'
+import { ComponentOptions, ConcreteComponent, FunctionalComponent } from 'vue'
+import { config } from './config'
 
 function mergeStubs(target: Record<string, any>, source: GlobalMountOptions) {
   if (source.stubs) {
@@ -14,13 +15,17 @@ function mergeStubs(target: Record<string, any>, source: GlobalMountOptions) {
 }
 
 export function mergeGlobalProperties(
-  configGlobal: GlobalMountOptions = {},
   mountGlobal: GlobalMountOptions = {}
 ): Required<GlobalMountOptions> {
   const stubs: Record<string, any> = {}
-
+  const configGlobal: GlobalMountOptions = config?.global ?? {}
   mergeStubs(stubs, configGlobal)
   mergeStubs(stubs, mountGlobal)
+
+  const renderStubDefaultSlot =
+    mountGlobal.renderStubDefaultSlot ??
+    config?.renderStubDefaultSlot ??
+    configGlobal?.renderStubDefaultSlot
 
   return {
     mixins: [...(configGlobal.mixins || []), ...(mountGlobal.mixins || [])],
@@ -31,20 +36,18 @@ export function mergeGlobalProperties(
     mocks: { ...configGlobal.mocks, ...mountGlobal.mocks },
     config: { ...configGlobal.config, ...mountGlobal.config },
     directives: { ...configGlobal.directives, ...mountGlobal.directives },
-    renderStubDefaultSlot: !!(mountGlobal.renderStubDefaultSlot !== undefined
-      ? mountGlobal.renderStubDefaultSlot
-      : configGlobal.renderStubDefaultSlot)
+    renderStubDefaultSlot
   }
 }
+
+export const isObject = (obj: unknown): obj is Record<string, any> =>
+  !!obj && typeof obj === 'object'
 
 // https://stackoverflow.com/a/48218209
 export const mergeDeep = (
   target: Record<string, any>,
   source: Record<string, any>
 ) => {
-  const isObject = (obj: unknown): obj is Record<string, any> =>
-    !!obj && typeof obj === 'object'
-
   if (!isObject(target) || !isObject(source)) {
     return source
   }
@@ -65,22 +68,29 @@ export const mergeDeep = (
   return target
 }
 
-export function isClassComponent(component: any) {
-  // TypeScript
-  return (
-    component.toString().includes('_super.apply(this, arguments) || this') ||
-    // native ES6
-    (typeof component === 'function' &&
-      /^\s*class\s+/.test(component.toString()))
+export function isClassComponent(component: unknown) {
+  return typeof component === 'function' && '__vccOpts' in component
+}
+
+export function isComponent(
+  component: unknown
+): component is ConcreteComponent {
+  return Boolean(
+    component &&
+      (typeof component === 'object' || typeof component === 'function')
   )
 }
 
-export function isFunctionalComponent(component: any) {
+export function isFunctionalComponent(
+  component: unknown
+): component is FunctionalComponent {
   return typeof component === 'function' && !isClassComponent(component)
 }
 
-export function isObjectComponent(component: any) {
-  return typeof component !== 'function' && !isClassComponent(component)
+export function isObjectComponent(
+  component: unknown
+): component is ComponentOptions {
+  return Boolean(component && typeof component === 'object')
 }
 
 // https://stackoverflow.com/questions/15458876/check-if-a-string-is-html-or-not/15458987#answer-15458968
@@ -103,4 +113,11 @@ export function textContent(element: Element): string {
   return element.nodeType !== Node.COMMENT_NODE
     ? element.textContent?.trim() ?? ''
     : ''
+}
+
+export function hasOwnProperty<O extends {}, P extends PropertyKey>(
+  obj: O,
+  prop: P
+): obj is O & Record<P, unknown> {
+  return obj.hasOwnProperty(prop)
 }

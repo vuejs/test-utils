@@ -115,7 +115,7 @@ export default {
   data() {
     return {
       posts: null,
-      loading: false
+      loading: null
     }
   },
   methods: {
@@ -124,7 +124,7 @@ export default {
 
       this.posts = await axios.get('/api/posts')
 
-      this.loading = false
+      this.loading = null
     }
   }
 }

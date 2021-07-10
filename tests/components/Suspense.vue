@@ -9,26 +9,26 @@
     <template #fallback>
       <FallbackContent />
     </template>
-  </Suspense>  
+  </Suspense>
 </template>
 
 <script lang="ts">
-import { h, onErrorCaptured, ref } from 'vue'
+import { defineComponent, h, onErrorCaptured, ref } from 'vue'
 
 import { simulateDelay } from '../utils'
 
-const DefaultContent = {
+const DefaultContent = defineComponent({
   async setup() {
     await simulateDelay({ delayInMs: 100 })
     return {}
   },
   render() { return h('div', ['Default content', h('span', 'Nested default content')]) }
-}
-const FallbackContent = {
+})
+const FallbackContent = defineComponent({
   render() { return h('div', 'Fallback content') }
-}
+})
 
-export default {
+export default defineComponent({
   components: {
     DefaultContent,
     FallbackContent
@@ -44,5 +44,5 @@ export default {
 
     return { error }
   }
-}
+})
 </script>

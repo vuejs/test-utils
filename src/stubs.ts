@@ -8,38 +8,51 @@ import {
   ComponentOptions,
   defineComponent,
   VNodeProps,
-  VNodeTypes
+  VNodeTypes,
+  ConcreteComponent
 } from 'vue'
 import { hyphenate } from './utils/vueShared'
-import { MOUNT_COMPONENT_REF, MOUNT_PARENT_NAME } from './constants'
-import { config } from './config'
 import { matchName } from './utils/matchName'
+import { isComponent, isFunctionalComponent, isObjectComponent } from './utils'
 import { ComponentInternalInstance } from '@vue/runtime-core'
+import {
+  isLegacyExtendedComponent,
+  unwrapLegacyVueExtendComponent
+} from './utils/vueCompatSupport'
 
 interface StubOptions {
   name: string
   props?: any
   propsDeclaration?: any
+  renderStubDefaultSlot?: boolean
 }
 
-function getSlots(ctx: ComponentPublicInstance): Slots | undefined {
-  return !config.renderStubDefaultSlot ? undefined : ctx.$slots
-}
+const stubsMap: WeakMap<ConcreteComponent, VNodeTypes> = new WeakMap()
+
+export const getOriginalVNodeTypeFromStub = (
+  type: ConcreteComponent
+): VNodeTypes | undefined => stubsMap.get(type)
+
+const doNotStubComponents: WeakSet<ConcreteComponent> = new WeakSet()
+const shouldNotStub = (type: ConcreteComponent) => doNotStubComponents.has(type)
+export const addToDoNotStubComponents = (type: ConcreteComponent) =>
+  doNotStubComponents.add(type)
 
 export const createStub = ({
   name,
-  props,
-  propsDeclaration
+  propsDeclaration,
+  renderStubDefaultSlot
 }: StubOptions): ComponentOptions => {
   const anonName = 'anonymous-stub'
   const tag = name ? `${hyphenate(name)}-stub` : anonName
 
   const render = (ctx: ComponentPublicInstance) => {
-    return h(tag, props, getSlots(ctx))
+    return h(tag, ctx.$props, renderStubDefaultSlot ? ctx.$slots : undefined)
   }
 
   return defineComponent({
     name: name || anonName,
+    compatConfig: { MODE: 3, RENDER_FUNCTION: false },
     render,
     props: propsDeclaration
   })
@@ -53,7 +66,12 @@ const createTransitionStub = ({
     return h(name, {}, ctx.$slots)
   }
 
-  return defineComponent({ name, render, props })
+  return defineComponent({
+    name,
+    compatConfig: { MODE: 3, RENDER_FUNCTION: false },
+    render,
+    props
+  })
 }
 
 const resolveComponentStubByName = (
@@ -92,28 +110,28 @@ const getComponentRegisteredName = (
   return null
 }
 
-const isHTMLElement = (type: VNodeTypes) => typeof type === 'string'
+const getComponentName = (type: VNodeTypes): string => {
+  if (isObjectComponent(type)) {
+    return type.name || ''
+  }
 
-const isCommentOrFragment = (type: VNodeTypes) => typeof type === 'symbol'
+  if (isLegacyExtendedComponent(type)) {
+    return unwrapLegacyVueExtendComponent(type).name || ''
+  }
 
-const isParent = (type: VNodeTypes) =>
-  isComponent(type) && type['name'] === MOUNT_PARENT_NAME
+  if (isFunctionalComponent(type)) {
+    return type.displayName || type.name
+  }
 
-const isMountedComponent = (
-  type: VNodeTypes,
-  props: ({ [key: string]: unknown } & VNodeProps) | null | undefined
-) => isComponent(type) && props && props['ref'] === MOUNT_COMPONENT_REF
-
-const isComponent = (type: VNodeTypes): type is ComponentOptions =>
-  typeof type === 'object'
-
-const isFunctionalComponent = (type: VNodeTypes): type is ComponentOptions =>
-  typeof type === 'function' && ('name' in type || 'displayName' in type)
+  return ''
+}
 
 export function stubComponents(
   stubs: Record<any, any> = {},
-  shallow: boolean = false
+  shallow: boolean = false,
+  renderStubDefaultSlot: boolean = false
 ) {
+  const components: Record<string, ComponentOptions> = {}
   transformVNodeArgs((args, instance: ComponentInternalInstance | null) => {
     const [nodeType, props, children, patchFlag, dynamicProps] = args
     const type = nodeType as VNodeTypes
@@ -142,27 +160,13 @@ export function stubComponents(
       ]
     }
 
-    // args[0] can either be:
-    // 1. a HTML tag (div, span...)
-    // 2. An object of component options, such as { name: 'foo', render: [Function], props: {...} }
-    // Depending what it is, we do different things.
-    if (
-      isHTMLElement(type) ||
-      isCommentOrFragment(type) ||
-      isParent(type) ||
-      isMountedComponent(type, props)
-    ) {
-      return args
-    }
-
     if (isComponent(type) || isFunctionalComponent(type)) {
-      const registeredName = getComponentRegisteredName(instance, type)
-      const componentName = type['name'] || type['displayName']
-
-      // No name found?
-      if (!registeredName && !componentName) {
-        return shallow ? ['stub'] : args
+      if (shouldNotStub(type)) {
+        return args
       }
+
+      const registeredName = getComponentRegisteredName(instance, type)
+      const componentName = getComponentName(type)
 
       let stub = null
       let name = null
@@ -184,9 +188,22 @@ export function stubComponents(
       }
 
       // case 2: custom implementation
-      if (stub && typeof stub === 'object') {
+      if (isComponent(stub)) {
+        const stubFn = isFunctionalComponent(stub) ? stub : null
+
+        const specializedStub: ConcreteComponent = stubFn
+          ? (...args) => stubFn(...args)
+          : { ...stub }
+
+        specializedStub.props = stub.props
+        stubsMap.set(specializedStub, type)
         // pass the props and children, for advanced stubbing
-        return [stubs[name], props, children, patchFlag, dynamicProps]
+        return [specializedStub, props, children, patchFlag, dynamicProps]
+      }
+
+      if (stub === false) {
+        // we explicitly opt out of stubbing this component
+        return args
       }
 
       // we return a stub by matching Vue's `h` function
@@ -198,13 +215,26 @@ export function stubComponents(
           name = registeredName || componentName
         }
 
-        const propsDeclaration = type?.props || {}
-        const newStub = createStub({ name, propsDeclaration, props })
-        stubs[name] = newStub
+        if (!isComponent(type)) {
+          throw new Error('Attempted to stub a non-component')
+        }
+
+        const propsDeclaration = type.props || {}
+        let newStub = components[name]
+        if (!newStub) {
+          newStub = createStub({
+            name,
+            propsDeclaration,
+            renderStubDefaultSlot
+          })
+          components[name] = newStub
+          stubsMap.set(newStub, type)
+        }
         return [newStub, props, children, patchFlag, dynamicProps]
       }
     }
 
+    // do not stub anything what is not a component
     return args
   })
 }

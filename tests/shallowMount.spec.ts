@@ -71,6 +71,41 @@ describe('shallowMount', () => {
     )
   })
 
+  it('correctly renders slot content', () => {
+    const ComponentWithSlot = defineComponent({
+      template: '<div><slot></slot></div>'
+    })
+
+    const wrapper = shallowMount(ComponentWithSlot, {
+      slots: {
+        default: '<span class="slot-content">test</span>'
+      }
+    })
+    expect(wrapper.find('.slot-content').exists()).toBe(true)
+  })
+
+  it('correctly stubs components inside slot', () => {
+    const ComponentWithSlot = defineComponent({
+      template: '<div><slot></slot></div>'
+    })
+
+    const Foo = defineComponent({
+      name: 'Foo',
+      template: '<div class="unstubbed-foo">OK</div>'
+    })
+
+    const wrapper = shallowMount(ComponentWithSlot, {
+      global: {
+        components: { Foo }
+      },
+      slots: {
+        default: '<Foo />'
+      }
+    })
+
+    expect(wrapper.find('.unstubbed-foo').exists()).toBe(false)
+  })
+
   it('stubs all components, but allows providing custom stub', () => {
     const wrapper = mount(ComponentWithChildren, {
       shallow: true,
@@ -91,6 +126,28 @@ describe('shallowMount', () => {
     )
   })
 
+  it('stubs all components, but allows disabling stub by passing false', () => {
+    const wrapper = mount(ComponentWithChildren, {
+      shallow: true,
+      global: {
+        stubs: {
+          Hello: false
+        }
+      }
+    })
+    expect(wrapper.html()).toEqual(
+      '<div class="ComponentWithChildren">\n' +
+        '  <div id="root">\n' +
+        '    <div id="msg">Hello world</div>\n' +
+        '  </div>\n' +
+        '  <component-with-input-stub></component-with-input-stub>\n' +
+        '  <component-without-name-stub></component-without-name-stub>\n' +
+        '  <script-setup-stub></script-setup-stub>\n' +
+        '  <with-props-stub></with-props-stub>\n' +
+        '</div>'
+    )
+  })
+
   it('stubs all components in a script setup component', () => {
     const wrapper = mount(ScriptSetupWithChildren, {
       shallow: true,
@@ -103,9 +160,39 @@ describe('shallowMount', () => {
     expect(wrapper.html()).toEqual(
       '<div>Override</div>\n' +
         '<component-with-input-stub></component-with-input-stub>\n' +
-        '<stub></stub>\n' +
-        '<stub></stub>\n' +
+        '<anonymous-stub></anonymous-stub>\n' +
+        '<anonymous-stub></anonymous-stub>\n' +
         '<with-props-stub></with-props-stub>'
+    )
+  })
+
+  it('should render stubs correctly', () => {
+    const ComponentToMount = defineComponent({
+      template: `<div>
+        <test-component class='component 1' />
+        <test-component class='component 2' />
+      </div>`
+    })
+
+    const TestComponent = defineComponent({
+      template: `<div>
+        this is just a test component
+      </div>`
+    })
+
+    const wrapper = shallowMount(ComponentToMount, {
+      global: {
+        components: {
+          TestComponent
+        }
+      }
+    })
+
+    expect(wrapper.html()).toBe(
+      '<div>\n' +
+        '  <test-component-stub class="component 1"></test-component-stub>\n' +
+        '  <test-component-stub class="component 2"></test-component-stub>\n' +
+        '</div>'
     )
   })
 })

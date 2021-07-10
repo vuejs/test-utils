@@ -42,7 +42,7 @@ To see Vue Test Utils in action, [take the Crash Course](../guide/essentials/a-c
 
 Docs are split into two main sections:
 
-- **Essentials**, to cover common uses cases you'll face when testing Vue components.
+- **Essentials**, to cover common use cases you'll face when testing Vue components.
 - **Vue Test Utils in Depth**, to explore other advanced features of the library.
 
 You can also explore the full [API](../api/).

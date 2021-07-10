@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import Hello from './Hello'
-import ComponentWithInput from './ComponentWithInput'
-import ComponentWithoutName from './ComponentWithoutName'
-import ScriptSetup from './ScriptSetup'
-import WithProps from './WithProps'
+import Hello from './Hello.vue'
+import ComponentWithInput from './ComponentWithInput.vue'
+import ComponentWithoutName from './ComponentWithoutName.vue'
+import ScriptSetup from './ScriptSetup.vue'
+import WithProps from './WithProps.vue'
 </script>
 
 <template>

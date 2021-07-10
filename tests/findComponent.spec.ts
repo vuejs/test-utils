@@ -111,6 +111,51 @@ describe('findComponent', () => {
     expect(wrapper.findComponent(ComponentWithoutName).exists()).toBe(true)
   })
 
+  it('finds a component by its definition with shallow', () => {
+    const Component = {
+      template: '<div><other-name /></div>',
+      components: {
+        OtherName: Hello
+      }
+    }
+    const wrapper = mount(Component, { shallow: true })
+    expect(wrapper.findComponent(Hello).exists()).toBe(true)
+  })
+
+  it('finds a component by its definition when using stub without name', () => {
+    const StubWithoutName = {
+      template: '<div>stub-without-name</div>'
+    }
+
+    const Component = {
+      template: '<div><other-name /></div>',
+      components: {
+        OtherName: Hello
+      }
+    }
+
+    const wrapper = mount(Component, {
+      global: { stubs: { Hello: StubWithoutName } }
+    })
+    expect(wrapper.findComponent(Hello).exists()).toBe(true)
+  })
+
+  it('finds a component by its definition when stub is reused', () => {
+    const reusedStub = { template: '<div>universal stub</div>' }
+
+    const wrapper = mount(compA, {
+      global: {
+        stubs: {
+          Hello: reusedStub,
+          compB: reusedStub
+        }
+      }
+    })
+
+    expect(wrapper.findComponent(Hello).exists()).toBe(true)
+    expect(wrapper.findComponent(compB).exists()).toBe(true)
+  })
+
   it('finds a component without a name by its locally assigned name', () => {
     const Component = {
       template: '<div><component-without-name/></div>',

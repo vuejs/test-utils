@@ -1,7 +1,8 @@
-import { h } from 'vue'
+import { defineComponent, h } from 'vue'
 
-import { mount } from '../../src'
+import { flushPromises, mount } from '../../src'
 import Hello from '../components/Hello.vue'
+import WithProps from '../components/WithProps.vue'
 import ComponentWithSlots from '../components/ComponentWithSlots.vue'
 
 describe('slots', () => {
@@ -51,6 +52,22 @@ describe('slots', () => {
       )
     })
 
+    it('supports providing an object with template to slot', () => {
+      const wrapper = mount(ComponentWithSlots, {
+        slots: {
+          default: { template: '<span>Default</span>' },
+          named: { template: '<span>Named</span>' }
+        }
+      })
+
+      expect(wrapper.find('.default').html()).toEqual(
+        '<div class="default"><span>Default</span></div>'
+      )
+      expect(wrapper.find('.named').html()).toEqual(
+        '<div class="named"><span>Named</span></div>'
+      )
+    })
+
     it('does not render slots that do not exist', () => {
       const wrapper = mount(ComponentWithSlots, {
         slots: {
@@ -72,7 +89,7 @@ describe('slots', () => {
         '' +
           '<div class="named">' +
           '<div id="root">' +
-          '<div id="msg"></div>' +
+          '<div id="msg">Hello world</div>' +
           '</div>' +
           '</div>'
       )
@@ -164,5 +181,66 @@ describe('slots', () => {
 
       expect(wrapper.find('.scoped').text()).toEqual('Just a plain true string')
     })
+  })
+
+  it('supports an array of components', () => {
+    const DivWithDefaultSlot = {
+      template: `<div><slot /></div>`
+    }
+
+    const wrapper = mount(DivWithDefaultSlot, {
+      slots: {
+        default: [
+          'plain string slot',
+          '<p class="foo">foo</p>',
+          Hello,
+          h('span', {}, 'Default'),
+          h(WithProps, { msg: 'props-msg' })
+        ]
+      }
+    })
+
+    expect(wrapper.find('#msg').exists()).toBe(true)
+    expect(wrapper.text().includes('plain string slot')).toBe(true)
+    expect(wrapper.find('.foo').exists()).toBe(true)
+    expect(wrapper.find('span').text()).toBe('Default')
+    expect(wrapper.find('#with-props').text()).toBe('props-msg')
+  })
+
+  it('triggers child component lifecycles', async () => {
+    const parentMounted = jest.fn()
+    const childMounted = jest.fn()
+
+    const Parent = defineComponent({
+      mounted() {
+        parentMounted()
+      },
+      render() {
+        return h(this.$slots.default!)
+      }
+    })
+
+    const Child = defineComponent({
+      render() {
+        return h('span')
+      },
+      mounted() {
+        childMounted()
+      }
+    })
+
+    const wrapper = mount(Parent, {
+      global: {
+        components: { Child }
+      },
+      slots: {
+        default: Child
+      }
+    })
+
+    await flushPromises()
+
+    expect(parentMounted).toHaveBeenCalled()
+    expect(childMounted).toHaveBeenCalled()
   })
 })

@@ -119,7 +119,7 @@ describe('mounting options: stubs', () => {
 
     expect(wrapper.html()).toEqual(
       '<div>\n' +
-        '  <foo-stub class="bar" test-id="foo" dynamic="[object Object]"></foo-stub>\n' +
+        '  <foo-stub dynamic="[object Object]" class="bar" test-id="foo"></foo-stub>\n' +
         '</div>'
     )
   })
@@ -209,6 +209,32 @@ describe('mounting options: stubs', () => {
     })
 
     expect(onBeforeMount).toHaveBeenCalled()
+    expect(wrapper.html()).toBe('<div>foo stub</div>')
+  })
+
+  it('uses functional component as a custom stub', () => {
+    const FooStub = () => h('div', 'foo stub')
+    const Foo = {
+      name: 'Foo',
+      render() {
+        return h('div', 'real foo')
+      }
+    }
+
+    const Comp = {
+      render() {
+        return h(Foo)
+      }
+    }
+
+    const wrapper = mount(Comp, {
+      global: {
+        stubs: {
+          Foo: FooStub
+        }
+      }
+    })
+
     expect(wrapper.html()).toBe('<div>foo stub</div>')
   })
 
@@ -643,5 +669,29 @@ describe('mounting options: stubs', () => {
           '</component-with-slots-stub>'
       )
     })
+  })
+
+  it('renders stub for anonymous component when using shallow mount', () => {
+    const AnonymousComponent = defineComponent({
+      template: `<div class="original"><slot></slot></div>`
+    })
+
+    const WrapperComponent = defineComponent({
+      computed: {
+        cmp() {
+          return AnonymousComponent
+        }
+      },
+      template: `<component :is="cmp">test</component>`
+    })
+
+    const wrapper = mount(WrapperComponent, {
+      shallow: true,
+      global: {
+        renderStubDefaultSlot: true
+      }
+    })
+
+    expect(wrapper.html()).toBe('<anonymous-stub>test</anonymous-stub>')
   })
 })

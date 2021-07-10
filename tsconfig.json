@@ -5,10 +5,12 @@
     "module": "esnext",
     "lib": ["DOM", "ES2015", "ES2017"],
     "strict": true,
+    "jsx": "preserve",
     "moduleResolution": "node",
     "esModuleInterop": true,
     "experimentalDecorators": true,
     "allowSyntheticDefaultImports": true,
+    "allowJs": true,
     "baseUrl": ".",
     "paths": {
       "vue": [
