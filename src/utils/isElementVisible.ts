@@ -15,7 +15,11 @@ function isStyleVisible<T extends Element>(element: T) {
     display !== 'none' &&
     visibility !== 'hidden' &&
     visibility !== 'collapse' &&
-    opacity !== '0'
+    opacity !== '0' &&
+    element.style.display !== 'none' &&
+    element.style.visibility !== 'none' &&
+    element.style.visibility !== 'none' &&
+    element.style.opacity !== '0'
   )
 }
 
