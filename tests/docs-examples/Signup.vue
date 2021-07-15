@@ -6,25 +6,20 @@
   </div>
 </template>
 
-<script>
-export default {
+<script lang="ts">
+import { computed, defineComponent, ref } from 'vue'
+
+export default defineComponent({
   emits: ['signup'],
-  data() {
-    return {
-      username: ''
-    }
-  },
-  computed: {
-    error() {
-      return this.username.length < 8
-    }
-  },
-  methods: {
-    submit() {
-      if (!this.error) {
-        this.$emit('signup', this.username)
+  setup(props, { emit }) {
+    const username = ref('')
+    const error = computed(() => username.value.length < 8)
+    function submit() {
+      if (!error.value) {
+        emit('signup', username.value)
       }
     }
+    return { username, submit }
   }
-}
+})
 </script>
