@@ -114,7 +114,7 @@ describe('slots', () => {
       })
 
       expect(wrapper.find('.scoped').text()).toEqual(
-        '{"boolean":true,"string":"string","object":{"foo":"foo"}}'
+        '{"aBoolean":true,"aString":"string","anObject":{"foo":"foo"}}'
       )
     })
 
@@ -132,16 +132,16 @@ describe('slots', () => {
       })
 
       expect(assertParams).toEqual({
-        boolean: true,
-        string: 'string',
-        object: { foo: 'foo' }
+        aBoolean: true,
+        aString: 'string',
+        anObject: { foo: 'foo' }
       })
     })
 
     it('allows passing a scoped slot via string with no destructuring using the # syntax', () => {
       const wrapper = mount(ComponentWithSlots, {
         slots: {
-          scoped: `<template #scoped="params"><div>Just a plain {{ params.boolean }} {{ params.string }}</div></template>`
+          scoped: `<template #scoped="params"><div>Just a plain {{ params.aBoolean }} {{ params.aString }}</div></template>`
         }
       })
 
@@ -151,7 +151,7 @@ describe('slots', () => {
     it('allows passing a scoped slot via a string with destructuring using the # syntax', () => {
       const wrapper = mount(ComponentWithSlots, {
         slots: {
-          scoped: `<template #scoped="{string, boolean}"><div>Just a plain {{ boolean }} {{ string }}</div></template>`
+          scoped: `<template #scoped="{aString, aBoolean}"><div>Just a plain {{ aBoolean }} {{ aString }}</div></template>`
         }
       })
 
@@ -164,7 +164,7 @@ describe('slots', () => {
       const wrapper = mount(ComponentWithSlots, {
         slots: {
           scoped: `
-            <template v-slot:scoped="params"><div>Just a plain {{ params.boolean }} {{ params.string }}</div></template>
+            <template v-slot:scoped="params"><div>Just a plain {{ params.aBoolean }} {{ params.aString }}</div></template>
           `
         }
       })
@@ -175,7 +175,7 @@ describe('slots', () => {
     it('allows passing a scoped slot via string with no destructuring without template tag', () => {
       const wrapper = mount(ComponentWithSlots, {
         slots: {
-          scoped: `<div>Just a plain {{ params.boolean }} {{ params.string }}</div>`
+          scoped: `<div>Just a plain {{ params.aBoolean }} {{ params.aString }}</div>`
         }
       })
 
