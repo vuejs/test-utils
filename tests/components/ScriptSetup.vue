@@ -6,7 +6,9 @@ import Hello from './Hello.vue'
 // write Composition API code just like in a normal setup()
 // but no need to manually return everything
 const count = ref(0)
-const inc = () => { count.value++ }
+const inc = () => {
+  count.value++
+}
 </script>
 
 <template>

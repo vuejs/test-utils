@@ -22,10 +22,14 @@ const DefaultContent = defineComponent({
     await simulateDelay({ delayInMs: 100 })
     return {}
   },
-  render() { return h('div', ['Default content', h('span', 'Nested default content')]) }
+  render() {
+    return h('div', ['Default content', h('span', 'Nested default content')])
+  }
 })
 const FallbackContent = defineComponent({
-  render() { return h('div', 'Fallback content') }
+  render() {
+    return h('div', 'Fallback content')
+  }
 })
 
 export default defineComponent({

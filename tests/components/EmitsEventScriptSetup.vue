@@ -3,9 +3,9 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, defineEmit } from 'vue';
+import { onMounted, defineEmit } from 'vue'
 
-const emit = defineEmit(['bar']);
+const emit = defineEmit(['bar'])
 
 const click = () => emit('bar', 'click')
 

@@ -14,9 +14,7 @@
     </div>
     <div class="scopedWithDefault">
       <slot name="scopedWithDefault" v-bind="{ boolean, string, object }">
-        boolean: {{ boolean }}
-        string: {{ string }}
-        object: {{ object }}
+        boolean: {{ boolean }} string: {{ string }} object: {{ object }}
       </slot>
     </div>
     <slot />
@@ -29,7 +27,7 @@
 <script>
 export default {
   name: 'ComponentWithSlots',
-  data () {
+  data() {
     return {
       boolean: true,
       string: 'string',

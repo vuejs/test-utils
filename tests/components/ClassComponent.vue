@@ -16,7 +16,7 @@ import { Options, Vue } from 'vue-class-component'
 })
 export default class ClassComponent extends Vue {
   dataText: string = ''
-  msg!: string; // declared for type-checking
+  msg!: string // declared for type-checking
   get computedMsg(): string {
     return `Message: ${(this.$props as any).msg}`
   }

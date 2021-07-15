@@ -1,9 +1,7 @@
 <template>
   <div>
     <RouterLink class="link" :to="{ name: name }">
-      <slot>
-        A test link
-      </slot>
+      <slot> A test link </slot>
     </RouterLink>
   </div>
 </template>
@@ -16,6 +14,6 @@ export default {
       type: String,
       required: true
     }
-  },
+  }
 }
 </script>
