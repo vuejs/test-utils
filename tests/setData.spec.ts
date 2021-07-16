@@ -165,4 +165,25 @@ describe('setData', () => {
     expect(wrapper.vm.field).toEqual(10)
     expect(wrapper.vm.isFieldNull).toBe(false)
   })
+
+  it('overwrites array with new value', async () => {
+    const Comp = {
+      template: `
+        <div>{{state.items.join(",")}}</div>
+      `,
+      data() {
+        return {
+          state: {
+            items: ['1']
+          }
+        }
+      }
+    }
+
+    const wrapper = mount(Comp)
+    expect(wrapper.html()).toMatchInlineSnapshot(`"<div>1</div>"`)
+
+    await wrapper.setData({ state: { items: ['2', '3'] } })
+    expect(wrapper.html()).toMatchInlineSnapshot(`"<div>2,3</div>"`)
+  })
 })
