@@ -130,4 +130,17 @@ describe('@vue/compat build', () => {
 
     expect(wrapper.html()).toBe('<div>stubbed</div>')
   })
+
+  it('wrapper.vm points to correct instance when component is wrapped with Vue.extend', () => {
+    const Component = extend({
+      data() {
+        return { foo: 'bar' }
+      },
+      template: '<div></div>'
+    })
+
+    const wrapper = mount(Component)
+
+    expect(wrapper.vm.foo).toBe('bar')
+  })
 })

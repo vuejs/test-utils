@@ -9,7 +9,6 @@ import {
   ComponentOptionsWithArrayProps,
   ComponentOptionsWithoutProps,
   ExtractPropTypes,
-  WritableComputedOptions,
   AppConfig,
   VNodeProps,
   ComponentOptionsMixin,
@@ -38,7 +37,10 @@ import { createWrapper, VueWrapper } from './vueWrapper'
 import { attachEmitListener } from './emit'
 import { createDataMixin } from './dataMixin'
 import { createStub, stubComponents, addToDoNotStubComponents } from './stubs'
-import { isLegacyFunctionalComponent } from './utils/vueCompatSupport'
+import {
+  isLegacyFunctionalComponent,
+  unwrapLegacyVueExtendComponent
+} from './utils/vueCompatSupport'
 
 // NOTE this should come from `vue`
 type PublicProps = VNodeProps & AllowedComponentProps & ComponentCustomProps
@@ -218,10 +220,11 @@ export function mount<
 
 // implementation
 export function mount(
-  originalComponent: any,
+  inputComponent: any,
   options?: MountingOptions<any>
 ): VueWrapper<any> {
   // normalise the incoming component
+  let originalComponent = unwrapLegacyVueExtendComponent(inputComponent)
   let component: ConcreteComponent
 
   if (
