@@ -125,4 +125,4 @@ config.plugins.VueWrapper.install(DataTestIdPlugin)
 ## Featuring Your Plugin
 
 If you're missing functionality, consider writing a plugin to extend Vue Test
-Utils and submit it to be featured at [Vue Community Guide](https://vue-community.org/v2/guide/ecosystem/testing.html) or [awesome-vue](https://github.com/vuejs/awesome-vue#test).
+Utils and submit it to be featured at [Vue Community Guide](https://vue-community.org/guide/ecosystem/testing.html) or [awesome-vue](https://github.com/vuejs/awesome-vue#test).
