@@ -229,7 +229,10 @@ export function mount(
     isLegacyFunctionalComponent(originalComponent)
   ) {
     component = defineComponent({
-      setup: (_, { attrs, slots }) => () => h(originalComponent, attrs, slots)
+      setup:
+        (_, { attrs, slots }) =>
+        () =>
+          h(originalComponent, attrs, slots)
     })
     addToDoNotStubComponents(originalComponent)
   } else if (isObjectComponent(originalComponent)) {

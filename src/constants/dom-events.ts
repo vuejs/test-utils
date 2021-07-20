@@ -62,7 +62,14 @@ export interface DomEvent {
 
 export type DomEventName = keyof typeof domEvents
 
-export const ignorableKeyModifiers = ['stop', 'prevent', 'self', 'exact', 'prevent', 'capture']
+export const ignorableKeyModifiers = [
+  'stop',
+  'prevent',
+  'self',
+  'exact',
+  'prevent',
+  'capture'
+]
 export const systemKeyModifiers = ['ctrl', 'shift', 'alt', 'meta'] as const
 export const mouseKeyModifiers = ['left', 'middle', 'right'] as const
 
@@ -95,7 +102,9 @@ export type DomEventNameWithModifier =
   | `click.${typeof mouseKeyModifiers[number]}`
   | `click.${typeof systemKeyModifiers[number]}.${typeof mouseKeyModifiers[number]}`
   | `${'keydown' | 'keyup'}.${keyof typeof keyCodesByKeyName}`
-  | `${'keydown' | 'keyup'}.${typeof systemKeyModifiers[number]}.${keyof typeof keyCodesByKeyName}`
+  | `${
+      | 'keydown'
+      | 'keyup'}.${typeof systemKeyModifiers[number]}.${keyof typeof keyCodesByKeyName}`
 
 const domEvents = {
   abort: {

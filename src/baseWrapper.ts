@@ -2,10 +2,7 @@ import { textContent } from './utils'
 import type { TriggerOptions } from './createDomEvent'
 import { nextTick } from 'vue'
 import { createDOMEvent } from './createDomEvent'
-import {
-  DomEventName,
-  DomEventNameWithModifier
-} from './constants/dom-events'
+import { DomEventName, DomEventNameWithModifier } from './constants/dom-events'
 
 export default class BaseWrapper<ElementType extends Element> {
   private readonly wrapperElement: ElementType
