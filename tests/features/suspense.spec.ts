@@ -17,13 +17,11 @@ describe('suspense', () => {
     expect(wrapper.html()).toContain('Fallback content')
   })
 
-  test('default state', async (done) => {
+  test('default state', async () => {
     const wrapper = mount(SuspenseComponent)
 
-    setTimeout(() => {
-      expect(wrapper.html()).toContain('Default content')
-      done()
-    }, 150)
+    await flushPromises()
+    expect(wrapper.html()).toContain('Default content')
   })
 
   test('error state', async () => {
