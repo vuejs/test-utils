@@ -52,11 +52,11 @@ describe('defineAsyncComponent', () => {
     })
 
     const wrapper = mount(Comp, { global: { config } })
-    jest.runTimersToTime(35)
+    jest.advanceTimersByTime(35)
     await flushPromises()
     expect(wrapper.html()).toContain('Loading Component')
 
-    jest.runTimersToTime(100)
+    jest.advanceTimersByTime(100)
     await flushPromises()
     expect(wrapper.html()).toContain('Async Component')
   })
