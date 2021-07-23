@@ -143,7 +143,7 @@ const wrapper = mount(App, {
 }
 ```
 
-### `shallowMount` and `renderDefaultStubSlot`
+### `shallowMount` and `renderStubDefaultSlot`
 
 `shallowMount` is intended to stub out any custom components. While this was the case in Vue Test Utils v1, stubbed components would still render their default `<slot />`. While this was unintended, some users came to enjoy this feature. This behavior is corrected in v2 - **the slot content for a stubbed component is not rendered**.
 
