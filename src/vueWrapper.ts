@@ -4,7 +4,7 @@ import { ShapeFlags } from '@vue/shared'
 import pretty from 'pretty'
 
 import { config } from './config'
-import domEvents from './constants/dom-event-types'
+import domEvents from './constants/dom-events'
 import { DOMWrapper } from './domWrapper'
 import {
   FindAllComponentsSelector,

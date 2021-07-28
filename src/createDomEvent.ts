@@ -1,36 +1,14 @@
 import domEvents, {
   DomEvent,
   DomEventName,
-  EventInterface
-} from './constants/dom-event-types'
-
-const keyCodesByKeyName = {
-  backspace: 8,
-  tab: 9,
-  enter: 13,
-  esc: 27,
-  space: 32,
-  pageup: 33,
-  pagedown: 34,
-  end: 35,
-  home: 36,
-  left: 37,
-  up: 38,
-  right: 39,
-  down: 40,
-  insert: 45,
-  delete: 46
-} as const
-
-// modifiers to keep an eye on
-const ignorableKeyModifiers = ['stop', 'prevent', 'self', 'exact']
-const systemKeyModifiers = ['ctrl', 'shift', 'alt', 'meta'] as const
-const mouseKeyModifiers = ['left', 'middle', 'right'] as const
-
-type KeyName = keyof typeof keyCodesByKeyName
-type Modifier =
-  | typeof systemKeyModifiers[number]
-  | typeof mouseKeyModifiers[number]
+  DomEventNameWithModifier,
+  KeyName,
+  Modifier,
+  ignorableKeyModifiers,
+  systemKeyModifiers,
+  mouseKeyModifiers,
+  keyCodesByKeyName
+} from './constants/dom-events'
 
 interface TriggerOptions {
   code?: String
@@ -40,7 +18,7 @@ interface TriggerOptions {
 }
 
 interface EventParams {
-  eventType: DomEventName | string
+  eventType: DomEventName
   modifiers: KeyName[]
   options?: TriggerOptions
 }
@@ -104,7 +82,7 @@ function getEventProperties(eventParams: EventParams) {
     }
   }
 
-  const meta: DomEvent = domEvents[eventType as DomEventName] || {
+  const meta: DomEvent = domEvents[eventType] || {
     eventInterface: 'Event',
     cancelable: true,
     bubbles: true
@@ -163,14 +141,14 @@ function createEvent(eventParams: EventParams) {
 }
 
 function createDOMEvent(
-  eventString: DomEventName | string,
+  eventString: DomEventNameWithModifier | string,
   options?: TriggerOptions
 ) {
-  // split eventString like `keydown.ctrl.shift.c` into `keydown` and array of modifiers
+  // split eventString like `keydown.ctrl.shift` into `keydown` and array of modifiers
   const [eventType, ...modifiers] = eventString.split('.')
 
   const eventParams: EventParams = {
-    eventType,
+    eventType: eventType as DomEventName,
     modifiers: modifiers as KeyName[],
     options
   }
