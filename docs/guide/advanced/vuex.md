@@ -2,11 +2,11 @@
 
 Vuex is just an implementation detail; no special treatment is required for testing components using Vuex. That said, there are some techniques that might make your tests easier to read and write. We will look at those here.
 
-This guide you assumed you are familiar with Vuex. Vuex 4 is the version that works with Vue.js 3. Read the docs [here](https://vuex.vuejs.org/).
+This guide assumes you are familiar with Vuex. Vuex 4 is the version that works with Vue.js 3. Read the docs [here](https://vuex.vuejs.org/).
 
 ## A Simple Example
 
-Here is a simple Vuex store, and a component that relies on a Vuex store been present:
+Here is a simple Vuex store, and a component that relies on a Vuex store being present:
 
 ```js
 import { createStore } from 'vuex'
@@ -50,7 +50,7 @@ const App = {
 
 ## Testing with a Real Vuex Store
 
-To full test this component (and the Vuex store) are working, we will click on the `<button>` and assert the count is increased. In your Vue applications, usually in `main.js`, you install Vuex like this:
+To fully test that this component and the Vuex store are working, we will click on the `<button>` and assert the count is increased. In your Vue applications, usually in `main.js`, you install Vuex like this:
 
 ```js
 const app = createApp(App)
@@ -119,13 +119,13 @@ test('vuex using a mock store', async () => {
 })
 ```
 
-Instead of using a real Vuex store and installing it via `global.plugins`, we created our own mock store, only implementing the parts of Vuex used in the component (in this case, the `state` and `commit` function).
+Instead of using a real Vuex store and installing it via `global.plugins`, we created our own mock store, only implementing the parts of Vuex used in the component (in this case, the `state` and `commit` functions).
 
 While it might seem convenient to test the store in isolation, notice that it won't give you any warning if you break your Vuex store. Consider carefully if you want to mock the Vuex store, or use a real one, and understand the trade-offs.
 
 ## Testing Vuex in Isolation
 
-You may want to test your Vuex mutations or actions in total isolation, especially if they are complex. You don't need Vue Test Utils for this, since a Vuex store is just regular JavaScript. Here's how you might test `increment` mutation without Vue Test Utils:
+You may want to test your Vuex mutations or actions in total isolation, especially if they are complex. You don't need Vue Test Utils for this, since a Vuex store is just regular JavaScript. Here's how you might test the `increment` mutation without Vue Test Utils:
 
 ```js
 test('increment mutation', () => {
@@ -148,7 +148,7 @@ test('increment mutation', () => {
 
 ## Presetting the Vuex State
 
-Sometimes it can be useful to have the Vuex store in a specific state for a test. One useful technique you can use, other that `global.mocks`, is to create a function that wraps `createStore` and takes an argument to seed the initial state. In this example we extend `increment` to take an additional argument, which will be added on to the `state.count`. If that is not provided, we just increment `state.count` by 1.
+Sometimes it can be useful to have the Vuex store in a specific state for a test. One useful technique you can use, other than `global.mocks`, is to create a function that wraps `createStore` and takes an argument to seed the initial state. In this example we extend `increment` to take an additional argument, which will be added on to the `state.count`. If that is not provided, we just increment `state.count` by 1.
 
 ```js
 const createVuexStore = (initialState) =>
@@ -177,7 +177,7 @@ test('increment mutation with a value', () => {
 })
 ```
 
-By creating a `createVuexStore` function that takes an initial state, we can easily set the initial state. This allows us to test all the edge cases, while simplifying our tests.
+By creating a `createVuexStore` function that takes an initial state, we can easily set the initial state. This allows us to test all of the edge cases, while simplifying our tests.
 
 The [Vue Testing Handbook](https://lmiller1990.github.io/vue-testing-handbook/testing-vuex.html) has more examples for testing Vuex. Note: the examples pertain to Vue.js 2 and Vue Test Utils v1. The ideas and concepts are the same, and the Vue Testing Handbook will be updated for Vue.js 3 and Vue Test Utils 2 in the near future.
 
