@@ -1152,7 +1152,7 @@ const wrapper = mount(Foo)
 // doesn't work! You get a wrapper, but since there is not
 // associated Vue instance, you cannot use methods like
 // exists() and text()
-wrapper.findComponent(Foo) 
+wrapper.findComponent(Foo)
 ```
 
 For tests using functional component, consider using `get` or `find` and treating them like standard DOM nodes.
@@ -1445,7 +1445,7 @@ const wrapper = mount(Foo)
 // doesn't work! You get a wrapper, but since there is not
 // associated Vue instance, you cannot use methods like
 // exists() and text()
-wrapper.findComponent(Foo) 
+wrapper.findComponent(Foo)
 ```
 
 For tests using functional component, consider using `get` or `find` and treating them like standard DOM nodes.
@@ -1830,7 +1830,8 @@ Check out [Making HTTP requests](../guide/advanced/http-requests.md) to see an e
 ```ts
 type GlobalMountOptions = {
   plugins?: (Plugin | [Plugin, ...any[]])[]
-  config?: Partial<Omit<AppConfig, 'isNativeTag'>>  mixins?: ComponentOptions[]
+  config?: Partial<Omit<AppConfig, 'isNativeTag'>>
+  mixins?: ComponentOptions[]
   mocks?: Record<string, any>
   provide?: Record<any, any>
   components?: Record<string, Component | object>
@@ -1844,7 +1845,9 @@ type GlobalMountOptions = {
 
 Instead of configuring global mounting options on a per-test basis, you can configure them globally. These will be used by default every time you `mount` a component. You can then override the defaults via mounting options.
 
-An example might be globally mocking the `$t` variable from vue-i18n, globally stubbing out a component, or any other global item:
+**Example:**
+
+An example might be globally mocking the `$t` variable from vue-i18n and a component:
 
 `Component.vue`:
 
@@ -1883,7 +1886,7 @@ config.global.mocks = {
   $t: (text) => text
 }
 
-test('config.global', () => {
+test('config.global mocks and stubs', () => {
   const wrapper = mount(Component)
 
   expect(wrapper.html()).toBe('<p>message</p><div>My component</div>')
