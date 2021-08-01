@@ -5,7 +5,8 @@ import {
   Plugin,
   AppConfig,
   VNode,
-  VNodeProps
+  VNodeProps,
+  ConcreteComponent
 } from 'vue'
 
 interface RefSelector {
@@ -87,6 +88,8 @@ export interface MountingOptions<Props, Data = {}> {
   shallow?: boolean
 }
 
+export type Stub = boolean | ConcreteComponent
+
 export type GlobalMountOptions = {
   /**
    * Installs plugins on the component.
@@ -130,7 +133,7 @@ export type GlobalMountOptions = {
    * @default "{ transition: true, 'transition-group': true }"
    * @see https://next.vue-test-utils.vuejs.org/api/#global-stubs
    */
-  stubs?: Record<any, any>
+  stubs?: Record<string, Stub>
   /**
    * Allows rendering the default slot content, even when using
    * `shallow` or `shallowMount`.
