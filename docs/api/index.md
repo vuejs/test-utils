@@ -312,7 +312,7 @@ type GlobalMountOptions = {
   plugins?: (Plugin | [Plugin, ...any[]])[]
   provide?: Record<any, any>
   renderStubDefaultSlot?: boolean
-  stubs?: Record<any, any>
+  stubs?: Stubs = Record<string, boolean | Component> | Array<string>
 }
 ```
 
