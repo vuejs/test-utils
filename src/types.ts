@@ -6,7 +6,8 @@ import {
   AppConfig,
   VNode,
   VNodeProps,
-  ConcreteComponent
+  ConcreteComponent,
+  DefineComponent
 } from 'vue'
 
 interface RefSelector {
@@ -88,7 +89,7 @@ export interface MountingOptions<Props, Data = {}> {
   shallow?: boolean
 }
 
-export type Stub = boolean | ConcreteComponent
+export type Stub = boolean | Component
 export type Stubs = Record<string, Stub> | Array<string>
 export type GlobalMountOptions = {
   /**
