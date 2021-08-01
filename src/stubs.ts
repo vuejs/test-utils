@@ -22,7 +22,6 @@ import {
 
 interface StubOptions {
   name: string
-  props?: any
   propsDeclaration?: any
   renderStubDefaultSlot?: boolean
 }
@@ -58,10 +57,7 @@ export const createStub = ({
   })
 }
 
-const createTransitionStub = ({
-  name,
-  props
-}: StubOptions): ComponentOptions => {
+const createTransitionStub = ({ name }: StubOptions): ComponentOptions => {
   const render = (ctx: ComponentPublicInstance) => {
     return h(name, {}, ctx.$slots)
   }
@@ -69,8 +65,7 @@ const createTransitionStub = ({
   return defineComponent({
     name,
     compatConfig: { MODE: 3, RENDER_FUNCTION: false },
-    render,
-    props
+    render
   })
 }
 
@@ -140,8 +135,7 @@ export function stubComponents(
     if (type === Transition && stubs['transition']) {
       return [
         createTransitionStub({
-          name: 'transition-stub',
-          propsDeclaration: undefined
+          name: 'transition-stub'
         }),
         undefined,
         children
@@ -152,8 +146,7 @@ export function stubComponents(
     if (type === TransitionGroup && stubs['transition-group']) {
       return [
         createTransitionStub({
-          name: 'transition-group-stub',
-          propsDeclaration: undefined
+          name: 'transition-group-stub'
         }),
         undefined,
         children
