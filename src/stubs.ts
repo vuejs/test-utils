@@ -4,12 +4,11 @@ import {
   TransitionGroup,
   h,
   ComponentPublicInstance,
-  Slots,
   ComponentOptions,
   defineComponent,
-  VNodeProps,
   VNodeTypes,
-  ConcreteComponent
+  ConcreteComponent,
+  ComponentPropsOptions
 } from 'vue'
 import { hyphenate } from './utils/vueShared'
 import { matchName } from './utils/matchName'
@@ -22,7 +21,7 @@ import {
 
 interface StubOptions {
   name: string
-  propsDeclaration?: any
+  propsDeclaration?: ComponentPropsOptions
   renderStubDefaultSlot?: boolean
 }
 
@@ -53,7 +52,7 @@ export const createStub = ({
     name: name || anonName,
     compatConfig: { MODE: 3, RENDER_FUNCTION: false },
     render,
-    props: propsDeclaration
+    props: propsDeclaration || {}
   })
 }
 
