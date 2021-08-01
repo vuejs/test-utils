@@ -1143,6 +1143,10 @@ test('findComponent', () => {
 })
 ```
 
+:::warning
+If `ref` in component points to HTML element, `findComponent` will return empty wrapper. This is intended behaviour
+:::
+
 **NOTE** `getComponent` and `findComponent` will not work on functional components, because they do not have an internal Vue instance (this is what makes functional components more performant). That means the following will **not** work:
 
 ```js
