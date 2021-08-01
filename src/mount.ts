@@ -468,7 +468,7 @@ export function mount(
         })
         // default stub.
         app.component(name, stubbed)
-      } else {
+      } else if (stub !== false) {
         // user has provided a custom implementation.
         app.component(name, stub)
       }
