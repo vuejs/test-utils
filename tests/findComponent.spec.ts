@@ -47,7 +47,16 @@ describe('findComponent', () => {
   it('finds component by ref', () => {
     const wrapper = mount(compA)
     // find by ref
-    expect(wrapper.findComponent({ ref: 'hello' })).toBeTruthy()
+    expect(wrapper.findComponent({ ref: 'hello' }).exists()).toBe(true)
+  })
+
+  it('does not find plain dom element by ref', () => {
+    const ComponentWithRefOnDomElement = defineComponent({
+      template: '<div ref="hello">Hello!</div>'
+    })
+    const wrapper = mount(ComponentWithRefOnDomElement)
+
+    expect(wrapper.findComponent({ ref: 'hello' }).exists()).toBe(false)
   })
 
   it('finds component by dom selector', () => {
