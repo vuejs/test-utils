@@ -93,20 +93,6 @@ export function isObjectComponent(
   return Boolean(component && typeof component === 'object')
 }
 
-// https://stackoverflow.com/questions/15458876/check-if-a-string-is-html-or-not/15458987#answer-15458968
-export function isHTML(str: string) {
-  var a = document.createElement('div')
-  a.innerHTML = str
-
-  for (let c = a.childNodes, i = c.length; i--; ) {
-    if (c[i].nodeType == 1) {
-      return true
-    }
-  }
-
-  return false
-}
-
 export function textContent(element: Element): string {
   // we check if the element is a comment first
   // to return an empty string in that case, instead of the comment content

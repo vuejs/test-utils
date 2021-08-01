@@ -12,6 +12,11 @@
     <div class="scoped">
       <slot name="scoped" v-bind="{ aBoolean, aString, anObject }" />
     </div>
+    <table class="insideTable">
+      <colgroup>
+        <slot name="insideTable" />
+      </colgroup>
+    </table>
     <div class="scopedWithDefault">
       <slot name="scopedWithDefault" v-bind="{ aBoolean, aString, anObject }">
         boolean: {{ aBoolean }} string: {{ aString }} object: {{ anObject }}

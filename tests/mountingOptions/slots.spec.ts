@@ -16,7 +16,6 @@ describe('slots', () => {
           named: namedString
         }
       })
-      expect(wrapper.vm.$slots.default!()[0].children).toBe(defaultString)
       expect(wrapper.find('.default').text()).toBe(defaultString)
       expect(wrapper.find('.named').text()).toBe(namedString)
     })
@@ -34,6 +33,16 @@ describe('slots', () => {
 
       expect(wrapper.find('.defaultNested').exists()).toBe(true)
       expect(wrapper.find('.namedNested').exists()).toBe(true)
+    })
+
+    it('supports providing html string with tags valid only nested in some other tag', () => {
+      const wrapper = mount(ComponentWithSlots, {
+        slots: {
+          insideTable: '<col><col><col>'
+        }
+      })
+
+      expect(wrapper.findAll('.insideTable col')).toHaveLength(3)
     })
 
     it('supports providing a render function to slot', () => {
