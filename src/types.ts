@@ -89,7 +89,7 @@ export interface MountingOptions<Props, Data = {}> {
 }
 
 export type Stub = boolean | ConcreteComponent
-
+export type Stubs = Record<string, Stub> | Array<string>
 export type GlobalMountOptions = {
   /**
    * Installs plugins on the component.
@@ -133,7 +133,7 @@ export type GlobalMountOptions = {
    * @default "{ transition: true, 'transition-group': true }"
    * @see https://next.vue-test-utils.vuejs.org/api/#global-stubs
    */
-  stubs?: Record<string, Stub>
+  stubs?: Stubs
   /**
    * Allows rendering the default slot content, even when using
    * `shallow` or `shallowMount`.

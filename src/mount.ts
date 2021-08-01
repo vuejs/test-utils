@@ -428,7 +428,7 @@ export function mount(
   if (global.components) {
     for (const key of Object.keys(global.components)) {
       // avoid registering components that are stubbed twice
-      if (!global.stubs[key]) {
+      if (!(key in global.stubs)) {
         app.component(key, global.components[key])
       }
     }

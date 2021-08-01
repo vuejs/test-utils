@@ -18,6 +18,7 @@ import {
   isLegacyExtendedComponent,
   unwrapLegacyVueExtendComponent
 } from './utils/vueCompatSupport'
+import { Stub, Stubs } from './types'
 
 interface StubOptions {
   name: string
@@ -68,16 +69,13 @@ const createTransitionStub = ({ name }: StubOptions): ComponentOptions => {
   })
 }
 
-const resolveComponentStubByName = (
-  componentName: string,
-  stubs: Record<any, any>
-) => {
+const resolveComponentStubByName = (componentName: string, stubs: Stubs) => {
   if (Array.isArray(stubs) && stubs.length) {
     // ['Foo', 'Bar'] => { Foo: true, Bar: true }
     stubs = stubs.reduce((acc, current) => {
       acc[current] = true
       return acc
-    }, {})
+    }, {} as Record<string, Stub>)
   }
 
   for (const [stubKey, value] of Object.entries(stubs)) {
@@ -121,7 +119,7 @@ const getComponentName = (type: VNodeTypes): string => {
 }
 
 export function stubComponents(
-  stubs: Record<any, any> = {},
+  stubs: Stubs = {},
   shallow: boolean = false,
   renderStubDefaultSlot: boolean = false
 ) {
@@ -131,7 +129,7 @@ export function stubComponents(
     const type = nodeType as VNodeTypes
 
     // stub transition by default via config.global.stubs
-    if (type === Transition && stubs['transition']) {
+    if (type === Transition && 'transition' in stubs && stubs['transition']) {
       return [
         createTransitionStub({
           name: 'transition-stub'
@@ -142,7 +140,11 @@ export function stubComponents(
     }
 
     // stub transition-group by default via config.global.stubs
-    if (type === TransitionGroup && stubs['transition-group']) {
+    if (
+      type === TransitionGroup &&
+      'transition-group' in stubs &&
+      stubs['transition-group']
+    ) {
       return [
         createTransitionStub({
           name: 'transition-group-stub'
