@@ -1075,7 +1075,6 @@ Finds a Vue Component instance and returns a `VueWrapper` if found. Returns `Err
 ```ts
 findComponent<T extends ComponentPublicInstance>(selector: new () => T): VueWrapper<T>
 findComponent<T extends ComponentPublicInstance>(selector: FindComponentSelector): VueWrapper<T>
-findComponent<T extends ComponentPublicInstance>(selector: any): VueWrapper<T>
 ```
 
 **Details:**
@@ -1571,7 +1570,7 @@ Sets a value on DOM element. Including:
 **Signature:**
 
 ```ts
-setValue(value: any, prop?: string): Promise<void>
+setValue(value: unknown, prop?: string): Promise<void>
 ```
 
 **Details:**
