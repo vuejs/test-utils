@@ -45,8 +45,8 @@ export const isObject = (obj: unknown): obj is Record<string, any> =>
 
 // https://stackoverflow.com/a/48218209
 export const mergeDeep = (
-  target: Record<string, any>,
-  source: Record<string, any>
+  target: Record<string, unknown>,
+  source: Record<string, unknown>
 ) => {
   if (!isObject(target) || !isObject(source)) {
     return source

@@ -25,12 +25,12 @@ export class VueWrapper<T extends ComponentPublicInstance>
   private componentVM: T
   private rootVM: ComponentPublicInstance | null
   private __app: App | null
-  private __setProps: ((props: Record<string, any>) => void) | undefined
+  private __setProps: ((props: Record<string, unknown>) => void) | undefined
 
   constructor(
     app: App | null,
     vm: ComponentPublicInstance,
-    setProps?: (props: Record<string, any>) => void
+    setProps?: (props: Record<string, unknown>) => void
   ) {
     super(vm?.$el)
     this.__app = app
@@ -149,18 +149,14 @@ export class VueWrapper<T extends ComponentPublicInstance>
   }
 
   findComponent<T extends ComponentPublicInstance>(
-    selector: new () => T
-  ): VueWrapper<T>
-  findComponent<T extends ComponentPublicInstance>(
-    selector: FindComponentSelector
-  ): VueWrapper<T>
-  findComponent<T extends ComponentPublicInstance>(
-    selector: any
+    selector: FindComponentSelector | (new () => T)
   ): VueWrapper<T> {
     if (typeof selector === 'object' && 'ref' in selector) {
       const result = this.vm.$refs[selector.ref]
       if (result) {
         return createWrapper(null, result as T)
+      } else {
+        return createWrapperError('VueWrapper')
       }
     }
 
@@ -181,13 +177,7 @@ export class VueWrapper<T extends ComponentPublicInstance>
   }
 
   getComponent<T extends ComponentPublicInstance>(
-    selector: new () => T
-  ): Omit<VueWrapper<T>, 'exists'>
-  getComponent<T extends ComponentPublicInstance>(
-    selector: FindComponentSelector
-  ): Omit<VueWrapper<T>, 'exists'>
-  getComponent<T extends ComponentPublicInstance>(
-    selector: any
+    selector: FindComponentSelector | (new () => T)
   ): Omit<VueWrapper<T>, 'exists'> {
     const result = this.findComponent(selector)
 
@@ -198,9 +188,9 @@ export class VueWrapper<T extends ComponentPublicInstance>
     let message = 'Unable to get '
     if (typeof selector === 'string') {
       message += `component with selector ${selector}`
-    } else if (selector.name) {
+    } else if ('name' in selector) {
       message += `component with name ${selector.name}`
-    } else if (selector.ref) {
+    } else if ('ref' in selector) {
       message += `component with ref ${selector.ref}`
     } else {
       message += 'specified component'
@@ -235,12 +225,12 @@ export class VueWrapper<T extends ComponentPublicInstance>
     return domWrapper.isVisible()
   }
 
-  setData(data: Record<string, any>): Promise<void> {
+  setData(data: Record<string, unknown>): Promise<void> {
     mergeDeep(this.componentVM.$data, data)
     return nextTick()
   }
 
-  setProps(props: Record<string, any>): Promise<void> {
+  setProps(props: Record<string, unknown>): Promise<void> {
     // if this VM's parent is not the root or if setProps does not exist, error out
     if (this.vm.$parent !== this.rootVM || !this.__setProps) {
       throw Error('You can only use setProps on your mounted component')
@@ -249,7 +239,7 @@ export class VueWrapper<T extends ComponentPublicInstance>
     return nextTick()
   }
 
-  setValue(value: any, prop?: string): Promise<void> {
+  setValue(value: unknown, prop?: string): Promise<void> {
     const propEvent = prop || 'modelValue'
     this.vm.$emit(`update:${propEvent}`, value)
     return this.vm.$nextTick()
@@ -270,7 +260,7 @@ export class VueWrapper<T extends ComponentPublicInstance>
 export function createWrapper<T extends ComponentPublicInstance>(
   app: App | null,
   vm: ComponentPublicInstance,
-  setProps?: (props: Record<string, any>) => void
+  setProps?: (props: Record<string, unknown>) => void
 ): VueWrapper<T> {
   return new VueWrapper<T>(app, vm, setProps)
 }
