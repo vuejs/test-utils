@@ -182,8 +182,8 @@ By creating a `createVuexStore` function that takes an initial state, we can eas
 The [Vue Testing Handbook](https://lmiller1990.github.io/vue-testing-handbook/testing-vuex.html) has more examples for testing Vuex. Note: the examples pertain to Vue.js 2 and Vue Test Utils v1. The ideas and concepts are the same, and the Vue Testing Handbook will be updated for Vue.js 3 and Vue Test Utils 2 in the near future.
 
 ## Testing a store when using the composition API
-When using the composition API, the Vuex store is usually accessed via a `useStore`-helper function. In Javascript projects the built-in `useStore` function should be used. More about it here: https://next.vuex.vuejs.org/guide/composition-api.html.
-In TypeScript projects the `useStore`-function can be used with an optional and unique injection key to get a properly typed store. To avoid repeating the key parameter passing whenever `useStore` is used, it is recommended to extract that logic into a helper function and reuse that function instead of the default `useStore`-function. More about it here: https://next.vuex.vuejs.org/guide/typescript-support.html#typing-usestore-composition-function.
+When using the Composition API, a Vuex store is usually accessed via a `useStore` helper function. More about it here: https://next.vuex.vuejs.org/guide/composition-api.html.
+`useStore` can be used with an optional and unique injection key to get a properly typed store. To avoid repeating the key parameter passing whenever `useStore` is used, it is recommended to extract that logic into a helper function and reuse that function instead of the default `useStore`-function. More about it here: https://next.vuex.vuejs.org/guide/typescript-support.html#typing-usestore-composition-function.
 The approach to provide a store for a unit test depends on the way the `useStore` function is used in the component.
 
 ### Testing components that utilize `useStore` without an injection key
