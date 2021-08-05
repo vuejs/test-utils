@@ -118,12 +118,35 @@ const getComponentName = (type: VNodeTypes): string => {
   return ''
 }
 
+function createStubOnceForType(
+  type: {} & VNodeTypes,
+  factoryFn: () => ConcreteComponent,
+  cache: WeakMap<{} & VNodeTypes, ConcreteComponent>
+): ConcreteComponent {
+  const cachedStub = cache.get(type)
+  if (cachedStub) {
+    return cachedStub
+  }
+
+  const stub = factoryFn()
+  stubsMap.set(stub, type)
+  cache.set(type, stub)
+  return stub
+}
+
 export function stubComponents(
   stubs: Stubs = {},
   shallow: boolean = false,
   renderStubDefaultSlot: boolean = false
 ) {
-  const components: Record<string, ComponentOptions> = {}
+  const createdStubsMap: WeakMap<{} & VNodeTypes, ConcreteComponent> =
+    new WeakMap()
+
+  const createStubOnce = (
+    type: {} & VNodeTypes,
+    factoryFn: () => ConcreteComponent
+  ) => createStubOnceForType(type, factoryFn, createdStubsMap)
+
   transformVNodeArgs((args, instance: ComponentInternalInstance | null) => {
     const [nodeType, props, children, patchFlag, dynamicProps] = args
     const type = nodeType as VNodeTypes
@@ -184,13 +207,15 @@ export function stubComponents(
       // case 2: custom implementation
       if (isComponent(stub)) {
         const stubFn = isFunctionalComponent(stub) ? stub : null
-
-        const specializedStub: ConcreteComponent = stubFn
+        const specializedStubComponent: ConcreteComponent = stubFn
           ? (...args) => stubFn(...args)
           : { ...stub }
+        specializedStubComponent.props = stub.props
 
-        specializedStub.props = stub.props
-        stubsMap.set(specializedStub, type)
+        const specializedStub = createStubOnce(
+          type,
+          () => specializedStubComponent
+        )
         // pass the props and children, for advanced stubbing
         return [specializedStub, props, children, patchFlag, dynamicProps]
       }
@@ -205,25 +230,20 @@ export function stubComponents(
       // case 1: default stub
       if (stub === true || shallow) {
         // Set name when using shallow without stub
-        if (!name) {
-          name = registeredName || componentName
-        }
+        const stubName = name || registeredName || componentName
 
         if (!isComponent(type)) {
           throw new Error('Attempted to stub a non-component')
         }
 
         const propsDeclaration = type.props || {}
-        let newStub = components[name]
-        if (!newStub) {
-          newStub = createStub({
-            name,
+        const newStub = createStubOnce(type, () =>
+          createStub({
+            name: stubName,
             propsDeclaration,
             renderStubDefaultSlot
           })
-          components[name] = newStub
-          stubsMap.set(newStub, type)
-        }
+        )
         return [newStub, props, children, patchFlag, dynamicProps]
       }
     }

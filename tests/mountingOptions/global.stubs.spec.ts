@@ -580,7 +580,6 @@ describe('mounting options: stubs', () => {
           }
         }
       })
-
       expect(wrapper.html()).toBe('<span>StubComponent</span>')
     })
   })
@@ -693,5 +692,34 @@ describe('mounting options: stubs', () => {
     })
 
     expect(wrapper.html()).toBe('<anonymous-stub>test</anonymous-stub>')
+  })
+
+  it('should not recreate stub across multiple renders', async () => {
+    const FooBar = {
+      name: 'FooBar',
+      render: () => h('span', 'real foobar')
+    }
+
+    const Comp = defineComponent({
+      data: () => ({ value: 1 }),
+      render() {
+        return h('div', {}, [this.value, h(FooBar)])
+      }
+    })
+
+    const wrapper = mount(Comp, {
+      global: {
+        stubs: {
+          'foo-bar': { name: 'FooBar', template: 'stub' }
+        }
+      }
+    })
+
+    const stub = wrapper.findComponent({ name: 'FooBar' })
+    await wrapper.setData({ value: 2 })
+
+    const stubAfterSecondRender = wrapper.findComponent({ name: 'FooBar' })
+
+    expect(stub.vm).toBe(stubAfterSecondRender.vm)
   })
 })
