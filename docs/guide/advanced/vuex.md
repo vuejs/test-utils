@@ -212,13 +212,13 @@ The mock store can also be imported from a file to improve code reusability.
 
 #### Example for providing the keyed `useStore`
 ```ts
-import { key } from 'store';
+import { key } from 'store'
 
 const wrapper = mount(App, {
   global: {
       provide: {
         [key as symbol]: createStore({
-          .....
+          // ...
         }),
       },
     },
