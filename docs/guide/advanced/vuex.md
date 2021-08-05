@@ -192,12 +192,16 @@ Without an injection key, the store data can just be injected into the component
 
 #### Example for providing the unkeyed `useStore`
 ```ts
+import { createStore } from 'vuex'
+
+const myStore = createStore({
+  // ...
+})
+
 const wrapper = mount(App, {
   global: {
       provide: {
-        store: createStore({
-          .....
-        }),
+        store: myStore
       },
     },
 })
@@ -212,14 +216,17 @@ The mock store can also be imported from a file to improve code reusability.
 
 #### Example for providing the keyed `useStore`
 ```ts
+import { createStore } from 'vuex'
 import { key } from 'store'
+
+const myStore = createStore({
+  // ...
+})
 
 const wrapper = mount(App, {
   global: {
       provide: {
-        [key as symbol]: createStore({
-          // ...
-        }),
+        [key as symbol]: myStore
       },
     },
 })
