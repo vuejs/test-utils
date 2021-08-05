@@ -186,8 +186,9 @@ When using the composition API, the Vuex store is usually accessed via a `useSto
 In TypeScript projects the `useStore`-function can be used with an optional and unique injection key to get a properly typed store. To avoid repeating the key parameter passing whenever `useStore` is used, it is recommended to extract that logic into a helper function and reuse that function instead of the default `useStore`-function. More about it here: https://next.vuex.vuejs.org/guide/typescript-support.html#typing-usestore-composition-function.
 The approach to provide a store for a unit test depends on the way the `useStore`-function is used in the component.
 
-### Testing components that utilize `useStore` without an injection keys
-Without an injection key, the store data can just be injected into the component on mount via the provide mounting-option. The name of the injected store must be the same as the one in the component, e.g. "store". Instead of creating the store on the fly, it can also be imported from a file and therefore be shared between unit tests.
+### Testing components that utilize `useStore` without an injection key
+
+Without an injection key, the store data can just be injected into the component via the global `provide` mounting option. The name of the injected store must be the same as the one in the component, e.g. "store". Instead of creating the store on the fly, it can also be imported from a file and therefore be shared between unit tests.
 
 #### Example for providing the unkeyed `useStore`
 ```ts
