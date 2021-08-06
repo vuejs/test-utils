@@ -32,7 +32,7 @@
     "jest": "25.5.4",
     "jsdom": "^16.7.0",
     "jsdom-global": "^3.0.2",
-    "lint-staged": "^11.1.1",
+    "lint-staged": "^11.1.2",
     "prettier": "^2.3.2",
     "pretty": "^2.0.0",
     "reflect-metadata": "^0.1.13",
