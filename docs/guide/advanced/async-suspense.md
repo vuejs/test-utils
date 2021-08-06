@@ -62,9 +62,9 @@ test('increments by 1', async () => {
 })
 ```
 
-Now the test will pass, because we ensure the next "tick" has executed updated the DOM before the assertion runs.
+Now the test will pass because we ensure the next "tick" has been executed and the DOM has been updated before the assertion runs.
 
-Since `await nextTick()` is common, Vue Test Utils provides a shortcut. Methods than cause the DOM to update, such as `trigger` and `setValue` return `nextTick`, so you can just `await` those directly:
+Since `await nextTick()` is common, Vue Test Utils provides a shortcut. Methods that cause the DOM to update, such as `trigger` and `setValue` return `nextTick`, so you can just `await` those directly:
 
 ```js {4}
 test('increments by 1', async () => {
@@ -100,13 +100,13 @@ jest.mock('axios', () => ({
   get: () => Promise.resolve({ data: 'some mocked data!' })
 }))
 
-test('uses a mocked axios HTTP client and flush-promises', async () => {
+test('uses a mocked axios HTTP client and flushPromises', async () => {
   // some component that makes a HTTP called in `created` using `axios`
   const wrapper = mount(AxiosComponent)
 
   await flushPromises() // axios promise is resolved immediately
 
-  // after line above, axios request has resolved with the mocked data.
+  // after the line above, axios request has resolved with the mocked data.
 })
 ```
 
@@ -116,7 +116,7 @@ If you want to learn more about testing requests on Components, make sure you ch
 
 ## Conclusion
 
-- Vue updates the DOM asynchronously; tests runner execute code synchronously instead.
-- Use `await nextTick()` to ensure the DOM has updated before the test continues
-- Functions that might update the DOM (like `trigger` and `setValue`) return `nextTick`, so you need `await` them.
-- Use `flush-promises` from Vue Test Utils to resolve any unresolved promises from non-Vue dependencies (such as API requests).
+- Vue updates the DOM asynchronously; tests runner executes code synchronously instead.
+- Use `await nextTick()` to ensure the DOM has updated before the test continues.
+- Functions that might update the DOM (like `trigger` and `setValue`) return `nextTick`, so you need to `await` them.
+- Use `flushPromises` from Vue Test Utils to resolve any unresolved promises from non-Vue dependencies (such as API requests).
