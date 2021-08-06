@@ -67,15 +67,6 @@ describe('findComponent', () => {
     )
   })
 
-  it('finds a component when root of mounted component', async () => {
-    const wrapper = mount(compD)
-    // make sure it finds the component, not its root
-    expect(wrapper.findComponent('.c-as-root-on-d').vm).toHaveProperty(
-      '$options.name',
-      'ComponentC'
-    )
-  })
-
   it('finds component by name', () => {
     const wrapper = mount(compA)
     expect(wrapper.findComponent({ name: 'Hello' }).text()).toBe('Hello world')
@@ -98,6 +89,19 @@ describe('findComponent', () => {
     expect(wrapper.findComponent(Comp).exists()).toBe(true)
     await wrapper.find('input').setValue('bar')
     expect(wrapper.html()).toContain('bar')
+  })
+
+  it('finds root component when recursion is used', async () => {
+    const Comp = defineComponent({
+      props: ['depth'],
+      name: 'Comp',
+      template: `
+        <Comp :depth="depth + 1" v-if="depth < 2" />
+        Depth {{ depth }}
+      `
+    })
+    const wrapper = mount(Comp, { props: { depth: 0 } })
+    expect(wrapper.findComponent(Comp).props('depth')).toBe(0)
   })
 
   it('finds component without a name by using its object definition', () => {
