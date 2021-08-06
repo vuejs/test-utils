@@ -190,6 +190,16 @@ describe('slots', () => {
 
       expect(wrapper.find('.scoped').text()).toEqual('Just a plain true string')
     })
+
+    it('allows passing a scoped slot via string with no HTML inside without template tag', () => {
+      const wrapper = mount(ComponentWithSlots, {
+        slots: {
+          scoped: 'Just a plain {{ params.aBoolean }} {{ params.aString }}'
+        }
+      })
+
+      expect(wrapper.find('.scoped').text()).toEqual('Just a plain true string')
+    })
   })
 
   it('supports an array of components', () => {
