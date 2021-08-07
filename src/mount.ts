@@ -453,26 +453,17 @@ export function mount(
   stubComponents(global.stubs, options?.shallow, global?.renderStubDefaultSlot)
 
   // users expect stubs to work with globally registered
-  // components, too, such as <router-link> and <router-view>
-  // so we register those globally.
+  // components so we register stubs as global components to avoid
+  // warning about not being able to resolve component
+  //
+  // component implementation provided here will never be called
+  // but we need name to make sure that stubComponents will
+  // properly stub this later by matching stub name
+  //
   // ref: https://github.com/vuejs/vue-test-utils-next/issues/249
-  // we register the component as named in the stubs to avoid not being
-  // able to resolve the component later due to casing
   // ref: https://github.com/vuejs/vue-test-utils-next/issues/425
   if (global?.stubs) {
-    for (const [name, stub] of Object.entries(global.stubs)) {
-      if (stub === true) {
-        const stubbed = createStub({
-          name,
-          renderStubDefaultSlot: global?.renderStubDefaultSlot
-        })
-        // default stub.
-        app.component(name, stubbed)
-      } else if (stub !== false) {
-        // user has provided a custom implementation.
-        app.component(name, stub)
-      }
-    }
+    for (const name of Object.keys(global.stubs)) app.component(name, { name })
   }
 
   // mount the app!
