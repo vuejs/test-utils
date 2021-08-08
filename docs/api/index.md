@@ -42,7 +42,16 @@ test('mounts a component', () => {
 })
 ```
 
-Notice that `mount` accepts a second parameter to define the component's state and app's global configuration.
+Notice that `mount` accepts a second parameter to define the component's state configuration. 
+
+#### options.global
+
+Among component state, you can configure the aformentioned Vue 3 app by the [`MountingOptions.global` config property.](#global) This would be useful for providing mocked values which your components expect to have available. 
+
+
+::: tip
+If you find yourself having to set common App configuration for many of your tests, then you can set configuration for your entire test suite using the exported [`config` object.](#config)
+:::
 
 ### attachTo
 
@@ -316,7 +325,7 @@ type GlobalMountOptions = {
 }
 ```
 
-You can configure all the `global` options on both a per test basis and globally for all tests. [See here for how to configure project wide defaults](#global-config).
+You can configure all the `global` options on both a per test basis and also for the entire test suite. [See here for how to configure project wide defaults](#config-global).
 
 #### global.components
 
@@ -1842,7 +1851,7 @@ type GlobalMountOptions = {
 
 **Details:**
 
-Instead of configuring global mounting options on a per-test basis, you can configure them globally. These will be used by default every time you `mount` a component. You can then override the defaults via mounting options.
+Instead of configuring mounting options on a per-test basis, you can configure them for your entire test suite. These will be used by default every time you `mount` a component. If desired, you can then override your defaults on a per-test basis.
 
 **Example:**
 
