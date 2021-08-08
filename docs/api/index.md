@@ -1062,7 +1062,7 @@ test('findAll', () => {
   const wrapper = mount(BaseTable);
 
   // .findAll() returns an array of DOMWrappers
-  const thirdRow = wrapper.findAll('tr')[2];
+  const thirdRow = wrapper.findAll('span')[2];
 })
 ```
 
