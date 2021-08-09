@@ -262,4 +262,15 @@ describe('slots', () => {
     expect(parentMounted).toHaveBeenCalled()
     expect(childMounted).toHaveBeenCalled()
   })
+
+  it('should return the correct number of vnodes in the slots', () => {
+    const wrapper = mount(ComponentWithSlots, {
+      slots: {
+        default: '<div/><div/>'
+      }
+    })
+
+    // @ts-expect-error
+    expect(wrapper.vm.$slots.default()).toHaveLength(2)
+  })
 })
