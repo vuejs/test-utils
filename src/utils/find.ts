@@ -127,11 +127,8 @@ function findAllVNodes(
   const nodes: VNode[] = [vnode]
   while (nodes.length) {
     const node = nodes.shift()!
-    // match direct children
     aggregateChildren(nodes, node.children)
     if (node.component) {
-      // match children of the wrapping component
-      aggregateChildren(nodes, node.component.subTree.children)
       aggregateChildren(nodes, [node.component.subTree])
     }
     if (node.suspense) {
@@ -139,7 +136,7 @@ function findAllVNodes(
       const { activeBranch } = node.suspense
       aggregateChildren(nodes, [activeBranch])
     }
-    if (matches(node, selector) && !matchingNodes.includes(node)) {
+    if (matches(node, selector)) {
       matchingNodes.push(node)
     }
   }
