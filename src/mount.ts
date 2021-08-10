@@ -27,7 +27,6 @@ import {
 import { MountingOptions, Slot } from './types'
 import {
   isFunctionalComponent,
-  isHTML,
   isObjectComponent,
   mergeGlobalProperties,
   isObject
@@ -281,14 +280,7 @@ export function mount(
     }
 
     if (typeof slot === 'string') {
-      // if it is HTML we process and render it using h
-      if (isHTML(slot)) {
-        return (props: VNodeProps) => h(processSlot(slot), props)
-      }
-      // otherwise it is just a string so we just return it as-is
-      else {
-        return () => slot
-      }
+      return (props: VNodeProps) => h(processSlot(slot), props)
     }
 
     throw Error(`Invalid slot received.`)
