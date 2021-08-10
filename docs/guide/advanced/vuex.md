@@ -181,56 +181,112 @@ By creating a `createVuexStore` function that takes an initial state, we can eas
 
 The [Vue Testing Handbook](https://lmiller1990.github.io/vue-testing-handbook/testing-vuex.html) has more examples for testing Vuex. Note: the examples pertain to Vue.js 2 and Vue Test Utils v1. The ideas and concepts are the same, and the Vue Testing Handbook will be updated for Vue.js 3 and Vue Test Utils 2 in the near future.
 
-## Testing a store when using the composition API
-When using the Composition API, a Vuex store is usually accessed via a `useStore` helper function. More about it here: https://next.vuex.vuejs.org/guide/composition-api.html.
-`useStore` can be used with an optional and unique injection key to get a properly typed store. To avoid repeating the key parameter passing whenever `useStore` is used, it is recommended to extract that logic into a helper function and reuse that function instead of the default `useStore`-function. More about it here: https://next.vuex.vuejs.org/guide/typescript-support.html#typing-usestore-composition-function.
-The approach to provide a store for a unit test depends on the way the `useStore` function is used in the component.
+## Testing using the Composition API
 
-### Testing components that utilize `useStore` without an injection key
+Vuex is accessed via a `useStore` function when using the Composition API. [Read more about it here](https://next.vuex.vuejs.org/guide/composition-api.html).
 
-Without an injection key, the store data can just be injected into the component via the global `provide` mounting option. The name of the injected store must be the same as the one in the component, e.g. "store". Instead of creating the store on the fly, it can also be imported from a file and therefore be shared between unit tests.
+`useStore` can be used with an optional and unique injection key as discussed [in the Vuex documentation](https://next.vuex.vuejs.org/guide/typescript-support.html#typing-usestore-composition-function).
+
+It looks like this:
+
+```js
+import { createStore } from 'vuex'
+import { createApp } from 'vue'
+
+// create a globally unique symbol for the injection key
+const key = Symbol()
+
+const App = {
+  setup () {
+    // use unique key to access store
+    const store = useStore(key)
+  }
+}
+
+const store = createStore({ /* ... */ })
+const app = createApp({ /* ... */ })
+
+// specify key as second argument when calling app.use(store)
+app.use(store, key)
+```
+
+To avoid repeating the key parameter passing whenever `useStore` is used, the Vuex documentation recommends extracting that logic into a helper function and reuse that function instead of the default `useStore` function. [Read wore about it here](https://next.vuex.vuejs.org/guide/typescript-support.html#typing-usestore-composition-function). The approach providing a store using Vue Test Utils depends on the way the `useStore` function is used in the component.
+
+### Testing Components that Utilize `useStore` without an Injection Key
+
+Without an injection key, the store data can just be injected into the component via the global `provide` mounting option. The name of the injected store must be the same as the one in the component, e.g. "store". 
 
 #### Example for providing the unkeyed `useStore`
-```ts
+
+```js
 import { createStore } from 'vuex'
 
-const myStore = createStore({
+const store = createStore({
   // ...
 })
 
 const wrapper = mount(App, {
   global: {
-      provide: {
-        store: myStore
-      },
+    provide: {
+      store: store
     },
+  },
 })
 ```
 
-### Testing components that utilize `useStore` with an injection keys
+### Testing Components that Utilize `useStore` with an Injection Key
 
 When using the store with an injection key ,the previous approach won't work. The store instance won't be returned from `useStore`. In order to access the correct store the identifier needs to be provided.
+
 It needs to be the exact key that is passed to `useStore` in the `setup` function of the component or to `useStore` within the custom helper function. Since JavaScript symbols are unique and can't be recreated, it is best to export the key from the real store.
 
-The mock store can also be imported from a file to improve code reusability.
+You can either use `global.provide` with the correct key to inject the store, or `global.plugins` to install the store and specify the key:
 
-#### Example for providing the keyed `useStore`
-```ts
+#### Providing the Keyed `useStore` using `global.provide`
+
+```js
+// store.js
+export const key = Symbol()
+```
+
+```js
+// app.spec.js
 import { createStore } from 'vuex'
-import { key } from 'store'
+import { key } from './store'
 
-const myStore = createStore({
-  // ...
-})
+const store = createStore({ /* ... */ })
 
 const wrapper = mount(App, {
   global: {
-      provide: {
-        [key as symbol]: myStore
-      },
+    provide: {
+      [key]: store
     },
+  },
 })
 ```
+
+#### Providing the Keyed `useStore` using `global.plugins`
+
+```js
+// store.js
+export const key = Symbol()
+```
+
+```js
+// app.spec.js
+import { createStore } from 'vuex'
+import { key } from './store'
+
+const store = createStore({ /* ... */ })
+
+const wrapper = mount(App, {
+  global: {
+    // to pass options to plugins, use the array syntax.
+    plugins: [[store, key]]
+  },
+})
+```
+
 
 
 ## Conclusion
