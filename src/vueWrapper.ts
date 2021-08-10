@@ -153,7 +153,7 @@ export class VueWrapper<T extends ComponentPublicInstance>
   ): VueWrapper<T> {
     if (typeof selector === 'object' && 'ref' in selector) {
       const result = this.vm.$refs[selector.ref]
-      if (result) {
+      if (result && !(result instanceof HTMLElement)) {
         return createWrapper(null, result as T)
       } else {
         return createWrapperError('VueWrapper')
