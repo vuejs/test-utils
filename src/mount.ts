@@ -21,6 +21,7 @@ import {
   EmitsOptions,
   ComputedOptions,
   ComponentPropsOptions,
+  ComponentOptions,
   ConcreteComponent
 } from 'vue'
 
@@ -34,7 +35,6 @@ import {
 import { processSlot } from './utils/compileSlots'
 import { createWrapper, VueWrapper } from './vueWrapper'
 import { attachEmitListener } from './emit'
-import { createDataMixin } from './dataMixin'
 import { createStub, stubComponents, addToDoNotStubComponents } from './stubs'
 import {
   isLegacyFunctionalComponent,
@@ -320,11 +320,20 @@ export function mount(
 
   // override component data with mounting options data
   if (options?.data) {
-    const dataMixin = createDataMixin(options.data())
-    ;(component as any).mixins = [
-      ...((component as any).mixins || []),
-      dataMixin
-    ]
+    const providedData = options.data()
+    if (isObjectComponent(originalComponent)) {
+      // component is guaranteed to be the same type as originalComponent
+      const objectComponent = component as ComponentOptions
+      const originalDataFn = originalComponent.data || (() => ({}))
+      objectComponent.data = (vm) => ({
+        ...originalDataFn.call(vm, vm),
+        ...providedData
+      })
+    } else {
+      throw new Error(
+        'data() option is not supported on functional and class components'
+      )
+    }
   }
 
   const MOUNT_COMPONENT_REF = 'VTU_COMPONENT'
