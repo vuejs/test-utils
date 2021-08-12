@@ -1,23 +1,5 @@
 import { compile } from '@vue/compiler-dom'
 import * as vue from 'vue'
-import type { SetupContext } from 'vue'
-import { addToDoNotStubComponents } from '../stubs'
-
-const SlotWrapper = {
-  inheritAttrs: false,
-  setup(_: Record<string, any>, ctx: SetupContext) {
-    return () => {
-      const names = Object.keys(ctx.slots)
-      if (names.length === 0) {
-        return []
-      } else {
-        const slotName = names[0]
-        return ctx.slots[slotName]!(ctx.attrs)
-      }
-    }
-  }
-}
-addToDoNotStubComponents(SlotWrapper)
 
 export function processSlot(source = '', Vue = vue) {
   let template = source.trim()
@@ -28,25 +10,26 @@ export function processSlot(source = '', Vue = vue) {
     template = `<template #default="params">${template}</template>`
   }
 
-  const { code } = compile(
-    `<SlotWrapper v-bind="$attrs">${template}</SlotWrapper>`,
-    {
-      mode: 'function',
-      prefixIdentifiers: __USE_PREFIX_IDENTIFIERS__
-    }
-  )
+  // Vue does not provide an easy way to compile template in "slot" mode
+  // Since we do not want to rely on compiler internals and specify
+  // transforms manually we create fake component invocation with the slot we
+  // need and pick slots param from render function later. Fake component will
+  // never be instantiated but it requires to be a component so compile
+  // properly generate invocation. Since we do not want to monkey-patch
+  // `resolveComponent` function we are just using one of built-in components:
+  // transition
+  const { code } = compile(`<transition>${template}</transition>`, {
+    mode: 'function',
+    prefixIdentifiers: __USE_PREFIX_IDENTIFIERS__
+  })
   const createRenderFunction = new Function(
     'Vue',
     __BROWSER__ ? `'use strict';\n${code}` : code
   )
-
-  const Component = {
-    inheritAttrs: false,
-    render: createRenderFunction(Vue),
-    components: {
-      SlotWrapper
-    }
+  const renderFn = createRenderFunction(Vue)
+  return (ctx = {}) => {
+    const result = renderFn()
+    const slotName = Object.keys(result.children)[0]
+    return result.children[slotName](ctx)
   }
-  addToDoNotStubComponents(Component)
-  return Component
 }

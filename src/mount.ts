@@ -263,27 +263,16 @@ export function mount(
   }
 
   function slotToFunction(slot: Slot) {
-    if (typeof slot === 'object') {
-      if ('render' in slot && slot.render) {
+    switch (typeof slot) {
+      case 'function':
+        return slot
+      case 'object':
         return () => h(slot)
-      }
-
-      if ('template' in slot && slot.template) {
-        return () => h(slot, props)
-      }
-
-      return () => slot
+      case 'string':
+        return processSlot(slot)
+      default:
+        throw Error(`Invalid slot received.`)
     }
-
-    if (typeof slot === 'function') {
-      return slot
-    }
-
-    if (typeof slot === 'string') {
-      return (props: VNodeProps) => h(processSlot(slot), props)
-    }
-
-    throw Error(`Invalid slot received.`)
   }
 
   // handle any slots passed via mounting options
@@ -295,24 +284,12 @@ export function mount(
         [name, slot]: [string, Slot]
       ): { [key: string]: Function } => {
         if (Array.isArray(slot)) {
-          const normalized = slot.reduce<Array<Function | VNode>>(
-            (acc, curr) => {
-              const slotAsFn = slotToFunction(curr)
-              if (isObject(curr) && 'render' in curr) {
-                const rendered = h(slotAsFn as any)
-                return acc.concat(rendered)
-              }
-              return acc.concat(slotAsFn())
-            },
-            []
-          )
-          acc[name] = () => normalized
-
+          const normalized = slot.map(slotToFunction)
+          acc[name] = (args: unknown) => normalized.map((f) => f(args))
           return acc
         }
 
         acc[name] = slotToFunction(slot)
-
         return acc
       },
       {}
