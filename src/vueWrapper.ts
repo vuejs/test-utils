@@ -160,17 +160,17 @@ export class VueWrapper<T extends ComponentPublicInstance>
       }
     }
 
-    const result = find(this.vm.$.subTree, selector)
-    if (result.length) {
-      return createWrapper(null, result[0])
-    }
-
     // https://github.com/vuejs/vue-test-utils-next/issues/211
     // VTU v1 supported finding the component mounted itself.
     // eg: mount(Comp).findComponent(Comp)
     // this is the same as doing `wrapper.vm`, but we keep this behavior for back compat.
     if (matches(this.vm.$.vnode, selector)) {
       return createWrapper(null, this.vm.$.vnode.component?.proxy!)
+    }
+
+    const result = find(this.vm.$.subTree, selector)
+    if (result.length) {
+      return createWrapper(null, result[0])
     }
 
     return createWrapperError('VueWrapper')
