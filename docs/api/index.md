@@ -1222,7 +1222,7 @@ test('findAllComponents', () => {
 
 ### get
 
-Gets an an element and returns a `DOMWrapper` if found. Otherwise it throws an error.
+Gets an element and returns a `DOMWrapper` if found. Otherwise it throws an error.
 
 **Signature:**
 
