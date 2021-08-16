@@ -51,15 +51,15 @@ import { mount, flushPromises } from '@vue/test-utils'
 import axios from 'axios'
 import PostList from './PostList.vue'
 
-const fakePostList = [
+const mockPostList = [
   { id: 1, title: 'title1' },
   { id: 2, title: 'title2' }
 ]
 
 // Following lines tell Jest to mock any call to `axios.get`
-// and to return `fakePostList` instead
+// and to return `mockPostList` instead
 jest.mock('axios', () => ({
-  get: jest.fn(() => fakePostList)
+  get: jest.fn(() => mockPostList)
 }))
 
 test('loads posts on button click', async () => {
@@ -84,7 +84,10 @@ test('loads posts on button click', async () => {
 })
 ```
 
-Notice how we awaited `flushPromises` and then interacted with the Component. We do so to ensure that the DOM has been updated before the assertions run.
+Pay attention that we added prefix `mock` to the variable `mockPostList`. If not, we will get the error: "The module factory of jest.mock() is not allowed to reference any out-of-scope variables."
+Additional info is located here: https://jestjs.io/docs/es6-class-mocks#calling-jestmock-with-the-module-factory-parameter.
+
+Also notice how we awaited `flushPromises` and then interacted with the Component. We do so to ensure that the DOM has been updated before the assertions run.
 
 :::tip Alternatives to jest.mock()
 There are several ways of setting mocks in Jest. The one used in the example above is the simplest. For more powerful alternatives, you might want to check out [axios-mock-adapter](https://github.com/ctimmerm/axios-mock-adapter) or [msw](https://github.com/mswjs/msw), among others.
