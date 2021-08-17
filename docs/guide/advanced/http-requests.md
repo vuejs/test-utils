@@ -84,8 +84,7 @@ test('loads posts on button click', async () => {
 })
 ```
 
-Pay attention that we added prefix `mock` to the variable `mockPostList`. If not, we will get the error: "The module factory of jest.mock() is not allowed to reference any out-of-scope variables."
-Additional info is located here: https://jestjs.io/docs/es6-class-mocks#calling-jestmock-with-the-module-factory-parameter.
+Pay attention that we added prefix `mock` to the variable `mockPostList`. If not, we will get the error: "The module factory of jest.mock() is not allowed to reference any out-of-scope variables.". This is jest-specific, and you can read more about this behavior [in their docs](https://jestjs.io/docs/es6-class-mocks#calling-jestmock-with-the-module-factory-parameter).
 
 Also notice how we awaited `flushPromises` and then interacted with the Component. We do so to ensure that the DOM has been updated before the assertions run.
 
