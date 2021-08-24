@@ -1,7 +1,7 @@
 import { mount } from '../../src'
 import ScriptSetup_ToRefsInject from '../components/ScriptSetup_ToRefsInject.vue'
 
-it('', async () => {
+it('toRefs and inject work with script setup', async () => {
   const wrapper = mount(ScriptSetup_ToRefsInject, {
     props: {
       title: 'Some title'
