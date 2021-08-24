@@ -1643,10 +1643,10 @@
     html-tags "^3.1.0"
     svg-tags "^1.0.0"
 
-"@vue/compat@^3.1.5":
-  version "3.2.4"
-  resolved "https://registry.yarnpkg.com/@vue/compat/-/compat-3.2.4.tgz#d5a30b7ce40e0f3333b6d28262ab7a5977861364"
-  integrity sha512-u/VQmEp5/Zsov4mCEV46jz4IIlsaQM/VyNE3m75g9gziwK8J6iiMT0xSvJsouNwFKIXggkAHfYeL/J3p+cObzQ==
+"@vue/compat@^3.2.6":
+  version "3.2.6"
+  resolved "https://registry.yarnpkg.com/@vue/compat/-/compat-3.2.6.tgz#d08b5ea8879c6d2a6871c89fe1ac167981543b8a"
+  integrity sha512-jEgO8GQel2m1wFPc1G5S3ztJsWy0ebA6akbCOTPeMlPRQtuYvp0Gj4eS6wuFeOfAjXF14B3hr7VhwningtURZQ==
 
 "@vue/compiler-core@3.1.5":
   version "3.1.5"

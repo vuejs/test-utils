@@ -23,7 +23,7 @@
     "@types/node": "16.7.1",
     "@types/pretty": "^2.0.0",
     "@vue/babel-plugin-jsx": "^1.0.6",
-    "@vue/compat": "^3.1.5",
+    "@vue/compat": "^3.2.6",
     "@vue/compiler-dom": "^3.1.4",
     "@vue/compiler-sfc": "3.1.5",
     "babel-jest": "^26.6.3",
