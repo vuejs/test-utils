@@ -5,6 +5,7 @@
     "module": "esnext",
     "lib": ["DOM", "ES2015", "ES2017"],
     "strict": true,
+    "allowJs": true,
     "jsx": "preserve",
     "moduleResolution": "node",
     "esModuleInterop": true,
