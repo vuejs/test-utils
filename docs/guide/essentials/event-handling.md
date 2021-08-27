@@ -36,8 +36,7 @@ test('emits an event when clicked', () => {
   const wrapper = mount(Counter)
 
   wrapper.find('button').trigger('click')
-  wrapper.find('button').trigger('click')
-
+  
   expect(wrapper.emitted()).toHaveProperty('increment')
 })
 ```
