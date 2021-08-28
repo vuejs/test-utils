@@ -1,11 +1,20 @@
 import { textContent } from './utils'
 import type { TriggerOptions } from './createDomEvent'
-import { nextTick } from 'vue'
+import {
+  ComponentInternalInstance,
+  ComponentPublicInstance,
+  nextTick
+} from 'vue'
 import { createDOMEvent } from './createDomEvent'
-import { DomEventName, DomEventNameWithModifier } from './constants/dom-events'
+import { DomEventNameWithModifier } from './constants/dom-events'
+import type { VueWrapper } from './vueWrapper'
+import type { DOMWrapper } from './domWrapper'
+import { FindAllComponentsSelector, FindComponentSelector } from './types'
 
-export default class BaseWrapper<ElementType extends Element> {
-  private readonly wrapperElement: ElementType
+export default abstract class BaseWrapper<ElementType extends Element> {
+  private readonly wrapperElement: ElementType & {
+    __vueParentComponent?: ComponentInternalInstance
+  }
 
   get element() {
     return this.wrapperElement
@@ -14,6 +23,16 @@ export default class BaseWrapper<ElementType extends Element> {
   constructor(element: ElementType) {
     this.wrapperElement = element
   }
+
+  abstract find(selector: string): DOMWrapper<Element>
+  abstract findAll(selector: string): DOMWrapper<Element>[]
+  abstract findComponent<T extends ComponentPublicInstance>(
+    selector: FindComponentSelector | (new () => T)
+  ): VueWrapper<T>
+  abstract findAllComponents(
+    selector: FindAllComponentsSelector
+  ): VueWrapper<any>[]
+  abstract html(): string
 
   classes(): string[]
   classes(className: string): boolean
@@ -43,6 +62,45 @@ export default class BaseWrapper<ElementType extends Element> {
 
   exists() {
     return true
+  }
+
+  get<K extends keyof HTMLElementTagNameMap>(
+    selector: K
+  ): Omit<DOMWrapper<HTMLElementTagNameMap[K]>, 'exists'>
+  get<K extends keyof SVGElementTagNameMap>(
+    selector: K
+  ): Omit<DOMWrapper<SVGElementTagNameMap[K]>, 'exists'>
+  get<T extends Element>(selector: string): Omit<DOMWrapper<T>, 'exists'>
+  get(selector: string): Omit<DOMWrapper<Element>, 'exists'> {
+    const result = this.find(selector)
+    if (result.exists()) {
+      return result
+    }
+
+    throw new Error(`Unable to get ${selector} within: ${this.html()}`)
+  }
+
+  getComponent<T extends ComponentPublicInstance>(
+    selector: FindComponentSelector | (new () => T)
+  ): Omit<VueWrapper<T>, 'exists'> {
+    const result = this.findComponent(selector)
+
+    if (result.exists()) {
+      return result as VueWrapper<T>
+    }
+
+    let message = 'Unable to get '
+    if (typeof selector === 'string') {
+      message += `component with selector ${selector}`
+    } else if ('name' in selector) {
+      message += `component with name ${selector.name}`
+    } else if ('ref' in selector) {
+      message += `component with ref ${selector.ref}`
+    } else {
+      message += 'specified component'
+    }
+    message += ` within: ${this.html()}`
+    throw new Error(message)
   }
 
   protected isDisabled = () => {

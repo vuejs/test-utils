@@ -24,4 +24,15 @@ describe('findAllComponents', () => {
     )
     expect(wrapper.findAllComponents(Hello)[0].text()).toBe('Hello world')
   })
+
+  it('finds all deeply nested vue components when chained from dom wrapper', () => {
+    const Component = defineComponent({
+      components: { Hello },
+      template:
+        '<div><Hello /><div class="nested"><Hello /><Hello /></div></div>'
+    })
+    const wrapper = mount(Component)
+    expect(wrapper.findAllComponents(Hello)).toHaveLength(3)
+    expect(wrapper.find('.nested').findAllComponents(Hello)).toHaveLength(2)
+  })
 })

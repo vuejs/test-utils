@@ -347,4 +347,73 @@ describe('findComponent', () => {
     })
     expect(wrapper.findComponent(Func).exists()).toBe(true)
   })
+
+  describe('chaining from dom wrapper', () => {
+    it('finds a component nested inside a node', () => {
+      const Comp = defineComponent({
+        components: { Hello: Hello },
+        template: '<div><div class="nested"><Hello /></div></div>'
+      })
+
+      const wrapper = mount(Comp)
+      expect(wrapper.find('.nested').findComponent(Hello).exists()).toBe(true)
+    })
+
+    it('finds a component inside DOM node', () => {
+      const Comp = defineComponent({
+        components: { Hello: Hello },
+        template:
+          '<div><Hello class="one"/><div class="nested"><Hello class="two" /></div>'
+      })
+
+      const wrapper = mount(Comp)
+      expect(wrapper.find('.nested').findComponent(Hello).classes('two')).toBe(
+        true
+      )
+    })
+
+    it('returns correct instance of recursive component', () => {
+      const Comp = defineComponent({
+        name: 'Comp',
+        props: ['firstLevel'],
+        template:
+          '<div class="first"><div class="nested"><Comp v-if="firstLevel" class="second" /></div>'
+      })
+
+      const wrapper = mount(Comp, { props: { firstLevel: true } })
+      expect(
+        wrapper.find('.nested').findComponent(Comp).classes('second')
+      ).toBe(true)
+    })
+
+    it('returns top-level component if it matches', () => {
+      const Comp = defineComponent({
+        name: 'Comp',
+        template: '<div class="top"></div>'
+      })
+
+      const wrapper = mount(Comp)
+      expect(wrapper.find('.top').findComponent(Comp).classes('top')).toBe(true)
+    })
+
+    it('uses refs of correct component when searching by ref', () => {
+      const Child = defineComponent({
+        components: { Hello },
+        template: '<div><Hello ref="testRef" class="inside"></div>'
+      })
+      const Comp = defineComponent({
+        components: { Child, Hello },
+        template:
+          '<div><Child class="nested" /><Hello ref="testRef" class="outside" /></div>'
+      })
+
+      const wrapper = mount(Comp)
+      expect(
+        wrapper
+          .find('.nested')
+          .findComponent({ ref: 'testRef' })
+          .classes('inside')
+      ).toBe(true)
+    })
+  })
 })
