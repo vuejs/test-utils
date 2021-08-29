@@ -8,6 +8,7 @@ import {
   defineComponent,
   VNodeTypes,
   ConcreteComponent,
+  DefineComponent,
   ComponentPropsOptions
 } from 'vue'
 import { hyphenate } from './utils/vueShared'
@@ -47,7 +48,7 @@ export const createStub = ({
   name,
   propsDeclaration,
   renderStubDefaultSlot
-}: StubOptions): ComponentOptions => {
+}: StubOptions) => {
   const anonName = 'anonymous-stub'
   const tag = name ? `${hyphenate(name)}-stub` : anonName
 
@@ -63,7 +64,7 @@ export const createStub = ({
   })
 }
 
-const createTransitionStub = ({ name }: StubOptions): ComponentOptions => {
+const createTransitionStub = ({ name }: StubOptions) => {
   const render = (ctx: ComponentPublicInstance) => {
     return h(name, {}, ctx.$slots)
   }

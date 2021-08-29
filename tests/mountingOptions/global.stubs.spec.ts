@@ -22,7 +22,7 @@ describe('mounting options: stubs', () => {
         return h('p')
       }
     }
-    const Component: ComponentOptions = {
+    const Component = {
       render() {
         return h(() => [h('div'), h(Foo)])
       }
@@ -131,7 +131,7 @@ describe('mounting options: stubs', () => {
         return h('p')
       }
     }
-    const Component: ComponentOptions = {
+    const Component = {
       render() {
         return h(() => [h('div'), h(Foo)])
       }
@@ -283,7 +283,7 @@ describe('mounting options: stubs', () => {
         return h('p')
       }
     }
-    const Component: ComponentOptions = {
+    const Component = {
       render() {
         return h(() => [h(Foo), h(Bar)])
       }

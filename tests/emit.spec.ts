@@ -1,4 +1,5 @@
 import {
+  DefineComponent,
   defineComponent,
   FunctionalComponent,
   getCurrentInstance,
@@ -322,7 +323,7 @@ describe('emitted', () => {
     expect(wrapper.emitted('foo')).toHaveLength(1)
   })
 
-  it.each([EmitsEventSFC, EmitsEventScriptSetup])(
+  it.each([EmitsEventSFC, EmitsEventScriptSetup] as DefineComponent[])(
     'captures emitted events',
     async (component) => {
       const wrapper = mount(component)
