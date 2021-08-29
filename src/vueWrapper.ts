@@ -151,6 +151,12 @@ export class VueWrapper<T extends ComponentPublicInstance>
   findComponent<T extends ComponentPublicInstance>(
     selector: FindComponentSelector | (new () => T)
   ): VueWrapper<T> {
+    if (typeof selector === 'string') {
+      throw Error(
+        'findComponent requires a Vue constructor or valid find object. If you are searching for DOM nodes, use `find` instead'
+      )
+    }
+
     if (typeof selector === 'object' && 'ref' in selector) {
       const result = this.vm.$refs[selector.ref]
       if (result && !(result instanceof HTMLElement)) {
@@ -200,6 +206,12 @@ export class VueWrapper<T extends ComponentPublicInstance>
   }
 
   findAllComponents(selector: FindAllComponentsSelector): VueWrapper<T>[] {
+    if (typeof selector === 'string') {
+      throw Error(
+        'findAllComponents requires a Vue constructor or valid find object. If you are searching for DOM nodes, use `find` instead'
+      )
+    }
+
     return find(this.vm.$.subTree, selector).map((c) => createWrapper(null, c))
   }
 

@@ -42,7 +42,7 @@ test('mounts a component', () => {
 })
 ```
 
-Notice that `mount` accepts a second parameter to define the component's state configuration. 
+Notice that `mount` accepts a second parameter to define the component's state configuration.
 
 **Example: mounting with component props and a Vue App plugin**
 ```js
@@ -58,7 +58,7 @@ const wrapper = mount(Component, {
 
 #### options.global
 
-Among component state, you can configure the aformentioned Vue 3 app by the [`MountingOptions.global` config property.](#global) This would be useful for providing mocked values which your components expect to have available. 
+Among component state, you can configure the aformentioned Vue 3 app by the [`MountingOptions.global` config property.](#global) This would be useful for providing mocked values which your components expect to have available.
 
 ::: tip
 If you find yourself having to set common App configuration for many of your tests, then you can set configuration for your entire test suite using the exported [`config` object.](#config)
@@ -1103,7 +1103,6 @@ findComponent<T extends ComponentPublicInstance>(selector: FindComponentSelector
 
 | syntax         | example                       | details                                                      |
 | -------------- | ----------------------------- | ------------------------------------------------------------ |
-| querySelector  | `findComponent('.component')` | Matches standard query selector.                             |
 | Component name | `findComponent({name: 'a'})`  | matches PascalCase, snake-case, camelCase                    |
 | Component ref  | `findComponent({ref: 'ref'})` | Can be used only on direct ref children of mounted component |
 | SFC            | `findComponent(Component)`    | Pass an imported component directly                          |
