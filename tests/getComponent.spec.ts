@@ -49,7 +49,7 @@ describe('getComponent', () => {
   })
 
   it('should throw if not found with a component selector that has no name', () => {
-    const wrapper = mount(compA)
+    const wrapper = mount(compB)
     expect(() => wrapper.getComponent(compA)).toThrowError(
       'Unable to get specified component within: <div class="A"></div>'
     )

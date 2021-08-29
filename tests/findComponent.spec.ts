@@ -97,6 +97,22 @@ describe('findComponent', () => {
     expect(wrapper.findComponent(Comp).props('depth')).toBe(0)
   })
 
+  it('finds root component without name', async () => {
+    const Comp = defineComponent({
+      template: `
+        <input v-model="msg" />
+        {{ msg }}
+      `,
+      data() {
+        return { msg: 'foo' }
+      }
+    })
+    const wrapper = mount(Comp)
+    expect(wrapper.findComponent(Comp).exists()).toBe(true)
+    await wrapper.find('input').setValue('bar')
+    expect(wrapper.html()).toContain('bar')
+  })
+
   it('finds component without a name by using its object definition', () => {
     const Component = {
       template: '<div><component-without-name/></div>',

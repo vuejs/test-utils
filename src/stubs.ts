@@ -26,7 +26,13 @@ interface StubOptions {
   renderStubDefaultSlot?: boolean
 }
 
-const stubsMap: WeakMap<ConcreteComponent, VNodeTypes> = new WeakMap()
+const stubsMap: WeakMap<ConcreteComponent, ConcreteComponent> = new WeakMap()
+export const registerStub = (
+  source: ConcreteComponent,
+  stub: ConcreteComponent
+) => {
+  stubsMap.set(stub, source)
+}
 
 export const getOriginalVNodeTypeFromStub = (
   type: ConcreteComponent
@@ -119,7 +125,7 @@ const getComponentName = (type: VNodeTypes): string => {
 }
 
 function createStubOnceForType(
-  type: {} & VNodeTypes,
+  type: ConcreteComponent,
   factoryFn: () => ConcreteComponent,
   cache: WeakMap<{} & VNodeTypes, ConcreteComponent>
 ): ConcreteComponent {
@@ -129,7 +135,7 @@ function createStubOnceForType(
   }
 
   const stub = factoryFn()
-  stubsMap.set(stub, type)
+  registerStub(type, stub)
   cache.set(type, stub)
   return stub
 }
@@ -143,7 +149,7 @@ export function stubComponents(
     new WeakMap()
 
   const createStubOnce = (
-    type: {} & VNodeTypes,
+    type: ConcreteComponent,
     factoryFn: () => ConcreteComponent
   ) => createStubOnceForType(type, factoryFn, createdStubsMap)
 
@@ -216,6 +222,8 @@ export function stubComponents(
           type,
           () => specializedStubComponent
         )
+        specializedStub.props = stub.props
+        registerStub(type, specializedStub)
         // pass the props and children, for advanced stubbing
         return [specializedStub, props, children, patchFlag, dynamicProps]
       }

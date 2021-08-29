@@ -35,7 +35,12 @@ import {
 import { processSlot } from './utils/compileSlots'
 import { createWrapper, VueWrapper } from './vueWrapper'
 import { attachEmitListener } from './emit'
-import { createStub, stubComponents, addToDoNotStubComponents } from './stubs'
+import {
+  createStub,
+  stubComponents,
+  addToDoNotStubComponents,
+  registerStub
+} from './stubs'
 import {
   isLegacyFunctionalComponent,
   unwrapLegacyVueExtendComponent
@@ -244,6 +249,7 @@ export function mount(
   }
 
   addToDoNotStubComponents(component)
+  registerStub(originalComponent, component)
   const el = document.createElement('div')
 
   if (options?.attachTo) {
