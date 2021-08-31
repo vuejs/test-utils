@@ -132,22 +132,6 @@ export class VueWrapper<T extends ComponentPublicInstance>
     return createWrapperError('DOMWrapper')
   }
 
-  get<K extends keyof HTMLElementTagNameMap>(
-    selector: K
-  ): Omit<DOMWrapper<HTMLElementTagNameMap[K]>, 'exists'>
-  get<K extends keyof SVGElementTagNameMap>(
-    selector: K
-  ): Omit<DOMWrapper<SVGElementTagNameMap[K]>, 'exists'>
-  get<T extends Element>(selector: string): Omit<DOMWrapper<T>, 'exists'>
-  get(selector: string): Omit<DOMWrapper<Element>, 'exists'> {
-    const result = this.find(selector)
-    if (result instanceof DOMWrapper) {
-      return result
-    }
-
-    throw new Error(`Unable to get ${selector} within: ${this.html()}`)
-  }
-
   findComponent<T extends ComponentPublicInstance>(
     selector: FindComponentSelector | (new () => T)
   ): VueWrapper<T> {
@@ -182,30 +166,7 @@ export class VueWrapper<T extends ComponentPublicInstance>
     return createWrapperError('VueWrapper')
   }
 
-  getComponent<T extends ComponentPublicInstance>(
-    selector: FindComponentSelector | (new () => T)
-  ): Omit<VueWrapper<T>, 'exists'> {
-    const result = this.findComponent(selector)
-
-    if (result instanceof VueWrapper) {
-      return result as VueWrapper<T>
-    }
-
-    let message = 'Unable to get '
-    if (typeof selector === 'string') {
-      message += `component with selector ${selector}`
-    } else if ('name' in selector) {
-      message += `component with name ${selector.name}`
-    } else if ('ref' in selector) {
-      message += `component with ref ${selector.ref}`
-    } else {
-      message += 'specified component'
-    }
-    message += ` within: ${this.html()}`
-    throw new Error(message)
-  }
-
-  findAllComponents(selector: FindAllComponentsSelector): VueWrapper<T>[] {
+  findAllComponents(selector: FindAllComponentsSelector): VueWrapper<any>[] {
     if (typeof selector === 'string') {
       throw Error(
         'findAllComponents requires a Vue constructor or valid find object. If you are searching for DOM nodes, use `find` instead'

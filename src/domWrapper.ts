@@ -3,6 +3,11 @@ import { isElementVisible } from './utils/isElementVisible'
 import BaseWrapper from './baseWrapper'
 import { createWrapperError } from './errorWrapper'
 import WrapperLike from './interfaces/wrapperLike'
+import { ComponentInternalInstance, ComponentPublicInstance } from 'vue'
+import { FindAllComponentsSelector, FindComponentSelector } from './types'
+import { VueWrapper } from 'src'
+import { matches, find } from './utils/find'
+import { createWrapper } from './vueWrapper'
 
 export class DOMWrapper<ElementType extends Element>
   extends BaseWrapper<ElementType>
@@ -38,22 +43,6 @@ export class DOMWrapper<ElementType extends Element>
     return createWrapperError('DOMWrapper')
   }
 
-  get<K extends keyof HTMLElementTagNameMap>(
-    selector: K
-  ): Omit<DOMWrapper<HTMLElementTagNameMap[K]>, 'exists'>
-  get<K extends keyof SVGElementTagNameMap>(
-    selector: K
-  ): Omit<DOMWrapper<SVGElementTagNameMap[K]>, 'exists'>
-  get<T extends Element>(selector: string): Omit<DOMWrapper<T>, 'exists'>
-  get(selector: string): Omit<DOMWrapper<Element>, 'exists'> {
-    const result = this.find(selector)
-    if (result instanceof DOMWrapper) {
-      return result
-    }
-
-    throw new Error(`Unable to get ${selector} within: ${this.html()}`)
-  }
-
   findAll<K extends keyof HTMLElementTagNameMap>(
     selector: K
   ): DOMWrapper<HTMLElementTagNameMap[K]>[]
@@ -65,6 +54,51 @@ export class DOMWrapper<ElementType extends Element>
     return Array.from(this.element.querySelectorAll(selector)).map(
       (x) => new DOMWrapper(x)
     )
+  }
+
+  findComponent<T extends ComponentPublicInstance>(
+    selector: FindComponentSelector | (new () => T)
+  ): VueWrapper<T> {
+    const parentComponent = this.element.__vueParentComponent
+
+    if (!parentComponent) {
+      return createWrapperError('VueWrapper')
+    }
+
+    if (typeof selector === 'object' && 'ref' in selector) {
+      const result = parentComponent.refs[selector.ref]
+      if (result && !(result instanceof HTMLElement)) {
+        return createWrapper(null, result as T)
+      } else {
+        return createWrapperError('VueWrapper')
+      }
+    }
+
+    if (
+      matches(parentComponent.vnode, selector) &&
+      this.element.contains(parentComponent.vnode.el as Node)
+    ) {
+      return createWrapper(null, parentComponent.proxy!)
+    }
+
+    const result = find(parentComponent.subTree, selector).filter((v) =>
+      this.element.contains(v.$el)
+    )
+
+    if (result.length) {
+      return createWrapper(null, result[0])
+    }
+
+    return createWrapperError('VueWrapper')
+  }
+
+  findAllComponents(selector: FindAllComponentsSelector): VueWrapper<any>[] {
+    const parentComponent: ComponentInternalInstance = (this.element as any)
+      .__vueParentComponent
+
+    return find(parentComponent.subTree, selector)
+      .filter((v) => this.element.contains(v.$el))
+      .map((c) => createWrapper(null, c))
   }
 
   private async setChecked(checked: boolean = true) {
