@@ -26,8 +26,8 @@ interface NameSelector {
   name: string
 }
 
-export type FindComponentSelector = RefSelector | NameSelector | string
-export type FindAllComponentsSelector = NameSelector | string
+export type FindComponentSelector = RefSelector | NameSelector
+export type FindAllComponentsSelector = NameSelector
 
 export type Slot = VNode | string | { render: Function } | Function | Component
 

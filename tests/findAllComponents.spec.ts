@@ -18,8 +18,7 @@ const compA = defineComponent({
 describe('findAllComponents', () => {
   it('finds all deeply nested vue components', () => {
     const wrapper = mount(compA)
-    // find by DOM selector
-    expect(wrapper.findAllComponents('.C')).toHaveLength(2)
+    expect(wrapper.findAllComponents(compC)).toHaveLength(2)
     expect(wrapper.findAllComponents({ name: 'Hello' })[0].text()).toBe(
       'Hello world'
     )

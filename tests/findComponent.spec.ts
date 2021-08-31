@@ -41,7 +41,8 @@ const compA = defineComponent({
 describe('findComponent', () => {
   it('does not find plain dom elements', () => {
     const wrapper = mount(compA)
-    expect(wrapper.findComponent('.domElement').exists()).toBeFalsy()
+    // @ts-expect-error
+    expect(() => wrapper.findComponent('.domElement')).toThrowError()
   })
 
   it('finds component by ref', () => {
@@ -57,23 +58,6 @@ describe('findComponent', () => {
     const wrapper = mount(ComponentWithRefOnDomElement)
 
     expect(wrapper.findComponent({ ref: 'hello' }).exists()).toBe(false)
-  })
-
-  it('finds component by dom selector', () => {
-    const wrapper = mount(compA)
-    // find by DOM selector
-    expect(wrapper.findComponent('.C').vm).toHaveProperty(
-      '$options.name',
-      'ComponentC'
-    )
-  })
-
-  it('does allows using complicated DOM selector query', () => {
-    const wrapper = mount(compA)
-    expect(wrapper.findComponent('.B > .C').vm).toHaveProperty(
-      '$options.name',
-      'ComponentC'
-    )
   })
 
   it('finds component by name', () => {
@@ -111,6 +95,22 @@ describe('findComponent', () => {
     })
     const wrapper = mount(Comp, { props: { depth: 0 } })
     expect(wrapper.findComponent(Comp).props('depth')).toBe(0)
+  })
+
+  it('finds root component without name', async () => {
+    const Comp = defineComponent({
+      template: `
+        <input v-model="msg" />
+        {{ msg }}
+      `,
+      data() {
+        return { msg: 'foo' }
+      }
+    })
+    const wrapper = mount(Comp)
+    expect(wrapper.findComponent(Comp).exists()).toBe(true)
+    await wrapper.find('input').setValue('bar')
+    expect(wrapper.html()).toContain('bar')
   })
 
   it('finds component without a name by using its object definition', () => {

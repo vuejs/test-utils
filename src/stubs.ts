@@ -8,6 +8,7 @@ import {
   defineComponent,
   VNodeTypes,
   ConcreteComponent,
+  DefineComponent,
   ComponentPropsOptions
 } from 'vue'
 import { hyphenate } from './utils/vueShared'
@@ -26,7 +27,13 @@ interface StubOptions {
   renderStubDefaultSlot?: boolean
 }
 
-const stubsMap: WeakMap<ConcreteComponent, VNodeTypes> = new WeakMap()
+const stubsMap: WeakMap<ConcreteComponent, ConcreteComponent> = new WeakMap()
+export const registerStub = (
+  source: ConcreteComponent,
+  stub: ConcreteComponent
+) => {
+  stubsMap.set(stub, source)
+}
 
 export const getOriginalVNodeTypeFromStub = (
   type: ConcreteComponent
@@ -41,7 +48,7 @@ export const createStub = ({
   name,
   propsDeclaration,
   renderStubDefaultSlot
-}: StubOptions): ComponentOptions => {
+}: StubOptions) => {
   const anonName = 'anonymous-stub'
   const tag = name ? `${hyphenate(name)}-stub` : anonName
 
@@ -57,7 +64,7 @@ export const createStub = ({
   })
 }
 
-const createTransitionStub = ({ name }: StubOptions): ComponentOptions => {
+const createTransitionStub = ({ name }: StubOptions) => {
   const render = (ctx: ComponentPublicInstance) => {
     return h(name, {}, ctx.$slots)
   }
@@ -119,7 +126,7 @@ const getComponentName = (type: VNodeTypes): string => {
 }
 
 function createStubOnceForType(
-  type: {} & VNodeTypes,
+  type: ConcreteComponent,
   factoryFn: () => ConcreteComponent,
   cache: WeakMap<{} & VNodeTypes, ConcreteComponent>
 ): ConcreteComponent {
@@ -129,7 +136,7 @@ function createStubOnceForType(
   }
 
   const stub = factoryFn()
-  stubsMap.set(stub, type)
+  registerStub(type, stub)
   cache.set(type, stub)
   return stub
 }
@@ -143,7 +150,7 @@ export function stubComponents(
     new WeakMap()
 
   const createStubOnce = (
-    type: {} & VNodeTypes,
+    type: ConcreteComponent,
     factoryFn: () => ConcreteComponent
   ) => createStubOnceForType(type, factoryFn, createdStubsMap)
 
@@ -216,6 +223,8 @@ export function stubComponents(
           type,
           () => specializedStubComponent
         )
+        specializedStub.props = stub.props
+        registerStub(type, specializedStub)
         // pass the props and children, for advanced stubbing
         return [specializedStub, props, children, patchFlag, dynamicProps]
       }

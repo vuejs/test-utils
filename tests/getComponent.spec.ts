@@ -1,5 +1,5 @@
 import { defineComponent } from 'vue'
-import { mount, MountingOptions, RouterLinkStub, shallowMount } from '../src'
+import { mount, RouterLinkStub, shallowMount } from '../src'
 import Issue425 from './components/Issue425.vue'
 
 const compA = defineComponent({
@@ -15,14 +15,15 @@ describe('getComponent', () => {
   it('should delegate to findComponent', () => {
     const wrapper = mount(compA)
     jest.spyOn(wrapper, 'findComponent').mockReturnThis()
-    wrapper.getComponent('.domElement')
-    expect(wrapper.findComponent).toHaveBeenCalledWith('.domElement')
+    wrapper.getComponent(compA)
+    expect(wrapper.findComponent).toHaveBeenCalledWith(compA)
   })
 
   it('should throw if not found with a string selector', () => {
     const wrapper = mount(compA)
+    // @ts-expect-error
     expect(() => wrapper.getComponent('.domElement')).toThrowError(
-      'Unable to get component with selector .domElement within: <div class="A"></div>'
+      'findComponent requires a Vue constructor or valid find object. If you are searching for DOM nodes, use `find` instead'
     )
   })
 
@@ -48,7 +49,7 @@ describe('getComponent', () => {
   })
 
   it('should throw if not found with a component selector that has no name', () => {
-    const wrapper = mount(compA)
+    const wrapper = mount(compB)
     expect(() => wrapper.getComponent(compA)).toThrowError(
       'Unable to get specified component within: <div class="A"></div>'
     )
@@ -69,12 +70,12 @@ describe('getComponent', () => {
   // https://github.com/vuejs/vue-test-utils-next/issues/425
   it('works with router-link and mount', () => {
     const wrapper = mount(Issue425, options)
-    expect(wrapper.getComponent('.link').props('to')).toEqual({ name })
+    expect(wrapper.getComponent(RouterLinkStub).props('to')).toEqual({ name })
   })
 
   // https://github.com/vuejs/vue-test-utils-next/issues/425
   it('works with router-link and shallowMount', () => {
     const wrapper = shallowMount(Issue425, options)
-    expect(wrapper.getComponent('.link').props('to')).toEqual({ name })
+    expect(wrapper.getComponent(RouterLinkStub).props('to')).toEqual({ name })
   })
 })
