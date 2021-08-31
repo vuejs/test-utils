@@ -13,7 +13,6 @@ it('toRefs and inject work with script setup', async () => {
     }
   })
 
-  console.log(wrapper.html())
   expect(wrapper.html()).toContain('Some title')
   expect(wrapper.find('p').html()).toContain('Parent Type')
   expect(wrapper.find('#data').exists()).toBe(true)
