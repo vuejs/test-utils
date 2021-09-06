@@ -735,7 +735,7 @@ describe('mounting options: stubs', () => {
         stubs: {
           ComponentWithInput: stub,
           ScriptSetup: true
-        } 
+        }
       }
     })
 
