@@ -5,7 +5,7 @@ import Hello from '../components/Hello.vue'
 import ComponentWithoutName from '../components/ComponentWithoutName.vue'
 import ComponentWithSlots from '../components/ComponentWithSlots.vue'
 import ScriptSetupWithChildren from './../components/ScriptSetupWithChildren.vue'
-import ScriptSetup from '../../components/ScriptSetup.vue'
+import MinimalScriptSetupWithChild from './../components/MinimalScriptSetupWithChild.vue'
 
 describe('mounting options: stubs', () => {
   let configStubsSave = config.global.stubs
@@ -725,7 +725,7 @@ describe('mounting options: stubs', () => {
     expect(stub.vm).toBe(stubAfterSecondRender.vm)
   })
 
-  it.only('works with script setup', () => {
+  it('works with script setup', () => {
     const stub = defineComponent({
       template: `<div>this is a stub</div>`
     })
@@ -742,5 +742,17 @@ describe('mounting options: stubs', () => {
     expect(wrapper.html()).toContain('<div>this is a stub</div>')
     // it should be stubbed, so this text should NOT be rendered.
     expect(wrapper.html()).not.toContain('This is a script setup component.')
+  })
+
+  it.only('works with script setup', () => {
+    const wrapper = mount(MinimalScriptSetupWithChild, {
+      global: {
+        stubs: {
+          ScriptSetup: true
+        }
+      }
+    })
+
+    expect(wrapper.html()).toContain('<script-setup-stub></script-setup-stub>')
   })
 })
