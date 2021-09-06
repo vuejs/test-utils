@@ -12,6 +12,7 @@ const inc = () => {
 </script>
 
 <template>
+  <h1>This is a script setup component.</h1>
   <button @click="inc">{{ count }}</button>
   <Hello />
 </template>
