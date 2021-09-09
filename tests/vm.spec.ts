@@ -1,5 +1,4 @@
 import { defineComponent, ref } from 'vue'
-
 import { mount } from '../src'
 
 describe('vm', () => {

@@ -36,7 +36,12 @@ export class VueWrapper<T extends ComponentPublicInstance>
     this.__app = app
     // root is null on functional components
     this.rootVM = vm?.$root
-    this.componentVM = vm as T
+    // vm.$.proxy is what the template has access to
+    // so even if the component is closed (as they are by default for `script setup`)
+    // a test will still be able to do something like
+    // `expect(wrapper.vm.count).toBe(1)`
+    // (note that vm can be null for functional components, hence the condition)
+    this.componentVM = vm ? (vm.$.proxy as T) : (vm as T)
     this.__setProps = setProps
 
     this.attachNativeEventListener()
