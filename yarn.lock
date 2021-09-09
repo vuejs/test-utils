@@ -1887,10 +1887,10 @@
     html-tags "^3.1.0"
     svg-tags "^1.0.0"
 
-"@vue/compat@3.2.4":
-  version "3.2.4"
-  resolved "https://registry.yarnpkg.com/@vue/compat/-/compat-3.2.4.tgz#d5a30b7ce40e0f3333b6d28262ab7a5977861364"
-  integrity sha512-u/VQmEp5/Zsov4mCEV46jz4IIlsaQM/VyNE3m75g9gziwK8J6iiMT0xSvJsouNwFKIXggkAHfYeL/J3p+cObzQ==
+"@vue/compat@3.2.11":
+  version "3.2.11"
+  resolved "https://registry.yarnpkg.com/@vue/compat/-/compat-3.2.11.tgz#6561c03ed4e6911a1aac5d4c0e0a0c8010cdbdbf"
+  integrity sha512-9JXdSN0+GP0I6GOK/ttcerj5+75sGUvb/GJg/7JCfczW9o6GvMaioZi524kMJtd4yu5e9W8TaZenSn06Nr3xUA==
 
 "@vue/compiler-core@3.2.10":
   version "3.2.10"
