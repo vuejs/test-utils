@@ -457,19 +457,13 @@ export function mount(
   const warnSave = console.warn
   console.warn = () => {}
 
-  // get `vm`.
-  // for some unknown reason, getting the `vm` for components using `<script setup>`
-  // as of Vue 3.0.3 works differently.
-  // if `appRef` has keys, use that (vm always has keys like $el, $props etc).
-  // if not, use the return value from app.mount.
   const appRef = vm.$refs[MOUNT_COMPONENT_REF] as ComponentPublicInstance
-  const $vm = Reflect.ownKeys(appRef).length ? appRef : vm
   // we add `hasOwnProperty` so jest can spy on the proxied vm without throwing
-  $vm.hasOwnProperty = (property) => {
-    return Reflect.has($vm, property)
+  appRef.hasOwnProperty = (property) => {
+    return Reflect.has(appRef, property)
   }
   console.warn = warnSave
-  return createWrapper(app, $vm, setProps)
+  return createWrapper(app, appRef, setProps)
 }
 
 export const shallowMount: typeof mount = (component: any, options?: any) => {
