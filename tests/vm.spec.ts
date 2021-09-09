@@ -1,6 +1,7 @@
 import { defineComponent, ref } from 'vue'
-
 import { mount } from '../src'
+import ScriptSetup from './components/ScriptSetup.vue'
+import ScriptSetupExpose from './components/ScriptSetup_Expose.vue'
 
 describe('vm', () => {
   it('returns the component vm', () => {
@@ -44,5 +45,21 @@ describe('vm', () => {
     await wrapper.get('div').trigger('click')
 
     expect(wrapper.vm.toggle).toHaveBeenCalled()
+  })
+
+  it('access vm with <script setup> with defineExpose()', async () => {
+    const wrapper = mount(ScriptSetupExpose)
+
+    await wrapper.find('button').trigger('click')
+    expect(wrapper.html()).toContain('1')
+    expect(wrapper.vm.count).toBe(1)
+  })
+
+  it('access vm with <script setup> even without defineExpose()', async () => {
+    const wrapper = mount(ScriptSetup)
+
+    await wrapper.find('button').trigger('click')
+    expect(wrapper.html()).toContain('1')
+    expect(wrapper.vm.count).toBe(1)
   })
 })
