@@ -301,6 +301,103 @@ test('routing', async () => {
 
 It _finally_ passes. Great! This is all very manual, however - and this is for a tiny, trivial app. This is the reason using a mocked router is a common approach when testing Vue components using Vue Test Utils.
 
+## Testing useRouter and useRoute within setup
+
+Vue router 4 allows for working with the router and route inside the `setup` function with the composition API.
+
+Consider the same demo component rewritten using the composition API.
+
+```js
+import { useRouter, useRoute } from 'vue-router'
+
+const Component = {
+  template: `<button @click="redirect">Click to Edit</button>`,
+  props: ['isAuthenticated'],
+  setup (props) {
+    const router = useRouter()
+    const route = useRoute()
+
+    const redirect = () => {
+      if (props.isAuthenticated) {
+        router.push(`/posts/${route.params.id}/edit`)
+      } else {
+        router.push('/404')
+      }
+    }
+
+    return {
+      redirect
+    }
+  }
+}
+```
+
+This time in order to test the component, we will use jest's ability to mock an imported resource, `vue-router` and mock both the router and route directly.
+
+```js
+import { useRouter, useRoute } from 'vue-router'
+
+jest.mock('vue-router', () => ({
+  useRoute: jest.fn(() => ({ })),
+  useRouter: jest.fn(() => ({
+    push: () => {}
+  }))
+}))
+
+test('allows authenticated user to edit a post', () => {
+  useRoute.mockImplementationOnce(() => ({
+    params: {
+      id: 1
+    }
+  }))
+
+  const push = jest.fn()
+  useRouter.mockImplementationOnce(() => {
+    push
+  })
+
+  const wrapper = mount(Component, {
+    props: {
+      isAuthenticated: true
+    },
+    global: {
+      mocks: {
+        // No need for the mocks
+      }
+    }
+  })
+
+  await wrapper.find('button').trigger('click')
+
+  expect(push).toHaveBeenCalledTimes(1)
+  expect(push).toHaveBeenCalledWith('/posts/1/edit')
+})
+
+test('redirect an unauthenticated user to 404', () => {
+  useRoute.mockImplementationOnce(() => ({
+    params: {
+      id: 1
+    }
+  }))
+
+  const push = jest.fn()
+  useRouter.mockImplementationOnce(() => {
+    push
+  })
+
+  const wrapper = mount(Component, {
+    props: {
+      isAuthenticated: false
+    }
+  })
+
+  await wrapper.find('button').trigger('click')
+
+  expect(push).toHaveBeenCalledTimes(1)
+  expect(push).toHaveBeenCalledWith('/404')
+})
+```
+
 ## Conclusion
 
 - You can use a real router instance in your tests.
