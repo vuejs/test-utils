@@ -338,7 +338,7 @@ This time in order to test the component, we will use jest's ability to mock an 
 import { useRouter, useRoute } from 'vue-router'
 
 jest.mock('vue-router', () => ({
-  useRoute: jest.fn(() => ({ })),
+  useRoute: jest.fn(),
   useRouter: jest.fn(() => ({
     push: () => {}
   }))
@@ -397,6 +397,8 @@ test('redirect an unauthenticated user to 404', () => {
   expect(push).toHaveBeenCalledWith('/404')
 })
 ```
+
+For those who prefer a non-manual approach, the library [vue-router-mock](https://github.com/posva/vue-router-mock) created by Posva is also available as an alternative.
 
 ## Conclusion
 
