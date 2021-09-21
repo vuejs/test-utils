@@ -86,7 +86,6 @@ Sometimes you may need to write a test for a side effect of a prop changing. Thi
 </template>
 
 <script>
-import axios from 'axios'
 
 export default {
   props: {
