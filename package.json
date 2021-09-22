@@ -24,7 +24,7 @@
     "@types/pretty": "^2.0.0",
     "@vue/babel-plugin-jsx": "^1.0.7",
     "@vue/compat": "3.2.13",
-    "@vue/compiler-dom": "3.2.12",
+    "@vue/compiler-dom": "3.2.13",
     "@vue/compiler-sfc": "3.2.12",
     "babel-jest": "^26.6.3",
     "babel-preset-jest": "^27.2.0",
