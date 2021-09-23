@@ -363,7 +363,7 @@ describe('findComponent', () => {
       const Comp = defineComponent({
         components: { Hello: Hello },
         template:
-          '<div><Hello class="one"/><div class="nested"><Hello class="two" /></div>'
+          '<div><Hello class="one"/><div class="nested"><Hello class="two" /></div></div>'
       })
 
       const wrapper = mount(Comp)
@@ -377,7 +377,7 @@ describe('findComponent', () => {
         name: 'Comp',
         props: ['firstLevel'],
         template:
-          '<div class="first"><div class="nested"><Comp v-if="firstLevel" class="second" /></div>'
+          '<div class="first"><div class="nested"><Comp v-if="firstLevel" class="second" /></div></div>'
       })
 
       const wrapper = mount(Comp, { props: { firstLevel: true } })
@@ -399,7 +399,7 @@ describe('findComponent', () => {
     it('uses refs of correct component when searching by ref', () => {
       const Child = defineComponent({
         components: { Hello },
-        template: '<div><Hello ref="testRef" class="inside"></div>'
+        template: '<div><Hello ref="testRef" class="inside" /></div>'
       })
       const Comp = defineComponent({
         components: { Child, Hello },
