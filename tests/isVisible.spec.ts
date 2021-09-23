@@ -200,7 +200,7 @@ describe('isVisible', () => {
 
     describe('child has two nodes', () => {
       const Foo = defineComponent({
-        template: `<div /><span />`
+        template: `<div ><span /></div>`
       })
 
       const Root = defineComponent({
