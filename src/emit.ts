@@ -30,7 +30,7 @@ export function emitted<T = unknown>(
 export const attachEmitListener = () => {
   events = {}
   // use devtools to capture this "emit"
-  setDevtoolsHook(createDevTools(events))
+  setDevtoolsHook(createDevTools(events), this)
 }
 
 // devtools hook only catches Vue component custom events
