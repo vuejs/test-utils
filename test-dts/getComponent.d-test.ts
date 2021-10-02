@@ -28,6 +28,11 @@ const componentByName = wrapper.getComponent({ name: 'ComponentToFind' })
 // returns a wrapper with a generic vm (any)
 expectType<ComponentPublicInstance>(componentByName.vm)
 
+// get by string
+const componentByString = wrapper.getComponent('other')
+// returns a wrapper with a generic vm (any)
+expectType<ComponentPublicInstance>(componentByString.vm)
+
 // get by ref
 const componentByRef = wrapper.getComponent({ ref: 'ref' })
 // returns a wrapper with a generic vm (any)

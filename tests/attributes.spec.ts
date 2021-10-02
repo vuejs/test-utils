@@ -58,7 +58,7 @@ describe('attributes', () => {
       }
     })
 
-    expect(wrapper.findComponent({ name: 'Hello' }).attributes()).toEqual({
+    expect(wrapper.findComponent('.hello-outside').attributes()).toEqual({
       class: 'hello-outside',
       'data-testid': 'hello',
       disabled: ''

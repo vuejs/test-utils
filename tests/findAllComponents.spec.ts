@@ -18,7 +18,8 @@ const compA = defineComponent({
 describe('findAllComponents', () => {
   it('finds all deeply nested vue components', () => {
     const wrapper = mount(compA)
-    expect(wrapper.findAllComponents(compC)).toHaveLength(2)
+    // find by DOM selector
+    expect(wrapper.findAllComponents('.C')).toHaveLength(2)
     expect(wrapper.findAllComponents({ name: 'Hello' })[0].text()).toBe(
       'Hello world'
     )
@@ -34,5 +35,15 @@ describe('findAllComponents', () => {
     const wrapper = mount(Component)
     expect(wrapper.findAllComponents(Hello)).toHaveLength(3)
     expect(wrapper.find('.nested').findAllComponents(Hello)).toHaveLength(2)
+  })
+
+  it('ignores DOM nodes matching css selector', () => {
+    const Component = defineComponent({
+      components: { Hello },
+      template:
+        '<div class="foo"><Hello class="foo" /><div class="nested foo"></div></div>'
+    })
+    const wrapper = mount(Component)
+    expect(wrapper.findAllComponents('.foo')).toHaveLength(1)
   })
 })
