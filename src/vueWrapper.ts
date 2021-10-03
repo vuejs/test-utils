@@ -189,6 +189,7 @@ export class VueWrapper<T extends ComponentPublicInstance>
   }
 
   findAllComponents(selector: FindAllComponentsSelector): VueWrapper<T>[] {
+    const results = find(this.vm.$.subTree, selector)
     return find(this.vm.$.subTree, selector).map((c) => createWrapper(null, c))
   }
 

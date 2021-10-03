@@ -148,8 +148,14 @@ export function find(
   root: VNode,
   selector: FindAllComponentsSelector
 ): ComponentPublicInstance[] {
-  return findAllVNodes(root, selector).map(
-    // @ts-ignore
-    (vnode: VNode) => vnode.component!.proxy!
-  )
+  let matchingVNodes = findAllVNodes(root, selector)
+
+  if (typeof selector === 'string') {
+    // When searching by CSS selector we want only one (topmost) vnode for each el`
+    matchingVNodes = matchingVNodes.filter(
+      (vnode: VNode) => vnode.component!.parent?.vnode.el !== vnode.el
+    )
+  }
+
+  return matchingVNodes.map((vnode: VNode) => vnode.component!.proxy!)
 }

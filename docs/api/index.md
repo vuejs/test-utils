@@ -42,7 +42,7 @@ test('mounts a component', () => {
 })
 ```
 
-Notice that `mount` accepts a second parameter to define the component's state configuration. 
+Notice that `mount` accepts a second parameter to define the component's state configuration.
 
 **Example: mounting with component props and a Vue App plugin**
 ```js
@@ -58,7 +58,7 @@ const wrapper = mount(Component, {
 
 #### options.global
 
-Among component state, you can configure the aformentioned Vue 3 app by the [`MountingOptions.global` config property.](#global) This would be useful for providing mocked values which your components expect to have available. 
+Among component state, you can configure the aformentioned Vue 3 app by the [`MountingOptions.global` config property.](#global) This would be useful for providing mocked values which your components expect to have available.
 
 ::: tip
 If you find yourself having to set common App configuration for many of your tests, then you can set configuration for your entire test suite using the exported [`config` object.](#config)
@@ -1166,6 +1166,7 @@ test('findComponent', () => {
 If `ref` in component points to HTML element, `findComponent` will return empty wrapper. This is intended behaviour
 :::
 
+
 **NOTE** `getComponent` and `findComponent` will not work on functional components, because they do not have an internal Vue instance (this is what makes functional components more performant). That means the following will **not** work:
 
 ```js
@@ -1179,6 +1180,31 @@ wrapper.findComponent(Foo)
 ```
 
 For tests using functional component, consider using `get` or `find` and treating them like standard DOM nodes.
+
+:::warning Usage with CSS selectors
+Using `findComponent` with CSS selector might have confusing behavior
+
+Consider this example:
+
+```js
+const ChildComponent = {
+  name: 'Child',
+  template: '<div class="child"></div>'
+}
+const RootComponent = {
+  name: 'Root',
+  components: { ChildComponent },
+  template: '<child-component class="root" />'
+}
+const wrapper = mount(RootComponent)
+const rootByCss = wrapper.findComponent('.root') // => finds Root
+expect(rootByCss.vm.$options.name).toBe('Root')
+const childByCss = wrapper.findComponent('.child')
+expect(childByCss.vm.$options.name).toBe('Root') // => still Root
+```
+
+The reason for such behavior is that `RootComponent` and `ChildComponent` are sharing same DOM node and only first matching component is included for each unique DOM node
+:::
 
 ### findAllComponents
 
@@ -1219,6 +1245,10 @@ test('findAllComponents', () => {
   wrapper.findAllComponents('[data-test="number"]')
 })
 ```
+
+:::warning Usage with CSS selectors
+`findAllComponents` has same behavior when used with CSS selector as [findComponent](#findcomponent)
+:::
 
 ### get
 
