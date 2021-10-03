@@ -2,7 +2,7 @@
 
 Vuex is just an implementation detail; no special treatment is required for testing components using Vuex. That said, there are some techniques that might make your tests easier to read and write. We will look at those here.
 
-This guide assumes you are familiar with Vuex. Vuex 4 is the version that works with Vue.js 3. Read the docs [here](https://vuex.vuejs.org/).
+This guide assumes you are familiar with Vuex. Vuex 4 is the version that works with Vue.js 3. Read the docs [here](https://next.vuex.vuejs.org/).
 
 ## A Simple Example
 
