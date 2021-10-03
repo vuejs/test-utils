@@ -69,7 +69,7 @@ A more thorough way to test this would be asserting against the rendered content
 
 ::: tip
 
-Note: if you are using a `<script setup>` component, `vm` will not be available. That's because `<script setup>` components are [closed by default](https://github.com/vuejs/rfcs/blob/script-setup-2/active-rfcs/0000-script-setup.md#closed-by-default). For these components, and in general, consider avoiding `vm` and asserting against the rendered markup.
+Note: if you are using a `<script setup>` component, `vm` will not be available. That's because `<script setup>` components are [closed by default](https://github.com/vuejs/rfcs/blob/master/active-rfcs/0040-script-setup.md#exposing-components-public-interface). For these components, and in general, consider avoiding `vm` and asserting against the rendered markup.
 :::
 
 ## Conclusion
