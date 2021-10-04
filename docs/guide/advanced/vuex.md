@@ -158,7 +158,7 @@ const createVuexStore = (initialState) =>
       ...initialState
     },
     mutations: {
-      increment(state, value) {
+      increment(state, value = 1) {
         state.count += value
       }
     }
