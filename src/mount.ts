@@ -45,6 +45,7 @@ import {
   isLegacyFunctionalComponent,
   unwrapLegacyVueExtendComponent
 } from './utils/vueCompatSupport'
+import { trackInstance } from './utils/autoUnmount'
 
 // NOTE this should come from `vue`
 type PublicProps = VNodeProps & AllowedComponentProps & ComponentCustomProps
@@ -452,7 +453,9 @@ export function mount(
     return Reflect.has(appRef, property)
   }
   console.warn = warnSave
-  return createWrapper(app, appRef, setProps)
+  const wrapper = createWrapper(app, appRef, setProps)
+  trackInstance(wrapper)
+  return wrapper
 }
 
 export const shallowMount: typeof mount = (component: any, options?: any) => {

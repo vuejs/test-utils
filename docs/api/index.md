@@ -1829,6 +1829,28 @@ function shallowMount(Component, options?: MountingOptions): VueWrapper
 
 `shallowMount` behaves exactly like `mount`, but it stubs all child components by default. Essentially, `shallowMount(Component)` is an alias of `mount(Component, { shallow: true })`.
 
+## enableAutoUnmount
+
+
+**Signature:**
+```ts
+enableAutoUnmount(hook: Function));
+disableAutoUnmount(): void;
+```
+
+**Details:**
+
+`enableAutoUnmount` allows to automatically destroy Vue wrappers. Destroy logic is passed as callback to `hook` Function.
+Common usage is to use `enableAutoUnmount` with teardown helper functions provided by your test framework, such as `afterEach`:
+
+```ts
+import { enableAutoUnmount } from '@vue/test-utils'
+
+enableAutoUnmount(afterEach)
+```
+
+`disableAutoUnmount` might be useful if you want this behavior only in specific subset of your test suite and you want to explicitly disable this behavior
+
 ## flushPromises
 
 **Signature:**
