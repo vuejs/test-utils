@@ -18,7 +18,8 @@ const compA = defineComponent({
 describe('findAllComponents', () => {
   it('finds all deeply nested vue components', () => {
     const wrapper = mount(compA)
-    expect(wrapper.findAllComponents(compC)).toHaveLength(2)
+    // find by DOM selector
+    expect(wrapper.findAllComponents('.C')).toHaveLength(2)
     expect(wrapper.findAllComponents({ name: 'Hello' })[0].text()).toBe(
       'Hello world'
     )
@@ -34,5 +35,47 @@ describe('findAllComponents', () => {
     const wrapper = mount(Component)
     expect(wrapper.findAllComponents(Hello)).toHaveLength(3)
     expect(wrapper.find('.nested').findAllComponents(Hello)).toHaveLength(2)
+  })
+
+  it('ignores DOM nodes matching css selector', () => {
+    const Component = defineComponent({
+      components: { Hello },
+      template:
+        '<div class="foo"><Hello class="foo" /><div class="nested foo"></div></div>'
+    })
+    const wrapper = mount(Component)
+    expect(wrapper.findAllComponents('.foo')).toHaveLength(1)
+  })
+
+  it('findAllComponents returns top-level components when components are nested', () => {
+    const DeepNestedChild = {
+      name: 'DeepNestedChild',
+      template: '<div>I am deeply nested</div>'
+    }
+    const NestedChild = {
+      name: 'NestedChild',
+      components: { DeepNestedChild },
+      template: '<deep-nested-child class="in-child" />'
+    }
+    const RootComponent = {
+      name: 'RootComponent',
+      components: { NestedChild },
+      template: '<div><nested-child class="in-root"></nested-child></div>'
+    }
+
+    const wrapper = mount(RootComponent)
+
+    expect(wrapper.findAllComponents('.in-root')).toHaveLength(1)
+    expect(wrapper.findAllComponents('.in-root')[0].vm.$options.name).toEqual(
+      'NestedChild'
+    )
+
+    expect(wrapper.findAllComponents('.in-child')).toHaveLength(1)
+
+    // someone might expect DeepNestedChild here, but
+    // we always return TOP component matching DOM element
+    expect(wrapper.findAllComponents('.in-child')[0].vm.$options.name).toEqual(
+      'NestedChild'
+    )
   })
 })

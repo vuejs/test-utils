@@ -41,8 +41,7 @@ const compA = defineComponent({
 describe('findComponent', () => {
   it('does not find plain dom elements', () => {
     const wrapper = mount(compA)
-    // @ts-expect-error
-    expect(() => wrapper.findComponent('.domElement')).toThrowError()
+    expect(wrapper.findComponent('.domElement').exists()).toBeFalsy()
   })
 
   it('finds component by ref', () => {
@@ -58,6 +57,23 @@ describe('findComponent', () => {
     const wrapper = mount(ComponentWithRefOnDomElement)
 
     expect(wrapper.findComponent({ ref: 'hello' }).exists()).toBe(false)
+  })
+
+  it('finds component by dom selector', () => {
+    const wrapper = mount(compA)
+    // find by DOM selector
+    expect(wrapper.findComponent('.C').vm).toHaveProperty(
+      '$options.name',
+      'ComponentC'
+    )
+  })
+
+  it('does allows using complicated DOM selector query', () => {
+    const wrapper = mount(compA)
+    expect(wrapper.findComponent('.B > .C').vm).toHaveProperty(
+      '$options.name',
+      'ComponentC'
+    )
   })
 
   it('finds component by name', () => {

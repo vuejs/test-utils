@@ -1103,6 +1103,7 @@ findComponent<T extends ComponentPublicInstance>(selector: FindComponentSelector
 
 | syntax         | example                       | details                                                      |
 | -------------- | ----------------------------- | ------------------------------------------------------------ |
+| querySelector  | `findComponent('.component')` | Matches standard query selector.                             |
 | Component name | `findComponent({name: 'a'})`  | matches PascalCase, snake-case, camelCase                    |
 | Component ref  | `findComponent({ref: 'ref'})` | Can be used only on direct ref children of mounted component |
 | SFC            | `findComponent(Component)`    | Pass an imported component directly                          |
@@ -1165,6 +1166,7 @@ test('findComponent', () => {
 If `ref` in component points to HTML element, `findComponent` will return empty wrapper. This is intended behaviour
 :::
 
+
 **NOTE** `getComponent` and `findComponent` will not work on functional components, because they do not have an internal Vue instance (this is what makes functional components more performant). That means the following will **not** work:
 
 ```js
@@ -1178,6 +1180,31 @@ wrapper.findComponent(Foo)
 ```
 
 For tests using functional component, consider using `get` or `find` and treating them like standard DOM nodes.
+
+:::warning Usage with CSS selectors
+Using `findComponent` with CSS selector might have confusing behavior
+
+Consider this example:
+
+```js
+const ChildComponent = {
+  name: 'Child',
+  template: '<div class="child"></div>'
+}
+const RootComponent = {
+  name: 'Root',
+  components: { ChildComponent },
+  template: '<child-component class="root" />'
+}
+const wrapper = mount(RootComponent)
+const rootByCss = wrapper.findComponent('.root') // => finds Root
+expect(rootByCss.vm.$options.name).toBe('Root')
+const childByCss = wrapper.findComponent('.child')
+expect(childByCss.vm.$options.name).toBe('Root') // => still Root
+```
+
+The reason for such behavior is that `RootComponent` and `ChildComponent` are sharing same DOM node and only first matching component is included for each unique DOM node
+:::
 
 ### findAllComponents
 
@@ -1218,6 +1245,10 @@ test('findAllComponents', () => {
   wrapper.findAllComponents('[data-test="number"]')
 })
 ```
+
+:::warning Usage with CSS selectors
+`findAllComponents` has same behavior when used with CSS selector as [findComponent](#findcomponent)
+:::
 
 ### get
 
