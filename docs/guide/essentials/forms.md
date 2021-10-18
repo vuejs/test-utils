@@ -298,7 +298,7 @@ test('emits an event only if you lose focus to a button', () => {
   const componentToGetFocus = wrapper.find('button')
 
   wrapper.find('input').trigger('blur', {
-    relatedTarget: componentToGetFocus
+    relatedTarget: componentToGetFocus.element
   })
 
   expect(wrapper.emitted('focus-lost')).toBeTruthy()
