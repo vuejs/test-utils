@@ -165,7 +165,9 @@ By using `shallow` mounting option that will automatically stub out all the chil
 test('shallow allows opt-out of stubbing specific component', () => {
   const wrapper = mount(ComplexComponent, {
     shallow: true,
-    stubs: { ComplexA: false }
+    global: {
+      stubs: { ComplexA: false }
+    }
   })
 
   console.log(wrapper.html())
