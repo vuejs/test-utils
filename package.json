@@ -22,7 +22,7 @@
     "@types/jest": "27.0.2",
     "@types/node": "16.11.1",
     "@types/pretty": "^2.0.0",
-    "@vue/babel-plugin-jsx": "^1.1.0",
+    "@vue/babel-plugin-jsx": "^1.1.1",
     "@vue/compat": "3.2.20",
     "@vue/compiler-dom": "3.2.20",
     "@vue/compiler-sfc": "3.2.20",
