@@ -1659,16 +1659,6 @@
   resolved "https://registry.yarnpkg.com/@vue/compat/-/compat-3.2.21.tgz#100d6ce5266554ef0c279f45e62eaf770ca6b241"
   integrity sha512-8JWKK7htA66gjaiGVYIfNAzE7dFcqdNP0LrcIIWU20pc3Rro3l8KhPbMo7xv2hGSOSLuE02kPLvQ19YWOotz9A==
 
-"@vue/compiler-core@3.2.20":
-  version "3.2.20"
-  resolved "https://registry.yarnpkg.com/@vue/compiler-core/-/compiler-core-3.2.20.tgz#af5a3c5237818835b0d0be837eb5885a8d21c160"
-  integrity sha512-vcEXlKXoPwBXFP5aUTHN9GTZaDfwCofa9Yu9bbW2C5O/QSa9Esdt7OG4+0RRd3EHEMxUvEdj4RZrd/KpQeiJbA==
-  dependencies:
-    "@babel/parser" "^7.15.0"
-    "@vue/shared" "3.2.20"
-    estree-walker "^2.0.2"
-    source-map "^0.6.1"
-
 "@vue/compiler-core@3.2.21":
   version "3.2.21"
   resolved "https://registry.yarnpkg.com/@vue/compiler-core/-/compiler-core-3.2.21.tgz#26566c32b2ad838199d471ef5df620a83846f24e"
@@ -1678,14 +1668,6 @@
     "@vue/shared" "3.2.21"
     estree-walker "^2.0.2"
     source-map "^0.6.1"
-
-"@vue/compiler-dom@3.2.20":
-  version "3.2.20"
-  resolved "https://registry.yarnpkg.com/@vue/compiler-dom/-/compiler-dom-3.2.20.tgz#8e0ef354449c0faf41519b00bfc2045eae01dcb5"
-  integrity sha512-QnI77ec/JtV7R0YBbcVayYTDCRcI9OCbxiUQK6izVyqQO0658n0zQuoNwe+bYgtqnvGAIqTR3FShTd5y4oOjdg==
-  dependencies:
-    "@vue/compiler-core" "3.2.20"
-    "@vue/shared" "3.2.20"
 
 "@vue/compiler-dom@3.2.21", "@vue/compiler-dom@^3.2.20":
   version "3.2.21"
