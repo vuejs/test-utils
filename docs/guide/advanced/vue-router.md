@@ -352,9 +352,9 @@ test('allows authenticated user to edit a post', () => {
   }))
 
   const push = jest.fn()
-  useRouter.mockImplementationOnce(() => {
+  useRouter.mockImplementationOnce(() => ({
     push
-  })
+  }))
 
   const wrapper = mount(Component, {
     props: {
@@ -381,9 +381,9 @@ test('redirect an unauthenticated user to 404', () => {
   }))
 
   const push = jest.fn()
-  useRouter.mockImplementationOnce(() => {
+  useRouter.mockImplementationOnce(() => ({
     push
-  })
+  }))
 
   const wrapper = mount(Component, {
     props: {
