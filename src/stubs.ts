@@ -109,9 +109,14 @@ const getComponentRegisteredName = (
   return null
 }
 
-const getComponentName = (type: VNodeTypes): string => {
+const getComponentName = (
+  instance: any | null,
+  type: VNodeTypes
+): string => {
   if (isObjectComponent(type)) {
-    return type.name || ''
+    const defaultName = Object.keys(instance?.setupState || {}).find((key) => instance.setupState[key] === type)
+
+    return type.name || defaultName || ''
   }
 
   if (isLegacyExtendedComponent(type)) {
@@ -190,7 +195,7 @@ export function stubComponents(
       }
 
       const registeredName = getComponentRegisteredName(instance, type)
-      const componentName = getComponentName(type)
+      const componentName = getComponentName(instance, type)
 
       let stub = null
       let name = null
