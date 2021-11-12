@@ -109,12 +109,11 @@ const getComponentRegisteredName = (
   return null
 }
 
-const getComponentName = (
-  instance: any | null,
-  type: VNodeTypes
-): string => {
+const getComponentName = (instance: any | null, type: VNodeTypes): string => {
   if (isObjectComponent(type)) {
-    const defaultName = Object.keys(instance?.setupState || {}).find((key) => instance.setupState[key] === type)
+    const defaultName = Object.keys(instance?.setupState || {}).find(
+      (key) => instance.setupState[key] === type
+    )
 
     return type.name || defaultName || ''
   }
