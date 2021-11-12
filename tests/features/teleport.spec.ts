@@ -22,7 +22,7 @@ describe('teleport', () => {
       }
     })
 
-    const wrapper = mount(Comp)
+    mount(Comp)
 
     expect(document.body.outerHTML).toBe(
       `<body><div id="far-away"><div>teleported</div></div></body>`
@@ -71,7 +71,7 @@ describe('teleport', () => {
       }
     })
 
-    const wrapper = mount(Comp)
+    mount(Comp)
     document.querySelector<HTMLButtonElement>('button')!.click()
 
     expect(onGreet).toHaveBeenCalledWith('HELLO!!!')

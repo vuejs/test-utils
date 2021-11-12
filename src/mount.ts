@@ -17,7 +17,6 @@ import {
   AllowedComponentProps,
   ComponentCustomProps,
   ExtractDefaultPropTypes,
-  VNode,
   EmitsOptions,
   ComputedOptions,
   ComponentPropsOptions,
@@ -29,18 +28,12 @@ import { MountingOptions, Slot } from './types'
 import {
   isFunctionalComponent,
   isObjectComponent,
-  mergeGlobalProperties,
-  isObject
+  mergeGlobalProperties
 } from './utils'
 import { processSlot } from './utils/compileSlots'
 import { createWrapper, VueWrapper } from './vueWrapper'
 import { attachEmitListener } from './emit'
-import {
-  createStub,
-  stubComponents,
-  addToDoNotStubComponents,
-  registerStub
-} from './stubs'
+import { stubComponents, addToDoNotStubComponents, registerStub } from './stubs'
 import {
   isLegacyFunctionalComponent,
   unwrapLegacyVueExtendComponent
