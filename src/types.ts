@@ -5,9 +5,7 @@ import {
   Plugin,
   AppConfig,
   VNode,
-  VNodeProps,
-  ConcreteComponent,
-  DefineComponent
+  VNodeProps
 } from 'vue'
 
 interface RefSelector {

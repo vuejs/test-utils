@@ -4,11 +4,9 @@ import {
   TransitionGroup,
   h,
   ComponentPublicInstance,
-  ComponentOptions,
   defineComponent,
   VNodeTypes,
   ConcreteComponent,
-  DefineComponent,
   ComponentPropsOptions
 } from 'vue'
 import { hyphenate } from './utils/vueShared'

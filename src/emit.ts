@@ -39,7 +39,7 @@ function createDevTools(events: Events): any {
     emit(eventType, ...payload) {
       if (eventType !== DevtoolsHooks.COMPONENT_EMIT) return
 
-      const [rootVM, componentVM, event, eventArgs] = payload
+      const [_, componentVM, event, eventArgs] = payload
       recordEvent(componentVM, event, eventArgs)
     }
   } as Partial<typeof devtools>

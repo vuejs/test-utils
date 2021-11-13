@@ -1,4 +1,4 @@
-import { h, ComponentOptions, defineComponent, defineAsyncComponent } from 'vue'
+import { h, defineComponent, defineAsyncComponent } from 'vue'
 
 import { config, flushPromises, mount, RouterLinkStub } from '../../src'
 import Hello from '../components/Hello.vue'

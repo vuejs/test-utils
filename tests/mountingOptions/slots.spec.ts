@@ -130,7 +130,7 @@ describe('slots', () => {
     it('allows passing a function to store variables for assertion', () => {
       let assertParams
 
-      const wrapper = mount(ComponentWithSlots, {
+      mount(ComponentWithSlots, {
         slots: {
           scoped: (params) => {
             assertParams = params
@@ -248,7 +248,7 @@ describe('slots', () => {
       }
     })
 
-    const wrapper = mount(Parent, {
+    mount(Parent, {
       global: {
         components: { Child }
       },

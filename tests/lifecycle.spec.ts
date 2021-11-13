@@ -5,8 +5,7 @@ import {
   nextTick,
   onBeforeMount,
   onUnmounted,
-  onBeforeUnmount,
-  ref
+  onBeforeUnmount
 } from 'vue'
 
 import { mount } from '../src'

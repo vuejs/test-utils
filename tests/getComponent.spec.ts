@@ -1,5 +1,5 @@
 import { defineComponent } from 'vue'
-import { mount, MountingOptions, RouterLinkStub, shallowMount } from '../src'
+import { mount, RouterLinkStub, shallowMount } from '../src'
 import Issue425 from './components/Issue425.vue'
 
 const compA = defineComponent({
