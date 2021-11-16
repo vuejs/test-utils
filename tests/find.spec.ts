@@ -39,7 +39,7 @@ describe('find', () => {
           <component-b v-for="item in [1, 2]" :key="item">
             <input type="text" :value="item">
           </component-b>
-        </div> 
+        </div>
       `,
       components: { ComponentB }
     })
@@ -61,6 +61,18 @@ describe('find', () => {
 
     const wrapper = mount(Component)
     expect(wrapper.find('.foo').exists()).toBe(true)
+  })
+
+  it('returns the root element from dom wrapper if it matches', () => {
+    const Component = defineComponent({
+      render() {
+        return h('div', { class: 'foo' }, 'text')
+      }
+    })
+
+    const wrapper = mount(Component)
+    const domWrapper = wrapper.find('.foo')
+    expect(domWrapper.find('.foo').exists()).toBe(true)
   })
 
   it('can be chained', () => {
