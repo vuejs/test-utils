@@ -257,7 +257,8 @@ export function mount(
       compatConfig: {
         MODE: 3,
         INSTANCE_LISTENERS: false,
-        INSTANCE_ATTRS_CLASS_STYLE: false
+        INSTANCE_ATTRS_CLASS_STYLE: false,
+        COMPONENT_FUNCTIONAL: isLegacyFunctionalComponent(originalComponent)
       },
       setup:
         (_, { attrs, slots }) =>
