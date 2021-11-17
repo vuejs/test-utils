@@ -1,4 +1,4 @@
-import { mount } from '../src'
+import { mount, shallowMount } from '../src'
 import WithProps from './components/WithProps.vue'
 import PropWithSymbol from './components/PropWithSymbol.vue'
 import Hello from './components/Hello.vue'
@@ -237,13 +237,22 @@ describe('props', () => {
       }
     })
 
-    const wrapper = mount(Comp, { shallow: true })
+    const wrapper = shallowMount(Comp)
 
     expect(wrapper.html()).toBe('<div>Symbol: Symbol()</div>')
   })
 
-  it('works with Symbol as default from SFC', () => {
-    const wrapper = mount(PropWithSymbol, { shallow: true })
+  it.only('works with symbol as default from SFC', () => {
+    const App = defineComponent({
+      template: `<PropWithSymbol :sym="sym" />`,
+      components: { PropWithSymbol },
+      data() {
+        return {
+          sym: Symbol()
+        }
+      }
+    })
+    const wrapper = shallowMount(App)
 
     expect(wrapper.html()).toBe('<div>Symbol: Symbol()</div>')
   })
