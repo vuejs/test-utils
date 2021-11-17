@@ -254,6 +254,6 @@ describe('props', () => {
     })
     const wrapper = shallowMount(App)
 
-    expect(wrapper.html()).toBe('<div>Symbol: Symbol()</div>')
+    expect(wrapper.html()).toBe('<prop-with-symbol-stub></prop-with-symbol-stub>')
   })
 })

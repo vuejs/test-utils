@@ -21,7 +21,7 @@ import { Stub, Stubs } from './types'
 
 interface StubOptions {
   name: string
-  propsDeclaration?: ComponentPropsOptions
+  propsDeclaration: ComponentPropsOptions
   renderStubDefaultSlot?: boolean
 }
 
@@ -50,8 +50,23 @@ export const createStub = ({
   const anonName = 'anonymous-stub'
   const tag = name ? `${hyphenate(name)}-stub` : anonName
 
-  const render = (ctx: ComponentPublicInstance) => {
-    return h(tag, ctx.$props, renderStubDefaultSlot ? ctx.$slots : undefined)
+  const render = (ctx: ComponentPublicInstance<ComponentPropsOptions>) => {
+    // https://github.com/vuejs/vue-test-utils-next/issues/1076
+    // Passing a symbol as a static prop is not legal, since Vue will try to do
+    // something like `el.setAttribute('val', Symbol())` which is not valid and
+    // causes an error.
+    // Only a problem when shallow mounting. For this reason we iterate of the
+    // props that will be passed and remove any that are symbols.
+    let propsWithoutSymbols = Object.keys(ctx.$props).reduce<typeof ctx.$props>((acc, key) => {
+      const $props = ctx.$props as Record<string, any>
+      if (typeof $props[key] === 'symbol') {
+        return acc
+      }
+      return {...acc, [key]: $props[key]}
+    }, {}) as typeof ctx.$props
+
+    // @ts-ignore
+    return h(tag, propsWithoutSymbols, renderStubDefaultSlot ? ctx.$slots : undefined)
   }
 
   return defineComponent({
@@ -62,7 +77,7 @@ export const createStub = ({
   })
 }
 
-const createTransitionStub = ({ name }: StubOptions) => {
+const createTransitionStub = ({ name, propsDeclaration }: StubOptions) => {
   const render = (ctx: ComponentPublicInstance) => {
     return h(name, {}, ctx.$slots)
   }
@@ -164,7 +179,8 @@ export function stubComponents(
     if (type === Transition && 'transition' in stubs && stubs['transition']) {
       return [
         createTransitionStub({
-          name: 'transition-stub'
+          name: 'transition-stub',
+          propsDeclaration: {}
         }),
         undefined,
         children
@@ -179,7 +195,8 @@ export function stubComponents(
     ) {
       return [
         createTransitionStub({
-          name: 'transition-group-stub'
+          name: 'transition-group-stub',
+          propsDeclaration: {}
         }),
         undefined,
         children
