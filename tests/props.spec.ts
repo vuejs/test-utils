@@ -1,5 +1,6 @@
 import { mount } from '../src'
 import WithProps from './components/WithProps.vue'
+import PropWithSymbol from './components/PropWithSymbol.vue'
 import Hello from './components/Hello.vue'
 import { defineComponent, h } from 'vue'
 
@@ -223,5 +224,27 @@ describe('props', () => {
     await wrapper.trigger('click')
 
     expect(wrapper.text()).toEqual('hello')
+  })
+
+  it('works with Symbol as default', () => {
+    const Comp = defineComponent({
+      template: `<div>Symbol: {{ sym }}</div>`,
+      props: {
+        sym: {
+          type: Symbol,
+          default: () => Symbol()
+        }
+      }
+    })
+
+    const wrapper = mount(Comp, { shallow: true })
+
+    expect(wrapper.html()).toBe('<div>Symbol: Symbol()</div>')
+  })
+
+  it('works with Symbol as default from SFC', () => {
+    const wrapper = mount(PropWithSymbol, { shallow: true })
+
+    expect(wrapper.html()).toBe('<div>Symbol: Symbol()</div>')
   })
 })
