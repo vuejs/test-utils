@@ -412,6 +412,23 @@ describe('findComponent', () => {
       expect(wrapper.find('.top').findComponent(Comp).classes('top')).toBe(true)
     })
 
+    it('finds functional components by component displayName', () => {
+      const cmp = () => h('button', { class: 'some-class ' })
+      cmp.displayName = 'FuncButton'
+      const Comp = defineComponent({
+        components: { ChildComponent: cmp },
+        template: '<div><child-component />Test</button></div>'
+      })
+
+      const wrapper = mount(Comp)
+      expect(wrapper.findAllComponents({ name: cmp.displayName }).length).toBe(
+        1
+      )
+      expect(wrapper.findComponent({ name: cmp.displayName }).exists()).toBe(
+        true
+      )
+    })
+
     it('uses refs of correct component when searching by ref', () => {
       const Child = defineComponent({
         components: { Hello },
