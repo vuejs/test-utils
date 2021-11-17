@@ -34,6 +34,10 @@ export class DOMWrapper<ElementType extends Element>
   ): DOMWrapper<SVGElementTagNameMap[K]>
   find<T extends Element>(selector: string): DOMWrapper<T>
   find(selector: string): DOMWrapper<Element> {
+    // allow finding the root element
+    if (this.element.matches(selector)) {
+      return this
+    }
     const result = this.element.querySelector(selector)
     if (result) {
       return new DOMWrapper(result)
