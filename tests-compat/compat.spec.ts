@@ -147,4 +147,35 @@ describe('@vue/compat build', () => {
 
     expect(wrapper.vm.foo).toBe('bar')
   })
+
+  it('correctly passes all props to functional component', async () => {
+    configureCompat({
+      MODE: 3,
+      INSTANCE_LISTENERS: 'suppress-warning',
+      INSTANCE_ATTRS_CLASS_STYLE: 'suppress-warning'
+    })
+
+    const FunctionalComponent = {
+      functional: true,
+      render(h: any, context: any) {
+        return h('div', context.data, context.props.text)
+      }
+    }
+
+    const onClick = jest.fn()
+    const wrapper = mount(FunctionalComponent, {
+      props: {
+        class: 'foo',
+        text: 'message',
+        style: { color: 'red' },
+        onClick
+      }
+    })
+    expect(wrapper.text()).toBe('message')
+    await wrapper.trigger('click')
+    expect(onClick).toHaveBeenCalled()
+    expect(wrapper.html()).toBe(
+      '<div class="foo" text="message" style="color: red;">message</div>'
+    )
+  })
 })

@@ -32,10 +32,10 @@ export function isLegacyFunctionalComponent(component: unknown) {
     return false
   }
 
-  return (
+  return Boolean(
     component &&
-    typeof component === 'object' &&
-    hasOwnProperty(component, 'functional') &&
-    component.functional
+      typeof component === 'object' &&
+      hasOwnProperty(component, 'functional') &&
+      component.functional
   )
 }
