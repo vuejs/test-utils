@@ -43,13 +43,34 @@ import { trackInstance } from './utils/autoUnmount'
 // NOTE this should come from `vue`
 type PublicProps = VNodeProps & AllowedComponentProps & ComponentCustomProps
 
+const MOUNT_OPTIONS: Array<keyof MountingOptions<any>> = [
+  'attachTo',
+  'attrs',
+  'data',
+  'props',
+  'slots',
+  'global',
+  'shallow'
+]
+
+function getInstanceOptions(
+  options: MountingOptions<any> & Record<string, any>
+): Record<string, any> {
+  const resultOptions = { ...options }
+  for (const key of Object.keys(options)) {
+    if (MOUNT_OPTIONS.includes(key as keyof MountingOptions<any>)) {
+      delete resultOptions[key]
+    }
+  }
+  return resultOptions
+}
 // Class component - no props
 export function mount<V>(
   originalComponent: {
     new (...args: any[]): V
     registerHooks(keys: string[]): void
   },
-  options?: MountingOptions<any>
+  options?: MountingOptions<any> & Record<string, any>
 ): VueWrapper<ComponentPublicInstance<V>>
 
 // Class component - props
@@ -59,13 +80,13 @@ export function mount<V, P>(
     props(Props: P): any
     registerHooks(keys: string[]): void
   },
-  options?: MountingOptions<P & PublicProps>
+  options?: MountingOptions<P & PublicProps> & Record<string, any>
 ): VueWrapper<ComponentPublicInstance<V>>
 
 // Functional component with emits
 export function mount<Props, E extends EmitsOptions = {}>(
   originalComponent: FunctionalComponent<Props, E>,
-  options?: MountingOptions<Props & PublicProps>
+  options?: MountingOptions<Props & PublicProps> & Record<string, any>
 ): VueWrapper<ComponentPublicInstance<Props>>
 
 // Component declared with defineComponent
@@ -100,7 +121,8 @@ export function mount<
   options?: MountingOptions<
     Partial<Defaults> & Omit<Props & PublicProps, keyof Defaults>,
     D
-  >
+  > &
+    Record<string, any>
 ): VueWrapper<
   InstanceType<
     DefineComponent<
@@ -146,7 +168,8 @@ export function mount<
   options?: MountingOptions<Props & PublicProps, D>
 ): VueWrapper<
   ComponentPublicInstance<Props, RawBindings, D, C, M, E, VNodeProps & Props>
->
+> &
+  Record<string, any>
 
 // Component declared with { props: [] }
 export function mount<
@@ -219,11 +242,12 @@ export function mount<
 // implementation
 export function mount(
   inputComponent: any,
-  options?: MountingOptions<any>
+  options?: MountingOptions<any> & Record<string, any>
 ): VueWrapper<any> {
   // normalise the incoming component
   let originalComponent = unwrapLegacyVueExtendComponent(inputComponent)
   let component: ConcreteComponent
+  const instanceOptions = getInstanceOptions(options ?? {})
 
   if (
     isFunctionalComponent(originalComponent) ||
@@ -233,11 +257,12 @@ export function mount(
       setup:
         (_, { attrs, slots }) =>
         () =>
-          h(originalComponent, attrs, slots)
+          h(originalComponent, attrs, slots),
+      ...instanceOptions
     })
     addToDoNotStubComponents(originalComponent)
   } else if (isObjectComponent(originalComponent)) {
-    component = { ...originalComponent }
+    component = { ...originalComponent, ...instanceOptions }
   } else {
     component = originalComponent
   }
