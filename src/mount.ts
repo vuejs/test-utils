@@ -430,7 +430,11 @@ export function mount(
   // ref: https://github.com/vuejs/vue-test-utils-next/issues/249
   // ref: https://github.com/vuejs/vue-test-utils-next/issues/425
   if (global?.stubs) {
-    for (const name of Object.keys(global.stubs)) app.component(name, { name })
+    for (const name of Object.keys(global.stubs)) {
+      if (!app.component(name)) {
+        app.component(name, { name })
+      }
+    }
   }
 
   // mount the app!

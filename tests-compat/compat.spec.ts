@@ -1,10 +1,14 @@
 import * as Vue from '@vue/compat'
 import { mount } from '../src'
 
-const { configureCompat, extend, defineComponent, h } = Vue as any
+const { configureCompat, extend, defineComponent, h, config } = Vue as any
 
 describe('@vue/compat build', () => {
-  describe.each([true, false])(
+  beforeAll(() => {
+    config.compilerOptions.whitespace = 'condense'
+  })
+
+  describe.each(['suppress-warning', false])(
     'when RENDER_FUNCTION compat is %p',
     (RENDER_FUNCTION) => {
       beforeEach(() => {
@@ -40,7 +44,7 @@ describe('@vue/compat build', () => {
   )
 
   it('finds components declared with legacy Vue.extend', () => {
-    configureCompat({ MODE: 3, GLOBAL_EXTEND: true })
+    configureCompat({ MODE: 3, GLOBAL_EXTEND: 'suppress-warning' })
 
     const LegacyComponent = extend({
       template: '<div>LEGACY</div>'
@@ -58,7 +62,7 @@ describe('@vue/compat build', () => {
   })
 
   it('correctly mounts legacy functional component', () => {
-    configureCompat({ MODE: 3, COMPONENT_FUNCTIONAL: true })
+    configureCompat({ MODE: 3, COMPONENT_FUNCTIONAL: 'suppress-warning' })
 
     const Component = defineComponent({
       functional: true,
@@ -72,8 +76,8 @@ describe('@vue/compat build', () => {
   it('does not stub root legacy functional component when shallow', () => {
     configureCompat({
       MODE: 3,
-      GLOBAL_EXTEND: true,
-      COMPONENT_FUNCTIONAL: true
+      GLOBAL_EXTEND: 'suppress-warning',
+      COMPONENT_FUNCTIONAL: 'suppress-warning'
     })
 
     const Foo = {
@@ -89,8 +93,8 @@ describe('@vue/compat build', () => {
   it('correctly mounts legacy functional component wrapped in Vue.extend', () => {
     configureCompat({
       MODE: 3,
-      GLOBAL_EXTEND: true,
-      COMPONENT_FUNCTIONAL: true
+      GLOBAL_EXTEND: 'suppress-warning',
+      COMPONENT_FUNCTIONAL: 'suppress-warning'
     })
 
     const Component = extend({
@@ -105,7 +109,7 @@ describe('@vue/compat build', () => {
   it('correctly stubs legacy component wrapped in Vue.extend', () => {
     configureCompat({
       MODE: 3,
-      GLOBAL_EXTEND: true
+      GLOBAL_EXTEND: 'suppress-warning'
     })
 
     const Foo = extend({
