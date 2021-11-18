@@ -2,6 +2,7 @@ import {
   transformVNodeArgs,
   Transition,
   TransitionGroup,
+  Teleport,
   h,
   ComponentPublicInstance,
   defineComponent,
@@ -9,7 +10,6 @@ import {
   ConcreteComponent,
   ComponentPropsOptions
 } from 'vue'
-import type { Teleport } from 'vue'
 import { hyphenate } from './utils/vueShared'
 import { matchName } from './utils/matchName'
 import { isComponent, isFunctionalComponent, isObjectComponent } from './utils'
@@ -200,7 +200,7 @@ export function stubComponents(
     }
 
     // stub teleport by default via config.global.stubs
-    if ((type as typeof Teleport).__isTeleport && 'teleport' in stubs && stubs['teleport']) {
+    if (type === Teleport && 'teleport' in stubs && stubs['teleport']) {
       return [
         createTeleportStub({
           name: 'teleport-stub'
