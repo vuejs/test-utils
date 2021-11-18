@@ -226,34 +226,52 @@ describe('props', () => {
     expect(wrapper.text()).toEqual('hello')
   })
 
-  it('works with Symbol as default', () => {
-    const Comp = defineComponent({
-      template: `<div>Symbol: {{ sym }}</div>`,
-      props: {
-        sym: {
-          type: Symbol,
-          default: () => Symbol()
+  describe('edge case with symbol props and stubs', () => {
+    it('works with Symbol as default', () => {
+      const Comp = defineComponent({
+        template: `<div>Symbol: {{ sym }}</div>`,
+        props: {
+          sym: {
+            type: Symbol,
+            default: () => Symbol()
+          }
         }
-      }
+      })
+
+      const wrapper = shallowMount(Comp)
+
+      expect(wrapper.html()).toBe('<div>Symbol: Symbol()</div>')
     })
 
-    const wrapper = shallowMount(Comp)
+    it('works with Symbol an array syntax', () => {
+      const Comp = defineComponent({
+        name: 'Comp',
+        template: `<div>Symbol: {{ sym }}</div>`,
+        props: ['sym']
+      })
 
-    expect(wrapper.html()).toBe('<div>Symbol: Symbol()</div>')
-  })
-
-  it.only('works with symbol as default from SFC', () => {
-    const App = defineComponent({
-      template: `<PropWithSymbol :sym="sym" />`,
-      components: { PropWithSymbol },
-      data() {
-        return {
-          sym: Symbol()
+      const wrapper = shallowMount({
+        render () {
+          return h(Comp, { sym: Symbol() })
         }
-      }
-    })
-    const wrapper = shallowMount(App)
+      })
 
-    expect(wrapper.html()).toBe('<prop-with-symbol-stub></prop-with-symbol-stub>')
+      expect(wrapper.html()).toBe('<comp-stub></comp-stub>')
+    })
+
+    it('works with symbol as default from SFC', () => {
+      const App = defineComponent({
+        template: `<PropWithSymbol :sym="sym" />`,
+        components: { PropWithSymbol },
+        data() {
+          return {
+            sym: Symbol()
+          }
+        }
+      })
+      const wrapper = shallowMount(App)
+
+      expect(wrapper.html()).toBe('<prop-with-symbol-stub></prop-with-symbol-stub>')
+    })
   })
 })

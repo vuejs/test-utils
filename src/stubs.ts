@@ -7,7 +7,8 @@ import {
   defineComponent,
   VNodeTypes,
   ConcreteComponent,
-  ComponentPropsOptions
+  ComponentPropsOptions,
+  ComponentObjectPropsOptions
 } from 'vue'
 import { hyphenate } from './utils/vueShared'
 import { matchName } from './utils/matchName'
@@ -42,6 +43,17 @@ const shouldNotStub = (type: ConcreteComponent) => doNotStubComponents.has(type)
 export const addToDoNotStubComponents = (type: ConcreteComponent) =>
   doNotStubComponents.add(type)
 
+const removeSymbols = <T = ComponentPropsOptions>(props: T): T  => {
+  // props are always normalized to object syntax
+  const $props = props as unknown as ComponentObjectPropsOptions
+  return Object.keys($props).reduce((acc, key) => {
+    if (typeof $props[key] === 'symbol') {
+      return acc
+    }
+    return {...acc, [key]: $props[key]}
+  }, {}) as T
+}
+
 export const createStub = ({
   name,
   propsDeclaration,
@@ -50,22 +62,15 @@ export const createStub = ({
   const anonName = 'anonymous-stub'
   const tag = name ? `${hyphenate(name)}-stub` : anonName
 
-  const render = (ctx: ComponentPublicInstance<ComponentPropsOptions>) => {
+  const render = (ctx: ComponentPublicInstance) => {
     // https://github.com/vuejs/vue-test-utils-next/issues/1076
     // Passing a symbol as a static prop is not legal, since Vue will try to do
     // something like `el.setAttribute('val', Symbol())` which is not valid and
     // causes an error.
     // Only a problem when shallow mounting. For this reason we iterate of the
     // props that will be passed and remove any that are symbols.
-    let propsWithoutSymbols = Object.keys(ctx.$props).reduce<typeof ctx.$props>((acc, key) => {
-      const $props = ctx.$props as Record<string, any>
-      if (typeof $props[key] === 'symbol') {
-        return acc
-      }
-      return {...acc, [key]: $props[key]}
-    }, {}) as typeof ctx.$props
+    const propsWithoutSymbols = removeSymbols(ctx.$props)
 
-    // @ts-ignore
     return h(tag, propsWithoutSymbols, renderStubDefaultSlot ? ctx.$slots : undefined)
   }
 
