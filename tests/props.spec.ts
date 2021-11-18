@@ -251,7 +251,7 @@ describe('props', () => {
       })
 
       const wrapper = shallowMount({
-        render () {
+        render() {
           return h(Comp, { sym: Symbol() })
         }
       })
@@ -271,7 +271,9 @@ describe('props', () => {
       })
       const wrapper = shallowMount(App)
 
-      expect(wrapper.html()).toBe('<prop-with-symbol-stub></prop-with-symbol-stub>')
+      expect(wrapper.html()).toBe(
+        '<prop-with-symbol-stub></prop-with-symbol-stub>'
+      )
     })
   })
 })

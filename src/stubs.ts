@@ -43,14 +43,14 @@ const shouldNotStub = (type: ConcreteComponent) => doNotStubComponents.has(type)
 export const addToDoNotStubComponents = (type: ConcreteComponent) =>
   doNotStubComponents.add(type)
 
-const removeSymbols = <T = ComponentPropsOptions>(props: T): T  => {
+const removeSymbols = <T = ComponentPropsOptions>(props: T): T => {
   // props are always normalized to object syntax
   const $props = props as unknown as ComponentObjectPropsOptions
   return Object.keys($props).reduce((acc, key) => {
     if (typeof $props[key] === 'symbol') {
       return acc
     }
-    return {...acc, [key]: $props[key]}
+    return { ...acc, [key]: $props[key] }
   }, {}) as T
 }
 
@@ -71,7 +71,11 @@ export const createStub = ({
     // props that will be passed and remove any that are symbols.
     const propsWithoutSymbols = removeSymbols(ctx.$props)
 
-    return h(tag, propsWithoutSymbols, renderStubDefaultSlot ? ctx.$slots : undefined)
+    return h(
+      tag,
+      propsWithoutSymbols,
+      renderStubDefaultSlot ? ctx.$slots : undefined
+    )
   }
 
   return defineComponent({
