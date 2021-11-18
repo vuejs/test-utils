@@ -419,6 +419,35 @@ describe('mounting options: stubs', () => {
     expect(wrapper.find('#content').exists()).toBe(true)
   })
 
+  it('stubs teleport by default', () => {
+    const Comp = {
+      template: `<teleport to="body"><div id="content" /></teleport>`
+    }
+    const wrapper = mount(Comp)
+
+    expect(wrapper.html()).toBe(
+      '<teleport-stub>\n' +
+      '  <div id="content"></div>\n' +
+      '</teleport-stub>'
+    )
+  })
+
+  it('opts out of stubbing teleport by default', () => {
+    const Comp = {
+      template: `<teleport to="body"><div id="content" /></teleport>`
+    }
+    const wrapper = mount(Comp, {
+      global: {
+        stubs: {
+          teleport: false
+        }
+      }
+    })
+
+    expect(wrapper.html()).toContain('<!--teleport start-->')
+    expect(wrapper.html()).toContain('<!--teleport end-->')
+  })
+
   it('stubs component by key prior before name', () => {
     const MyComponent = defineComponent({
       name: 'MyComponent',

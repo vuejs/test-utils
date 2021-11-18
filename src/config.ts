@@ -63,7 +63,8 @@ export const config: GlobalConfigOptions = {
   global: {
     stubs: {
       transition: true,
-      'transition-group': true
+      'transition-group': true,
+      teleport: true,
     },
     provide: {},
     components: {},
