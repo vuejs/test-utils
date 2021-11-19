@@ -206,7 +206,7 @@ export function stubComponents(
           name: 'teleport-stub'
         }),
         undefined,
-        children
+        () => children
       ]
     }
 
