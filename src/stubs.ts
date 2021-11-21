@@ -171,7 +171,7 @@ export function stubComponents(
 
   transformVNodeArgs((args, instance: ComponentInternalInstance | null) => {
     const [nodeType, props, children, patchFlag, dynamicProps] = args
-    const type = nodeType as (VNodeTypes | typeof Teleport)
+    const type = nodeType as VNodeTypes | typeof Teleport
 
     // stub transition by default via config.global.stubs
     if (type === Transition && 'transition' in stubs && stubs['transition']) {

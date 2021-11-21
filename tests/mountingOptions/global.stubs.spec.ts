@@ -426,8 +426,7 @@ describe('mounting options: stubs', () => {
     const wrapper = mount(Comp)
 
     expect(wrapper.html()).toBe(
-      '<!--teleport start-->\n' +
-      '<!--teleport end-->'
+      '<!--teleport start-->\n' + '<!--teleport end-->'
     )
   })
 
@@ -444,9 +443,7 @@ describe('mounting options: stubs', () => {
     })
 
     expect(wrapper.html()).toBe(
-      '<teleport-stub>\n' +
-      '  <div id="content"></div>\n' +
-      '</teleport-stub>'
+      '<teleport-stub>\n' + '  <div id="content"></div>\n' + '</teleport-stub>'
     )
   })
 
