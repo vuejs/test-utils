@@ -258,8 +258,9 @@ export function mount(
         MODE: 3,
         INSTANCE_LISTENERS: false,
         INSTANCE_ATTRS_CLASS_STYLE: false,
-        COMPONENT_FUNCTIONAL:
-          isLegacyFunctionalComponent(originalComponent) && 'suppress-warning'
+        COMPONENT_FUNCTIONAL: isLegacyFunctionalComponent(originalComponent)
+          ? 'suppress-warning'
+          : false
       },
       setup:
         (_, { attrs, slots }) =>

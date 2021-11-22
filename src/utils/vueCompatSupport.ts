@@ -27,7 +27,7 @@ export function unwrapLegacyVueExtendComponent<T>(
   return isLegacyExtendedComponent(selector) ? selector.options : selector
 }
 
-export function isLegacyFunctionalComponent(component: unknown) {
+export function isLegacyFunctionalComponent(component: unknown): boolean {
   return Boolean(
     component &&
       typeof component === 'object' &&
