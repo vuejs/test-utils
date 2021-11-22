@@ -139,7 +139,7 @@ export class VueWrapper<T extends ComponentPublicInstance>
       : this.element.querySelector && this.element.querySelector(selector)
 
     if (result) {
-      return new DOMWrapper(result)
+      return new DOMWrapper(result, createWrapper)
     }
 
     return createWrapperError('DOMWrapper')
@@ -214,11 +214,13 @@ export class VueWrapper<T extends ComponentPublicInstance>
       ? this.element.querySelectorAll(selector)
       : ([] as unknown as NodeListOf<Element>)
 
-    return Array.from(results).map((element) => new DOMWrapper(element))
+    return Array.from(results).map(
+      (element) => new DOMWrapper(element, createWrapper)
+    )
   }
 
   isVisible(): boolean {
-    const domWrapper = new DOMWrapper(this.element)
+    const domWrapper = new DOMWrapper(this.element, createWrapper)
     return domWrapper.isVisible()
   }
 
