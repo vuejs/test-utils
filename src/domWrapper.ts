@@ -6,13 +6,16 @@ import WrapperLike from './interfaces/wrapperLike'
 import { ComponentInternalInstance, ComponentPublicInstance } from 'vue'
 import { FindAllComponentsSelector, FindComponentSelector } from './types'
 import { matches, find } from './utils/find'
-import { VueWrapper, createWrapper } from './vueWrapper'
+import type { createWrapper, VueWrapper } from './vueWrapper'
 
 export class DOMWrapper<ElementType extends Element>
   extends BaseWrapper<ElementType>
   implements WrapperLike
 {
-  constructor(element: ElementType) {
+  constructor(
+    element: ElementType,
+    private createVueWrapper: typeof createWrapper
+  ) {
     super(element)
     // plugins hook
     config.plugins.DOMWrapper.extend(this)
@@ -40,7 +43,7 @@ export class DOMWrapper<ElementType extends Element>
     }
     const result = this.element.querySelector(selector)
     if (result) {
-      return new DOMWrapper(result)
+      return new DOMWrapper(result, this.createVueWrapper)
     }
 
     return createWrapperError('DOMWrapper')
@@ -55,7 +58,7 @@ export class DOMWrapper<ElementType extends Element>
   findAll<T extends Element>(selector: string): DOMWrapper<T>[]
   findAll(selector: string): DOMWrapper<Element>[] {
     return Array.from(this.element.querySelectorAll(selector)).map(
-      (x) => new DOMWrapper(x)
+      (x) => new DOMWrapper(x, this.createVueWrapper)
     )
   }
 
@@ -71,7 +74,7 @@ export class DOMWrapper<ElementType extends Element>
     if (typeof selector === 'object' && 'ref' in selector) {
       const result = parentComponent.refs[selector.ref]
       if (result && !(result instanceof HTMLElement)) {
-        return createWrapper(null, result as T)
+        return this.createVueWrapper(null, result as T)
       } else {
         return createWrapperError('VueWrapper')
       }
@@ -81,7 +84,7 @@ export class DOMWrapper<ElementType extends Element>
       matches(parentComponent.vnode, selector) &&
       this.element.contains(parentComponent.vnode.el as Node)
     ) {
-      return createWrapper(null, parentComponent.proxy!)
+      return this.createVueWrapper(null, parentComponent.proxy!)
     }
 
     const result = find(parentComponent.subTree, selector).filter((v) =>
@@ -89,7 +92,7 @@ export class DOMWrapper<ElementType extends Element>
     )
 
     if (result.length) {
-      return createWrapper(null, result[0])
+      return this.createVueWrapper(null, result[0])
     }
 
     return createWrapperError('VueWrapper')
@@ -101,7 +104,7 @@ export class DOMWrapper<ElementType extends Element>
 
     return find(parentComponent.subTree, selector)
       .filter((v) => this.element.contains(v.$el))
-      .map((c) => createWrapper(null, c))
+      .map((c) => this.createVueWrapper(null, c))
   }
 
   private async setChecked(checked: boolean = true) {
@@ -173,6 +176,8 @@ export class DOMWrapper<ElementType extends Element>
       parentElement = parentElement.parentElement!
     }
 
-    return new DOMWrapper(parentElement).trigger('change')
+    return new DOMWrapper(parentElement, this.createVueWrapper).trigger(
+      'change'
+    )
   }
 }
