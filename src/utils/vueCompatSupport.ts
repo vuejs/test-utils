@@ -28,10 +28,6 @@ export function unwrapLegacyVueExtendComponent<T>(
 }
 
 export function isLegacyFunctionalComponent(component: unknown) {
-  if (!isCompatEnabled('COMPONENT_FUNCTIONAL')) {
-    return false
-  }
-
   return Boolean(
     component &&
       typeof component === 'object' &&
