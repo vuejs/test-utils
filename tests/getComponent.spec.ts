@@ -1,4 +1,4 @@
-import { defineComponent } from 'vue'
+import { DefineComponent, defineComponent } from 'vue'
 import { mount, RouterLinkStub, shallowMount } from '../src'
 import Issue425 from './components/Issue425.vue'
 
@@ -69,12 +69,16 @@ describe('getComponent', () => {
   // https://github.com/vuejs/vue-test-utils-next/issues/425
   it('works with router-link and mount', () => {
     const wrapper = mount(Issue425, options)
-    expect(wrapper.getComponent('.link').props('to')).toEqual({ name })
+    expect(wrapper.getComponent<DefineComponent>('.link').props('to')).toEqual({
+      name
+    })
   })
 
   // https://github.com/vuejs/vue-test-utils-next/issues/425
   it('works with router-link and shallowMount', () => {
     const wrapper = shallowMount(Issue425, options)
-    expect(wrapper.getComponent('.link').props('to')).toEqual({ name })
+    expect(wrapper.getComponent<DefineComponent>('.link').props('to')).toEqual({
+      name
+    })
   })
 })

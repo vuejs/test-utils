@@ -1,110 +1,28 @@
 import { config } from './config'
-import { isElementVisible } from './utils/isElementVisible'
 import BaseWrapper from './baseWrapper'
-import { createWrapperError } from './errorWrapper'
 import WrapperLike from './interfaces/wrapperLike'
-import { ComponentInternalInstance, ComponentPublicInstance } from 'vue'
-import { FindAllComponentsSelector, FindComponentSelector } from './types'
-import { matches, find } from './utils/find'
-import type { createWrapper, VueWrapper } from './vueWrapper'
+import { isElement } from './utils/isElement'
 
-export class DOMWrapper<ElementType extends Element>
-  extends BaseWrapper<ElementType>
-  implements WrapperLike
-{
-  constructor(
-    element: ElementType,
-    private createVueWrapper: typeof createWrapper
-  ) {
+export class DOMWrapper<NodeType extends Node> extends BaseWrapper<NodeType> {
+  constructor(element: NodeType) {
     super(element)
     // plugins hook
     config.plugins.DOMWrapper.extend(this)
   }
 
-  isVisible() {
-    return isElementVisible(this.element)
+  getCurrentComponent() {
+    return this.element.__vueParentComponent
   }
 
   html() {
-    return this.element.outerHTML
+    return isElement(this.element)
+      ? this.element.outerHTML
+      : this.element.toString()
   }
 
-  find<K extends keyof HTMLElementTagNameMap>(
-    selector: K
-  ): DOMWrapper<HTMLElementTagNameMap[K]>
-  find<K extends keyof SVGElementTagNameMap>(
-    selector: K
-  ): DOMWrapper<SVGElementTagNameMap[K]>
-  find<T extends Element>(selector: string): DOMWrapper<T>
-  find(selector: string): DOMWrapper<Element> {
-    // allow finding the root element
-    if (this.element.matches(selector)) {
-      return this
-    }
-    const result = this.element.querySelector(selector)
-    if (result) {
-      return new DOMWrapper(result, this.createVueWrapper)
-    }
-
-    return createWrapperError('DOMWrapper')
-  }
-
-  findAll<K extends keyof HTMLElementTagNameMap>(
-    selector: K
-  ): DOMWrapper<HTMLElementTagNameMap[K]>[]
-  findAll<K extends keyof SVGElementTagNameMap>(
-    selector: K
-  ): DOMWrapper<SVGElementTagNameMap[K]>[]
-  findAll<T extends Element>(selector: string): DOMWrapper<T>[]
-  findAll(selector: string): DOMWrapper<Element>[] {
-    return Array.from(this.element.querySelectorAll(selector)).map(
-      (x) => new DOMWrapper(x, this.createVueWrapper)
-    )
-  }
-
-  findComponent<T extends ComponentPublicInstance>(
-    selector: FindComponentSelector | (new () => T)
-  ): VueWrapper<T> {
-    const parentComponent = this.element.__vueParentComponent
-
-    if (!parentComponent) {
-      return createWrapperError('VueWrapper')
-    }
-
-    if (typeof selector === 'object' && 'ref' in selector) {
-      const result = parentComponent.refs[selector.ref]
-      if (result && !(result instanceof HTMLElement)) {
-        return this.createVueWrapper(null, result as T)
-      } else {
-        return createWrapperError('VueWrapper')
-      }
-    }
-
-    if (
-      matches(parentComponent.vnode, selector) &&
-      this.element.contains(parentComponent.vnode.el as Node)
-    ) {
-      return this.createVueWrapper(null, parentComponent.proxy!)
-    }
-
-    const result = find(parentComponent.subTree, selector).filter((v) =>
-      this.element.contains(v.$el)
-    )
-
-    if (result.length) {
-      return this.createVueWrapper(null, result[0])
-    }
-
-    return createWrapperError('VueWrapper')
-  }
-
-  findAllComponents(selector: FindAllComponentsSelector): VueWrapper<any>[] {
-    const parentComponent: ComponentInternalInstance = (this.element as any)
-      .__vueParentComponent
-
-    return find(parentComponent.subTree, selector)
-      .filter((v) => this.element.contains(v.$el))
-      .map((c) => this.createVueWrapper(null, c))
+  findAllComponents(selector: any): any {
+    const results = super.findAllComponents(selector)
+    return results.filter((r: WrapperLike) => this.element.contains(r.element))
   }
 
   private async setChecked(checked: boolean = true) {
@@ -176,8 +94,10 @@ export class DOMWrapper<ElementType extends Element>
       parentElement = parentElement.parentElement!
     }
 
-    return new DOMWrapper(parentElement, this.createVueWrapper).trigger(
-      'change'
-    )
+    return new DOMWrapper(parentElement).trigger('change')
   }
+}
+
+export function createWrapper<T extends Element>(element: T): DOMWrapper<T> {
+  return new DOMWrapper<T>(element)
 }

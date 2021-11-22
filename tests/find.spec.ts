@@ -15,6 +15,17 @@ describe('find', () => {
     expect(wrapper.find('#my-span').exists()).toBe(true)
   })
 
+  it('find DOM element by ref', () => {
+    const Component = defineComponent({
+      render() {
+        return h('div', {}, [h('span', { ref: 'span', id: 'my-span' })])
+      }
+    })
+    const wrapper = mount(Component)
+    expect(wrapper.find({ ref: 'span' }).exists()).toBe(true)
+    expect(wrapper.find({ ref: 'span' }).attributes('id')).toBe('my-span')
+  })
+
   it('find using multiple root nodes', () => {
     const Component = defineComponent({
       render() {

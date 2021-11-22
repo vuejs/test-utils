@@ -1,4 +1,9 @@
-import { ComponentPublicInstance, nextTick, App } from 'vue'
+import {
+  nextTick,
+  App,
+  ComponentCustomProperties,
+  ComponentPublicInstance
+} from 'vue'
 import { ShapeFlags } from '@vue/shared'
 // @ts-ignore todo - No DefinitelyTyped package exists for this
 import pretty from 'pretty'
@@ -6,30 +11,27 @@ import pretty from 'pretty'
 import { config } from './config'
 import domEvents from './constants/dom-events'
 import { DOMWrapper } from './domWrapper'
-import {
-  FindAllComponentsSelector,
-  FindComponentSelector,
-  VueElement
-} from './types'
-import { createWrapperError } from './errorWrapper'
-import { find, matches } from './utils/find'
+import { VueElement } from './types'
 import { mergeDeep } from './utils'
 import { emitted, recordEvent } from './emit'
 import BaseWrapper from './baseWrapper'
-import WrapperLike from './interfaces/wrapperLike'
 
-export class VueWrapper<T extends ComponentPublicInstance>
-  extends BaseWrapper<T['$el']>
-  implements WrapperLike
-{
+export class VueWrapper<
+  T extends Omit<
+    ComponentPublicInstance,
+    '$emit' | keyof ComponentCustomProperties
+  > & {
+    $emit: (event: any, ...args: any[]) => void
+  } & ComponentCustomProperties = ComponentPublicInstance
+> extends BaseWrapper<Node> {
   private componentVM: T
-  private rootVM: ComponentPublicInstance | null
+  private rootVM: ComponentPublicInstance | undefined | null
   private __app: App | null
   private __setProps: ((props: Record<string, unknown>) => void) | undefined
 
   constructor(
     app: App | null,
-    vm: ComponentPublicInstance,
+    vm: T,
     setProps?: (props: Record<string, unknown>) => void
   ) {
     super(vm?.$el)
@@ -64,6 +66,10 @@ export class VueWrapper<T extends ComponentPublicInstance>
 
   private get parentElement(): VueElement {
     return this.vm.$el.parentElement
+  }
+
+  getCurrentComponent() {
+    return this.vm.$
   }
 
   private attachNativeEventListener(): void {
@@ -125,102 +131,8 @@ export class VueWrapper<T extends ComponentPublicInstance>
     return pretty(this.element.outerHTML)
   }
 
-  find<K extends keyof HTMLElementTagNameMap>(
-    selector: K
-  ): DOMWrapper<HTMLElementTagNameMap[K]>
-  find<K extends keyof SVGElementTagNameMap>(
-    selector: K
-  ): DOMWrapper<SVGElementTagNameMap[K]>
-  find<T extends Element>(selector: string): DOMWrapper<T>
-  find(selector: string): DOMWrapper<Element> {
-    const result = this.parentElement['__vue_app__']
-      ? // force using the parentElement to allow finding the root element
-        this.parentElement.querySelector(selector)
-      : this.element.querySelector && this.element.querySelector(selector)
-
-    if (result) {
-      return new DOMWrapper(result, createWrapper)
-    }
-
-    return createWrapperError('DOMWrapper')
-  }
-
-  findComponent<T extends ComponentPublicInstance>(
-    selector: FindComponentSelector | (new () => T)
-  ): VueWrapper<T> {
-    if (typeof selector === 'object' && 'ref' in selector) {
-      const result = this.vm.$refs[selector.ref]
-      if (result && !(result instanceof HTMLElement)) {
-        return createWrapper(null, result as T)
-      } else {
-        return createWrapperError('VueWrapper')
-      }
-    }
-
-    // https://github.com/vuejs/vue-test-utils-next/issues/211
-    // VTU v1 supported finding the component mounted itself.
-    // eg: mount(Comp).findComponent(Comp)
-    // this is the same as doing `wrapper.vm`, but we keep this behavior for back compat.
-    if (matches(this.vm.$.vnode, selector)) {
-      return createWrapper(null, this.vm.$.vnode.component?.proxy!)
-    }
-
-    const result = find(this.vm.$.subTree, selector)
-    if (result.length) {
-      return createWrapper(null, result[0])
-    }
-
-    return createWrapperError('VueWrapper')
-  }
-
-  getComponent<T extends ComponentPublicInstance>(
-    selector: FindComponentSelector | (new () => T)
-  ): Omit<VueWrapper<T>, 'exists'> {
-    const result = this.findComponent(selector)
-
-    if (result instanceof VueWrapper) {
-      return result as VueWrapper<T>
-    }
-
-    let message = 'Unable to get '
-    if (typeof selector === 'string') {
-      message += `component with selector ${selector}`
-    } else if ('name' in selector) {
-      message += `component with name ${selector.name}`
-    } else if ('ref' in selector) {
-      message += `component with ref ${selector.ref}`
-    } else {
-      message += 'specified component'
-    }
-    message += ` within: ${this.html()}`
-    throw new Error(message)
-  }
-
-  findAllComponents(selector: FindAllComponentsSelector): VueWrapper<T>[] {
-    return find(this.vm.$.subTree, selector).map((c) => createWrapper(null, c))
-  }
-
-  findAll<K extends keyof HTMLElementTagNameMap>(
-    selector: K
-  ): DOMWrapper<HTMLElementTagNameMap[K]>[]
-  findAll<K extends keyof SVGElementTagNameMap>(
-    selector: K
-  ): DOMWrapper<SVGElementTagNameMap[K]>[]
-  findAll<T extends Element>(selector: string): DOMWrapper<T>[]
-  findAll(selector: string): DOMWrapper<Element>[] {
-    const results = this.parentElement['__vue_app__']
-      ? this.parentElement.querySelectorAll(selector)
-      : this.element.querySelectorAll
-      ? this.element.querySelectorAll(selector)
-      : ([] as unknown as NodeListOf<Element>)
-
-    return Array.from(results).map(
-      (element) => new DOMWrapper(element, createWrapper)
-    )
-  }
-
   isVisible(): boolean {
-    const domWrapper = new DOMWrapper(this.element, createWrapper)
+    const domWrapper = new DOMWrapper(this.element)
     return domWrapper.isVisible()
   }
 
@@ -258,7 +170,7 @@ export class VueWrapper<T extends ComponentPublicInstance>
 
 export function createWrapper<T extends ComponentPublicInstance>(
   app: App | null,
-  vm: ComponentPublicInstance,
+  vm: T,
   setProps?: (props: Record<string, unknown>) => void
 ): VueWrapper<T> {
   return new VueWrapper<T>(app, vm, setProps)

@@ -45,6 +45,7 @@ test('mounts a component', () => {
 Notice that `mount` accepts a second parameter to define the component's state configuration.
 
 **Example: mounting with component props and a Vue App plugin**
+
 ```js
 const wrapper = mount(Component, {
   props: {
@@ -374,9 +375,7 @@ export default {
 
 ```vue
 <template>
-  <div class="global-component">
-    My Global Component
-  </div>
+  <div class="global-component">My Global Component</div>
 </template>
 ```
 
@@ -1079,10 +1078,10 @@ import { mount } from '@vue/test-utils'
 import BaseTable from './BaseTable.vue'
 
 test('findAll', () => {
-  const wrapper = mount(BaseTable);
+  const wrapper = mount(BaseTable)
 
   // .findAll() returns an array of DOMWrappers
-  const thirdRow = wrapper.findAll('span')[2];
+  const thirdRow = wrapper.findAll('span')[2]
 })
 ```
 
@@ -1165,21 +1164,6 @@ test('findComponent', () => {
 :::warning
 If `ref` in component points to HTML element, `findComponent` will return empty wrapper. This is intended behaviour
 :::
-
-
-**NOTE** `getComponent` and `findComponent` will not work on functional components, because they do not have an internal Vue instance (this is what makes functional components more performant). That means the following will **not** work:
-
-```js
-const Foo = () => h('div')
-
-const wrapper = mount(Foo)
-// doesn't work! You get a wrapper, but since there is not
-// associated Vue instance, you cannot use methods like
-// exists() and text()
-wrapper.findComponent(Foo)
-```
-
-For tests using functional component, consider using `get` or `find` and treating them like standard DOM nodes.
 
 :::warning Usage with CSS selectors
 Using `findComponent` with CSS selector might have confusing behavior
@@ -1488,20 +1472,6 @@ test('props', () => {
   })
 })
 ```
-
-**NOTE** `getComponent` and `findComponent` will not work on functional components, because they do not have an internal Vue instance (this is what makes functional components more performant). That means the following will **not** work:
-
-```js
-const Foo = () => h('div')
-
-const wrapper = mount(Foo)
-// doesn't work! You get a wrapper, but since there is not
-// associated Vue instance, you cannot use methods like
-// exists() and text()
-wrapper.findComponent(Foo)
-```
-
-For tests using functional component, consider using `get` or `find` and treating them like standard DOM nodes.
 
 :::tip
 As a rule of thumb, test against the effects of a passed prop (a DOM update, an emitted event, and so on). This will make tests more powerful than simply asserting that a prop is passed.
@@ -1862,8 +1832,8 @@ function shallowMount(Component, options?: MountingOptions): VueWrapper
 
 ## enableAutoUnmount
 
-
 **Signature:**
+
 ```ts
 enableAutoUnmount(hook: Function));
 disableAutoUnmount(): void;

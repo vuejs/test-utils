@@ -1,6 +1,7 @@
 import { expectType } from './index'
 import { defineComponent, ComponentPublicInstance } from 'vue'
 import { mount } from '../src'
+import WrapperLike from '../src/interfaces/wrapperLike'
 
 const ComponentToFind = defineComponent({
   props: {
@@ -30,8 +31,8 @@ expectType<ComponentPublicInstance>(componentByName.vm)
 
 // get by string
 const componentByString = wrapper.getComponent('other')
-// returns a wrapper with a generic vm (any)
-expectType<ComponentPublicInstance>(componentByString.vm)
+// returns a wrapper with WrapperLike (no vm as it could be a functional component)
+expectType<Omit<WrapperLike, 'exists'>>(componentByString)
 
 // get by ref
 const componentByRef = wrapper.getComponent({ ref: 'ref' })

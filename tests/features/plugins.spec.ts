@@ -3,7 +3,7 @@ import { ComponentPublicInstance } from 'vue'
 import { mount, config, VueWrapper } from '../../src'
 
 declare module '../../src/vueWrapper' {
-  interface VueWrapper<T extends ComponentPublicInstance> {
+  interface VueWrapper {
     width(): number
     $el: Element
     myMethod(): void

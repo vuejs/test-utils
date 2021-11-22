@@ -1,6 +1,6 @@
 import { mount } from '../src'
 import Hello from './components/Hello.vue'
-import { defineComponent } from 'vue'
+import { DefineComponent, defineComponent } from 'vue'
 
 const compC = defineComponent({
   name: 'ComponentC',
@@ -66,16 +66,17 @@ describe('findAllComponents', () => {
     const wrapper = mount(RootComponent)
 
     expect(wrapper.findAllComponents('.in-root')).toHaveLength(1)
-    expect(wrapper.findAllComponents('.in-root')[0].vm.$options.name).toEqual(
-      'NestedChild'
-    )
+    expect(
+      wrapper.findAllComponents<DefineComponent>('.in-root')[0].vm.$options.name
+    ).toEqual('NestedChild')
 
     expect(wrapper.findAllComponents('.in-child')).toHaveLength(1)
 
     // someone might expect DeepNestedChild here, but
     // we always return TOP component matching DOM element
-    expect(wrapper.findAllComponents('.in-child')[0].vm.$options.name).toEqual(
-      'NestedChild'
-    )
+    expect(
+      wrapper.findAllComponents<DefineComponent>('.in-child')[0].vm.$options
+        .name
+    ).toEqual('NestedChild')
   })
 })
