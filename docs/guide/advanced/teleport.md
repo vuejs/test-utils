@@ -4,6 +4,10 @@ Vue 3 comes with a new built-in component: `<Teleport>`, which allows components
 
 Here are some strategies and techniques for testing components using `<Teleport>`.
 
+::: tip
+If you want to test the rest of your component, ignoring teleport, you can stub `teleport` by passing `teleport: true` in the [global stubs option](../../api/#global-stubs).
+:::
+
 ## Example
 
 In this example we are testing a `<Navbar>` component. It renders a `<Signup>` component inside of a `<Teleport>`. The `target` prop of `<Teleport>` is an element located outside of the `<Navbar>` component.

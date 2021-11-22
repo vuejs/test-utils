@@ -2,6 +2,7 @@ import {
   transformVNodeArgs,
   Transition,
   TransitionGroup,
+  Teleport,
   h,
   ComponentPublicInstance,
   defineComponent,
@@ -63,6 +64,18 @@ export const createStub = ({
 }
 
 const createTransitionStub = ({ name }: StubOptions) => {
+  const render = (ctx: ComponentPublicInstance) => {
+    return h(name, {}, ctx.$slots)
+  }
+
+  return defineComponent({
+    name,
+    compatConfig: { MODE: 3, RENDER_FUNCTION: false },
+    render
+  })
+}
+
+const createTeleportStub = ({ name }: StubOptions) => {
   const render = (ctx: ComponentPublicInstance) => {
     return h(name, {}, ctx.$slots)
   }
@@ -158,7 +171,7 @@ export function stubComponents(
 
   transformVNodeArgs((args, instance: ComponentInternalInstance | null) => {
     const [nodeType, props, children, patchFlag, dynamicProps] = args
-    const type = nodeType as VNodeTypes
+    const type = nodeType as VNodeTypes | typeof Teleport
 
     // stub transition by default via config.global.stubs
     if (type === Transition && 'transition' in stubs && stubs['transition']) {
@@ -183,6 +196,17 @@ export function stubComponents(
         }),
         undefined,
         children
+      ]
+    }
+
+    // stub teleport by default via config.global.stubs
+    if (type === Teleport && 'teleport' in stubs && stubs['teleport']) {
+      return [
+        createTeleportStub({
+          name: 'teleport-stub'
+        }),
+        undefined,
+        () => children
       ]
     }
 
