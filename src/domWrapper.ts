@@ -2,6 +2,7 @@ import { config } from './config'
 import BaseWrapper from './baseWrapper'
 import WrapperLike from './interfaces/wrapperLike'
 import { isElement } from './utils/isElement'
+import { registerFactory, WrapperType } from './wrapperFactory'
 
 export class DOMWrapper<NodeType extends Node> extends BaseWrapper<NodeType> {
   constructor(element: NodeType) {
@@ -98,6 +99,4 @@ export class DOMWrapper<NodeType extends Node> extends BaseWrapper<NodeType> {
   }
 }
 
-export function createWrapper<T extends Element>(element: T): DOMWrapper<T> {
-  return new DOMWrapper<T>(element)
-}
+registerFactory(WrapperType.DOMWrapper, (element) => new DOMWrapper(element))

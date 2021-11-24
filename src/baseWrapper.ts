@@ -8,7 +8,7 @@ import {
 } from 'vue'
 import { createDOMEvent } from './createDomEvent'
 import { DomEventNameWithModifier } from './constants/dom-events'
-import { createWrapper as createVueWrapper, VueWrapper } from './vueWrapper'
+import type { VueWrapper } from './vueWrapper'
 import {
   DefinedComponent,
   FindAllComponentsSelector,
@@ -21,7 +21,8 @@ import { find, matches } from './utils/find'
 import { createWrapperError } from './errorWrapper'
 import { isElementVisible } from './utils/isElementVisible'
 import { isElement } from './utils/isElement'
-import { createWrapper as createDOMWrapper, DOMWrapper } from './domWrapper'
+import type { DOMWrapper } from './domWrapper'
+import { createDOMWrapper, createVueWrapper } from './wrapperFactory'
 
 export default abstract class BaseWrapper<ElementType extends Node>
   implements WrapperLike
@@ -171,11 +172,6 @@ export default abstract class BaseWrapper<ElementType extends Node>
     }
 
     let results = find(currentComponent.subTree, selector)
-    if (this instanceof DOMWrapper) {
-      results = results.filter((v) =>
-        this.element.contains(v.vnode.el as Element)
-      )
-    }
 
     return results.map((c) =>
       c.proxy

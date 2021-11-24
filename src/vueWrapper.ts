@@ -10,11 +10,15 @@ import pretty from 'pretty'
 
 import { config } from './config'
 import domEvents from './constants/dom-events'
-import { DOMWrapper } from './domWrapper'
 import { VueElement } from './types'
 import { mergeDeep } from './utils'
 import { emitted, recordEvent } from './emit'
 import BaseWrapper from './baseWrapper'
+import {
+  createDOMWrapper,
+  registerFactory,
+  WrapperType
+} from './wrapperFactory'
 
 export class VueWrapper<
   T extends Omit<
@@ -132,7 +136,7 @@ export class VueWrapper<
   }
 
   isVisible(): boolean {
-    const domWrapper = new DOMWrapper(this.element)
+    const domWrapper = createDOMWrapper(this.element)
     return domWrapper.isVisible()
   }
 
@@ -168,10 +172,7 @@ export class VueWrapper<
   }
 }
 
-export function createWrapper<T extends ComponentPublicInstance>(
-  app: App | null,
-  vm: T,
-  setProps?: (props: Record<string, unknown>) => void
-): VueWrapper<T> {
-  return new VueWrapper<T>(app, vm, setProps)
-}
+registerFactory(
+  WrapperType.VueWrapper,
+  (app, vm, setProps) => new VueWrapper(app, vm, setProps)
+)
