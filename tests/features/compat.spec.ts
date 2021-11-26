@@ -137,6 +137,37 @@ describe('@vue/compat build', () => {
     expect(wrapper.html()).toBe('<div>stubbed</div>')
   })
 
+  it('correctly uses stubs when stub is legacy component', () => {
+    configureCompat({
+      MODE: 3,
+      GLOBAL_EXTEND: 'suppress-warning',
+      GLOBAL_MOUNT: 'suppress-warning'
+    })
+
+    const Foo = {
+      name: 'Foo',
+      template: '<div>original</div>'
+    }
+
+    const FooStub = extend({ template: '<div>stubbed</div>' })
+
+    const Component = {
+      components: { NamedAsNotFoo: Foo },
+      template: '<named-as-not-foo />'
+    }
+
+    const wrapper = mount(Component, {
+      global: {
+        stubs: {
+          Foo: FooStub
+        }
+      }
+    })
+
+    expect(wrapper.findComponent(Foo).html()).toBe('<div>stubbed</div>')
+  })
+
+
   it('wrapper.vm points to correct instance when component is wrapped with Vue.extend', () => {
     const Component = extend({
       data() {

@@ -239,17 +239,18 @@ export function stubComponents(
 
       // case 2: custom implementation
       if (isComponent(stub)) {
-        const stubFn = isFunctionalComponent(stub) ? stub : null
+        const unwrappedStub = unwrapLegacyVueExtendComponent(stub)
+        const stubFn = isFunctionalComponent(unwrappedStub) ? unwrappedStub : null
         const specializedStubComponent: ConcreteComponent = stubFn
           ? (...args) => stubFn(...args)
-          : { ...stub }
-        specializedStubComponent.props = stub.props
+          : { ...unwrappedStub }
+        specializedStubComponent.props = unwrappedStub.props
 
         const specializedStub = createStubOnce(
           type,
           () => specializedStubComponent
         )
-        specializedStub.props = stub.props
+        specializedStub.props = unwrappedStub.props
         registerStub(type, specializedStub)
         // pass the props and children, for advanced stubbing
         return [specializedStub, props, children, patchFlag, dynamicProps]
