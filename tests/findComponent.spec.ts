@@ -417,7 +417,7 @@ describe('findComponent', () => {
       cmp.displayName = 'FuncButton'
       const Comp = defineComponent({
         components: { ChildComponent: cmp },
-        template: '<div><child-component />Test</button></div>'
+        template: '<div><child-component /><button>Test</button></div>'
       })
 
       const wrapper = mount(Comp)

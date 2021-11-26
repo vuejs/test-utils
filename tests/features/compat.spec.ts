@@ -1,7 +1,9 @@
-import * as Vue from '@vue/compat'
-import { mount } from '../src'
+import * as mockVue from '@vue/compat'
+import { mount } from '../../src'
 
-const { configureCompat, extend, defineComponent, h, config } = Vue as any
+jest.mock('vue', () => mockVue)
+
+const { configureCompat, extend, defineComponent, h, config } = mockVue as any
 
 describe('@vue/compat build', () => {
   beforeAll(() => {
