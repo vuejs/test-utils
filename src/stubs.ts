@@ -240,7 +240,9 @@ export function stubComponents(
       // case 2: custom implementation
       if (isComponent(stub)) {
         const unwrappedStub = unwrapLegacyVueExtendComponent(stub)
-        const stubFn = isFunctionalComponent(unwrappedStub) ? unwrappedStub : null
+        const stubFn = isFunctionalComponent(unwrappedStub)
+          ? unwrappedStub
+          : null
         const specializedStubComponent: ConcreteComponent = stubFn
           ? (...args) => stubFn(...args)
           : { ...unwrappedStub }
