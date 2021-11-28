@@ -1,7 +1,9 @@
-import * as Vue from '@vue/compat'
-import { mount } from '../src'
+import * as mockVue from '@vue/compat'
+import { mount } from '../../src'
 
-const { configureCompat, extend, defineComponent, h, config } = Vue as any
+jest.mock('vue', () => mockVue)
+
+const { configureCompat, extend, defineComponent, h, config } = mockVue as any
 
 describe('@vue/compat build', () => {
   beforeAll(() => {
@@ -133,6 +135,36 @@ describe('@vue/compat build', () => {
     })
 
     expect(wrapper.html()).toBe('<div>stubbed</div>')
+  })
+
+  it('correctly uses stubs when stub is legacy component', () => {
+    configureCompat({
+      MODE: 3,
+      GLOBAL_EXTEND: 'suppress-warning',
+      GLOBAL_MOUNT: 'suppress-warning'
+    })
+
+    const Foo = {
+      name: 'Foo',
+      template: '<div>original</div>'
+    }
+
+    const FooStub = extend({ template: '<div>stubbed</div>' })
+
+    const Component = {
+      components: { NamedAsNotFoo: Foo },
+      template: '<named-as-not-foo />'
+    }
+
+    const wrapper = mount(Component, {
+      global: {
+        stubs: {
+          Foo: FooStub
+        }
+      }
+    })
+
+    expect(wrapper.findComponent(Foo).html()).toBe('<div>stubbed</div>')
   })
 
   it('wrapper.vm points to correct instance when component is wrapped with Vue.extend', () => {
