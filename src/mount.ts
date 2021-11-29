@@ -31,7 +31,7 @@ import {
   mergeGlobalProperties
 } from './utils'
 import { processSlot } from './utils/compileSlots'
-import { createWrapper, VueWrapper } from './vueWrapper'
+import { VueWrapper } from './vueWrapper'
 import { attachEmitListener } from './emit'
 import { stubComponents, addToDoNotStubComponents, registerStub } from './stubs'
 import {
@@ -39,6 +39,7 @@ import {
   unwrapLegacyVueExtendComponent
 } from './utils/vueCompatSupport'
 import { trackInstance } from './utils/autoUnmount'
+import { createVueWrapper } from './wrapperFactory'
 
 // NOTE this should come from `vue`
 type PublicProps = VNodeProps & AllowedComponentProps & ComponentCustomProps
@@ -483,7 +484,7 @@ export function mount(
     return Reflect.has(appRef, property)
   }
   console.warn = warnSave
-  const wrapper = createWrapper(app, appRef, setProps)
+  const wrapper = createVueWrapper(app, appRef, setProps)
   trackInstance(wrapper)
   return wrapper
 }

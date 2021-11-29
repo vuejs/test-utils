@@ -5,27 +5,24 @@ import {
   Plugin,
   AppConfig,
   VNode,
-  VNodeProps
+  VNodeProps,
+  FunctionalComponent
 } from 'vue'
 
-interface RefSelector {
+export interface RefSelector {
   ref: string
 }
-
-interface NameSelector {
+export interface NameSelector {
   name: string
+  length?: never
 }
 
-interface RefSelector {
-  ref: string
-}
-
-interface NameSelector {
-  name: string
-}
-
-export type FindComponentSelector = RefSelector | NameSelector | string
-export type FindAllComponentsSelector = NameSelector | string
+export type FindAllComponentsSelector =
+  | DefinedComponent
+  | FunctionalComponent
+  | NameSelector
+  | string
+export type FindComponentSelector = RefSelector | FindAllComponentsSelector
 
 export type Slot = VNode | string | { render: Function } | Function | Component
 
@@ -143,3 +140,5 @@ export type GlobalMountOptions = {
 }
 
 export type VueElement = Element & { __vue_app__?: any }
+
+export type DefinedComponent = new (...args: any[]) => any

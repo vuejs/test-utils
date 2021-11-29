@@ -93,7 +93,7 @@ export function isObjectComponent(
   return Boolean(component && typeof component === 'object')
 }
 
-export function textContent(element: Element): string {
+export function textContent(element: Node): string {
   // we check if the element is a comment first
   // to return an empty string in that case, instead of the comment content
   return element.nodeType !== Node.COMMENT_NODE

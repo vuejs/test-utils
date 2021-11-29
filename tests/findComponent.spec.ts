@@ -62,7 +62,7 @@ describe('findComponent', () => {
   it('finds component by dom selector', () => {
     const wrapper = mount(compA)
     // find by DOM selector
-    expect(wrapper.findComponent('.C').vm).toHaveProperty(
+    expect(wrapper.findComponent<typeof compC>('.C').vm).toHaveProperty(
       '$options.name',
       'ComponentC'
     )
@@ -70,7 +70,7 @@ describe('findComponent', () => {
 
   it('does allows using complicated DOM selector query', () => {
     const wrapper = mount(compA)
-    expect(wrapper.findComponent('.B > .C').vm).toHaveProperty(
+    expect(wrapper.findComponent<typeof compC>('.B > .C').vm).toHaveProperty(
       '$options.name',
       'ComponentC'
     )

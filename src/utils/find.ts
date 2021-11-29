@@ -1,5 +1,5 @@
 import {
-  ComponentPublicInstance,
+  ComponentInternalInstance,
   VNode,
   VNodeArrayChildren,
   VNodeNormalizedChildren
@@ -149,7 +149,7 @@ function findAllVNodes(
 export function find(
   root: VNode,
   selector: FindAllComponentsSelector
-): ComponentPublicInstance[] {
+): ComponentInternalInstance[] {
   let matchingVNodes = findAllVNodes(root, selector)
 
   if (typeof selector === 'string') {
@@ -159,5 +159,5 @@ export function find(
     )
   }
 
-  return matchingVNodes.map((vnode: VNode) => vnode.component!.proxy!)
+  return matchingVNodes.map((vnode: VNode) => vnode.component!)
 }
