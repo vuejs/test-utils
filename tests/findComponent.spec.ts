@@ -182,7 +182,23 @@ describe('findComponent', () => {
     })
 
     expect(wrapper.findComponent(Hello).exists()).toBe(true)
+    expect(wrapper.findAllComponents(Hello)).toHaveLength(1)
     expect(wrapper.findComponent(compB).exists()).toBe(true)
+    expect(wrapper.findAllComponents(compB)).toHaveLength(1)
+  })
+
+  it('finds a component by its stub', () => {
+    const HelloStub = defineComponent({ template: '<div>universal stub</div>' })
+
+    const wrapper = mount(compA, {
+      global: {
+        stubs: {
+          Hello: HelloStub
+        }
+      }
+    })
+
+    expect(wrapper.findComponent(HelloStub).exists()).toBe(true)
   })
 
   it('finds a component without a name by its locally assigned name', () => {

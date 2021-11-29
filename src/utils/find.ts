@@ -2,10 +2,14 @@ import {
   ComponentInternalInstance,
   VNode,
   VNodeArrayChildren,
-  VNodeNormalizedChildren
+  VNodeNormalizedChildren,
+  VNodeTypes
 } from 'vue'
 import { FindAllComponentsSelector } from '../types'
-import { getOriginalVNodeTypeFromStub } from '../stubs'
+import {
+  getOriginalStubFromSpecializedStub,
+  getOriginalVNodeTypeFromStub
+} from '../stubs'
 import { isComponent } from '../utils'
 import { matchName } from './matchName'
 import { unwrapLegacyVueExtendComponent } from './vueCompatSupport'
@@ -28,32 +32,28 @@ export function matches(
   const nodeType = node.type
   if (!isComponent(nodeType)) return false
 
-  if (node.type === selector) {
-    return true
-  }
-
   if (typeof selector === 'string') {
     return node.el?.matches?.(selector)
   }
 
-  if (
-    typeof selector === 'object' &&
-    getOriginalVNodeTypeFromStub(nodeType) === selector
-  ) {
-    // we are looking at stub of this exact component
+  // When we're using stubs we want user to be able to
+  // find stubbed components both by original component
+  // or stub definition. That's why we are trying to
+  // extract original component and also stub, which was
+  // used to create specialized stub for render
+
+  const nodeTypeCandidates: VNodeTypes[] = [
+    nodeType,
+    getOriginalVNodeTypeFromStub(nodeType),
+    getOriginalStubFromSpecializedStub(nodeType)
+  ].filter(Boolean) as VNodeTypes[]
+
+  if (nodeTypeCandidates.includes(selector)) {
     return true
   }
 
   let componentName: string | undefined
-  if ('displayName' in nodeType) {
-    // match functional components
-    componentName = nodeType.displayName
-  }
-
-  if (!componentName && 'name' in nodeType) {
-    // match normal component definitions
-    componentName = nodeType.name
-  }
+  componentName = nodeType.displayName || nodeType.name
 
   let selectorName = selector.name
 
