@@ -55,18 +55,7 @@ describe('find', () => {
     })
   })
 
-  it('find using multiple root nodes', () => {
-    const Component = defineComponent({
-      render() {
-        return [h('div', 'text'), h('span', { id: 'my-span' })]
-      }
-    })
-
-    const wrapper = mount(Component)
-    expect(wrapper.find('#my-span').exists()).toBe(true)
-  })
-
-  test('find using current node after findAllComponents', () => {
+  it('find using current node after findAllComponents', () => {
     const ComponentB = defineComponent({
       name: 'ComponentB',
       template: '<div><slot></slot></div>'
@@ -126,14 +115,14 @@ describe('find', () => {
     expect(wrapper.find('.foo').find('.bar').exists()).toBe(true)
   })
 
-  test('works with suspense', async () => {
+  it('works with suspense', async () => {
     const wrapper = mount(SuspenseComponent)
 
     expect(wrapper.html()).toContain('Fallback content')
     expect(wrapper.find('div').exists()).toBeTruthy()
   })
 
-  test('can wrap `find` in an async function', async () => {
+  it('can wrap `find` in an async function', async () => {
     async function findAfterNextTick(
       wrapper: VueWrapper<any>,
       selector: string
@@ -152,7 +141,7 @@ describe('find', () => {
     expect(foundElement.exists()).toBeFalsy()
   })
 
-  test('handle empty root node', () => {
+  it('handle empty root node', () => {
     const EmptyTestComponent = {
       name: 'EmptyTestComponent',
       render: () => null
@@ -170,7 +159,7 @@ describe('find', () => {
 })
 
 describe('findAll', () => {
-  test('findAll using single root node', () => {
+  it('findAll using single root node', () => {
     const Component = defineComponent({
       render() {
         return h('div', {}, [
@@ -184,7 +173,7 @@ describe('findAll', () => {
     expect(wrapper.findAll('.span')).toHaveLength(2)
   })
 
-  test('findAll using multiple root nodes', () => {
+  it('findAll using multiple root nodes', () => {
     const Component = defineComponent({
       render() {
         return [
@@ -198,7 +187,7 @@ describe('findAll', () => {
     expect(wrapper.findAll('.span')).toHaveLength(2)
   })
 
-  test('findAll using current node after findAllComponents', () => {
+  it('findAll using current node after findAllComponents', () => {
     const ComponentB = defineComponent({
       name: 'ComponentB',
       template: '<div><slot></slot></div>'
@@ -224,14 +213,14 @@ describe('findAll', () => {
     expect(lastCompB.findAll('input')[0].element.value).toBe('2')
   })
 
-  test('works with suspense', async () => {
+  it('works with suspense', async () => {
     const wrapper = mount(SuspenseComponent)
 
     expect(wrapper.html()).toContain('Fallback content')
     expect(wrapper.findAll('div')).toBeTruthy()
   })
 
-  test('chaining finds compiles successfully', () => {
+  it('chaining finds compiles successfully', () => {
     const Bar = {
       render() {
         return h('span', { id: 'bar' })
@@ -247,7 +236,7 @@ describe('findAll', () => {
     expect(wrapper.find('#foo').find('#bar').exists()).toBe(true)
   })
 
-  test('handle empty/comment root node', () => {
+  it('handle empty/comment root node', () => {
     const EmptyTestComponent = {
       name: 'EmptyTestComponent',
       render: () => null
@@ -261,5 +250,90 @@ describe('findAll', () => {
     const wrapper = mount(Component)
     const etc = wrapper.findComponent({ name: 'EmptyTestComponent' })
     expect(etc.findAll('p')).toHaveLength(0)
+  })
+
+  describe('with multiple root nodes', () => {
+    const MultipleRootComponentWithRenderFn = defineComponent({
+      render() {
+        return [
+          h(
+            'div',
+            { class: 'root1' },
+            h('div', { class: 'target1' }, 'target1')
+          ),
+          h(
+            'div',
+            { class: 'root2' },
+            h('div', { class: 'target2' }, 'target2')
+          ),
+          h(
+            'div',
+            { class: 'root3' },
+            h('div', { class: 'target3' }, 'target3')
+          )
+        ]
+      }
+    })
+
+    const MultipleRootComponentWithTemplate = defineComponent({
+      template: [
+        '<div class="root1"><div class="target1">target1</div></div>',
+        '<div class="root2"><div class="target2">target2</div></div>',
+        '<div class="root3"><div class="target3">target3</div></div>'
+      ].join('\n')
+    })
+
+    const WrapperComponent = defineComponent({
+      components: {
+        MultipleRootComponentWithTemplate,
+        MultipleRootComponentWithRenderFn
+      },
+      template: [
+        '<div><multiple-root-component-with-template /></div>',
+        '<div><multiple-root-component-with-render-fn /></div>'
+      ].join('\n')
+    })
+    it('find one of root nodes', () => {
+      const Component = defineComponent({
+        render() {
+          return [h('div', 'text'), h('span', { id: 'my-span' })]
+        }
+      })
+
+      const wrapper = mount(Component)
+      expect(wrapper.find('#my-span').exists()).toBe(true)
+    })
+
+    it('finds second root node when component is not mount root', () => {
+      const wrapper = mount(WrapperComponent)
+      expect(
+        wrapper
+          .findComponent(MultipleRootComponentWithRenderFn)
+          .find('.root2')
+          .exists()
+      ).toBe(true)
+      expect(
+        wrapper
+          .findComponent(MultipleRootComponentWithTemplate)
+          .find('.root2')
+          .exists()
+      ).toBe(true)
+    })
+
+    it('finds contents of second root node when component is not mount root', () => {
+      const wrapper = mount(WrapperComponent)
+      expect(
+        wrapper
+          .findComponent(MultipleRootComponentWithTemplate)
+          .find('.target2')
+          .exists()
+      ).toBe(true)
+      expect(
+        wrapper
+          .findComponent(MultipleRootComponentWithRenderFn)
+          .find('.target2')
+          .exists()
+      ).toBe(true)
+    })
   })
 })

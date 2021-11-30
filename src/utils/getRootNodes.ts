@@ -1,0 +1,35 @@
+import { ShapeFlags } from '@vue/shared'
+import { isNotNullOrUndefined } from '../utils'
+import { VNode, VNodeArrayChildren } from 'vue'
+
+export function getRootNodes(vnode: VNode): Node[] {
+  if (vnode.shapeFlag & (ShapeFlags.ELEMENT | ShapeFlags.SUSPENSE)) {
+    return [vnode.el as Node]
+  } else if (vnode.shapeFlag & ShapeFlags.COMPONENT) {
+    const { subTree } = vnode.component!
+    return getRootNodes(subTree)
+  } else if (vnode.shapeFlag & ShapeFlags.TEXT_CHILDREN) {
+    // static node optimization, subTree.children will be static string and will not help us
+    const result = [vnode.el as Node]
+    if (vnode.anchor) {
+      let currentNode: Node | null = result[0].nextSibling
+      while (currentNode && currentNode.previousSibling !== vnode.anchor) {
+        result.push(currentNode)
+        currentNode = currentNode.nextSibling
+      }
+    }
+    return result
+  } else if (vnode.shapeFlag & ShapeFlags.ARRAY_CHILDREN) {
+    const children = (vnode.children as unknown as VNodeArrayChildren).flat(
+      Infinity
+    ) as VNode[]
+
+    return children
+      .flatMap((vnode) => getRootNodes(vnode))
+      .filter(isNotNullOrUndefined)
+  }
+  // Missing cases which do not need special handling:
+  // ShapeFlags.SLOTS_CHILDREN comes with ShapeFlags.ELEMENT
+  // ShapeFlags.TELEPORT comes with ShapeFlags.TEXT_CHILDREN
+  return []
+}

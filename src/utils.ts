@@ -108,6 +108,12 @@ export function hasOwnProperty<O extends {}, P extends PropertyKey>(
   return obj.hasOwnProperty(prop)
 }
 
+export function isNotNullOrUndefined<T extends {}>(
+  obj: T | null | undefined
+): obj is T {
+  return Boolean(obj)
+}
+
 export function isRefSelector(
   selector: string | RefSelector
 ): selector is RefSelector {
