@@ -17,7 +17,7 @@ interface Plugin<Instance, O> {
   options: O
 }
 
-class Pluggable<Instance = DOMWrapper<Element>> {
+class Pluggable<Instance = DOMWrapper<Node>> {
   installedPlugins: Plugin<Instance, any>[] = []
 
   install<O>(handler: (instance: Instance) => Record<string, any>): void

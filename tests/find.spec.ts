@@ -1,4 +1,4 @@
-import { defineComponent, h, nextTick } from 'vue'
+import { defineComponent, h, nextTick, Fragment } from 'vue'
 
 import { mount, VueWrapper } from '../src'
 import SuspenseComponent from './components/Suspense.vue'
@@ -15,15 +15,29 @@ describe('find', () => {
     expect(wrapper.find('#my-span').exists()).toBe(true)
   })
 
-  it('find DOM element by ref', () => {
-    const Component = defineComponent({
-      render() {
-        return h('div', {}, [h('span', { ref: 'span', id: 'my-span' })])
-      }
+  describe('find DOM element by ref', () => {
+    it('works for root element', () => {
+      const Component = defineComponent({
+        render() {
+          return h('div', {}, [h('span', { ref: 'span', id: 'my-span' })])
+        }
+      })
+      const wrapper = mount(Component)
+      expect(wrapper.find({ ref: 'span' }).exists()).toBe(true)
+      expect(wrapper.find({ ref: 'span' }).attributes('id')).toBe('my-span')
     })
-    const wrapper = mount(Component)
-    expect(wrapper.find({ ref: 'span' }).exists()).toBe(true)
-    expect(wrapper.find({ ref: 'span' }).attributes('id')).toBe('my-span')
+
+    it('works when ref is pointing to non-element node', () => {
+      const Component = defineComponent({
+        render() {
+          return h('div', null, h(Fragment, { ref: 'plain' }, ['hello']))
+        }
+      })
+
+      const wrapper = mount(Component)
+      expect(wrapper.find({ ref: 'plain' }).exists()).toBe(true)
+      expect(wrapper.find({ ref: 'plain' }).element).toBeInstanceOf(Text)
+    })
   })
 
   it('find using multiple root nodes', () => {

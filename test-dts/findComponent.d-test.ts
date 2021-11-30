@@ -41,7 +41,7 @@ expectType<VueWrapper<InstanceType<typeof ComponentWithEmits>>>(
 
 // find by type - functional
 const functionalComponentByType = wrapper.findComponent(FuncComponent)
-expectType<DOMWrapper<Element>>(functionalComponentByType)
+expectType<DOMWrapper<Node>>(functionalComponentByType)
 
 // find by string
 const componentByString = wrapper.findComponent('.foo')

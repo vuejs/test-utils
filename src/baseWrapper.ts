@@ -46,8 +46,9 @@ export default abstract class BaseWrapper<ElementType extends Node>
     selector: K
   ): DOMWrapper<SVGElementTagNameMap[K]>
   find<T extends Element>(selector: string | RefSelector): DOMWrapper<T>
-  find(selector: string | RefSelector): DOMWrapper<Element>
-  find(selector: string | RefSelector): DOMWrapper<Element> {
+  find(selector: string): DOMWrapper<Element>
+  find(selector: RefSelector): DOMWrapper<Node>
+  find(selector: string | RefSelector): DOMWrapper<Node> {
     // allow finding the root element
     if (!isElement(this.element)) {
       return createWrapperError('DOMWrapper')
@@ -61,7 +62,7 @@ export default abstract class BaseWrapper<ElementType extends Node>
 
       const result = currentComponent.refs[selector.ref]
 
-      if (result instanceof HTMLElement) {
+      if (result instanceof Node) {
         return createDOMWrapper(result)
       } else {
         return createWrapperError('DOMWrapper')
@@ -110,8 +111,9 @@ export default abstract class BaseWrapper<ElementType extends Node>
     selector: T | Exclude<FindComponentSelector, FunctionalComponent>
   ): VueWrapper<InstanceType<T>>
   // searching for functional component results in DOMWrapper
+  findComponent<T extends FunctionalComponent>(selector: T): DOMWrapper<Node>
   findComponent<T extends FunctionalComponent>(
-    selector: T | string
+    selector: string
   ): DOMWrapper<Element>
   // searching by name or ref always results in VueWrapper
   findComponent<T extends never>(
@@ -154,7 +156,10 @@ export default abstract class BaseWrapper<ElementType extends Node>
     selector: T | Exclude<FindAllComponentsSelector, FunctionalComponent>
   ): VueWrapper<InstanceType<T>>[]
   findAllComponents<T extends FunctionalComponent>(
-    selector: T | string
+    selector: T
+  ): DOMWrapper<Node>[]
+  findAllComponents<T extends FunctionalComponent>(
+    selector: string
   ): DOMWrapper<Element>[]
   findAllComponents<T extends never>(selector: NameSelector): VueWrapper[]
   findAllComponents<T extends ComponentPublicInstance>(
@@ -223,7 +228,8 @@ export default abstract class BaseWrapper<ElementType extends Node>
     selector: K
   ): Omit<DOMWrapper<SVGElementTagNameMap[K]>, 'exists'>
   get<T extends Element>(selector: string): Omit<DOMWrapper<T>, 'exists'>
-  get(selector: string): Omit<DOMWrapper<Element>, 'exists'> {
+  get(selector: RefSelector): Omit<DOMWrapper<Node>, 'exists'>
+  get(selector: string | RefSelector): Omit<DOMWrapper<Element>, 'exists'> {
     const result = this.find(selector)
     if (result.exists()) {
       return result

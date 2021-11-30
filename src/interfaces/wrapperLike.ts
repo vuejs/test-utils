@@ -18,7 +18,8 @@ export default interface WrapperLike {
     selector: K
   ): DOMWrapper<SVGElementTagNameMap[K]>
   find<T extends Element>(selector: string | RefSelector): DOMWrapper<T>
-  find(selector: string | RefSelector): DOMWrapper<Element>
+  find(selector: string): DOMWrapper<Element>
+  find(selector: RefSelector): DOMWrapper<Node>
 
   findAll<K extends keyof HTMLElementTagNameMap>(
     selector: K
@@ -50,8 +51,11 @@ export default interface WrapperLike {
     selector: T | Exclude<FindAllComponentsSelector, FunctionalComponent>
   ): VueWrapper<InstanceType<T>>[]
   findAllComponents<T extends FunctionalComponent>(
-    selector: T | string
+    selector: string
   ): DOMWrapper<Element>[]
+  findAllComponents<T extends FunctionalComponent>(
+    selector: T
+  ): DOMWrapper<Node>[]
   findAllComponents<T extends never>(selector: NameSelector): VueWrapper[]
   findAllComponents<T extends ComponentPublicInstance>(
     selector: T | FindAllComponentsSelector
@@ -65,6 +69,7 @@ export default interface WrapperLike {
     selector: K
   ): Omit<DOMWrapper<SVGElementTagNameMap[K]>, 'exists'>
   get<T extends Element>(selector: string): Omit<DOMWrapper<T>, 'exists'>
+  get(selector: RefSelector): Omit<DOMWrapper<Node>, 'exists'>
   get(selector: string): Omit<DOMWrapper<Element>, 'exists'>
 
   getComponent<T extends never>(selector: string): Omit<WrapperLike, 'exists'>
@@ -75,10 +80,6 @@ export default interface WrapperLike {
   getComponent<T extends FunctionalComponent>(
     selector: T | string
   ): Omit<DOMWrapper<Element>, 'exists'>
-  // searching by name or ref always results in VueWrapper
-  getComponent<T extends never>(
-    selector: NameSelector | RefSelector
-  ): Omit<VueWrapper, 'exists'>
   getComponent<T extends ComponentPublicInstance>(
     selector: T | FindComponentSelector
   ): Omit<VueWrapper<T>, 'exists'>
