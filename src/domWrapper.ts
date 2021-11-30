@@ -3,6 +3,9 @@ import BaseWrapper from './baseWrapper'
 import WrapperLike from './interfaces/wrapperLike'
 import { isElement } from './utils/isElement'
 import { registerFactory, WrapperType } from './wrapperFactory'
+import { RefSelector } from './types'
+import { isRefSelector } from './utils'
+import { createWrapperError } from './errorWrapper'
 
 export class DOMWrapper<NodeType extends Node> extends BaseWrapper<NodeType> {
   constructor(element: NodeType) {
@@ -19,6 +22,17 @@ export class DOMWrapper<NodeType extends Node> extends BaseWrapper<NodeType> {
     return isElement(this.element)
       ? this.element.outerHTML
       : this.element.toString()
+  }
+
+  find(selector: string | RefSelector): DOMWrapper<any> {
+    const result = super.find(selector)
+    if (result.exists() && isRefSelector(selector)) {
+      return this.element.contains(result.element)
+        ? result
+        : createWrapperError('DOMWrapper')
+    }
+
+    return result
   }
 
   findAllComponents(selector: any): any {

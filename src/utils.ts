@@ -1,4 +1,4 @@
-import { GlobalMountOptions } from './types'
+import { GlobalMountOptions, RefSelector } from './types'
 import { ComponentOptions, ConcreteComponent, FunctionalComponent } from 'vue'
 import { config } from './config'
 
@@ -106,4 +106,10 @@ export function hasOwnProperty<O extends {}, P extends PropertyKey>(
   prop: P
 ): obj is O & Record<P, unknown> {
   return obj.hasOwnProperty(prop)
+}
+
+export function isRefSelector(
+  selector: string | RefSelector
+): selector is RefSelector {
+  return typeof selector === 'object' && 'ref' in selector
 }

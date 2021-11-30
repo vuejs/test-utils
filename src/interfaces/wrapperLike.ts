@@ -17,9 +17,8 @@ export default interface WrapperLike {
   find<K extends keyof SVGElementTagNameMap>(
     selector: K
   ): DOMWrapper<SVGElementTagNameMap[K]>
-  find<T extends Element>(selector: string | RefSelector): DOMWrapper<T>
-  find(selector: string): DOMWrapper<Element>
-  find(selector: RefSelector): DOMWrapper<Node>
+  find<T extends Element = Element>(selector: string): DOMWrapper<T>
+  find<T extends Node = Node>(selector: string | RefSelector): DOMWrapper<T>
 
   findAll<K extends keyof HTMLElementTagNameMap>(
     selector: K
@@ -68,9 +67,12 @@ export default interface WrapperLike {
   get<K extends keyof SVGElementTagNameMap>(
     selector: K
   ): Omit<DOMWrapper<SVGElementTagNameMap[K]>, 'exists'>
-  get<T extends Element>(selector: string): Omit<DOMWrapper<T>, 'exists'>
-  get(selector: RefSelector): Omit<DOMWrapper<Node>, 'exists'>
-  get(selector: string): Omit<DOMWrapper<Element>, 'exists'>
+  get<T extends Element = Element>(
+    selector: string
+  ): Omit<DOMWrapper<T>, 'exists'>
+  get<T extends Node = Node>(
+    selector: string | RefSelector
+  ): Omit<DOMWrapper<T>, 'exists'>
 
   getComponent<T extends never>(selector: string): Omit<WrapperLike, 'exists'>
   getComponent<T extends DefinedComponent>(

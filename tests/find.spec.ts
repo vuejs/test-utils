@@ -38,6 +38,21 @@ describe('find', () => {
       expect(wrapper.find({ ref: 'plain' }).exists()).toBe(true)
       expect(wrapper.find({ ref: 'plain' }).element).toBeInstanceOf(Text)
     })
+
+    it('does not find ref located in the same component but not in current DOM wrapper', () => {
+      const Component = defineComponent({
+        render() {
+          return h('div', [
+            h('span', { ref: 'span', id: 'my-span' }),
+            h('div', { class: 'search-target' })
+          ])
+        }
+      })
+      const wrapper = mount(Component)
+      expect(
+        wrapper.find('.search-target').find({ ref: 'span' }).exists()
+      ).toBe(false)
+    })
   })
 
   it('find using multiple root nodes', () => {
