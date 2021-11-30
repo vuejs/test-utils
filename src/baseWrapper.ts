@@ -1,4 +1,4 @@
-import { textContent } from './utils'
+import { isNotNullOrUndefined, textContent } from './utils'
 import type { TriggerOptions } from './createDomEvent'
 import {
   ComponentInternalInstance,
@@ -14,7 +14,8 @@ import {
   FindAllComponentsSelector,
   FindComponentSelector,
   NameSelector,
-  RefSelector
+  RefSelector,
+  VueNode
 } from './types'
 import WrapperLike from './interfaces/wrapperLike'
 import { find, matches } from './utils/find'
@@ -27,9 +28,8 @@ import { createDOMWrapper, createVueWrapper } from './wrapperFactory'
 export default abstract class BaseWrapper<ElementType extends Node>
   implements WrapperLike
 {
-  private readonly wrapperElement: ElementType & {
-    __vueParentComponent?: ComponentInternalInstance
-  }
+  protected readonly wrapperElement: VueNode<ElementType>
+  protected abstract getRootNodes(): VueNode[]
 
   get element() {
     return this.wrapperElement
@@ -48,11 +48,6 @@ export default abstract class BaseWrapper<ElementType extends Node>
   find<T extends Element = Element>(selector: string): DOMWrapper<T>
   find<T extends Node = Node>(selector: string | RefSelector): DOMWrapper<T>
   find(selector: string | RefSelector): DOMWrapper<Node> {
-    // allow finding the root element
-    if (!isElement(this.element)) {
-      return createWrapperError('DOMWrapper')
-    }
-
     if (typeof selector === 'object' && 'ref' in selector) {
       const currentComponent = this.getCurrentComponent()
       if (!currentComponent) {
@@ -68,12 +63,24 @@ export default abstract class BaseWrapper<ElementType extends Node>
       }
     }
 
-    if (this.element.matches(selector)) {
-      return createDOMWrapper(this.element)
+    const elementRootNodes = this.getRootNodes().filter(
+      (node): node is Element => node instanceof Element
+    )
+    if (elementRootNodes.length === 0) {
+      return createWrapperError('DOMWrapper')
     }
-    const result = this.element.querySelector(selector)
-    if (result) {
-      return createDOMWrapper(result)
+    const matchingRootNode = elementRootNodes.find((node) =>
+      node.matches(selector)
+    )
+    if (matchingRootNode) {
+      return createDOMWrapper(matchingRootNode)
+    }
+
+    const result = elementRootNodes
+      .map((node) => node.querySelector(selector))
+      .filter(isNotNullOrUndefined)
+    if (result.length > 0) {
+      return createDOMWrapper(result[0])
     }
 
     return createWrapperError('DOMWrapper')

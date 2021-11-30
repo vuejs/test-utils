@@ -14,6 +14,10 @@ export class DOMWrapper<NodeType extends Node> extends BaseWrapper<NodeType> {
     config.plugins.DOMWrapper.extend(this)
   }
 
+  getRootNodes() {
+    return [this.wrapperElement]
+  }
+
   getCurrentComponent() {
     return this.element.__vueParentComponent
   }

@@ -10,8 +10,9 @@ import pretty from 'pretty'
 
 import { config } from './config'
 import domEvents from './constants/dom-events'
-import { VueElement } from './types'
+import { VueElement, VueNode } from './types'
 import { mergeDeep } from './utils'
+import { getRootNodes } from './utils/getRootNodes'
 import { emitted, recordEvent } from './emit'
 import BaseWrapper from './baseWrapper'
 import {
@@ -66,6 +67,10 @@ export class VueWrapper<
   private get hasMultipleRoots(): boolean {
     // if the subtree is an array of children, we have multiple root nodes
     return this.vm.$.subTree.shapeFlag === ShapeFlags.ARRAY_CHILDREN
+  }
+
+  protected getRootNodes(): VueNode[] {
+    return getRootNodes(this.vm.$.vnode)
   }
 
   private get parentElement(): VueElement {

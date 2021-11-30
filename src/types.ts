@@ -6,7 +6,8 @@ import {
   AppConfig,
   VNode,
   VNodeProps,
-  FunctionalComponent
+  FunctionalComponent,
+  ComponentInternalInstance
 } from 'vue'
 
 export interface RefSelector {
@@ -139,6 +140,11 @@ export type GlobalMountOptions = {
   renderStubDefaultSlot?: boolean
 }
 
-export type VueElement = Element & { __vue_app__?: any }
+export type VueNode<T extends Node = Node> = T & {
+  __vue_app__?: any
+  __vueParentComponent?: ComponentInternalInstance
+}
+
+export type VueElement = VueNode<Element>
 
 export type DefinedComponent = new (...args: any[]) => any
