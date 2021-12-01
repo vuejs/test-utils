@@ -24,6 +24,8 @@ import { isElementVisible } from './utils/isElementVisible'
 import { isElement } from './utils/isElement'
 import type { DOMWrapper } from './domWrapper'
 import { createDOMWrapper, createVueWrapper } from './wrapperFactory'
+import { stringifyNode } from './utils/stringifyNode'
+import pretty from 'pretty'
 
 export default abstract class BaseWrapper<ElementType extends Node>
   implements WrapperLike
@@ -191,7 +193,11 @@ export default abstract class BaseWrapper<ElementType extends Node>
     )
   }
   abstract setValue(value?: any): Promise<void>
-  abstract html(): string
+  html(): string {
+    return this.getRootNodes()
+      .map((node) => pretty(stringifyNode(node)))
+      .join('\n')
+  }
 
   classes(): string[]
   classes(className: string): boolean

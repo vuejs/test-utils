@@ -95,12 +95,13 @@ describe('slots', () => {
       })
 
       expect(wrapper.find('.named').html()).toBe(
-        '' +
-          '<div class="named">' +
-          '<div id="root">' +
-          '<div id="msg">Hello world</div>' +
-          '</div>' +
+        [
+          '<div class="named">',
+          '  <div id="root">',
+          '    <div id="msg">Hello world</div>',
+          '  </div>',
           '</div>'
+        ].join('\n')
       )
     })
   })
