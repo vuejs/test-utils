@@ -323,6 +323,29 @@ describe('emitted', () => {
     expect(wrapper.emitted('foo')).toHaveLength(1)
   })
 
+  it('does not capture native events on component which render non-element root', async () => {
+    const Foo = defineComponent({ template: 'plain-string' })
+    const wrapper = mount(Foo)
+    await wrapper.trigger('click')
+    expect(wrapper.emitted('click')).toBeUndefined()
+  })
+
+  it('does not capture native events on component with multiple root element nodes', async () => {
+    const Foo = defineComponent({ template: '<div>1</div><div>2</div>' })
+    const wrapper = mount(Foo)
+    await wrapper.find('div').trigger('click')
+    expect(wrapper.emitted('click')).toBeUndefined()
+  })
+
+  it('capture native events on components which render multiple root nodes with only single element', async () => {
+    const Foo = defineComponent({
+      template: '<div>1</div><!-- comment node -->'
+    })
+    const wrapper = mount(Foo)
+    await wrapper.find('div').trigger('click')
+    expect(wrapper.emitted('click')).toHaveLength(1)
+  })
+
   it.each([EmitsEventSFC, EmitsEventScriptSetup] as DefineComponent[])(
     'captures emitted events',
     async (component) => {
