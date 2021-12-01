@@ -1,7 +1,6 @@
 import { config } from './config'
 import BaseWrapper from './baseWrapper'
 import WrapperLike from './interfaces/wrapperLike'
-import { isElement } from './utils/isElement'
 import { registerFactory, WrapperType } from './wrapperFactory'
 import { RefSelector } from './types'
 import { isRefSelector } from './utils'
@@ -20,12 +19,6 @@ export class DOMWrapper<NodeType extends Node> extends BaseWrapper<NodeType> {
 
   getCurrentComponent() {
     return this.element.__vueParentComponent
-  }
-
-  html() {
-    return isElement(this.element)
-      ? this.element.outerHTML
-      : this.element.toString()
   }
 
   find(selector: string | RefSelector): DOMWrapper<any> {

@@ -131,15 +131,6 @@ export class VueWrapper<
     return emitted(this.vm, eventName)
   }
 
-  html() {
-    // cover cases like <Suspense>, multiple root nodes.
-    if (this.parentElement['__vue_app__']) {
-      return pretty(this.parentElement.innerHTML)
-    }
-
-    return pretty(this.element.outerHTML)
-  }
-
   isVisible(): boolean {
     const domWrapper = createDOMWrapper(this.element)
     return domWrapper.isVisible()

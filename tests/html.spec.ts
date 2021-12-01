@@ -15,18 +15,35 @@ describe('html', () => {
     expect(wrapper.html()).toBe('<div>Text content</div>')
   })
 
-  it('returns the html when mounting multiple root nodes', () => {
+  describe('multiple root components', () => {
+    const originalTemplate = [
+      '<div>foo</div>',
+      '<!-- comment node -->',
+      'some text',
+      '<div>bar</div>',
+      '<div>baz</div>'
+    ]
+
     const Component = defineComponent({
-      render() {
-        return [h('div', {}, 'foo'), h('div', {}, 'bar'), h('div', {}, 'baz')]
-      }
+      name: 'TemplateComponent',
+      template: originalTemplate.join('')
     })
 
-    const wrapper = mount(Component)
+    it('returns the html when mounting multiple root nodes', () => {
+      const wrapper = mount(Component)
+      expect(wrapper.html()).toBe(originalTemplate.join('\n'))
+    })
 
-    expect(wrapper.html()).toBe(
-      '<div>foo</div>\n' + '<div>bar</div>\n' + '<div>baz</div>'
-    )
+    it('returns the html when multiple root component is located inside other component', () => {
+      const ParentComponent = defineComponent({
+        components: { MultipleRoots: Component },
+        template: '<div>parent <multiple-roots /></div>'
+      })
+      const wrapper = mount(ParentComponent)
+      expect(wrapper.findComponent(Component).html()).toBe(
+        originalTemplate.join('\n')
+      )
+    })
   })
 
   it('returns the html when mounting a Suspense component', () => {
