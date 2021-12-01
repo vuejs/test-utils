@@ -26,17 +26,29 @@ interface StubOptions {
   renderStubDefaultSlot?: boolean
 }
 
-const stubsMap: WeakMap<ConcreteComponent, ConcreteComponent> = new WeakMap()
-export const registerStub = (
-  source: ConcreteComponent,
+const stubsMap: WeakMap<
+  ConcreteComponent,
+  { source: ConcreteComponent; originalStub?: ConcreteComponent }
+> = new WeakMap()
+export const registerStub = ({
+  source,
+  stub,
+  originalStub
+}: {
+  source: ConcreteComponent
   stub: ConcreteComponent
-) => {
-  stubsMap.set(stub, source)
+  originalStub?: ConcreteComponent
+}) => {
+  stubsMap.set(stub, { source, originalStub })
 }
 
 export const getOriginalVNodeTypeFromStub = (
   type: ConcreteComponent
-): VNodeTypes | undefined => stubsMap.get(type)
+): VNodeTypes | undefined => stubsMap.get(type)?.source
+
+export const getOriginalStubFromSpecializedStub = (
+  type: ConcreteComponent
+): VNodeTypes | undefined => stubsMap.get(type)?.originalStub
 
 const doNotStubComponents: WeakSet<ConcreteComponent> = new WeakSet()
 const shouldNotStub = (type: ConcreteComponent) => doNotStubComponents.has(type)
@@ -151,7 +163,6 @@ function createStubOnceForType(
   }
 
   const stub = factoryFn()
-  registerStub(type, stub)
   cache.set(type, stub)
   return stub
 }
@@ -253,7 +264,11 @@ export function stubComponents(
           () => specializedStubComponent
         )
         specializedStub.props = unwrappedStub.props
-        registerStub(type, specializedStub)
+        registerStub({
+          source: type,
+          stub: specializedStub,
+          originalStub: stub
+        })
         // pass the props and children, for advanced stubbing
         return [specializedStub, props, children, patchFlag, dynamicProps]
       }
@@ -274,7 +289,8 @@ export function stubComponents(
           throw new Error('Attempted to stub a non-component')
         }
 
-        const propsDeclaration = type.props || {}
+        const propsDeclaration =
+          unwrapLegacyVueExtendComponent(type).props || {}
         const newStub = createStubOnce(type, () =>
           createStub({
             name: stubName,
@@ -282,6 +298,7 @@ export function stubComponents(
             renderStubDefaultSlot
           })
         )
+        registerStub({ source: type, stub: newStub })
         return [newStub, props, children, patchFlag, dynamicProps]
       }
     }

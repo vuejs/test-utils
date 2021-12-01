@@ -277,7 +277,7 @@ export function mount(
   }
 
   addToDoNotStubComponents(component)
-  registerStub(originalComponent, component)
+  registerStub({ source: originalComponent, stub: component })
   const el = document.createElement('div')
 
   if (options?.attachTo) {
