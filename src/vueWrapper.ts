@@ -94,7 +94,14 @@ export class VueWrapper<
           // and we only need the keys
           Object.keys(vm.$options.emits)
       : []
-    const element = this.element
+
+    const elementRoots = this.getRootNodes().filter(
+      (node): node is Element => node instanceof Element
+    )
+    if (elementRoots.length !== 1) {
+      return
+    }
+    const [element] = elementRoots
     for (let eventName of Object.keys(domEvents)) {
       // if a component includes events in 'emits' with the same name as native
       // events, the native events with that name should be ignored
