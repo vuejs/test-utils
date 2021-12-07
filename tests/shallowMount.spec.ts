@@ -161,6 +161,7 @@ describe('shallowMount', () => {
       '<div>Override</div>\n' +
         '<component-with-input-stub></component-with-input-stub>\n' +
         '<component-without-name-stub></component-without-name-stub>\n' +
+        '<component-async-stub></component-async-stub>\n' +
         '<script-setup-stub></script-setup-stub>\n' +
         '<with-props-stub></with-props-stub>'
     )
