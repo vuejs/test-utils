@@ -138,7 +138,7 @@ const getComponentName = (instance: any | null, type: VNodeTypes): string => {
       (key) => instance.setupState[key] === type
     )
 
-    return type.name || defaultName || ''
+    return defaultName || type.name || ''
   }
 
   if (isLegacyExtendedComponent(type)) {
