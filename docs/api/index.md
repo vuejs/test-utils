@@ -302,6 +302,7 @@ Slots can be a string or any valid component definition either imported from a `
 `Component.spec.js`:
 
 ```js
+import { h } from 'vue';
 import { mount } from '@vue/test-utils'
 import Component from './Component.vue'
 import Bar from './Bar.vue'
