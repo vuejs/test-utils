@@ -188,7 +188,7 @@ export function stubComponents(
     if (type === Transition && 'transition' in stubs && stubs['transition']) {
       return [
         createTransitionStub({
-          name: 'transition-stub',
+          name: 'transition-stub'
         }),
         undefined,
         children
@@ -203,7 +203,7 @@ export function stubComponents(
     ) {
       return [
         createTransitionStub({
-          name: 'transition-group-stub',
+          name: 'transition-group-stub'
         }),
         undefined,
         children
