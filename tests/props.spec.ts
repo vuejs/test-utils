@@ -1,5 +1,6 @@
-import { mount } from '../src'
+import { mount, shallowMount } from '../src'
 import WithProps from './components/WithProps.vue'
+import PropWithSymbol from './components/PropWithSymbol.vue'
 import Hello from './components/Hello.vue'
 import { defineComponent, h } from 'vue'
 
@@ -223,5 +224,56 @@ describe('props', () => {
     await wrapper.trigger('click')
 
     expect(wrapper.text()).toEqual('hello')
+  })
+
+  describe('edge case with symbol props and stubs', () => {
+    it('works with Symbol as default', () => {
+      const Comp = defineComponent({
+        template: `<div>Symbol: {{ sym }}</div>`,
+        props: {
+          sym: {
+            type: Symbol,
+            default: () => Symbol()
+          }
+        }
+      })
+
+      const wrapper = shallowMount(Comp)
+
+      expect(wrapper.html()).toBe('<div>Symbol: Symbol()</div>')
+    })
+
+    it('works with symbol as array syntax', () => {
+      const Comp = defineComponent({
+        name: 'Comp',
+        template: `<div>Symbol: {{ sym }}</div>`,
+        props: ['sym']
+      })
+
+      const wrapper = shallowMount({
+        render() {
+          return h(Comp, { sym: Symbol() })
+        }
+      })
+
+      expect(wrapper.html()).toBe('<comp-stub sym="Symbol()"></comp-stub>')
+    })
+
+    it('works with symbol as default from SFC', () => {
+      const App = defineComponent({
+        template: `<PropWithSymbol :sym="sym" />`,
+        components: { PropWithSymbol },
+        data() {
+          return {
+            sym: Symbol()
+          }
+        }
+      })
+      const wrapper = shallowMount(App)
+
+      expect(wrapper.html()).toBe(
+        '<prop-with-symbol-stub sym="Symbol()"></prop-with-symbol-stub>'
+      )
+    })
   })
 })

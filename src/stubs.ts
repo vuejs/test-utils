@@ -8,7 +8,8 @@ import {
   defineComponent,
   VNodeTypes,
   ConcreteComponent,
-  ComponentPropsOptions
+  ComponentPropsOptions,
+  ComponentObjectPropsOptions
 } from 'vue'
 import { hyphenate } from './utils/vueShared'
 import { matchName } from './utils/matchName'
@@ -55,6 +56,17 @@ const shouldNotStub = (type: ConcreteComponent) => doNotStubComponents.has(type)
 export const addToDoNotStubComponents = (type: ConcreteComponent) =>
   doNotStubComponents.add(type)
 
+const stringifySymbols = (props: ComponentPropsOptions) => {
+  // props are always normalized to object syntax
+  const $props = props as unknown as ComponentObjectPropsOptions
+  return Object.keys($props).reduce((acc, key) => {
+    if (typeof $props[key] === 'symbol') {
+      return { ...acc, [key]: $props[key]?.toString() }
+    }
+    return { ...acc, [key]: $props[key] }
+  }, {})
+}
+
 export const createStub = ({
   name,
   propsDeclaration,
@@ -64,7 +76,19 @@ export const createStub = ({
   const tag = name ? `${hyphenate(name)}-stub` : anonName
 
   const render = (ctx: ComponentPublicInstance) => {
-    return h(tag, ctx.$props, renderStubDefaultSlot ? ctx.$slots : undefined)
+    // https://github.com/vuejs/vue-test-utils-next/issues/1076
+    // Passing a symbol as a static prop is not legal, since Vue will try to do
+    // something like `el.setAttribute('val', Symbol())` which is not valid and
+    // causes an error.
+    // Only a problem when shallow mounting. For this reason we iterate of the
+    // props that will be passed and stringify any that are symbols.
+    const propsWithoutSymbols = stringifySymbols(ctx.$props)
+
+    return h(
+      tag,
+      propsWithoutSymbols,
+      renderStubDefaultSlot ? ctx.$slots : undefined
+    )
   }
 
   return defineComponent({
