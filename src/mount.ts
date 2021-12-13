@@ -57,6 +57,13 @@ const MOUNT_OPTIONS: Array<keyof MountingOptions<any>> = [
 function getInstanceOptions(
   options: MountingOptions<any> & Record<string, any>
 ): Record<string, any> {
+  if (options.methods) {
+    console.warn(
+      "Passing a `methods` option to mount was deprecated on Vue Test Utils v1, and it won't have any effect on v2. For additional info: https://vue-test-utils.vuejs.org/upgrading-to-v1/#setmethods-and-mountingoptions-methods"
+    )
+    delete options.methods
+  }
+
   const resultOptions = { ...options }
   for (const key of Object.keys(options)) {
     if (MOUNT_OPTIONS.includes(key as keyof MountingOptions<any>)) {
@@ -65,6 +72,7 @@ function getInstanceOptions(
   }
   return resultOptions
 }
+
 // Class component - no props
 export function mount<V>(
   originalComponent: {

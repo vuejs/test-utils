@@ -10,4 +10,24 @@ describe('mounting options: other', () => {
     })
     expect(wrapper.vm.$options.someUnknownOption).toBe(optionContent)
   })
+
+  it('warns on deprecated `method` option and methods are preserved', () => {
+    const spy = jest.spyOn(console, 'warn').mockImplementationOnce(() => {})
+
+    const TestComponent = defineComponent({
+      template: '<div>{{ sayHi() }}</div>',
+      methods: {
+        sayHi() {
+          return 'hi'
+        }
+      }
+    })
+
+    const wrapper = mount(TestComponent, { methods: {} })
+
+    expect(spy).toHaveBeenCalledTimes(1)
+    expect(wrapper.html()).toBe('<div>hi</div>')
+
+    spy.mockRestore()
+  })
 })
