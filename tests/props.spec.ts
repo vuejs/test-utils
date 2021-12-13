@@ -243,7 +243,7 @@ describe('props', () => {
       expect(wrapper.html()).toBe('<div>Symbol: Symbol()</div>')
     })
 
-    it('works with Symbol an array syntax', () => {
+    it('works with symbol as array syntax', () => {
       const Comp = defineComponent({
         name: 'Comp',
         template: `<div>Symbol: {{ sym }}</div>`,
@@ -256,7 +256,7 @@ describe('props', () => {
         }
       })
 
-      expect(wrapper.html()).toBe('<comp-stub></comp-stub>')
+      expect(wrapper.html()).toBe('<comp-stub sym="Symbol()"></comp-stub>')
     })
 
     it('works with symbol as default from SFC', () => {
@@ -272,7 +272,7 @@ describe('props', () => {
       const wrapper = shallowMount(App)
 
       expect(wrapper.html()).toBe(
-        '<prop-with-symbol-stub></prop-with-symbol-stub>'
+        '<prop-with-symbol-stub sym="Symbol()"></prop-with-symbol-stub>'
       )
     })
   })

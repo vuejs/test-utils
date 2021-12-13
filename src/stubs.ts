@@ -48,7 +48,7 @@ const removeSymbols = <T = ComponentPropsOptions>(props: T): T => {
   const $props = props as unknown as ComponentObjectPropsOptions
   return Object.keys($props).reduce((acc, key) => {
     if (typeof $props[key] === 'symbol') {
-      return acc
+      return {...acc, [key]: $props[key]?.toString()}
     }
     return { ...acc, [key]: $props[key] }
   }, {}) as T
@@ -86,7 +86,7 @@ export const createStub = ({
   })
 }
 
-const createTransitionStub = ({ name, propsDeclaration }: StubOptions) => {
+const createTransitionStub = ({ name }: StubOptions) => {
   const render = (ctx: ComponentPublicInstance) => {
     return h(name, {}, ctx.$slots)
   }
