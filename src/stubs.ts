@@ -22,7 +22,7 @@ import { Stub, Stubs } from './types'
 
 interface StubOptions {
   name: string
-  propsDeclaration: ComponentPropsOptions
+  propsDeclaration?: ComponentPropsOptions
   renderStubDefaultSlot?: boolean
 }
 
@@ -43,7 +43,7 @@ const shouldNotStub = (type: ConcreteComponent) => doNotStubComponents.has(type)
 export const addToDoNotStubComponents = (type: ConcreteComponent) =>
   doNotStubComponents.add(type)
 
-const removeSymbols = <T = ComponentPropsOptions>(props: T): T => {
+const stringifySymbols = (props: ComponentPropsOptions) => {
   // props are always normalized to object syntax
   const $props = props as unknown as ComponentObjectPropsOptions
   return Object.keys($props).reduce((acc, key) => {
@@ -51,7 +51,7 @@ const removeSymbols = <T = ComponentPropsOptions>(props: T): T => {
       return { ...acc, [key]: $props[key]?.toString() }
     }
     return { ...acc, [key]: $props[key] }
-  }, {}) as T
+  }, {})
 }
 
 export const createStub = ({
@@ -68,8 +68,8 @@ export const createStub = ({
     // something like `el.setAttribute('val', Symbol())` which is not valid and
     // causes an error.
     // Only a problem when shallow mounting. For this reason we iterate of the
-    // props that will be passed and remove any that are symbols.
-    const propsWithoutSymbols = removeSymbols(ctx.$props)
+    // props that will be passed and stringify any that are symbols.
+    const propsWithoutSymbols = stringifySymbols(ctx.$props)
 
     return h(
       tag,
@@ -189,7 +189,6 @@ export function stubComponents(
       return [
         createTransitionStub({
           name: 'transition-stub',
-          propsDeclaration: {}
         }),
         undefined,
         children
@@ -205,7 +204,6 @@ export function stubComponents(
       return [
         createTransitionStub({
           name: 'transition-group-stub',
-          propsDeclaration: {}
         }),
         undefined,
         children
