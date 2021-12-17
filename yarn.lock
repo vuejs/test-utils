@@ -1554,10 +1554,10 @@
   dependencies:
     "@types/yargs-parser" "*"
 
-"@vitejs/plugin-vue@^1.10.1":
-  version "1.10.2"
-  resolved "https://registry.yarnpkg.com/@vitejs/plugin-vue/-/plugin-vue-1.10.2.tgz#d718479e2789d8a94b63e00f23f1898ba239253a"
-  integrity sha512-/QJ0Z9qfhAFtKRY+r57ziY4BSbGUTGsPRMpB/Ron3QPwBZM4OZAZHdTa4a8PafCwU5DTatXG8TMDoP8z+oDqJw==
+"@vitejs/plugin-vue@^2.0.0":
+  version "2.0.1"
+  resolved "https://registry.yarnpkg.com/@vitejs/plugin-vue/-/plugin-vue-2.0.1.tgz#db0e5eacf96358e04cc501c9008079b25a70a4ac"
+  integrity sha512-wtdMnGVvys9K8tg+DxowU1ytTrdVveXr3LzdhaKakysgGXyrsfaeds2cDywtvujEASjWOwWL/OgWM+qoeM8Plg==
 
 "@volar/code-gen@0.29.8":
   version "0.29.8"
@@ -1758,6 +1758,13 @@
   dependencies:
     "@vue/shared" "3.2.24"
 
+"@vue/reactivity@3.2.26":
+  version "3.2.26"
+  resolved "https://registry.yarnpkg.com/@vue/reactivity/-/reactivity-3.2.26.tgz#d529191e581521c3c12e29ef986d4c8a933a0f83"
+  integrity sha512-h38bxCZLW6oFJVDlCcAiUKFnXI8xP8d+eO0pcDxx+7dQfSPje2AO6M9S9QO6MrxQB7fGP0DH0dYQ8ksf6hrXKQ==
+  dependencies:
+    "@vue/shared" "3.2.26"
+
 "@vue/reactivity@^3.2.21":
   version "3.2.21"
   resolved "https://registry.yarnpkg.com/@vue/reactivity/-/reactivity-3.2.21.tgz#073ad144192ed78a07e151e95a3baa515e4099a2"
@@ -1784,6 +1791,14 @@
     "@vue/reactivity" "3.2.24"
     "@vue/shared" "3.2.24"
 
+"@vue/runtime-core@3.2.26":
+  version "3.2.26"
+  resolved "https://registry.yarnpkg.com/@vue/runtime-core/-/runtime-core-3.2.26.tgz#5c59cc440ed7a39b6dbd4c02e2d21c8d1988f0de"
+  integrity sha512-BcYi7qZ9Nn+CJDJrHQ6Zsmxei2hDW0L6AB4vPvUQGBm2fZyC0GXd/4nVbyA2ubmuhctD5RbYY8L+5GUJszv9mQ==
+  dependencies:
+    "@vue/reactivity" "3.2.26"
+    "@vue/shared" "3.2.26"
+
 "@vue/runtime-dom@3.2.24":
   version "3.2.24"
   resolved "https://registry.yarnpkg.com/@vue/runtime-dom/-/runtime-dom-3.2.24.tgz#14b462514cdb01d9de6c09ecf1d5d5d55a58e1e3"
@@ -1793,6 +1808,15 @@
     "@vue/shared" "3.2.24"
     csstype "^2.6.8"
 
+"@vue/runtime-dom@3.2.26":
+  version "3.2.26"
+  resolved "https://registry.yarnpkg.com/@vue/runtime-dom/-/runtime-dom-3.2.26.tgz#84d3ae2584488747717c2e072d5d9112c0d2e6c2"
+  integrity sha512-dY56UIiZI+gjc4e8JQBwAifljyexfVCkIAu/WX8snh8vSOt/gMSEGwPRcl2UpYpBYeyExV8WCbgvwWRNt9cHhQ==
+  dependencies:
+    "@vue/runtime-core" "3.2.26"
+    "@vue/shared" "3.2.26"
+    csstype "^2.6.8"
+
 "@vue/server-renderer@3.2.24":
   version "3.2.24"
   resolved "https://registry.yarnpkg.com/@vue/server-renderer/-/server-renderer-3.2.24.tgz#8009b1e52293fd4efc71b90452baf502ecb9dc03"
@@ -1800,6 +1824,14 @@
   dependencies:
     "@vue/compiler-ssr" "3.2.24"
     "@vue/shared" "3.2.24"
+
+"@vue/server-renderer@3.2.26":
+  version "3.2.26"
+  resolved "https://registry.yarnpkg.com/@vue/server-renderer/-/server-renderer-3.2.26.tgz#f16a4b9fbcc917417b4cea70c99afce2701341cf"
+  integrity sha512-Jp5SggDUvvUYSBIvYEhy76t4nr1vapY/FIFloWmQzn7UxqaHrrBpbxrqPcTrSgGrcaglj0VBp22BKJNre4aA1w==
+  dependencies:
+    "@vue/compiler-ssr" "3.2.26"
+    "@vue/shared" "3.2.26"
 
 "@vue/shared@3.2.21":
   version "3.2.21"
@@ -6363,10 +6395,10 @@ verror@1.10.0:
     core-util-is "1.0.2"
     extsprintf "^1.2.0"
 
-vite@^2.7.0-beta.8:
-  version "2.7.0"
-  resolved "https://registry.yarnpkg.com/vite/-/vite-2.7.0.tgz#d3d753220d10afb055731cd7feaa8e87b2b779b6"
-  integrity sha512-ZM629j9n6f1Gcr2KsfpLhJ0FRkift4SsTLSvExmNpGJYzyi1JyLOFybz85ShqFP5f4oCfJSblWAma9X8lZg/vA==
+vite@^2.7.0:
+  version "2.7.3"
+  resolved "https://registry.yarnpkg.com/vite/-/vite-2.7.3.tgz#e983cf4f71f42c192436bfcad1b75932642da293"
+  integrity sha512-GAY1P+9fLJOju1SRm8+hykVnEXog+E+KXuqqyMBQDriKCUIKzWnPn142yNNhSdf/ixYGYdUa5ce3A8WaEajzGw==
   dependencies:
     esbuild "^0.13.12"
     postcss "^8.3.11"
@@ -6375,17 +6407,17 @@ vite@^2.7.0-beta.8:
   optionalDependencies:
     fsevents "~2.3.2"
 
-vitepress@^0.20.4:
-  version "0.20.4"
-  resolved "https://registry.yarnpkg.com/vitepress/-/vitepress-0.20.4.tgz#51aa54737a6bd6e29066fb63668770bb450970e8"
-  integrity sha512-UzmGxYDkZnSSsQp3yenxpulZCibQDzOo/4ipX6GgIurol21FkFhAqkNwhAK+5pwp1TY4rkaBR5cFmNh02JtrJg==
+vitepress@^0.20.9:
+  version "0.20.9"
+  resolved "https://registry.yarnpkg.com/vitepress/-/vitepress-0.20.9.tgz#aa8ca4889a1941a8c4f2be44938c362f38187057"
+  integrity sha512-2Rd6NMS5sTVl+3HDM9EzIMi3JOTNz1DjylvbYEWjxPyCmL3OH0lEez7O4FAijCkS5+i3VcwygxisadonMhtYkw==
   dependencies:
     "@docsearch/css" "^3.0.0-alpha.41"
     "@docsearch/js" "^3.0.0-alpha.41"
-    "@vitejs/plugin-vue" "^1.10.1"
+    "@vitejs/plugin-vue" "^2.0.0"
     prismjs "^1.25.0"
-    vite "^2.7.0-beta.8"
-    vue "^3.2.24"
+    vite "^2.7.0"
+    vue "^3.2.26"
 
 void-elements@^3.1.0:
   version "3.1.0"
@@ -6553,7 +6585,7 @@ vue-tsc@0.29.8:
     "@volar/shared" "0.29.8"
     vscode-vue-languageservice "0.29.8"
 
-vue@3.2.24, vue@^3.2.24:
+vue@3.2.24:
   version "3.2.24"
   resolved "https://registry.yarnpkg.com/vue/-/vue-3.2.24.tgz#6de7b01e55740dc37c0a5dbd45e70eed49f95189"
   integrity sha512-PvCklXNfcUMyeP/a9nME27C32IipwUDoS45rDyKn5+RQrWyjL+0JAJtf98HL6y9bfqQRTlYjSowWEB1nXxvG5Q==
@@ -6563,6 +6595,17 @@ vue@3.2.24, vue@^3.2.24:
     "@vue/runtime-dom" "3.2.24"
     "@vue/server-renderer" "3.2.24"
     "@vue/shared" "3.2.24"
+
+vue@^3.2.26:
+  version "3.2.26"
+  resolved "https://registry.yarnpkg.com/vue/-/vue-3.2.26.tgz#5db575583ecae495c7caa5c12fd590dffcbb763e"
+  integrity sha512-KD4lULmskL5cCsEkfhERVRIOEDrfEL9CwAsLYpzptOGjaGFNWo3BQ9g8MAb7RaIO71rmVOziZ/uEN/rHwcUIhg==
+  dependencies:
+    "@vue/compiler-dom" "3.2.26"
+    "@vue/compiler-sfc" "3.2.26"
+    "@vue/runtime-dom" "3.2.26"
+    "@vue/server-renderer" "3.2.26"
+    "@vue/shared" "3.2.26"
 
 vuex@^4.0.2:
   version "4.0.2"
