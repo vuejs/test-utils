@@ -98,4 +98,21 @@ describe('html', () => {
     const foo = wrapper.findComponent(Foo)
     expect(foo.html()).toEqual('<div class="Foo">FOO</div>')
   })
+
+  it('get component from within root fragments', () => {
+    const RegularComponent = {
+      name: 'RegularComponent',
+      template: '<span>hello world</span>'
+    }
+    const ComponentWithRootFragments = {
+      name: 'ComponentWithRootFragments',
+      template: '<regular-component /><div>bye bye</div>',
+      components: { RegularComponent }
+    }
+    const wrapper = mount(ComponentWithRootFragments)
+    const regular = wrapper.getComponent(RegularComponent)
+
+    expect(regular.vm.$options.name).toBe('RegularComponent')
+    expect(regular.html()).toMatchInlineSnapshot(`"<span>hello world</span>"`)
+  })
 })
