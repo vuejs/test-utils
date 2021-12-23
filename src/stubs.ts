@@ -13,13 +13,14 @@ import {
 } from 'vue'
 import { hyphenate } from './utils/vueShared'
 import { matchName } from './utils/matchName'
-import { isComponent, isFunctionalComponent, isObjectComponent } from './utils'
+import { isComponent, isFunctionalComponent } from './utils'
 import { ComponentInternalInstance } from '@vue/runtime-core'
-import {
-  isLegacyExtendedComponent,
-  unwrapLegacyVueExtendComponent
-} from './utils/vueCompatSupport'
+import { unwrapLegacyVueExtendComponent } from './utils/vueCompatSupport'
 import { Stub, Stubs } from './types'
+import {
+  getComponentName,
+  getComponentRegisteredName
+} from './utils/componentName'
 
 interface StubOptions {
   name: string
@@ -137,43 +138,6 @@ const resolveComponentStubByName = (componentName: string, stubs: Stubs) => {
       return value
     }
   }
-}
-
-const getComponentRegisteredName = (
-  instance: ComponentInternalInstance | null,
-  type: VNodeTypes
-): string | null => {
-  if (!instance || !instance.parent) return null
-
-  // try to infer the name based on local resolution
-  const registry = (instance.type as any).components
-  for (const key in registry) {
-    if (registry[key] === type) {
-      return key
-    }
-  }
-
-  return null
-}
-
-const getComponentName = (instance: any | null, type: VNodeTypes): string => {
-  if (isObjectComponent(type)) {
-    const defaultName = Object.keys(instance?.setupState || {}).find(
-      (key) => instance.setupState[key] === type
-    )
-
-    return defaultName || type.name || ''
-  }
-
-  if (isLegacyExtendedComponent(type)) {
-    return unwrapLegacyVueExtendComponent(type).name || ''
-  }
-
-  if (isFunctionalComponent(type)) {
-    return type.displayName || type.name
-  }
-
-  return ''
 }
 
 function createStubOnceForType(

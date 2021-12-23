@@ -4,6 +4,7 @@ import { config, flushPromises, mount, RouterLinkStub } from '../../src'
 import Hello from '../components/Hello.vue'
 import ComponentWithoutName from '../components/ComponentWithoutName.vue'
 import ComponentWithSlots from '../components/ComponentWithSlots.vue'
+import ScriptSetupWithChildren from '../components/ScriptSetupWithChildren.vue'
 
 describe('mounting options: stubs', () => {
   let configStubsSave = config.global.stubs
@@ -362,6 +363,33 @@ describe('mounting options: stubs', () => {
     })
 
     expect(wrapper.html()).toBe('<foo-bar-stub></foo-bar-stub>')
+  })
+
+  it('stubs components within script setup', () => {
+    const wrapper = mount(ScriptSetupWithChildren as any, {
+      global: {
+        stubs: {
+          Hello: { template: '<span>Stubbed Hello</span>' },
+          ComponentWithInput: {
+            template: '<span>Stubbed ComponentWithInput</span>'
+          },
+          ComponentWithoutName: {
+            template: '<span>Stubbed ComponentWithoutName</span>'
+          },
+          ComponentAsync: { template: '<span>Stubbed ComponentAsync</span>' },
+          ScriptSetup: { template: '<span>Stubbed ScriptSetup</span>' },
+          WithProps: { template: '<span>Stubbed WithProps</span>' }
+        }
+      }
+    })
+    expect(wrapper.html()).toBe(
+      '<span>Stubbed Hello</span>\n' +
+        '<span>Stubbed ComponentWithInput</span>\n' +
+        '<span>Stubbed ComponentWithoutName</span>\n' +
+        '<span>Stubbed ComponentAsync</span>\n' +
+        '<span>Stubbed ScriptSetup</span>\n' +
+        '<span>Stubbed WithProps</span>'
+    )
   })
 
   it('stubs transition by default', () => {
