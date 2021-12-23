@@ -14,6 +14,22 @@ describe('get', () => {
     expect(wrapper.get('#my-span')).not.toBeNull()
   })
 
+  test('returns the element if it is a root element inside Suspense', () => {
+    const Async = defineComponent({
+      // works if there is a root element
+      // template: '<div><h1>Hello</h1><span id="my-span">There</span></div>'
+      // otherwise does not find the element
+      template: '<h1>Hello</h1><span id="my-span">There</span>'
+    })
+    const Component = defineComponent({
+      components: { Async },
+      template: '<Suspense><Async/></Suspense>'
+    })
+
+    const wrapper = mount(Component)
+    expect(wrapper.get('#my-span')).not.toBeNull()
+  })
+
   test('throws if it does not exist', () => {
     const Component = defineComponent({
       render() {
