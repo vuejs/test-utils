@@ -13,7 +13,12 @@ import {
 } from 'vue'
 import { hyphenate } from './utils/vueShared'
 import { matchName } from './utils/matchName'
-import { hasOwnProperty, isComponent, isFunctionalComponent, isObjectComponent } from './utils'
+import {
+  hasOwnProperty,
+  isComponent,
+  isFunctionalComponent,
+  isObjectComponent
+} from './utils'
 import { ComponentInternalInstance, Prop } from '@vue/runtime-core'
 import {
   isLegacyExtendedComponent,
@@ -85,52 +90,59 @@ export const createStub = ({
     const propsWithoutSymbols = stringifySymbols(ctx.$props)
 
     // Filter default value of props
-    const props = Object.entries(propsWithoutSymbols).reduce((props, [propName, propValue]) => {
-      const skipProp = (() => {
-        if (propValue === undefined) return true
+    const props = Object.entries(propsWithoutSymbols).reduce(
+      (props, [propName, propValue]) => {
+        const skipProp = (() => {
+          if (propValue === undefined) return true
 
-        // Prop declaration in array style will be skipped here
-        const propDeclaration = (propsDeclaration as any)?.[propName] as Prop<any> | undefined
-        if (propDeclaration) {
-          // Boolean prop declaration: myProp: Boolean
-          if (propDeclaration === Boolean) return !propValue
+          // Prop declaration in array style will be skipped here
+          const propDeclaration = (propsDeclaration as any)?.[propName] as
+            | Prop<any>
+            | undefined
+          if (propDeclaration) {
+            // Boolean prop declaration: myProp: Boolean
+            if (propDeclaration === Boolean) return !propValue
 
-          // Prop declaration with object style
-          // myProp: { type: String, default: 'default-value' }
-          if (typeof propDeclaration === 'object' && hasOwnProperty(propDeclaration, 'default')) {
-            let defaultValue = propDeclaration.default
+            // Prop declaration with object style
+            // myProp: { type: String, default: 'default-value' }
+            if (
+              typeof propDeclaration === 'object' &&
+              hasOwnProperty(propDeclaration, 'default')
+            ) {
+              let defaultValue = propDeclaration.default
 
-            // Default value factory?
-            // myProp: { type: Array, default: () => ['one'] }
-            if (typeof defaultValue === 'function') {
-              defaultValue = defaultValue()
+              // Default value factory?
+              // myProp: { type: Array, default: () => ['one'] }
+              if (typeof defaultValue === 'function') {
+                defaultValue = defaultValue()
+              }
+
+              // Compare primitive value
+              if (
+                typeof defaultValue !== 'object' ||
+                typeof propValue !== 'object'
+              ) {
+                return defaultValue === propValue
+              }
+
+              // Compare objects
+              // TODO: use some different object comparison
+              return JSON.stringify(defaultValue) === JSON.stringify(propValue)
             }
-
-            // Compare primitive value
-            if (typeof defaultValue !== 'object' || typeof propValue !== 'object') {
-              return defaultValue === propValue
-            }
-
-            // Compare objects
-            // TODO: use some different object comparison
-            return JSON.stringify(defaultValue) === JSON.stringify(propValue)
           }
+
+          return false
+        })()
+
+        if (!skipProp) {
+          props[propName] = propValue
         }
-
-        return false
-      })()
-
-      if (!skipProp) {
-        props[propName] = propValue
-      }
-      return props
-    }, {} as Record<string, unknown>)
-
-    return h(
-      tag,
-      props,
-      renderStubDefaultSlot ? ctx.$slots : undefined
+        return props
+      },
+      {} as Record<string, unknown>
     )
+
+    return h(tag, props, renderStubDefaultSlot ? ctx.$slots : undefined)
   }
 
   return defineComponent({
