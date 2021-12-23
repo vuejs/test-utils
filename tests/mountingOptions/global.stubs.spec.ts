@@ -1,9 +1,11 @@
 import { h, defineComponent, defineAsyncComponent } from 'vue'
 
-import { config, flushPromises, mount, RouterLinkStub } from '../../src'
+import { config, flushPromises, mount, RouterLinkStub, shallowMount } from '../../src'
 import Hello from '../components/Hello.vue'
 import ComponentWithoutName from '../components/ComponentWithoutName.vue'
 import ComponentWithSlots from '../components/ComponentWithSlots.vue'
+import ScriptSetupDefineProps from '../components/ScriptSetupDefineProps.vue'
+import WithProps from '../components/WithProps.vue'
 
 describe('mounting options: stubs', () => {
   let configStubsSave = config.global.stubs
@@ -694,6 +696,55 @@ describe('mounting options: stubs', () => {
           '    <simple-slot-stub>nested content</simple-slot-stub>\n' +
           '  </component-with-slots-stub>\n' +
           '</component-with-slots-stub>'
+      )
+    })
+  })
+
+  describe('stub props', () => {
+    it('stubs component props', () => {
+      const wrapper = shallowMount(defineComponent({
+        render: () => h(WithProps, {
+          withDefaultString: 'other-value',
+          withDefaultBool: true,
+          withDefaultArray: ['one', 'two'],
+          withDefaultObject: {key: 'value'}
+        })
+      }))
+      expect(wrapper.html()).toEqual(
+        '<with-props-stub withdefaultstring="other-value" withdefaultbool="true" withdefaultarray="one,two" withdefaultobject="[object Object]"></with-props-stub>'
+      )
+    })
+
+    it('stubs component props default values', () => {
+      const wrapper = shallowMount(defineComponent({
+        render: () => h(WithProps)
+      }))
+      expect(wrapper.html()).toEqual(
+        '<with-props-stub></with-props-stub>'
+      )
+    })
+
+    it('stubs component props default values', () => {
+      const wrapper = shallowMount(defineComponent({
+        render: () => h(WithProps, {
+          withDefaultString: 'default-value',
+          withDefaultBool: false,
+          withDefaultArray: ['default-value'],
+          withDefaultObject: { obj: 'default' }
+        })
+      }))
+      expect(wrapper.html()).toEqual(
+        '<with-props-stub></with-props-stub>'
+      )
+    })
+
+    it('stubs script setup component with define props default values', () => {
+      const wrapper = shallowMount(defineComponent({
+        components: { ScriptSetupDefineProps },
+        render: () => h(ScriptSetupDefineProps)
+      }))
+      expect(wrapper.html()).toEqual(
+        '<script-setup-define-props-stub></script-setup-define-props-stub>'
       )
     })
   })

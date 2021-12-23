@@ -14,6 +14,19 @@ export default defineComponent({
     msg: {
       type: String,
       required: false
+    },
+    withDefaultString: {
+      type: String,
+      default: 'default-value'
+    },
+    withDefaultBool: Boolean,
+    withDefaultArray: {
+      type: Array,
+      default: () => ['default-value']
+    },
+    withDefaultObject: {
+      type: Object,
+      default: () => ({ obj: 'default' })
     }
   }
 })

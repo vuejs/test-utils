@@ -127,7 +127,11 @@ describe('teleport', () => {
     const withProps = wrapper.getComponent(WithProps)
 
     expect(withProps.props()).toEqual({
-      msg: 'hi there'
+      msg: 'hi there',
+      withDefaultString: 'default-value',
+      withDefaultBool: false,
+      withDefaultArray: ['default-value'],
+      withDefaultObject: { obj: 'default' }
     })
   })
 

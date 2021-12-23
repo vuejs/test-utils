@@ -12,7 +12,28 @@ describe('props', () => {
 
   it('returns all props applied to a component', () => {
     const wrapper = mount(WithProps, { props: { msg: 'ABC' } })
-    expect(wrapper.props()).toEqual({ msg: 'ABC' })
+    expect(wrapper.props()).toEqual({
+      msg: 'ABC',
+      withDefaultString: 'default-value',
+      withDefaultBool: false,
+      withDefaultArray: ['default-value'],
+      withDefaultObject: { obj: 'default' }
+    })
+  })
+
+  it('return default value of string prop', () => {
+    const wrapper = mount(WithProps, { props: { msg: 'ABC' } })
+    expect(wrapper.props('withDefaultString')).toBe('default-value')
+  })
+
+  it('return default value of boolean prop', () => {
+    const wrapper = mount(WithProps, { props: { msg: 'ABC' } })
+    expect(wrapper.props('withDefaultBool')).toBe(false)
+  })
+
+  it('return default value of object prop', () => {
+    const wrapper = mount(WithProps, { props: { msg: 'ABC' } })
+    expect(wrapper.props('withDefaultObject')).toEqual({ obj: 'default' })
   })
 
   it('returns undefined if props does not exist', () => {
