@@ -2,6 +2,7 @@ import { defineComponent, h, nextTick } from 'vue'
 import { mount } from '../src'
 import Hello from './components/Hello.vue'
 import ComponentWithoutName from './components/ComponentWithoutName.vue'
+import ScriptSetupWithChildren from './components/ScriptSetupWithChildren.vue'
 
 const compC = defineComponent({
   name: 'ComponentC',
@@ -81,6 +82,28 @@ describe('findComponent', () => {
     expect(wrapper.findComponent({ name: 'Hello' }).text()).toBe('Hello world')
     expect(wrapper.findComponent({ name: 'ComponentB' }).exists()).toBeTruthy()
     expect(wrapper.findComponent({ name: 'component-c' }).exists()).toBeTruthy()
+  })
+
+  it('finds component within script setup by name', () => {
+    const wrapper = mount(ScriptSetupWithChildren)
+    expect(wrapper.findComponent({ name: 'Hello' }).text()).toBe('Hello world')
+    expect(
+      wrapper.findComponent({ name: 'ComponentWithInput' }).exists()
+    ).toBeTruthy()
+    expect(
+      wrapper.findComponent({ name: 'component-with-input' }).exists()
+    ).toBeTruthy()
+  })
+
+  it('finds component within script setup without name', () => {
+    const wrapper = mount(ScriptSetupWithChildren)
+    expect(wrapper.findComponent({ name: 'ScriptSetup' }).exists()).toBeTruthy()
+    expect(
+      wrapper.findComponent({ name: 'ComponentWithoutName' }).exists()
+    ).toBeTruthy()
+    expect(
+      wrapper.findComponent({ name: 'component-without-name' }).exists()
+    ).toBeTruthy()
   })
 
   it('finds root component', async () => {

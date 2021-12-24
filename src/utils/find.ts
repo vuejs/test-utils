@@ -13,6 +13,7 @@ import {
 import { isComponent } from '../utils'
 import { matchName } from './matchName'
 import { unwrapLegacyVueExtendComponent } from './vueCompatSupport'
+import { getComponentName, getComponentRegisteredName } from './componentName'
 
 /**
  * Detect whether a selector matches a VNode
@@ -53,7 +54,7 @@ export function matches(
   }
 
   let componentName: string | undefined
-  componentName = nodeType.displayName || nodeType.name
+  componentName = getComponentName(node.component, nodeType)
 
   let selectorName = selector.name
 
@@ -61,6 +62,9 @@ export function matches(
   if (componentName && selectorName) {
     return matchName(selectorName, componentName)
   }
+
+  componentName =
+    getComponentRegisteredName(node.component, nodeType) || undefined
 
   // if a name is missing, then check the locally registered components in the parent
   if (node.component.parent) {
@@ -75,10 +79,10 @@ export function matches(
         componentName = key
       }
     }
-    // we may have one or both missing names
-    if (selectorName && componentName) {
-      return matchName(selectorName, componentName)
-    }
+  }
+
+  if (selectorName && componentName) {
+    return matchName(selectorName, componentName)
   }
 
   return false
