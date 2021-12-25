@@ -4,8 +4,8 @@ import {
   FindComponentSelector,
   NameSelector,
   RefSelector
-} from 'src/types'
-import { VueWrapper } from 'src/vueWrapper'
+} from '../types'
+import { VueWrapper } from '../vueWrapper'
 import { ComponentPublicInstance, FunctionalComponent } from 'vue'
 import type { DOMWrapper } from '../domWrapper'
 
