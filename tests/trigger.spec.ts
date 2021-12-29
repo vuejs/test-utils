@@ -1,6 +1,7 @@
 import { defineComponent, h, ref } from 'vue'
 
 import { mount } from '../src'
+import WithCheckbox from './components/WithCheckbox.vue'
 import { keyCodesByKeyName, KeyName } from '../src/createDomEvent'
 
 describe('trigger', () => {
@@ -356,5 +357,11 @@ describe('trigger', () => {
     const wrapper = mount(Comp)
     await wrapper.find('label').trigger('click')
     expect(wrapper.emitted().ok[0]).toEqual(['foo'])
+  })
+
+  it('works with label and checkbox using SFC', async () => {
+    const wrapper = mount(WithCheckbox)
+    await wrapper.find('.or-checkbox-label').trigger('click')
+    expect(wrapper.emitted()).toHaveProperty('update:modelValue')
   })
 })
