@@ -123,7 +123,7 @@ test('layout full page layout', () => {
   const wrapper = mount(Layout, {
     slots: {
       header: Header
-      main: h('div', 'Main content'),
+      main: h('div', 'Main Content'),
       sidebar: { template: '<div>Sidebar</div>' },
       footer: '<div>Footer</div>',
     }

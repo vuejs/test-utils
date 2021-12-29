@@ -1,5 +1,4 @@
 import {
-  DefineComponent,
   defineComponent,
   FunctionalComponent,
   getCurrentInstance,
@@ -346,16 +345,23 @@ describe('emitted', () => {
     expect(wrapper.emitted('click')).toHaveLength(1)
   })
 
-  it.each([EmitsEventSFC, EmitsEventScriptSetup] as DefineComponent[])(
-    'captures emitted events',
-    async (component) => {
-      const wrapper = mount(component)
-      await wrapper.trigger('click')
+  it('captures emitted events in SFC', async () => {
+    const wrapper = mount(EmitsEventSFC)
+    await wrapper.trigger('click')
 
-      expect(wrapper.emitted().click).toHaveLength(1)
-      expect(wrapper.emitted().bar).toHaveLength(2)
-      expect(wrapper.emitted().bar[0]).toEqual(['mounted'])
-      expect(wrapper.emitted().bar[1]).toEqual(['click'])
-    }
-  )
+    expect(wrapper.emitted().click).toHaveLength(1)
+    expect(wrapper.emitted().bar).toHaveLength(2)
+    expect(wrapper.emitted().bar[0]).toEqual(['mounted'])
+    expect(wrapper.emitted().bar[1]).toEqual(['click'])
+  })
+
+  it('captures emitted events in script setup', async () => {
+    const wrapper = mount(EmitsEventScriptSetup)
+    await wrapper.trigger('click')
+
+    expect(wrapper.emitted().click).toHaveLength(1)
+    expect(wrapper.emitted().bar).toHaveLength(2)
+    expect(wrapper.emitted().bar[0]).toEqual(['mounted'])
+    expect(wrapper.emitted().bar[1]).toEqual(['click'])
+  })
 })

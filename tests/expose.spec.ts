@@ -25,10 +25,11 @@ describe('expose', () => {
     const wrapper = mount(DefineExposeWithRenderFunction)
 
     // other is exposed vie `expose`
+    // @ts-ignore upstream issue, see https://github.com/vuejs/vue-next/issues/4397#issuecomment-957613874
     expect(wrapper.vm.other).toBe('other')
     // can't access `msg` as it is not exposed
     // and we are in a component with a setup returning a render function
-    expect(wrapper.vm.msg).toBeUndefined()
+    expect((wrapper.vm as unknown as { msg: undefined }).msg).toBeUndefined()
   })
 
   it('access vm with <script setup> and defineExpose()', async () => {
