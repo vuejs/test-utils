@@ -22,13 +22,16 @@ describe('deepCompare', () => {
     expect(deepCompare(['1', 1], ['1', 1])).toBe(true)
     expect(deepCompare([{}], [{}])).toBe(true)
     expect(deepCompare([{ a: 1 }], [{ a: 1 }])).toBe(true)
-    expect(deepCompare({
-      method () {
-      }
-    }, {
-      method () {
-      }
-    })).toBe(true)
+    expect(
+      deepCompare(
+        {
+          method() {}
+        },
+        {
+          method() {}
+        }
+      )
+    ).toBe(true)
   })
 
   it('should not be equal', () => {
@@ -53,12 +56,15 @@ describe('deepCompare', () => {
     expect(deepCompare([], {})).toBe(false)
     expect(deepCompare({ a: 1 }, [1])).toBe(false)
     expect(deepCompare([1], { a: 1 })).toBe(false)
-    expect(deepCompare({
-      method: function x () {
-      }
-    }, {
-      method: function y () {
-      }
-    })).toBe(false)
+    expect(
+      deepCompare(
+        {
+          method: function x() {}
+        },
+        {
+          method: function y() {}
+        }
+      )
+    ).toBe(false)
   })
 })
