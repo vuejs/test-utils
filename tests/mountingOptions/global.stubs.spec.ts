@@ -1,18 +1,11 @@
 import { h, defineComponent, defineAsyncComponent } from 'vue'
 
-import {
-  config,
-  flushPromises,
-  mount,
-  RouterLinkStub,
-  shallowMount
-} from '../../src'
+import { config, flushPromises, mount, RouterLinkStub } from '../../src'
 import Hello from '../components/Hello.vue'
 import ComponentWithoutName from '../components/ComponentWithoutName.vue'
 import ComponentWithSlots from '../components/ComponentWithSlots.vue'
 import ScriptSetupWithChildren from '../components/ScriptSetupWithChildren.vue'
 import ScriptSetupDefineProps from '../components/ScriptSetupDefineProps.vue'
-import WithProps from '../components/WithProps.vue'
 
 describe('mounting options: stubs', () => {
   let configStubsSave = config.global.stubs
@@ -735,55 +728,174 @@ describe('mounting options: stubs', () => {
   })
 
   describe('stub props', () => {
-    it('stubs component props', () => {
-      const wrapper = shallowMount(
-        defineComponent({
-          render: () =>
-            h(WithProps, {
-              withDefaultString: 'other-value',
-              withDefaultBool: true,
-              withDefaultArray: ['one', 'two'],
-              withDefaultObject: { key: 'value' }
-            })
-        })
-      )
-      expect(wrapper.html()).toEqual(
-        '<with-props-stub withdefaultstring="other-value" withdefaultbool="true" withdefaultarray="one,two" withdefaultobject="[object Object]"></with-props-stub>'
+    const PropsComponent = defineComponent({
+      name: 'PropsComponent',
+      props: {
+        boolShort: Boolean,
+        boolAndStringShort: [String, Boolean],
+        boolWithoutDefault: {
+          type: Boolean
+        },
+        boolWithDefault: {
+          type: Boolean,
+          default: true
+        },
+        string: {
+          type: String,
+          default: 'default-value'
+        },
+        number: {
+          type: Number,
+          default: 47
+        },
+        array: {
+          type: Array,
+          default: () => ['one', 'two']
+        },
+        obj: {
+          type: Object,
+          default: () => ({ obj1: 7 })
+        },
+        nestedObj: {
+          type: Object,
+          default: () => ({ nested: { obj1: 1 } })
+        }
+      },
+      template: '<div/>'
+    })
+
+    const ParentPropsComponent = defineComponent({
+      props: {
+        childProps: {
+          type: Object,
+          default: undefined
+        }
+      },
+      setup(props) {
+        return () => h(PropsComponent, props.childProps)
+      }
+    })
+
+    it('stubs with default props', () => {
+      const wrapper = mount(ParentPropsComponent, {
+        global: {
+          stubs: {
+            PropsComponent: true
+          }
+        }
+      })
+
+      expect(wrapper.html()).toBe(
+        '<props-component-stub></props-component-stub>'
       )
     })
 
-    it('stubs component props default values', () => {
-      const wrapper = shallowMount(
-        defineComponent({
-          render: () => h(WithProps)
-        })
+    it('stubs with given default props', () => {
+      const wrapper = mount(ParentPropsComponent, {
+        props: {
+          childProps: {
+            boolShort: false,
+            boolAndStringShort: false,
+            boolWithoutDefault: false,
+            boolWithDefault: true,
+            string: 'default-value',
+            number: 47,
+            array: ['one', 'two'],
+            obj: { obj1: 7 },
+            nestedObj: { nested: { obj1: 1 } }
+          }
+        },
+        global: {
+          stubs: {
+            PropsComponent: true
+          }
+        }
+      })
+
+      expect(wrapper.html()).toBe(
+        '<props-component-stub></props-component-stub>'
       )
-      expect(wrapper.html()).toEqual('<with-props-stub></with-props-stub>')
     })
 
-    it('stubs component props default values', () => {
-      const wrapper = shallowMount(
-        defineComponent({
-          render: () =>
-            h(WithProps, {
-              withDefaultString: 'default-value',
-              withDefaultBool: false,
-              withDefaultArray: ['default-value'],
-              withDefaultObject: { obj: 'default' }
-            })
-        })
+    it('stubs with given props', () => {
+      const wrapper = mount(ParentPropsComponent, {
+        props: {
+          childProps: {
+            boolShort: true,
+            boolAndStringShort: 'test',
+            boolWithoutDefault: true,
+            boolWithDefault: false,
+            string: 'test',
+            number: 5,
+            array: ['three', 'four'],
+            obj: { obj1: 5 },
+            nestedObj: { nested: { obj1: 2 } }
+          }
+        },
+        global: {
+          stubs: {
+            PropsComponent: true
+          }
+        }
+      })
+
+      expect(wrapper.html()).toBe(
+        '<props-component-stub ' +
+          'array="three,four" ' +
+          'boolandstringshort="test" ' +
+          'boolshort="true" ' +
+          'boolwithdefault="false" ' +
+          'boolwithoutdefault="true" ' +
+          'nestedobj="[object Object]" ' +
+          'number="5" ' +
+          'obj="[object Object]" ' +
+          'string="test"' +
+          '></props-component-stub>'
       )
-      expect(wrapper.html()).toEqual('<with-props-stub></with-props-stub>')
     })
 
-    it('stubs script setup component with define props default values', () => {
-      const wrapper = shallowMount(
+    it('stubs with array style props', () => {
+      const ChildComponent = defineComponent({
+        name: 'ChildComponent',
+        props: ['var1', 'var2', 'var3'],
+        template: '<div/>'
+      })
+
+      const ParentComponent = defineComponent({
+        render: () =>
+          h(ChildComponent, {
+            var1: 'test'
+          })
+      })
+
+      const wrapper = mount(ParentComponent, {
+        global: {
+          stubs: {
+            ChildComponent: true
+          }
+        }
+      })
+
+      expect(wrapper.html()).toBe(
+        '<child-component-stub var1="test"></child-component-stub>'
+      )
+    })
+
+    it('stubs with script setup define props', () => {
+      const wrapper = mount(
         defineComponent({
           components: { ScriptSetupDefineProps },
           render: () => h(ScriptSetupDefineProps)
-        })
+        }),
+        {
+          global: {
+            stubs: {
+              ScriptSetupDefineProps: true
+            }
+          }
+        }
       )
-      expect(wrapper.html()).toEqual(
+      expect(wrapper.html()).toBe(
         '<script-setup-define-props-stub></script-setup-define-props-stub>'
       )
     })

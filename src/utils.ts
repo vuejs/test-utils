@@ -68,6 +68,44 @@ export const mergeDeep = (
   return target
 }
 
+/**
+ * Deep compare two objects
+ * Does not work with circular objects and only compares method names
+ */
+export const deepCompare = (a: unknown, b: unknown): boolean => {
+  if (a === b) return true
+  if (!a || !b) return false
+  if (Array.isArray(a) !== Array.isArray(b)) return false
+  // Primitive objects! -> Simple compare with: ===
+  if (!isObject(a) || !isObject(b)) return a === b
+
+  if (Object.keys(a).length !== Object.keys(b).length) return false
+
+  for (const p of Object.keys(a)) {
+    if (!hasOwnProperty(b, p)) return false
+
+    if (typeof a[p] !== typeof b[p]) return false
+
+    switch (typeof a[p]) {
+      case 'object':
+        if (!deepCompare(a[p], b[p])) return false
+        break
+      case 'function':
+        type callable = () => void
+        if ((a[p] as callable).toString() !== (b[p] as callable).toString()) {
+          return false
+        }
+        break
+      default:
+        if (a[p] !== b[p]) {
+          return false
+        }
+    }
+  }
+
+  return true
+}
+
 export function isClassComponent(component: unknown) {
   return typeof component === 'function' && '__vccOpts' in component
 }

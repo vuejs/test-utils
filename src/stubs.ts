@@ -14,17 +14,18 @@ import {
 import { hyphenate } from './utils/vueShared'
 import { matchName } from './utils/matchName'
 import {
+  deepCompare,
   hasOwnProperty,
   isComponent,
-  isFunctionalComponent,
-  isObjectComponent
+  isFunctionalComponent
 } from './utils'
-import { ComponentInternalInstance, Prop } from '@vue/runtime-core'
-import {
-  isLegacyExtendedComponent,
-  unwrapLegacyVueExtendComponent
-} from './utils/vueCompatSupport'
+import { ComponentInternalInstance } from '@vue/runtime-core'
+import { unwrapLegacyVueExtendComponent } from './utils/vueCompatSupport'
 import { Stub, Stubs } from './types'
+import {
+  getComponentName,
+  getComponentRegisteredName
+} from './utils/componentName'
 
 interface StubOptions {
   name: string
@@ -80,6 +81,64 @@ export const createStub = ({
   const anonName = 'anonymous-stub'
   const tag = name ? `${hyphenate(name)}-stub` : anonName
 
+  // Object with default values for component props
+  const defaultProps = (() => {
+    // Array-style prop declaration
+    if (!propsDeclaration || Array.isArray(propsDeclaration)) return {}
+
+    return Object.entries(propsDeclaration).reduce(
+      (defaultProps, [propName, propDeclaration]) => {
+        let defaultValue = undefined
+
+        if (propDeclaration) {
+          // Specific default value set
+          // myProp: { type: String, default: 'default-value' }
+          if (
+            typeof propDeclaration === 'object' &&
+            hasOwnProperty(propDeclaration, 'default')
+          ) {
+            defaultValue = propDeclaration.default
+
+            // Default value factory?
+            // myProp: { type: Array, default: () => ['one'] }
+            if (typeof defaultValue === 'function') {
+              defaultValue = defaultValue()
+            }
+          } else {
+            const propType = (() => {
+              if (
+                typeof propDeclaration === 'function' ||
+                Array.isArray(propDeclaration)
+              )
+                return propDeclaration
+              return typeof propDeclaration === 'object' &&
+                hasOwnProperty(propDeclaration, 'type')
+                ? propDeclaration.type
+                : null
+            })()
+
+            // Boolean prop declaration
+            // myProp: Boolean
+            // or
+            // myProp: [Boolean, String]
+            if (
+              propType === Boolean ||
+              (Array.isArray(propType) && propType.includes(Boolean))
+            ) {
+              defaultValue = false
+            }
+          }
+        }
+
+        if (defaultValue !== undefined) {
+          defaultProps[propName] = defaultValue
+        }
+        return defaultProps
+      },
+      {} as Record<string, any>
+    )
+  })()
+
   const render = (ctx: ComponentPublicInstance) => {
     // https://github.com/vuejs/vue-test-utils-next/issues/1076
     // Passing a symbol as a static prop is not legal, since Vue will try to do
@@ -87,60 +146,24 @@ export const createStub = ({
     // causes an error.
     // Only a problem when shallow mounting. For this reason we iterate of the
     // props that will be passed and stringify any that are symbols.
-    const propsWithoutSymbols = stringifySymbols(ctx.$props)
+    const propsWithoutSymbols: Record<string, unknown> = stringifySymbols(
+      ctx.$props
+    )
 
     // Filter default value of props
-    const props = Object.entries(propsWithoutSymbols).reduce(
-      (props, [propName, propValue]) => {
-        const skipProp = (() => {
-          if (propValue === undefined) return true
+    const props = Object.keys(propsWithoutSymbols)
+      .sort()
+      .reduce((props, propName) => {
+        const propValue = propsWithoutSymbols[propName]
 
-          // Prop declaration in array style will be skipped here
-          const propDeclaration = (propsDeclaration as any)?.[propName] as
-            | Prop<any>
-            | undefined
-          if (propDeclaration) {
-            // Boolean prop declaration: myProp: Boolean
-            if (propDeclaration === Boolean) return !propValue
-
-            // Prop declaration with object style
-            // myProp: { type: String, default: 'default-value' }
-            if (
-              typeof propDeclaration === 'object' &&
-              hasOwnProperty(propDeclaration, 'default')
-            ) {
-              let defaultValue = propDeclaration.default
-
-              // Default value factory?
-              // myProp: { type: Array, default: () => ['one'] }
-              if (typeof defaultValue === 'function') {
-                defaultValue = defaultValue()
-              }
-
-              // Compare primitive value
-              if (
-                typeof defaultValue !== 'object' ||
-                typeof propValue !== 'object'
-              ) {
-                return defaultValue === propValue
-              }
-
-              // Compare objects
-              // TODO: use some different object comparison
-              return JSON.stringify(defaultValue) === JSON.stringify(propValue)
-            }
-          }
-
-          return false
-        })()
-
-        if (!skipProp) {
+        if (
+          propValue !== undefined &&
+          !deepCompare(propValue, defaultProps[propName])
+        ) {
           props[propName] = propValue
         }
         return props
-      },
-      {} as Record<string, unknown>
-    )
+      }, {} as Record<string, unknown>)
 
     return h(tag, props, renderStubDefaultSlot ? ctx.$slots : undefined)
   }
