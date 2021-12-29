@@ -345,4 +345,16 @@ describe('trigger', () => {
       expect(clickHandler).not.toHaveBeenCalled()
     })
   })
+
+  it('works with label and checkbox', async () => {
+    const Comp = defineComponent({
+      template: `
+        <input type="checkbox" @change="$emit('ok', 'foo')" id="foo" />
+        <label for="foo">foo</label>
+      `
+    })
+    const wrapper = mount(Comp)
+    await wrapper.find('label').trigger('click')
+    expect(wrapper.emitted().ok[0]).toEqual(['foo'])
+  })
 })
