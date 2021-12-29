@@ -22,8 +22,5 @@
     "tests",
     "src",
     "types"
-  ],
-  "vueCompilerOptions": {
-    "experimentalExposeScriptSetupContext": true
-  }
+  ]
 }
