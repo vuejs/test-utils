@@ -1,8 +1,15 @@
 import { expectError, expectType } from './index'
 import {
+  ComponentOptions,
   DefineComponent,
   defineComponent,
-  FunctionalComponent
+  FunctionalComponent,
+  getCurrentInstance,
+  h,
+  ref,
+  SetupContext,
+  Prop,
+  VNodeChild
 } from 'vue'
 import { Options, Vue } from 'vue-class-component'
 import { mount } from '../src'
@@ -210,6 +217,78 @@ class ClassComponent extends Vue {
 // @ts-expect-error changeMessage expects an argument
 expectError(mount(ClassComponent, {}).vm.changeMessage())
 mount(ClassComponent, {}).vm.changeMessage('')
+
+// region standard class component implement
+class StandardClassComponent<Props extends {} = {}> {
+  static defaultProps?: Record<string, Prop<any>> | string[]
+  private static __vccValue?: ComponentOptions
+  static get __vccOpts(): ComponentOptions {
+    if (this.__vccValue) return this.__vccValue
+    const CompConstructor = this
+    return (this.__vccValue = {
+      name: CompConstructor.name,
+      props: CompConstructor.defaultProps,
+      setup(props, ctx) {
+        const instance = new CompConstructor()
+        return instance.render.bind(instance)
+      }
+    })
+  }
+  constructor() {
+    const instance = getCurrentInstance()!
+    this.props = instance.props as Props
+    // @ts-expect-error no explicit setupContext on instance
+    this.context = instance.setupContext as SetupContext
+  }
+
+  props: Props
+  get $props() {
+    return this.props
+  }
+  context: SetupContext
+  render(): VNodeChild {}
+}
+class NoPropClassComponent extends StandardClassComponent {
+  count = ref(0)
+  changeCount(count: number) {
+    this.count.value = count
+  }
+  render() {
+    return h('div', `hello world ${this.count.value}`)
+  }
+}
+
+// @ts-expect-error changeCount expects an argument
+expectError(mount(NoPropClassComponent, {}).vm.changeCount())
+mount(NoPropClassComponent, {}).vm.changeCount(2)
+
+interface WithProp_Props {
+  size: 'small' | 'large'
+  age?: number
+}
+
+class WithPropClassComponent extends StandardClassComponent<WithProp_Props> {
+  static defaultProps: (keyof WithProp_Props)[] = ['size', 'age']
+  count = ref(0)
+  changeCount(count: number) {
+    this.count.value = count
+  }
+  render() {
+    return h('div', `hello world ${this.count.value}${this.props.size}`)
+  }
+}
+
+expectError(
+  // @ts-expect-error should has props error
+  mount<WithPropClassComponent, WithProp_Props>(WithPropClassComponent, {
+    props: {}
+  })
+)
+mount<WithPropClassComponent, WithProp_Props>(WithPropClassComponent, {
+  props: { size: 'small' }
+})
+
+// endregion
 
 // default props
 const Foo = defineComponent({
