@@ -14,10 +14,14 @@ Following is a simple component that toggles a content wrapped in a fading trans
 </template>
 
 <script>
+import { ref } from 'vue'
+
 export default {
-  data() {
+  setup() {
+    const show = ref(false)
+
     return {
-      show: false
+      show
     }
   }
 }
