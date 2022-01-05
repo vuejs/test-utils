@@ -34,11 +34,11 @@ export default {
 </style>
 ```
 
-Since Vue Test Utils stubs built-in transitions, you could test the component above as you'd test any other component:
+Since Vue Test Utils stubs built-in transitions, you can test the component above as you'd test any other component:
 
 ```js
 import Component from './Component.vue'
-import { mount } from '../../src'
+import { mount } from '@vue/test-utils'
 
 test('works with transitions', async () => {
   const wrapper = mount(Component)
