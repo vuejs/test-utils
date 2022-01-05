@@ -1,0 +1,23 @@
+---
+name: Feature request
+about: Suggest an idea for this project
+title: 'Feature request:'
+labels: ''
+assignees: ''
+
+---
+
+<!-- Thanks for your interest in the project – we appreciate your ideas! Please bear in mind that maintainers might need to request additional information or context before adding a new feature. A They need to think about edge cases and how to feature fits in the codebase, so a feature request might take some time to move forward. -->
+
+
+**Is your feature request related to a problem? Please describe.**
+<!-- A clear and concise description of what the problem is. Ex. I'm always frustrated when [...] -->
+
+**Describe the solution you'd like**
+<!-- A clear and concise description of what you want to happen. -->
+
+**Describe alternatives you've considered**
+<!-- A clear and concise description of any alternative solutions or features you've considered. -->
+
+**Additional context**
+<!-- Add any other context or screenshots about the feature request here. -->
