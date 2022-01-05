@@ -114,9 +114,40 @@ test('uses a mocked axios HTTP client and flushPromises', async () => {
 If you want to learn more about testing requests on Components, make sure you check [Making HTTP Requests](http-requests.md) guide.
 :::
 
+## Testing asynchronous `setup`
+
+If the component you want to test uses an asynchronous `setup`,
+then you must mount the component inside a `Suspense` component
+(as you do when you use it in your application).
+
+For example, this `Async` component:
+
+```js
+const Async = defineComponent({
+  async setup() {
+    // await something
+  }
+})
+```
+
+must be tested as follow:
+
+```js
+test('Async component', () => {
+  const TestComponent = defineComponent({
+    components: { Async },
+    template: '<Suspense><Async/></Suspense>'
+  })
+
+  const wrapper = mount(TestComponent)
+  // ...
+})
+```
+
 ## Conclusion
 
 - Vue updates the DOM asynchronously; tests runner executes code synchronously instead.
 - Use `await nextTick()` to ensure the DOM has updated before the test continues.
 - Functions that might update the DOM (like `trigger` and `setValue`) return `nextTick`, so you need to `await` them.
 - Use `flushPromises` from Vue Test Utils to resolve any unresolved promises from non-Vue dependencies (such as API requests).
+- Use `Suspense` to test components with an asynchronous `setup`.
