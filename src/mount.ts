@@ -21,7 +21,8 @@ import {
   ComputedOptions,
   ComponentPropsOptions,
   ComponentOptions,
-  ConcreteComponent
+  ConcreteComponent,
+  Prop
 } from 'vue'
 
 import { MountingOptions, Slot } from './types'
@@ -72,6 +73,25 @@ function getInstanceOptions(
   }
   return resultOptions
 }
+
+// Class component (without vue-class-component) - no props
+export function mount<V>(
+  originalComponent: {
+    new (...args: any[]): V
+    __vccOpts: any
+  },
+  options?: MountingOptions<any> & Record<string, any>
+): VueWrapper<ComponentPublicInstance<V>>
+
+// Class component (without vue-class-component) - props
+export function mount<V, P>(
+  originalComponent: {
+    new (...args: any[]): V
+    __vccOpts: any
+    defaultProps?: Record<string, Prop<any>> | string[]
+  },
+  options?: MountingOptions<P & PublicProps> & Record<string, any>
+): VueWrapper<ComponentPublicInstance<V>>
 
 // Class component - no props
 export function mount<V>(
