@@ -14,7 +14,7 @@ assignees: ''
 <!-- A clear and concise description of what the bug is. -->
 
 **To Reproduce**
-<!-- Steps to reproduce the behavior. -->
+<!-- Steps to reproduce the behavior or, even better, a link to a minimal reproduction (a repository with the minimum code to reproduce the issue is greatly appreciated). -->
 
 **Expected behavior**
 <!-- A clear and concise description of what you expected to happen. -->
