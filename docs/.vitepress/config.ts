@@ -89,10 +89,6 @@ export default defineConfig({
           { text: 'Testing Vue Router', link: '/guide/advanced/vue-router' },
           { text: 'Testing Teleport', link: '/guide/advanced/teleport' },
           {
-            text: 'Third-party integration',
-            link: '/guide/advanced/third-party'
-          },
-          {
             text: 'Stubs and Shallow Mount',
             link: '/guide/advanced/stubs-shallow-mount'
           }
