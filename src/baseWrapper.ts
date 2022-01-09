@@ -1,4 +1,4 @@
-import { isNotNullOrUndefined, textContent } from './utils'
+import { textContent } from './utils'
 import type { TriggerOptions } from './createDomEvent'
 import {
   ComponentInternalInstance,
@@ -41,6 +41,21 @@ export default abstract class BaseWrapper<ElementType extends Node>
     this.wrapperElement = element
   }
 
+  protected findAllDOMElements(selector: string): Element[] {
+    const elementRootNodes = this.getRootNodes().filter(isElement)
+    if (elementRootNodes.length === 0) return []
+
+    const result: Element[] = [
+      ...elementRootNodes.filter((node) => node.matches(selector))
+    ]
+
+    elementRootNodes.forEach((rootNode) => {
+      result.push(...Array.from(rootNode.querySelectorAll(selector)))
+    })
+
+    return result
+  }
+
   find<K extends keyof HTMLElementTagNameMap>(
     selector: K
   ): DOMWrapper<HTMLElementTagNameMap[K]>
@@ -65,24 +80,9 @@ export default abstract class BaseWrapper<ElementType extends Node>
       }
     }
 
-    const elementRootNodes = this.getRootNodes().filter(
-      (node): node is Element => node instanceof Element
-    )
-    if (elementRootNodes.length === 0) {
-      return createWrapperError('DOMWrapper')
-    }
-    const matchingRootNode = elementRootNodes.find((node) =>
-      node.matches(selector)
-    )
-    if (matchingRootNode) {
-      return createDOMWrapper(matchingRootNode)
-    }
-
-    const result = elementRootNodes
-      .map((node) => node.querySelector(selector))
-      .filter(isNotNullOrUndefined)
-    if (result.length > 0) {
-      return createDOMWrapper(result[0])
+    const elements = this.findAllDOMElements(selector)
+    if (elements.length > 0) {
+      return createDOMWrapper(elements[0])
     }
 
     return createWrapperError('DOMWrapper')
@@ -96,20 +96,7 @@ export default abstract class BaseWrapper<ElementType extends Node>
   ): DOMWrapper<SVGElementTagNameMap[K]>[]
   findAll<T extends Element>(selector: string): DOMWrapper<T>[]
   findAll(selector: string): DOMWrapper<Element>[] {
-    if (!isElement(this.element)) {
-      return []
-    }
-
-    const result = this.element.matches(selector)
-      ? [createDOMWrapper(this.element)]
-      : []
-
-    return [
-      ...result,
-      ...Array.from(this.element.querySelectorAll(selector)).map((x) =>
-        createDOMWrapper(x)
-      )
-    ]
+    return this.findAllDOMElements(selector).map(createDOMWrapper)
   }
 
   // searching by string without specifying component results in WrapperLike object
