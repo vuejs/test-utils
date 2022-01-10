@@ -4,7 +4,6 @@ import {
   TransitionGroup,
   Teleport,
   h,
-  ComponentPublicInstance,
   defineComponent,
   VNodeTypes,
   ConcreteComponent,
@@ -24,7 +23,7 @@ import {
 
 interface StubOptions {
   name: string
-  propsDeclaration?: ComponentPropsOptions
+  type?: ConcreteComponent
   renderStubDefaultSlot?: boolean
 }
 
@@ -70,57 +69,36 @@ const stringifySymbols = (props: ComponentPropsOptions) => {
 
 export const createStub = ({
   name,
-  propsDeclaration,
+  type,
   renderStubDefaultSlot
 }: StubOptions) => {
   const anonName = 'anonymous-stub'
   const tag = name ? `${hyphenate(name)}-stub` : anonName
 
-  const render = (ctx: ComponentPublicInstance) => {
-    // https://github.com/vuejs/vue-test-utils-next/issues/1076
-    // Passing a symbol as a static prop is not legal, since Vue will try to do
-    // something like `el.setAttribute('val', Symbol())` which is not valid and
-    // causes an error.
-    // Only a problem when shallow mounting. For this reason we iterate of the
-    // props that will be passed and stringify any that are symbols.
-    const propsWithoutSymbols = stringifySymbols(ctx.$props)
-
-    return h(
-      tag,
-      propsWithoutSymbols,
-      renderStubDefaultSlot ? ctx.$slots : undefined
-    )
-  }
+  const propsDeclaration = type
+    ? unwrapLegacyVueExtendComponent(type).props || {}
+    : {}
 
   return defineComponent({
     name: name || anonName,
-    compatConfig: { MODE: 3, RENDER_FUNCTION: false },
-    render,
-    props: propsDeclaration || {}
-  })
-}
+    props: propsDeclaration,
+    setup(props, { slots }) {
+      return () => {
+        // https://github.com/vuejs/vue-test-utils-next/issues/1076
+        // Passing a symbol as a static prop is not legal, since Vue will try to do
+        // something like `el.setAttribute('val', Symbol())` which is not valid and
+        // causes an error.
+        // Only a problem when shallow mounting. For this reason we iterate of the
+        // props that will be passed and stringify any that are symbols.
+        const propsWithoutSymbols = stringifySymbols(props)
 
-const createTransitionStub = ({ name }: StubOptions) => {
-  const render = (ctx: ComponentPublicInstance) => {
-    return h(name, {}, ctx.$slots)
-  }
-
-  return defineComponent({
-    name,
-    compatConfig: { MODE: 3, RENDER_FUNCTION: false },
-    render
-  })
-}
-
-const createTeleportStub = ({ name }: StubOptions) => {
-  const render = (ctx: ComponentPublicInstance) => {
-    return h(name, {}, ctx.$slots)
-  }
-
-  return defineComponent({
-    name,
-    compatConfig: { MODE: 3, RENDER_FUNCTION: false },
-    render
+        return h(
+          tag,
+          propsWithoutSymbols,
+          renderStubDefaultSlot ? slots : undefined
+        )
+      }
+    }
   })
 }
 
@@ -175,8 +153,9 @@ export function stubComponents(
     // stub transition by default via config.global.stubs
     if (type === Transition && 'transition' in stubs && stubs['transition']) {
       return [
-        createTransitionStub({
-          name: 'transition-stub'
+        createStub({
+          name: 'transition',
+          renderStubDefaultSlot: true
         }),
         undefined,
         children
@@ -190,8 +169,9 @@ export function stubComponents(
       stubs['transition-group']
     ) {
       return [
-        createTransitionStub({
-          name: 'transition-group-stub'
+        createStub({
+          name: 'transition-group',
+          renderStubDefaultSlot: true
         }),
         undefined,
         children
@@ -201,8 +181,9 @@ export function stubComponents(
     // stub teleport by default via config.global.stubs
     if (type === Teleport && 'teleport' in stubs && stubs['teleport']) {
       return [
-        createTeleportStub({
-          name: 'teleport-stub'
+        createStub({
+          name: 'teleport',
+          renderStubDefaultSlot: true
         }),
         undefined,
         () => children
@@ -277,12 +258,10 @@ export function stubComponents(
           throw new Error('Attempted to stub a non-component')
         }
 
-        const propsDeclaration =
-          unwrapLegacyVueExtendComponent(type).props || {}
         const newStub = createStubOnce(type, () =>
           createStub({
             name: stubName,
-            propsDeclaration,
+            type,
             renderStubDefaultSlot
           })
         )
