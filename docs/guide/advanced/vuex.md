@@ -210,7 +210,7 @@ const app = createApp({ /* ... */ })
 app.use(store, key)
 ```
 
-To avoid repeating the key parameter passing whenever `useStore` is used, the Vuex documentation recommends extracting that logic into a helper function and reuse that function instead of the default `useStore` function. [Read wore about it here](https://next.vuex.vuejs.org/guide/typescript-support.html#typing-usestore-composition-function). The approach providing a store using Vue Test Utils depends on the way the `useStore` function is used in the component.
+To avoid repeating the key parameter passing whenever `useStore` is used, the Vuex documentation recommends extracting that logic into a helper function and reuse that function instead of the default `useStore` function. [Read more about it here](https://next.vuex.vuejs.org/guide/typescript-support.html#typing-usestore-composition-function). The approach providing a store using Vue Test Utils depends on the way the `useStore` function is used in the component.
 
 ### Testing Components that Utilize `useStore` without an Injection Key
 
