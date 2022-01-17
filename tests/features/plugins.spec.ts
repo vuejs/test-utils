@@ -104,11 +104,7 @@ describe('createStubs', () => {
   }
 
   const Parent = {
-    render: () => h('div', [
-      h(Child1),
-      h(Child1),
-      h(Child2)
-    ])
+    render: () => h('div', [h(Child1), h(Child1), h(Child2)])
   }
 
   const customCreateStub = jest.fn(({ name }) => h(`${name}-custom-stub`))
@@ -129,15 +125,23 @@ describe('createStubs', () => {
       shallow: true
     })
 
-    expect(wrapper.html()).toBe('<div>\n' +
-      '  <child1-custom-stub></child1-custom-stub>\n' +
-      '  <child1-custom-stub></child1-custom-stub>\n' +
-      '  <child2-custom-stub></child2-custom-stub>\n' +
-      '</div>')
+    expect(wrapper.html()).toBe(
+      '<div>\n' +
+        '  <child1-custom-stub></child1-custom-stub>\n' +
+        '  <child1-custom-stub></child1-custom-stub>\n' +
+        '  <child2-custom-stub></child2-custom-stub>\n' +
+        '</div>'
+    )
 
     expect(customCreateStub).toHaveBeenCalledTimes(2)
-    expect(customCreateStub).toHaveBeenCalledWith({ name: 'child1', component: Child1 })
-    expect(customCreateStub).toHaveBeenCalledWith({ name: 'child2', component: Child2 })
+    expect(customCreateStub).toHaveBeenCalledWith({
+      name: 'child1',
+      component: Child1
+    })
+    expect(customCreateStub).toHaveBeenCalledWith({
+      name: 'child2',
+      component: Child2
+    })
   })
 
   it('should be called only for stubbed components', () => {
@@ -149,24 +153,31 @@ describe('createStubs', () => {
       }
     })
 
-    expect(wrapper.html()).toBe('<div>\n' +
-      '  <div>real child 1</div>\n' +
-      '  <div>real child 1</div>\n' +
-      '  <child2-custom-stub></child2-custom-stub>\n' +
-      '</div>')
+    expect(wrapper.html()).toBe(
+      '<div>\n' +
+        '  <div>real child 1</div>\n' +
+        '  <div>real child 1</div>\n' +
+        '  <child2-custom-stub></child2-custom-stub>\n' +
+        '</div>'
+    )
 
     expect(customCreateStub).toHaveBeenCalledTimes(1)
-    expect(customCreateStub).toHaveBeenCalledWith({ name: 'child2', component: Child2 })
+    expect(customCreateStub).toHaveBeenCalledWith({
+      name: 'child2',
+      component: Child2
+    })
   })
 
   it('should not be called for no stubs', () => {
     const wrapper = mount(Parent)
 
-    expect(wrapper.html()).toBe('<div>\n' +
-      '  <div>real child 1</div>\n' +
-      '  <div>real child 1</div>\n' +
-      '  <div>real child 2</div>\n' +
-      '</div>')
+    expect(wrapper.html()).toBe(
+      '<div>\n' +
+        '  <div>real child 1</div>\n' +
+        '  <div>real child 1</div>\n' +
+        '  <div>real child 2</div>\n' +
+        '</div>'
+    )
 
     expect(customCreateStub).not.toHaveBeenCalled()
   })
@@ -181,13 +192,18 @@ describe('createStubs', () => {
       }
     })
 
-    expect(wrapper.html()).toBe('<div>\n' +
-      '  <child1-custom-stub></child1-custom-stub>\n' +
-      '  <child1-custom-stub></child1-custom-stub>\n' +
-      '  <div>Child 2 stub</div>\n' +
-      '</div>')
+    expect(wrapper.html()).toBe(
+      '<div>\n' +
+        '  <child1-custom-stub></child1-custom-stub>\n' +
+        '  <child1-custom-stub></child1-custom-stub>\n' +
+        '  <div>Child 2 stub</div>\n' +
+        '</div>'
+    )
 
     expect(customCreateStub).toHaveBeenCalledTimes(1)
-    expect(customCreateStub).toHaveBeenCalledWith({ name: 'child1', component: Child1 })
+    expect(customCreateStub).toHaveBeenCalledWith({
+      name: 'child1',
+      component: Child1
+    })
   })
 })
