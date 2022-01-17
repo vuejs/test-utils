@@ -1,4 +1,4 @@
-import { ComponentPublicInstance } from 'vue'
+import { ComponentPublicInstance, h } from 'vue'
 
 import { mount, config, VueWrapper } from '../../src'
 
@@ -90,5 +90,104 @@ describe('Plugin#install', () => {
         expect(() => mountComponent()).not.toThrow()
       }
     )
+  })
+})
+
+describe('createStubs', () => {
+  const Child1 = {
+    name: 'child1',
+    render: () => h('div', 'real child 1')
+  }
+  const Child2 = {
+    name: 'child2',
+    render: () => h('div', 'real child 2')
+  }
+
+  const Parent = {
+    render: () => h('div', [
+      h(Child1),
+      h(Child1),
+      h(Child2)
+    ])
+  }
+
+  const customCreateStub = jest.fn(({ name }) => h(`${name}-custom-stub`))
+  beforeAll(() => {
+    config.plugins.createStubs = customCreateStub
+  })
+
+  afterAll(() => {
+    config.plugins.createStubs = undefined
+  })
+
+  beforeEach(() => {
+    customCreateStub.mockClear()
+  })
+
+  it('should be called for every stub once', () => {
+    const wrapper = mount(Parent, {
+      shallow: true
+    })
+
+    expect(wrapper.html()).toBe('<div>\n' +
+      '  <child1-custom-stub></child1-custom-stub>\n' +
+      '  <child1-custom-stub></child1-custom-stub>\n' +
+      '  <child2-custom-stub></child2-custom-stub>\n' +
+      '</div>')
+
+    expect(customCreateStub).toHaveBeenCalledTimes(2)
+    expect(customCreateStub).toHaveBeenCalledWith({ name: 'child1', component: Child1 })
+    expect(customCreateStub).toHaveBeenCalledWith({ name: 'child2', component: Child2 })
+  })
+
+  it('should be called only for stubbed components', () => {
+    const wrapper = mount(Parent, {
+      global: {
+        stubs: {
+          child2: true
+        }
+      }
+    })
+
+    expect(wrapper.html()).toBe('<div>\n' +
+      '  <div>real child 1</div>\n' +
+      '  <div>real child 1</div>\n' +
+      '  <child2-custom-stub></child2-custom-stub>\n' +
+      '</div>')
+
+    expect(customCreateStub).toHaveBeenCalledTimes(1)
+    expect(customCreateStub).toHaveBeenCalledWith({ name: 'child2', component: Child2 })
+  })
+
+  it('should not be called for no stubs', () => {
+    const wrapper = mount(Parent)
+
+    expect(wrapper.html()).toBe('<div>\n' +
+      '  <div>real child 1</div>\n' +
+      '  <div>real child 1</div>\n' +
+      '  <div>real child 2</div>\n' +
+      '</div>')
+
+    expect(customCreateStub).not.toHaveBeenCalled()
+  })
+
+  it('should not be called for manual stubs', () => {
+    const wrapper = mount(Parent, {
+      shallow: true,
+      global: {
+        stubs: {
+          child2: () => h('div', 'Child 2 stub')
+        }
+      }
+    })
+
+    expect(wrapper.html()).toBe('<div>\n' +
+      '  <child1-custom-stub></child1-custom-stub>\n' +
+      '  <child1-custom-stub></child1-custom-stub>\n' +
+      '  <div>Child 2 stub</div>\n' +
+      '</div>')
+
+    expect(customCreateStub).toHaveBeenCalledTimes(1)
+    expect(customCreateStub).toHaveBeenCalledWith({ name: 'child1', component: Child1 })
   })
 })
