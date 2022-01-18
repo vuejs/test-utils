@@ -1,6 +1,6 @@
 # Migrating from Vue Test Utils v1
 
-A review of changes VTU v1 -> VTU v2, and some code snippets to showcase required modifications. If you encounter a bug or difference in behavior not documented here, please [open an issue](https://github.com/vuejs/vue-test-utils-next/issues/new).
+A review of changes VTU v1 -> VTU v2, and some code snippets to showcase required modifications. If you encounter a bug or difference in behavior not documented here, please [open an issue](https://github.com/vuejs/test-utils/issues/new).
 
 ## Changes
 

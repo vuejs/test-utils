@@ -6,7 +6,7 @@ export function createWrapperError<T extends object>(
       switch (prop) {
         case 'then':
           // allows for better errors when wrapping `find` in `await`
-          // https://github.com/vuejs/vue-test-utils-next/issues/638
+          // https://github.com/vuejs/test-utils/issues/638
           return
         case 'exists':
           return () => false

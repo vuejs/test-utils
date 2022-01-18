@@ -299,7 +299,7 @@ describe('emitted', () => {
     expect(wrapper.emitted().compositionstart).not.toBe(undefined)
   })
 
-  it('https://github.com/vuejs/vue-test-utils-next/issues/436', async () => {
+  it('https://github.com/vuejs/test-utils/issues/436', async () => {
     const Foo = defineComponent({
       name: 'Foo',
       emits: ['foo'],

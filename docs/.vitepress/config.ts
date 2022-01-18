@@ -12,8 +12,8 @@ export default defineConfig({
   },
   head: [['link', { rel: 'icon', href: `/logo.png` }]],
   themeConfig: {
-    repo: 'vuejs/vue-test-utils-next',
-    docsRepo: 'vuejs/vue-test-utils-next',
+    repo: 'vuejs/test-utils',
+    docsRepo: 'vuejs/test-utils',
     docsDir: 'docs',
     docsBranch: 'master',
     editLinks: true,
@@ -30,7 +30,7 @@ export default defineConfig({
       { text: 'Migrating from Vue 2', link: '/migration/' },
       {
         text: 'Changelog',
-        link: 'https://github.com/vuejs/vue-test-utils-next/releases'
+        link: 'https://github.com/vuejs/test-utils/releases'
       }
     ],
     sidebar: [

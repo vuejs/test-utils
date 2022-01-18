@@ -170,7 +170,7 @@ describe('slots', () => {
 
     it('allows passing a scoped slot via string with no destructuring using the v-slot syntax ', () => {
       // Note: there is intentionally a carriage return after the first ` in the scoped key.
-      // https://github.com/vuejs/vue-test-utils-next/issues/202
+      // https://github.com/vuejs/test-utils/issues/202
       const wrapper = mount(ComponentWithSlots, {
         slots: {
           scoped: `

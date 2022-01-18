@@ -84,7 +84,7 @@ export const createStub = ({
     props: propsDeclaration,
     setup(props, { slots }) {
       return () => {
-        // https://github.com/vuejs/vue-test-utils-next/issues/1076
+        // https://github.com/vuejs/test-utils/issues/1076
         // Passing a symbol as a static prop is not legal, since Vue will try to do
         // something like `el.setAttribute('val', Symbol())` which is not valid and
         // causes an error.

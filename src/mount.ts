@@ -410,7 +410,7 @@ export function mount(
   const app = createApp(Parent)
 
   // add tracking for emitted events
-  // this must be done after `createApp`: https://github.com/vuejs/vue-test-utils-next/issues/436
+  // this must be done after `createApp`: https://github.com/vuejs/test-utils/issues/436
   attachEmitListener()
 
   // global mocks mixin
@@ -489,8 +489,8 @@ export function mount(
   // but we need name to make sure that stubComponents will
   // properly stub this later by matching stub name
   //
-  // ref: https://github.com/vuejs/vue-test-utils-next/issues/249
-  // ref: https://github.com/vuejs/vue-test-utils-next/issues/425
+  // ref: https://github.com/vuejs/test-utils/issues/249
+  // ref: https://github.com/vuejs/test-utils/issues/425
   if (global?.stubs) {
     for (const name of Object.keys(global.stubs)) {
       if (!app.component(name)) {
