@@ -15,7 +15,7 @@ export default defineConfig({
     repo: 'vuejs/test-utils',
     docsRepo: 'vuejs/test-utils',
     docsDir: 'docs',
-    docsBranch: 'master',
+    docsBranch: 'main',
     editLinks: true,
     algolia: {
       apiKey: 'ee1b8516c9e5a5be9b6c25684eafc42f',
