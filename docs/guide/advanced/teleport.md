@@ -121,7 +121,7 @@ The next thing to do is fill out the username input. Unfortunately, we cannot us
 
 We see some comments used by Vue to handle `<Teleport>` - but no `<input>`. That's because the `<Signup>` component (and its HTML) are not rendered inside of `<Navbar>` anymore - it was teleported outside.
 
-Although the actual HTML is teleported outside, it turns out the Virtual DOM associated with `<Navbar>` maintains a reference to the original component. This means you can use `getComponent` and `findComponent, which operate on the Virtual DOM, not the regular DOM.
+Although the actual HTML is teleported outside, it turns out the Virtual DOM associated with `<Navbar>` maintains a reference to the original component. This means you can use `getComponent` and `findComponent`, which operate on the Virtual DOM, not the regular DOM.
 
 ```ts {12}
 beforeEach(() => {
