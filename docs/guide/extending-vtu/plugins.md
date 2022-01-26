@@ -10,7 +10,9 @@ Some use cases for plugins:
 1.  Attaching matchers to the Wrapper instance
 1.  Attaching functionality to the Wrapper
 
-## Using a Plugin
+## Wrapper Plugin
+
+### Using a Plugin
 
 Install plugins by calling the `config.plugins.VueWrapper.install()` method
 . This has to be done before you call `mount`.
@@ -43,12 +45,12 @@ once. Follow the instructions of the plugin you're installing.
 
 Check out the [Vue Community Guide](https://vue-community.org/v2/guide/ecosystem/testing.html) or [awesome-vue](https://github.com/vuejs/awesome-vue#test) for a collection of community-contributed plugins and libraries.
 
-## Writing a Plugin
+### Writing a Plugin
 
 A Vue Test Utils plugin is simply a function that receives the mounted
 `VueWrapper` or `DOMWrapper` instance and can modify it.
 
-### Basic Plugin
+#### Basic Plugin
 
 Below is a simple plugin to add a convenient alias to map `wrapper.element` to `wrapper.$el`
 
@@ -75,7 +77,7 @@ const wrapper = mount({ template: `<h1>🔌 Plugin</h1>` })
 console.log(wrapper.$el.innerHTML) // 🔌 Plugin
 ```
 
-### Data Test ID Plugin
+#### Data Test ID Plugin
 
 The below plugin adds a method `findByTestId` to the `VueWrapper` instance. This encourages using a selector strategy relying on test-only attributes on your Vue Components.
 
@@ -120,6 +122,50 @@ const DataTestIdPlugin = (wrapper) => {
 }
 
 config.plugins.VueWrapper.install(DataTestIdPlugin)
+```
+
+## Stubs Plugin
+
+The `config.plugins.createStubs` allows to overwrite the default stub creation provided by VTU.
+
+Some use cases are:
+* You want to add more logic into the stubs (for example named slots)
+* You want to use different stubs for multiple components (for example stub components from a library)
+
+### Usage
+
+```typescript
+config.plugins.createStubs = ({ name, component }) => {
+  return defineComponent({
+    render: () => h(`custom-${name}-stub`)
+  })
+}
+```
+
+This function will be called everytime VTU generates a stub either from
+```typescript
+const wrapper = mount(Component, {
+  global: {
+    stubs: {
+      ChildComponent: true
+    }
+  }
+})
+```
+or 
+```typescript
+const wrapper = shallowMount(Component)
+```
+
+But will not be called, when you explicit set a stub
+```typescript
+const wrapper = mount(Component, {
+  global: {
+    stubs: {
+      ChildComponent: { template: '<child-stub/>' }
+    }
+  }
+})
 ```
 
 ## Featuring Your Plugin
