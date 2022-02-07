@@ -1,4 +1,5 @@
 import { defineComponent } from 'vue'
+import LastUpdated from './components/LastUpdated.vue'
 
 import { mount } from '../src'
 
@@ -40,5 +41,21 @@ describe('Unmount', () => {
     } as any)
     wrapper.unmount()
     expect(errorHandler).not.toHaveBeenCalled()
+  })
+
+  it("The LastUpdated component renders the 'when' property", async () => {
+    const wrapper = mount(LastUpdated, { props: { when: 'today' } })
+
+    await wrapper.vm.$nextTick()
+    expect(wrapper.html()).toContain('<span>today</span>')
+    wrapper.unmount()
+  })
+
+  it("The LastUpdated component doesn't render when 'when' is undefined", async () => {
+    const wrapper = mount(LastUpdated, { props: { when: undefined } })
+
+    await wrapper.vm.$nextTick()
+    expect(wrapper.html()).not.toContain('<span>today</span>')
+    wrapper.unmount()
   })
 })
