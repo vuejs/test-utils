@@ -20,6 +20,12 @@ import {
   getComponentName,
   getComponentRegisteredName
 } from './utils/componentName'
+import { config } from './config'
+
+export type CustomCreateStub = (params: {
+  name: string
+  component: ConcreteComponent
+}) => ConcreteComponent
 
 interface StubOptions {
   name: string
@@ -259,11 +265,16 @@ export function stubComponents(
         }
 
         const newStub = createStubOnce(type, () =>
-          createStub({
-            name: stubName,
-            type,
-            renderStubDefaultSlot
-          })
+          config.plugins.createStubs
+            ? config.plugins.createStubs({
+                name: stubName,
+                component: type
+              })
+            : createStub({
+                name: stubName,
+                type,
+                renderStubDefaultSlot
+              })
         )
         registerStub({ source: type, stub: newStub })
         return [newStub, props, children, patchFlag, dynamicProps]
