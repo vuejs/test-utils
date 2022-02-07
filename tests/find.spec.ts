@@ -2,6 +2,7 @@ import { defineComponent, h, nextTick, Fragment } from 'vue'
 
 import { mount, VueWrapper } from '../src'
 import SuspenseComponent from './components/Suspense.vue'
+import ParentComponent from './compodefineComponentponent.vue'
 
 describe('find', () => {
   it('find using single root node', () => {
@@ -335,5 +336,14 @@ describe('findAll', () => {
           .exists()
       ).toBe(true)
     })
+  })
+
+  // https://github.com/vuejs/test-utils/issues/1233
+  it('finds 3 children', () => {
+    const wrapper = mount(ParentComponent)
+
+    const parent = wrapper.get('.parent')
+
+    expect(parent.findAll('div').length).toBe(3)
   })
 })
