@@ -302,7 +302,7 @@ describe('findComponent', () => {
     expect(wrapper.findComponent(Hello).unmount).toThrowError()
   })
 
-  // https://github.com/vuejs/vue-test-utils-next/issues/173
+  // https://github.com/vuejs/test-utils/issues/173
   const ComponentA = {
     name: 'ComponentA',
     template: `<div><slot></slot></div>`
@@ -358,7 +358,7 @@ describe('findComponent', () => {
     expect(compB[0].vm.$el.querySelector('.content').textContent).toBe('1')
   })
 
-  // https://github.com/vuejs/vue-test-utils-next/pull/188
+  // https://github.com/vuejs/test-utils/pull/188
   const slotComponent = defineComponent({
     name: 'slotA',
     template: '<div><slot /><slot name="b" /></div>'

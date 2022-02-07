@@ -1,11 +1,13 @@
+import { DomEventNameWithModifier } from 'src/constants/dom-events'
+import { TriggerOptions } from 'src/createDomEvent'
 import {
   DefinedComponent,
   FindAllComponentsSelector,
   FindComponentSelector,
   NameSelector,
   RefSelector
-} from 'src/types'
-import { VueWrapper } from 'src/vueWrapper'
+} from '../types'
+import { VueWrapper } from '../vueWrapper'
 import { ComponentPublicInstance, FunctionalComponent } from 'vue'
 import type { DOMWrapper } from '../domWrapper'
 
@@ -92,11 +94,24 @@ export default interface WrapperLike {
 
   html(): string
 
+  classes(): string[]
+  classes(className: string): boolean
+  classes(className?: string): string[] | boolean
+
   attributes(): { [key: string]: string }
   attributes(key: string): string
   attributes(key?: string): { [key: string]: string } | string
 
+  text(): string
   exists(): boolean
 
   setValue(value: any): Promise<void>
+
+  isVisible(): boolean
+
+  trigger(
+    eventString: DomEventNameWithModifier,
+    options?: TriggerOptions
+  ): Promise<void>
+  trigger(eventString: string, options?: TriggerOptions): Promise<void>
 }

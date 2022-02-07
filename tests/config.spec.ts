@@ -1,4 +1,5 @@
 import { defineComponent, ComponentPublicInstance, h, inject } from 'vue'
+import type { App } from 'vue'
 import { config, mount } from '../src'
 import Hello from './components/Hello.vue'
 import ComponentWithSlots from './components/ComponentWithSlots.vue'
@@ -48,6 +49,43 @@ describe('config', () => {
       expect(comp.find('#default-slot').exists()).toBe(true)
       // user defined config overrides default config
       expect(comp.findComponent(Hello).exists()).toBe(true)
+    })
+  })
+
+  describe('config integrity', () => {
+    it('should not leak config when plugins overwrite globalProperties', async () => {
+      // test with a function because it's not an "easy to clone" primitive type
+      const globalRouterMock = { push: jest.fn() }
+      const pluginRouterMock = { push: jest.fn() }
+      const Component = defineComponent({ template: '<div />' })
+
+      class Plugin {
+        static install(_app: App) {
+          _app.config.globalProperties.$router = pluginRouterMock
+        }
+      }
+
+      config.global.config.globalProperties = {
+        $router: globalRouterMock
+      }
+
+      // first with plugin to overwrite globalRouterMock with pluginRouterMock
+      const wrapper1 = mount(Component, {
+        global: {
+          plugins: [Plugin]
+        }
+      })
+
+      // then without plugin to check if the plugin overwrite is gone
+      const wrapper2 = mount(Component)
+
+      wrapper1.vm.$router.push('/route-1')
+      wrapper2.vm.$router.push('/route-2')
+
+      expect(pluginRouterMock.push).toHaveBeenCalledTimes(1)
+      expect(pluginRouterMock.push).toHaveBeenCalledWith('/route-1')
+      expect(globalRouterMock.push).toHaveBeenCalledTimes(1)
+      expect(globalRouterMock.push).toHaveBeenCalledWith('/route-2')
     })
   })
 

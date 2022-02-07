@@ -326,15 +326,15 @@ test('renders slots content', () => {
 
 ```ts
 type GlobalMountOptions = {
-  components?: Record<string, Component | object>
+  plugins?: (Plugin | [Plugin, ...any[]])[]
   config?: Partial<Omit<AppConfig, 'isNativeTag'>>
-  directives?: Record<string, Directive>
   mixins?: ComponentOptions[]
   mocks?: Record<string, any>
-  plugins?: (Plugin | [Plugin, ...any[]])[]
   provide?: Record<any, any>
-  renderStubDefaultSlot?: boolean
+  components?: Record<string, Component | object>
+  directives?: Record<string, Directive>
   stubs?: Stubs = Record<string, boolean | Component> | Array<string>
+  renderStubDefaultSlot?: boolean
 }
 ```
 
@@ -1882,7 +1882,7 @@ type GlobalMountOptions = {
   provide?: Record<any, any>
   components?: Record<string, Component | object>
   directives?: Record<string, Directive>
-  stubs?: Record<any, any>
+  stubs?: Stubs = Record<string, boolean | Component> | Array<string>
   renderStubDefaultSlot?: boolean
 }
 ```

@@ -47,6 +47,7 @@ describe('expose', () => {
     await wrapper.find('button').trigger('click')
     expect(wrapper.html()).toContain('1')
     // can access `count` even if it is _not_ exposed
+    // @ts-ignore we need better types here, see https://github.com/vuejs/test-utils/issues/972
     expect(wrapper.vm.count).toBe(1)
   })
 })

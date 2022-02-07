@@ -3,6 +3,7 @@ import { defineComponent, h, nextTick, Fragment } from 'vue'
 import { mount, VueWrapper } from '../src'
 import SuspenseComponent from './components/Suspense.vue'
 import ParentComponent from './compodefineComponentponent.vue'
+import MultipleRootRender from './components/MultipleRootRender.vue'
 
 describe('find', () => {
   it('find using single root node', () => {
@@ -156,6 +157,11 @@ describe('find', () => {
     const wrapper = mount(Component)
     const etc = wrapper.findComponent({ name: 'EmptyTestComponent' })
     expect(etc.find('p').exists()).toBe(false)
+  })
+
+  it('finds root node with SFC render function', () => {
+    const wrapper = mount(MultipleRootRender)
+    expect(wrapper.find('a').exists()).toBe(true)
   })
 })
 
@@ -335,6 +341,11 @@ describe('findAll', () => {
           .find('.target2')
           .exists()
       ).toBe(true)
+    })
+
+    it('finds all root nodes with SFC render function', () => {
+      const wrapper = mount(MultipleRootRender)
+      expect(wrapper.findAll('a')).toHaveLength(3)
     })
   })
 

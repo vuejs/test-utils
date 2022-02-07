@@ -192,7 +192,7 @@ describe('props', () => {
     })
   })
 
-  it('https://github.com/vuejs/vue-test-utils-next/issues/440', async () => {
+  it('https://github.com/vuejs/test-utils/issues/440', async () => {
     const Foo = defineComponent({
       name: 'Foo',
       props: {

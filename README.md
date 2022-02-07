@@ -7,15 +7,15 @@ The next iteration of Vue Test Utils. It targets Vue 3.
 - yarn: `yarn add @vue/test-utils@next --dev`
 - npm: `npm install @vue/test-utils@next --save-dev`
 
-Get started with the [documentation](https://next.vue-test-utils.vuejs.org/).
+Get started with the [documentation](https://test-utils.vuejs.org/).
 
 ## Coming from Vue 2 + Vue Test Utils?
 
-[Check the migration guide](https://next.vue-test-utils.vuejs.org/migration/). It's still a work in progress. If you find a problem or something that doesn't work that previously did in Vue Test Utils v1, please open an issue.
+[Check the migration guide](https://test-utils.vuejs.org/migration/). It's still a work in progress. If you find a problem or something that doesn't work that previously did in Vue Test Utils v1, please open an issue.
 
 ## Documentation
 
-See the [docs](https://next.vue-test-utils.vuejs.org/).
+See the [docs](https://test-utils.vuejs.org/).
 
 ## Development
 
@@ -34,7 +34,7 @@ This is table for those coming from VTU 1, comparing the two APIs. Some things a
 | option           | status | notes                                                                               |
 | ---------------- | ------ | ----------------------------------------------------------------------------------- |
 | data             | ✅     |
-| slots            | ✅     | 
+| slots            | ✅     |
 | mocks            | ✅     | nested in `global`                                                                  |
 | propsData        | ✅     | now called `props`                                                                  |
 | provide          | ✅     | nested in `global`                                                                  |

@@ -2,20 +2,20 @@ import { defineConfig } from 'vitepress'
 import packageJSON from '../../package.json'
 
 export default defineConfig({
-  title: `Vue Test Utils for Vue 3 (${packageJSON.version})`,
-  description: 'The documentation for the official Vue Test Utils for Vue 3',
+  title: `Vue Test Utils`,
+  description: 'The documentation for the official Vue Test Utils',
   locales: {
     '/': {
       lang: 'en-US',
-      title: `Vue Test Utils for Vue 3 (${packageJSON.version})`
+      title: `Vue Test Utils`
     }
   },
   head: [['link', { rel: 'icon', href: `/logo.png` }]],
   themeConfig: {
-    repo: 'vuejs/vue-test-utils-next',
-    docsRepo: 'vuejs/vue-test-utils-next',
+    repo: 'vuejs/test-utils',
+    docsRepo: 'vuejs/test-utils',
     docsDir: 'docs',
-    docsBranch: 'master',
+    docsBranch: 'main',
     editLinks: true,
     algolia: {
       apiKey: 'ee1b8516c9e5a5be9b6c25684eafc42f',
@@ -30,7 +30,7 @@ export default defineConfig({
       { text: 'Migrating from Vue 2', link: '/migration/' },
       {
         text: 'Changelog',
-        link: 'https://github.com/vuejs/vue-test-utils-next/releases'
+        link: 'https://github.com/vuejs/test-utils/releases'
       }
     ],
     sidebar: [
@@ -88,10 +88,6 @@ export default defineConfig({
           { text: 'Testing Vuex', link: '/guide/advanced/vuex' },
           { text: 'Testing Vue Router', link: '/guide/advanced/vue-router' },
           { text: 'Testing Teleport', link: '/guide/advanced/teleport' },
-          {
-            text: 'Third-party integration',
-            link: '/guide/advanced/third-party'
-          },
           {
             text: 'Stubs and Shallow Mount',
             link: '/guide/advanced/stubs-shallow-mount'

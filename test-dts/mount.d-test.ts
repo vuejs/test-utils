@@ -1,8 +1,15 @@
 import { expectError, expectType } from './index'
 import {
+  ComponentOptions,
   DefineComponent,
   defineComponent,
-  FunctionalComponent
+  FunctionalComponent,
+  getCurrentInstance,
+  h,
+  ref,
+  SetupContext,
+  Prop,
+  VNodeChild
 } from 'vue'
 import { Options, Vue } from 'vue-class-component'
 import { mount } from '../src'
@@ -179,7 +186,7 @@ declare const FunctionalComponentEmit: FunctionalComponent<
     level: number
   },
   { hello: (foo: string, bar: string) => void }
->
+  >
 
 mount(FunctionalComponent)
 mount(defineComponent(FunctionalComponent))
@@ -210,6 +217,78 @@ class ClassComponent extends Vue {
 // @ts-expect-error changeMessage expects an argument
 expectError(mount(ClassComponent, {}).vm.changeMessage())
 mount(ClassComponent, {}).vm.changeMessage('')
+
+// region custom class component implement
+class CustomClassComponent<Props extends {} = {}> {
+  static defaultProps?: Record<string, Prop<any>> | string[]
+  private static __vccValue?: ComponentOptions
+  static get __vccOpts(): ComponentOptions {
+    if (this.__vccValue) return this.__vccValue
+    const CompConstructor = this
+    return (this.__vccValue = {
+      name: CompConstructor.name,
+      props: CompConstructor.defaultProps,
+      setup(props, ctx) {
+        const instance = new CompConstructor()
+        return instance.render.bind(instance)
+      }
+    })
+  }
+  constructor() {
+    const instance = getCurrentInstance()!
+    this.props = instance.props as Props
+    // @ts-expect-error no explicit setupContext on instance
+    this.context = instance.setupContext as SetupContext
+  }
+
+  props: Props
+  get $props() {
+    return this.props
+  }
+  context: SetupContext
+  render(): VNodeChild {}
+}
+class NoPropCustomClassComponent extends CustomClassComponent {
+  count = ref(0)
+  changeCount(count: number) {
+    this.count.value = count
+  }
+  render() {
+    return h('div', `hello world ${this.count.value}`)
+  }
+}
+
+// @ts-expect-error changeCount expects an argument
+expectError(mount(NoPropCustomClassComponent, {}).vm.changeCount())
+mount(NoPropCustomClassComponent, {}).vm.changeCount(2)
+
+interface CustomClassComponentProps {
+  size: 'small' | 'large'
+  age?: number
+}
+
+class WithPropCustomClassComponent extends CustomClassComponent<CustomClassComponentProps> {
+  static defaultProps: (keyof CustomClassComponentProps)[] = ['size', 'age']
+  count = ref(0)
+  changeCount(count: number) {
+    this.count.value = count
+  }
+  render() {
+    return h('div', `hello world ${this.count.value}${this.props.size}`)
+  }
+}
+
+expectError(
+  // @ts-expect-error should has props error
+  mount<WithPropCustomClassComponent, CustomClassComponentProps>(WithPropCustomClassComponent, {
+    props: {}
+  })
+)
+mount<WithPropCustomClassComponent, CustomClassComponentProps>(WithPropCustomClassComponent, {
+  props: { size: 'small' }
+})
+
+// endregion
 
 // default props
 const Foo = defineComponent({

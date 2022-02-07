@@ -135,7 +135,7 @@ test('layout full page layout', () => {
 })
 ```
 
-[Refer to the tests](https://github.com/vuejs/vue-test-utils-next/blob/9d3c2a6526f3d8751d29b2f9112ad2a3332bbf52/tests/mountingOptions/slots.spec.ts#L124-L167) for more examples and use cases.
+[Refer to the tests](https://github.com/vuejs/test-utils/blob/9d3c2a6526f3d8751d29b2f9112ad2a3332bbf52/tests/mountingOptions/slots.spec.ts#L124-L167) for more examples and use cases.
 
 ## Scoped Slots
 

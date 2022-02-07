@@ -38,7 +38,7 @@ describe('mounting options: stubs', () => {
     expect(wrapper.html()).toBe('<div></div>\n' + '<foo-stub></foo-stub>')
   })
 
-  // https://github.com/vuejs/vue-test-utils-next/issues/249
+  // https://github.com/vuejs/test-utils/issues/249
   it('applies stubs globally', () => {
     const Comp = defineComponent({
       template: '<div><foo /><router-link to="/foo" /><router-view /></div>'

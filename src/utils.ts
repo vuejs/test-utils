@@ -14,6 +14,26 @@ function mergeStubs(target: Record<string, any>, source: GlobalMountOptions) {
   }
 }
 
+// perform 1-level-deep-pseudo-clone merge in order to prevent config leaks
+// example: vue-router overwrites globalProperties.$router
+function mergeAppConfig(
+  configGlobalConfig: GlobalMountOptions['config'],
+  mountGlobalConfig: GlobalMountOptions['config']
+): Required<GlobalMountOptions>['config'] {
+  return {
+    ...configGlobalConfig,
+    ...mountGlobalConfig,
+    globalProperties: {
+      ...configGlobalConfig?.globalProperties,
+      ...mountGlobalConfig?.globalProperties
+    },
+    compilerOptions: {
+      ...configGlobalConfig?.compilerOptions,
+      ...mountGlobalConfig?.compilerOptions
+    }
+  }
+}
+
 export function mergeGlobalProperties(
   mountGlobal: GlobalMountOptions = {}
 ): Required<GlobalMountOptions> {
@@ -34,7 +54,7 @@ export function mergeGlobalProperties(
     components: { ...configGlobal.components, ...mountGlobal.components },
     provide: { ...configGlobal.provide, ...mountGlobal.provide },
     mocks: { ...configGlobal.mocks, ...mountGlobal.mocks },
-    config: { ...configGlobal.config, ...mountGlobal.config },
+    config: mergeAppConfig(configGlobal.config, mountGlobal.config),
     directives: { ...configGlobal.directives, ...mountGlobal.directives },
     renderStubDefaultSlot
   }

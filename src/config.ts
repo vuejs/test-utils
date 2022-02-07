@@ -1,12 +1,14 @@
 import { GlobalMountOptions } from './types'
 import { VueWrapper } from './vueWrapper'
 import { DOMWrapper } from './domWrapper'
+import { CustomCreateStub } from './stubs'
 
 export interface GlobalConfigOptions {
   global: Required<GlobalMountOptions>
   plugins: {
     VueWrapper: Pluggable<VueWrapper>
     DOMWrapper: Pluggable<DOMWrapper<Node>>
+    createStubs?: CustomCreateStub
   }
   renderStubDefaultSlot: boolean
 }

@@ -66,7 +66,7 @@ describe('getComponent', () => {
     }
   }
 
-  // https://github.com/vuejs/vue-test-utils-next/issues/425
+  // https://github.com/vuejs/test-utils/issues/425
   it('works with router-link and mount', () => {
     const wrapper = mount(Issue425, options)
     expect(wrapper.getComponent<DefineComponent>('.link').props('to')).toEqual({
@@ -74,7 +74,7 @@ describe('getComponent', () => {
     })
   })
 
-  // https://github.com/vuejs/vue-test-utils-next/issues/425
+  // https://github.com/vuejs/test-utils/issues/425
   it('works with router-link and shallowMount', () => {
     const wrapper = shallowMount(Issue425, options)
     expect(wrapper.getComponent<DefineComponent>('.link').props('to')).toEqual({
