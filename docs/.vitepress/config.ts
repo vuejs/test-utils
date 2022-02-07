@@ -2,12 +2,12 @@ import { defineConfig } from 'vitepress'
 import packageJSON from '../../package.json'
 
 export default defineConfig({
-  title: `Vue Test Utils for Vue 3 (${packageJSON.version})`,
-  description: 'The documentation for the official Vue Test Utils for Vue 3',
+  title: `Vue Test Utils`,
+  description: 'The documentation for the official Vue Test Utils',
   locales: {
     '/': {
       lang: 'en-US',
-      title: `Vue Test Utils for Vue 3 (${packageJSON.version})`
+      title: `Vue Test Utils`
     }
   },
   head: [['link', { rel: 'icon', href: `/logo.png` }]],
