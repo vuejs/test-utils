@@ -1,15 +1,15 @@
-# Vue Test Utils (next)
+# Vue Test Utils
 
-The next iteration of Vue Test Utils. It targets Vue 3.
+Component testing utils for Vue 3.
 
 ## Installation and Usage
 
-- yarn: `yarn add @vue/test-utils@next --dev`
-- npm: `npm install @vue/test-utils@next --save-dev`
+- yarn: `yarn add @vue/test-utils --dev`
+- npm: `npm install @vue/test-utils --save-dev`
 
 Get started with the [documentation](https://test-utils.vuejs.org/).
 
-## Coming from Vue 2 + Vue Test Utils?
+## Coming from Vue 2 + Test Utils v1?
 
 [Check the migration guide](https://test-utils.vuejs.org/migration/). It's still a work in progress. If you find a problem or something that doesn't work that previously did in Vue Test Utils v1, please open an issue.
 
