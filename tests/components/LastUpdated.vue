@@ -6,7 +6,7 @@
 
 <script>
 export default {
-  name: "last-updated",
-  props: ["when"]
+  name: 'last-updated',
+  props: ['when']
 }
 </script>
