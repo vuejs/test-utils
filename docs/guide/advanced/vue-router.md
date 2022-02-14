@@ -134,26 +134,32 @@ const Posts = {
 
 The root of the app displays a `<router-link>` leading to `/posts`, where we list the posts.
 
-The real router looks like this:
+The real router looks like this. Notice that we're exporting the routes separately from the route, so that we can instantiate a new router for each individual test later.
 
 ```js
 import { createRouter, createWebHistory } from 'vue-router'
 
+const routes = [
+  {
+    path: '/',
+    component: {
+      template: 'Welcome to the blogging app'
+    }
+  },
+  {
+    path: '/posts',
+    component: Posts
+  }
+];
+
 const router = createRouter({
   history: createWebHistory(),
-  routes: [
-    {
-      path: '/',
-      component: {
-        template: 'Welcome to the blogging app'
-      }
-    },
-    {
-      path: '/posts',
-      component: Posts
-    }
-  ]
+  routes: routes,
 })
+
+export { routes };
+
+export default router;
 ```
 
 The best way to illustrate how to test an app using Vue Router is to let the warnings guide us. The following minimal test is enough to get us going:
@@ -278,10 +284,6 @@ In this case, however, there is no _hasNavigated_ hook we can await on. One alte
 import { mount, flushPromises } from '@vue/test-utils'
 import { createRouter, createWebHistory } from 'vue-router'
 
-const router = createRouter({
-  // omitted for brevity
-})
-
 test('routing', async () => {
   router.push('/')
   await router.isReady()
@@ -299,7 +301,35 @@ test('routing', async () => {
 })
 ```
 
-It _finally_ passes. Great! This is all very manual, however - and this is for a tiny, trivial app. This is the reason using a mocked router is a common approach when testing Vue components using Vue Test Utils.
+It _finally_ passes. Great! This is all very manual, however - and this is for a tiny, trivial app. This is the reason using a mocked router is a common approach when testing Vue components using Vue Test Utils. In case you prefer to keep using a real router, keep in mind that each test should use it's own instance of the router like so:
+
+```js {1,20}
+import { mount, flushPromises } from '@vue/test-utils'
+import { createRouter, createWebHistory } from 'vue-router'
+
+let router;
+beforeEach(async () => {
+  const router = createRouter({
+    // omitted for brevity
+  })
+});
+
+test('routing', async () => {
+  router.push('/')
+  await router.isReady()
+
+  const wrapper = mount(App, {
+    global: {
+      plugins: [router]
+    }
+  })
+  expect(wrapper.html()).toContain('Welcome to the blogging app')
+
+  await wrapper.find('a').trigger('click')
+  await flushPromises()
+  expect(wrapper.html()).toContain('Testing Vue Router')
+})
+```
 
 ## Using a mocked router with Composition API
 
@@ -401,17 +431,21 @@ test('redirect an unauthenticated user to 404', () => {
 
 ## Using a real router with Composition API
 
-Using a real router with Composition API works the same as using a real router with Options API.
+Using a real router with Composition API works the same as using a real router with Options API. Keep in mind that, just as is the case with Options API, it's considered
+a good practice to instantiate a new router object for each test, instead of importing the router directly from your app.
 
 ```js
-const router = createRouter({
-  // omitted for brevity
-})
+let router;
+beforeEach(async () => {
+  const router = createRouter({
+    // omitted for brevity
+  })
 
-test('allows authenticated user to edit a post', async () => {
   router.push('/')
   await router.isReady()
+});
 
+test('allows authenticated user to edit a post', async () => {
   const wrapper = mount(Component, {
     props: {
       isAuthenticated: true
