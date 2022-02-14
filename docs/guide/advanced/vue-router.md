@@ -301,7 +301,7 @@ test('routing', async () => {
 
 It _finally_ passes. Great! This is all very manual, however - and this is for a tiny, trivial app. This is the reason using a mocked router is a common approach when testing Vue components using Vue Test Utils.
 
-## Testing useRouter and useRoute within setup
+## Using a mocked router with Composition API
 
 Vue router 4 allows for working with the router and route inside the `setup` function with the composition API.
 
@@ -361,9 +361,7 @@ test('allows authenticated user to edit a post', () => {
       isAuthenticated: true
     },
     global: {
-      mocks: {
-        // No need for the mocks
-      }
+      stubs: ["router-link", "router-view"], // Stubs for router-link and router-view in case they're rendered in your template
     }
   })
 
@@ -388,6 +386,9 @@ test('redirect an unauthenticated user to 404', () => {
   const wrapper = mount(Component, {
     props: {
       isAuthenticated: false
+    }
+    global: {
+      stubs: ["router-link", "router-view"], // Stubs for router-link and router-view in case they're rendered in your template
     }
   })
 
