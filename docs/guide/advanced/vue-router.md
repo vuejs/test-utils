@@ -399,6 +399,35 @@ test('redirect an unauthenticated user to 404', () => {
 })
 ```
 
+## Using a real router with Composition API
+
+Using a real router with Composition API works the same as using a real router with Options API.
+
+```js
+const router = createRouter({
+  // omitted for brevity
+})
+
+test('allows authenticated user to edit a post', async () => {
+  router.push('/')
+  await router.isReady()
+
+  const wrapper = mount(Component, {
+    props: {
+      isAuthenticated: true
+    },
+    global: {
+      plugins: [router],
+    }
+  })
+
+  await wrapper.find('button').trigger('click')
+
+  expect(push).toHaveBeenCalledTimes(1)
+  expect(push).toHaveBeenCalledWith('/posts/1/edit')
+})
+```
+
 For those who prefer a non-manual approach, the library [vue-router-mock](https://github.com/posva/vue-router-mock) created by Posva is also available as an alternative.
 
 ## Conclusion
