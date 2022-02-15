@@ -188,9 +188,11 @@ The `<router-link>` and `<router-view>` component are not found. We need to inst
 ```js {10,11,12}
 import { mount } from '@vue/test-utils'
 import { createRouter, createWebHistory } from 'vue-router'
+import { routes } from "@/router" // This import should point to your routes file declared above
 
 const router = createRouter({
-  // omitted for brevity
+  history: createWebHistory(),
+  routes: routes,
 })
 
 test('routing', () => {
@@ -217,9 +219,11 @@ Vue Router provides an `isReady` function that tell us when router is ready. We 
 ```js {11,12}
 import { mount } from '@vue/test-utils'
 import { createRouter, createWebHistory } from 'vue-router'
+import { routes } from "@/router"
 
 const router = createRouter({
-  // omitted for brevity
+  history: createWebHistory(),
+  routes: routes,
 })
 
 test('routing', async () => {
@@ -244,9 +248,11 @@ Now let's navigate to `/posts` and make sure the routing is working as expected:
 ```js {19,20}
 import { mount } from '@vue/test-utils'
 import { createRouter, createWebHistory } from 'vue-router'
+import { routes } from "@/router"
 
 const router = createRouter({
-  // omitted for brevity
+  history: createWebHistory(),
+  routes: routes,
 })
 
 test('routing', async () => {
@@ -283,6 +289,12 @@ In this case, however, there is no _hasNavigated_ hook we can await on. One alte
 ```js {1,20}
 import { mount, flushPromises } from '@vue/test-utils'
 import { createRouter, createWebHistory } from 'vue-router'
+import { routes } from "@/router"
+
+const router = createRouter({
+  history: createWebHistory(),
+  routes: routes,
+})
 
 test('routing', async () => {
   router.push('/')
@@ -306,11 +318,13 @@ It _finally_ passes. Great! This is all very manual, however - and this is for a
 ```js {1,20}
 import { mount, flushPromises } from '@vue/test-utils'
 import { createRouter, createWebHistory } from 'vue-router'
+import { routes } from "@/router"
 
 let router;
 beforeEach(async () => {
-  const router = createRouter({
-    // omitted for brevity
+  router = createRouter({
+    history: createWebHistory(),
+    routes: routes,
   })
 });
 
@@ -435,10 +449,16 @@ Using a real router with Composition API works the same as using a real router w
 a good practice to instantiate a new router object for each test, instead of importing the router directly from your app.
 
 ```js
+import { mount, flushPromises } from '@vue/test-utils'
+import { createRouter, createWebHistory } from 'vue-router'
+import { routes } from "@/router"
+
 let router;
+
 beforeEach(async () => {
-  const router = createRouter({
-    // omitted for brevity
+  router = createRouter({
+    history: createWebHistory(),
+    routes: routes,
   })
 
   router.push('/')
