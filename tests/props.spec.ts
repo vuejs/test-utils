@@ -1,10 +1,20 @@
-import { mount, shallowMount } from '../src'
+import { mount } from '../src'
 import WithProps from './components/WithProps.vue'
 import PropWithSymbol from './components/PropWithSymbol.vue'
 import Hello from './components/Hello.vue'
 import { defineComponent, h } from 'vue'
+import Title from './components/FunctionComponent'
 
 describe('props', () => {
+  it('should get props from functional component', async () => {
+    const wrapper = mount(Title, {
+      props: {
+        title: 'nickname'
+      }
+    })
+    expect(wrapper.props('title')).toBe('nickname')
+  })
+
   it('returns a single prop applied to a component', () => {
     const wrapper = mount(WithProps, { props: { msg: 'ABC' } })
     expect(wrapper.props('msg')).toEqual('ABC')
@@ -179,7 +189,7 @@ describe('props', () => {
     const wrapper = mount(Component, {
       shallow: true
     })
-    let fooCmp = wrapper.findComponent({ name: 'Foo' })
+    const fooCmp = wrapper.findComponent({ name: 'Foo' })
 
     expect(fooCmp.props()).toEqual({
       foo: 'old value'
@@ -191,7 +201,6 @@ describe('props', () => {
       foo: 'new value'
     })
   })
-
   it('https://github.com/vuejs/test-utils/issues/440', async () => {
     const Foo = defineComponent({
       name: 'Foo',

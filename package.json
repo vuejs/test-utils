@@ -58,6 +58,7 @@
   },
   "scripts": {
     "test": "yarn jest --runInBand tests/",
+    "test:props":"jest a --runTestsByPath tests/props.spec.ts",
     "test:build": "yarn jest --runInBand tests/ -use-build",
     "tsd": "tsc -p test-dts/tsconfig.tsd.json",
     "build": "yarn rollup -c rollup.config.js",
