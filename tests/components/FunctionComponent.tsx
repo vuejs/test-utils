@@ -6,5 +6,7 @@ interface Props {
 const Title: FunctionalComponent<Props> = ({ title }) => {
   return <h1> {title} </h1>
 }
-
+Title.props = {
+  title: String
+}
 export default Title

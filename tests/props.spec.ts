@@ -1,4 +1,4 @@
-import { mount } from '../src'
+import { mount, shallowMount } from '../src'
 import WithProps from './components/WithProps.vue'
 import PropWithSymbol from './components/PropWithSymbol.vue'
 import Hello from './components/Hello.vue'
@@ -6,15 +6,6 @@ import { defineComponent, h } from 'vue'
 import Title from './components/FunctionComponent'
 
 describe('props', () => {
-  it('should get props from functional component', async () => {
-    const wrapper = mount(Title, {
-      props: {
-        title: 'nickname'
-      }
-    })
-    expect(wrapper.props('title')).toBe('nickname')
-  })
-
   it('returns a single prop applied to a component', () => {
     const wrapper = mount(WithProps, { props: { msg: 'ABC' } })
     expect(wrapper.props('msg')).toEqual('ABC')
@@ -283,6 +274,15 @@ describe('props', () => {
       expect(wrapper.html()).toBe(
         '<prop-with-symbol-stub sym="Symbol()"></prop-with-symbol-stub>'
       )
+    })
+
+    it('should get props from functional component', async () => {
+      const wrapper = mount(Title, {
+        props: {
+          title: 'nickname'
+        }
+      })
+      expect(wrapper.props('title')).toBe('nickname')
     })
   })
 })
