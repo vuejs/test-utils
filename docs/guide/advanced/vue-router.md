@@ -134,26 +134,32 @@ const Posts = {
 
 The root of the app displays a `<router-link>` leading to `/posts`, where we list the posts.
 
-The real router looks like this:
+The real router looks like this. Notice that we're exporting the routes separately from the route, so that we can instantiate a new router for each individual test later.
 
 ```js
 import { createRouter, createWebHistory } from 'vue-router'
 
+const routes = [
+  {
+    path: '/',
+    component: {
+      template: 'Welcome to the blogging app'
+    }
+  },
+  {
+    path: '/posts',
+    component: Posts
+  }
+];
+
 const router = createRouter({
   history: createWebHistory(),
-  routes: [
-    {
-      path: '/',
-      component: {
-        template: 'Welcome to the blogging app'
-      }
-    },
-    {
-      path: '/posts',
-      component: Posts
-    }
-  ]
+  routes: routes,
 })
+
+export { routes };
+
+export default router;
 ```
 
 The best way to illustrate how to test an app using Vue Router is to let the warnings guide us. The following minimal test is enough to get us going:
@@ -182,9 +188,11 @@ The `<router-link>` and `<router-view>` component are not found. We need to inst
 ```js {10,11,12}
 import { mount } from '@vue/test-utils'
 import { createRouter, createWebHistory } from 'vue-router'
+import { routes } from "@/router" // This import should point to your routes file declared above
 
 const router = createRouter({
-  // omitted for brevity
+  history: createWebHistory(),
+  routes: routes,
 })
 
 test('routing', () => {
@@ -211,9 +219,11 @@ Vue Router provides an `isReady` function that tell us when router is ready. We 
 ```js {11,12}
 import { mount } from '@vue/test-utils'
 import { createRouter, createWebHistory } from 'vue-router'
+import { routes } from "@/router"
 
 const router = createRouter({
-  // omitted for brevity
+  history: createWebHistory(),
+  routes: routes,
 })
 
 test('routing', async () => {
@@ -238,9 +248,11 @@ Now let's navigate to `/posts` and make sure the routing is working as expected:
 ```js {19,20}
 import { mount } from '@vue/test-utils'
 import { createRouter, createWebHistory } from 'vue-router'
+import { routes } from "@/router"
 
 const router = createRouter({
-  // omitted for brevity
+  history: createWebHistory(),
+  routes: routes,
 })
 
 test('routing', async () => {
@@ -277,9 +289,11 @@ In this case, however, there is no _hasNavigated_ hook we can await on. One alte
 ```js {1,20}
 import { mount, flushPromises } from '@vue/test-utils'
 import { createRouter, createWebHistory } from 'vue-router'
+import { routes } from "@/router"
 
 const router = createRouter({
-  // omitted for brevity
+  history: createWebHistory(),
+  routes: routes,
 })
 
 test('routing', async () => {
@@ -299,9 +313,39 @@ test('routing', async () => {
 })
 ```
 
-It _finally_ passes. Great! This is all very manual, however - and this is for a tiny, trivial app. This is the reason using a mocked router is a common approach when testing Vue components using Vue Test Utils.
+It _finally_ passes. Great! This is all very manual, however - and this is for a tiny, trivial app. This is the reason using a mocked router is a common approach when testing Vue components using Vue Test Utils. In case you prefer to keep using a real router, keep in mind that each test should use it's own instance of the router like so:
 
-## Testing useRouter and useRoute within setup
+```js {1,20}
+import { mount, flushPromises } from '@vue/test-utils'
+import { createRouter, createWebHistory } from 'vue-router'
+import { routes } from "@/router"
+
+let router;
+beforeEach(async () => {
+  router = createRouter({
+    history: createWebHistory(),
+    routes: routes,
+  })
+});
+
+test('routing', async () => {
+  router.push('/')
+  await router.isReady()
+
+  const wrapper = mount(App, {
+    global: {
+      plugins: [router]
+    }
+  })
+  expect(wrapper.html()).toContain('Welcome to the blogging app')
+
+  await wrapper.find('a').trigger('click')
+  await flushPromises()
+  expect(wrapper.html()).toContain('Testing Vue Router')
+})
+```
+
+## Using a mocked router with Composition API
 
 Vue router 4 allows for working with the router and route inside the `setup` function with the composition API.
 
@@ -361,9 +405,7 @@ test('allows authenticated user to edit a post', () => {
       isAuthenticated: true
     },
     global: {
-      mocks: {
-        // No need for the mocks
-      }
+      stubs: ["router-link", "router-view"], // Stubs for router-link and router-view in case they're rendered in your template
     }
   })
 
@@ -389,12 +431,54 @@ test('redirect an unauthenticated user to 404', () => {
     props: {
       isAuthenticated: false
     }
+    global: {
+      stubs: ["router-link", "router-view"], // Stubs for router-link and router-view in case they're rendered in your template
+    }
   })
 
   await wrapper.find('button').trigger('click')
 
   expect(push).toHaveBeenCalledTimes(1)
   expect(push).toHaveBeenCalledWith('/404')
+})
+```
+
+## Using a real router with Composition API
+
+Using a real router with Composition API works the same as using a real router with Options API. Keep in mind that, just as is the case with Options API, it's considered
+a good practice to instantiate a new router object for each test, instead of importing the router directly from your app.
+
+```js
+import { mount, flushPromises } from '@vue/test-utils'
+import { createRouter, createWebHistory } from 'vue-router'
+import { routes } from "@/router"
+
+let router;
+
+beforeEach(async () => {
+  router = createRouter({
+    history: createWebHistory(),
+    routes: routes,
+  })
+
+  router.push('/')
+  await router.isReady()
+});
+
+test('allows authenticated user to edit a post', async () => {
+  const wrapper = mount(Component, {
+    props: {
+      isAuthenticated: true
+    },
+    global: {
+      plugins: [router],
+    }
+  })
+
+  await wrapper.find('button').trigger('click')
+
+  expect(push).toHaveBeenCalledTimes(1)
+  expect(push).toHaveBeenCalledWith('/posts/1/edit')
 })
 ```
 
