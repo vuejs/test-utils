@@ -2,6 +2,7 @@ import { defineAsyncComponent, defineComponent } from 'vue'
 import { mount, shallowMount, VueWrapper } from '../src'
 import ComponentWithChildren from './components/ComponentWithChildren.vue'
 import ScriptSetupWithChildren from './components/ScriptSetupWithChildren.vue'
+import DynamicComponentWithComputedProperty from './components/DynamicComponentWithComputedProperty.vue'
 
 describe('shallowMount', () => {
   it('renders props for stubbed component in a snapshot', () => {
@@ -195,5 +196,17 @@ describe('shallowMount', () => {
         '  <test-component-stub class="component 2"></test-component-stub>\n' +
         '</div>'
     )
+  })
+
+  it('stubs a given component that is also returned by a computed property', () => {
+    const wrapper = shallowMount(DynamicComponentWithComputedProperty)
+
+    expect(wrapper.find('hello-stub').exists()).toBe(true)
+  })
+
+  it('does not attempt to stub a dynamic component based on the name of a computed property', () => {
+    const wrapper = shallowMount(DynamicComponentWithComputedProperty)
+
+    expect(wrapper.find('computed-property-stub').exists()).toBe(false)
   })
 })

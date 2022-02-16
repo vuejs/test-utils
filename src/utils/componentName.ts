@@ -11,7 +11,8 @@ const getComponentNameInSetup = (
   type: VNodeTypes
 ): string | undefined =>
   Object.keys(instance?.setupState || {}).find(
-    (key) => instance.setupState[key] === type
+    (key) =>
+      Object.getOwnPropertyDescriptor(instance.setupState, key)?.value === type
   )
 
 export const getComponentRegisteredName = (
