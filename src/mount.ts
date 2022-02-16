@@ -510,7 +510,8 @@ export function mount(
   console.warn = () => {}
 
   const appRef = vm.$refs[MOUNT_COMPONENT_REF] as ComponentPublicInstance
-  // we add `hasOwnProperty` so jest can spy on the proxied vm without throwing
+  // we add `hasOwnProperty` so Jest can spy on the proxied vm without throwing
+  // note that this is not necessary with Jest v27+ or Vitest, but is kept for compatibility with older Jest versions
   appRef.hasOwnProperty = (property) => {
     return Reflect.has(appRef, property)
   }
