@@ -27,7 +27,7 @@
     "@vue/compiler-dom": "3.2.31",
     "@vue/compiler-sfc": "3.2.31",
     "@vue/vue3-jest": "27.0.0-alpha.4",
-    "babel-jest": "27.1.0",
+    "babel-jest": "27.5.1",
     "babel-preset-jest": "27.0.6",
     "husky": "^7.0.4",
     "jest": "27.5.1",
