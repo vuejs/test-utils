@@ -274,7 +274,7 @@ export function mount(
   options?: MountingOptions<any> & Record<string, any>
 ): VueWrapper<any> {
   // normalise the incoming component
-  let originalComponent = unwrapLegacyVueExtendComponent(inputComponent)
+  const originalComponent = unwrapLegacyVueExtendComponent(inputComponent)
   let component: ConcreteComponent
   const instanceOptions = getInstanceOptions(options ?? {})
 
@@ -291,6 +291,7 @@ export function mount(
           ? 'suppress-warning'
           : false
       },
+      props: originalComponent.props || {},
       setup:
         (_, { attrs, slots }) =>
         () =>
