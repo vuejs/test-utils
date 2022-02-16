@@ -198,24 +198,14 @@ describe('shallowMount', () => {
     )
   })
 
-  it('stubs a given component that is not returned by a computed property', () => {
+  it('stubs a given component that is also returned by a computed property', () => {
     const wrapper = shallowMount(DynamicComponentWithComputedProperty)
 
     expect(wrapper.find('hello-stub').exists()).toBe(true)
   })
 
-  it('stubs a given component that is also returned by a computed property', () => {
-    const wrapper = shallowMount(DynamicComponentWithComputedProperty, {
-      props: { isHello: true }
-    })
-
-    expect(wrapper.find('hello-stub').exists()).toBe(true)
-  })
-
   it('does not attempt to stub a dynamic component based on the name of a computed property', () => {
-    const wrapper = shallowMount(DynamicComponentWithComputedProperty, {
-      props: { isHello: true }
-    })
+    const wrapper = shallowMount(DynamicComponentWithComputedProperty)
 
     expect(wrapper.find('computed-property-stub').exists()).toBe(false)
   })
