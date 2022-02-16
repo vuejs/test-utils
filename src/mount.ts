@@ -211,11 +211,9 @@ export function mount<
   Mixin extends ComponentOptionsMixin = ComponentOptionsMixin,
   Extends extends ComponentOptionsMixin = ComponentOptionsMixin,
   EE extends string = string,
-  Props extends Readonly<{ [key in PropNames]?: any }> = Readonly<
-    {
-      [key in PropNames]?: any
-    }
-  >
+  Props extends Readonly<{ [key in PropNames]?: any }> = Readonly<{
+    [key in PropNames]?: any
+  }>
 >(
   componentOptions: ComponentOptionsWithArrayProps<
     PropNames,
