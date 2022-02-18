@@ -21,7 +21,15 @@ export class DOMWrapper<NodeType extends Node> extends BaseWrapper<NodeType> {
     return this.element.__vueParentComponent
   }
 
-  find(selector: string | RefSelector): DOMWrapper<any> {
+  find<K extends keyof HTMLElementTagNameMap>(
+    selector: K
+  ): DOMWrapper<HTMLElementTagNameMap[K]>
+  find<K extends keyof SVGElementTagNameMap>(
+    selector: K
+  ): DOMWrapper<SVGElementTagNameMap[K]>
+  find<T extends Element = Element>(selector: string): DOMWrapper<T>
+  find<T extends Node = Node>(selector: string | RefSelector): DOMWrapper<T>
+  find(selector: string | RefSelector): DOMWrapper<Node> {
     const result = super.find(selector)
     if (result.exists() && isRefSelector(selector)) {
       return this.element.contains(result.element)
