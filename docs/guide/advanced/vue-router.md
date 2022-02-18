@@ -36,7 +36,9 @@ const Component = {
 We could use a real router, then navigate to the correct route for this component, then after clicking the button assert that the correct page is rendered... however, this is a lot of setup for a relatively simple test. At it's core, the test we want to write is "if authenticated, redirect to X, otherwise redirect to Y". Let's see how we might accomplish this by mocking the routing using the `global.mocks` property:
 
 ```js
-test('allows authenticated user to edit a post', () => {
+import { mount } from '@vue/test-utils';
+
+test('allows authenticated user to edit a post', async () => {
   const mockRoute = {
     params: {
       id: 1
@@ -64,7 +66,7 @@ test('allows authenticated user to edit a post', () => {
   expect(mockRouter.push).toHaveBeenCalledWith('/posts/1/edit')
 })
 
-test('redirect an unauthenticated user to 404', () => {
+test('redirect an unauthenticated user to 404', async () => {
   const mockRoute = {
     params: {
       id: 1
