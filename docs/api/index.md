@@ -1017,11 +1017,12 @@ find<K extends keyof HTMLElementTagNameMap>(selector: K): DOMWrapper<HTMLElement
 find<K extends keyof SVGElementTagNameMap>(selector: K): DOMWrapper<SVGElementTagNameMap[K]>
 find<T extends Element>(selector: string): DOMWrapper<T>
 find(selector: string): DOMWrapper<Element>
+find<T extends Node = Node>(selector: string | RefSelector): DOMWrapper<T>;
 ```
 
 **Details:**
 
-You can use the same syntax `querySelector` implements. `find` is basically an alias for `querySelector`.
+You can use the same syntax `querySelector` implements. `find` is basically an alias for `querySelector`. In addition you can search for element refs.
 
 `Component.vue`:
 
@@ -1029,6 +1030,7 @@ You can use the same syntax `querySelector` implements. `find` is basically an a
 <template>
   <span>Span</span>
   <span data-test="span">Span</span>
+  <span ref="span">Span</span>
 </template>
 ```
 
@@ -1043,6 +1045,7 @@ test('find', () => {
 
   wrapper.find('span') //=> found; returns DOMWrapper
   wrapper.find('[data-test="span"]') //=> found; returns DOMWrapper
+  wrapper.find({ ref: 'span' }) //=> found; returns DOMWrapper
   wrapper.find('p') //=> nothing found; returns ErrorWrapper
 })
 ```
