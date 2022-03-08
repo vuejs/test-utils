@@ -83,9 +83,7 @@ test('increments by 1', async () => {
 A common example is a function that returns a `Promise`. Perhaps you mocked your `axios` HTTP client using `jest.mock`:
 
 ```js
-jest.mock('axios', () => ({
-  get: () => Promise.resolve({ data: 'some mocked data!' })
-}))
+jest.spyOn(axios, 'get').mockResolvedValue({ data: 'some mocked data!' })
 ```
 
 In this case, Vue has no knowledge of the unresolved Promise, so calling `nextTick` will not work - your assertion may run before it is resolved. For scenarios like this, Vue Test Utils exposes [`flushPromises`](../../api/#flushPromises), which causes all outstanding promises to resolve immediately.
@@ -96,9 +94,7 @@ Let's see an example:
 import { flushPromises } from '@vue/test-utils'
 import axios from 'axios'
 
-jest.mock('axios', () => ({
-  get: () => Promise.resolve({ data: 'some mocked data!' })
-}))
+jest.spyOn(axios, 'get').mockResolvedValue({ data: 'some mocked data!' })
 
 test('uses a mocked axios HTTP client and flushPromises', async () => {
   // some component that makes a HTTP called in `created` using `axios`

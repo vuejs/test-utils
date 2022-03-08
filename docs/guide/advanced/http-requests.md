@@ -58,9 +58,7 @@ const mockPostList = [
 
 // Following lines tell Jest to mock any call to `axios.get`
 // and to return `mockPostList` instead
-jest.mock('axios', () => ({
-  get: jest.fn(() => mockPostList)
-}))
+jest.spyOn(axios, 'get').mockResolvedValue(mockPostList)
 
 test('loads posts on button click', async () => {
   const wrapper = mount(PostList)
