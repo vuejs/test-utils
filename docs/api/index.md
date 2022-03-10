@@ -785,7 +785,7 @@ test('global.stubs using a custom component', () => {
 
 ### shallow
 
-Stubs out out all child components from the component.
+Stubs out all child components from the component.
 
 **Signature:**
 
