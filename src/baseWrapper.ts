@@ -41,7 +41,10 @@ export default abstract class BaseWrapper<ElementType extends Node>
     this.wrapperElement = element
   }
 
-  protected findAllDOMElements(selector: string, ignoreSelf = false): Element[] {
+  protected findAllDOMElements(
+    selector: string,
+    ignoreSelf = false
+  ): Element[] {
     const elementRootNodes = this.getRootNodes().filter(isElement)
     if (elementRootNodes.length === 0) return []
 
@@ -54,7 +57,7 @@ export default abstract class BaseWrapper<ElementType extends Node>
     })
 
     if (ignoreSelf) {
-      return result.filter(x => !x.isSameNode(this.element))
+      return result.filter((x) => !x.isSameNode(this.element))
     }
 
     return result
