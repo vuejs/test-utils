@@ -91,5 +91,11 @@
         "dom"
       ]
     }
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/vuejs/test-utils.git"
+  },
+  "homepage": "https://github.com/vuejs/test-utils"
+
 }
