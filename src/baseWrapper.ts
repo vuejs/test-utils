@@ -103,7 +103,9 @@ export default abstract class BaseWrapper<ElementType extends Node>
   ): DOMWrapper<SVGElementTagNameMap[K]>[]
   findAll<T extends Element>(selector: string): DOMWrapper<T>[]
   findAll(selector: string): DOMWrapper<Element>[] {
-    return this.findAllDOMElements(selector, true).map(createDOMWrapper)
+    const isRootNodeOfTemplate = this.getRootNodes()?.[0] === this.element
+    const ignoreSelf = !isRootNodeOfTemplate || !Reflect.get(this, 'vm')
+    return this.findAllDOMElements(selector, ignoreSelf).map(createDOMWrapper)
   }
 
   // searching by string without specifying component results in WrapperLike object

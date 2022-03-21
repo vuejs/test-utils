@@ -357,4 +357,19 @@ describe('findAll', () => {
 
     expect(parent.findAll('div').length).toBe(3)
   })
+
+  // https://github.com/vuejs/test-utils/issues/1233
+  it('finds all divs with findAll', () => {
+    const wrapper = mount({
+      template: `
+        <div class="parent">
+          <div />
+          <div />
+          <div />
+        </div>
+      `
+    })
+
+    expect(wrapper.findAll('div').length).toBe(4)
+  })
 })
