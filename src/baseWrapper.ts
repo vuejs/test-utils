@@ -41,7 +41,7 @@ export default abstract class BaseWrapper<ElementType extends Node>
     this.wrapperElement = element
   }
 
-  protected findAllDOMElements(selector: string): Element[] {
+  protected findAllDOMElements(selector: string, ignoreSelf = false): Element[] {
     const elementRootNodes = this.getRootNodes().filter(isElement)
     if (elementRootNodes.length === 0) return []
 
@@ -52,6 +52,10 @@ export default abstract class BaseWrapper<ElementType extends Node>
     elementRootNodes.forEach((rootNode) => {
       result.push(...Array.from(rootNode.querySelectorAll(selector)))
     })
+
+    if (ignoreSelf) {
+      return result.filter(x => !x.isSameNode(this.element))
+    }
 
     return result
   }
@@ -96,7 +100,7 @@ export default abstract class BaseWrapper<ElementType extends Node>
   ): DOMWrapper<SVGElementTagNameMap[K]>[]
   findAll<T extends Element>(selector: string): DOMWrapper<T>[]
   findAll(selector: string): DOMWrapper<Element>[] {
-    return this.findAllDOMElements(selector).map(createDOMWrapper)
+    return this.findAllDOMElements(selector, true).map(createDOMWrapper)
   }
 
   // searching by string without specifying component results in WrapperLike object

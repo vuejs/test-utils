@@ -2,6 +2,7 @@ import { defineComponent, h, nextTick, Fragment } from 'vue'
 
 import { mount, VueWrapper } from '../src'
 import SuspenseComponent from './components/Suspense.vue'
+import ParentComponent from './components/ParentComponent.vue'
 import MultipleRootRender from './components/MultipleRootRender.vue'
 
 describe('find', () => {
@@ -346,5 +347,14 @@ describe('findAll', () => {
       const wrapper = mount(MultipleRootRender)
       expect(wrapper.findAll('a')).toHaveLength(3)
     })
+  })
+
+  // https://github.com/vuejs/test-utils/issues/1233
+  it('finds 3 children', () => {
+    const wrapper = mount(ParentComponent)
+
+    const parent = wrapper.get('.parent')
+
+    expect(parent.findAll('div').length).toBe(3)
   })
 })
