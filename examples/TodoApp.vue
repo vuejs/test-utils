@@ -1,16 +1,16 @@
 <template>
   <div>
-    <div 
-      v-for="todo in todos" 
-      :key="todo.id" 
+    <div
+      v-for="todo in todos"
+      :key="todo.id"
       data-test="todo"
-      :class="[ todo.completed ? 'completed' : '' ]"  
+      :class="[todo.completed ? 'completed' : '']"
     >
       {{ todo.text }}
-      <input 
-        type="checkbox" 
-        v-model="todo.completed" 
-        data-test="todo-checkbox" 
+      <input
+        type="checkbox"
+        v-model="todo.completed"
+        data-test="todo-checkbox"
       />
     </div>
 
@@ -20,8 +20,10 @@
   </div>
 </template>
 
-<script>
-export default {
+<script lang="ts">
+import { defineComponent } from 'vue'
+
+export default defineComponent({
   name: 'TodoApp',
 
   data() {
@@ -46,5 +48,5 @@ export default {
       })
     }
   }
-}
+})
 </script>

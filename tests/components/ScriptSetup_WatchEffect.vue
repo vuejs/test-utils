@@ -8,7 +8,7 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref, watchEffect, inject } from 'vue'
 
 const type = inject('someType')

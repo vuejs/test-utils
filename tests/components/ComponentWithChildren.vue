@@ -8,14 +8,15 @@
   </div>
 </template>
 
-<script>
-import Hello from './Hello'
-import ComponentWithInput from './ComponentWithInput'
-import ComponentWithoutName from './ComponentWithoutName'
-import ScriptSetup from './ScriptSetup'
-import WithProps from './WithProps'
+<script lang="ts">
+import { defineComponent } from 'vue'
+import Hello from './Hello.vue'
+import ComponentWithInput from './ComponentWithInput.vue'
+import ComponentWithoutName from './ComponentWithoutName.vue'
+import ScriptSetup from './ScriptSetup.vue'
+import WithProps from './WithProps.vue'
 
-export default {
+export default defineComponent({
   name: 'ComponentWithChildren',
   components: {
     Hello,
@@ -27,5 +28,5 @@ export default {
   data() {
     return {}
   }
-}
+})
 </script>
