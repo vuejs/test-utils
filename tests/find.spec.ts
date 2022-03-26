@@ -1,7 +1,7 @@
 import { defineComponent, h, nextTick, Fragment } from 'vue'
-
 import { mount, VueWrapper } from '../src'
 import SuspenseComponent from './components/Suspense.vue'
+import ParentComponent from './components/ParentComponent.vue'
 import MultipleRootRender from './components/MultipleRootRender.vue'
 
 describe('find', () => {
@@ -91,18 +91,6 @@ describe('find', () => {
 
     const wrapper = mount(Component)
     expect(wrapper.find('.foo').exists()).toBe(true)
-  })
-
-  it('returns the root element from dom wrapper if it matches', () => {
-    const Component = defineComponent({
-      render() {
-        return h('div', { class: 'foo' }, 'text')
-      }
-    })
-
-    const wrapper = mount(Component)
-    const domWrapper = wrapper.find('.foo')
-    expect(domWrapper.find('.foo').exists()).toBe(true)
   })
 
   it('can be chained', () => {
@@ -346,5 +334,37 @@ describe('findAll', () => {
       const wrapper = mount(MultipleRootRender)
       expect(wrapper.findAll('a')).toHaveLength(3)
     })
+  })
+
+  // https://github.com/vuejs/test-utils/issues/1233
+  it('finds 3 children', () => {
+    const wrapper = mount(ParentComponent)
+
+    const parent = wrapper.get('.parent')
+
+    expect(parent.findAll('div').length).toBe(3)
+  })
+
+  it('finds itself on Vue wrapper', () => {
+    const wrapper = mount(ParentComponent)
+
+    const parent = wrapper.get('div')
+
+    expect(parent.classes()).toContain('parent')
+  })
+
+  it('does not find itself on DOM node', () => {
+    const wrapper = mount(ParentComponent)
+
+    const parent = wrapper.get('.parent')
+
+    expect(parent.find('div').classes()).toContain('first')
+  })
+
+  // https://github.com/vuejs/test-utils/issues/1233
+  it('finds all divs with findAll', () => {
+    const wrapper = mount(ParentComponent)
+
+    expect(wrapper.findAll('div').length).toBe(4)
   })
 })

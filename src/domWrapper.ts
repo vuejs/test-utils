@@ -1,7 +1,11 @@
 import { config } from './config'
 import BaseWrapper from './baseWrapper'
 import WrapperLike from './interfaces/wrapperLike'
-import { registerFactory, WrapperType } from './wrapperFactory'
+import {
+  createDOMWrapper,
+  registerFactory,
+  WrapperType
+} from './wrapperFactory'
 import { RefSelector } from './types'
 import { isRefSelector } from './utils'
 import { createWrapperError } from './errorWrapper'
@@ -38,6 +42,23 @@ export class DOMWrapper<NodeType extends Node> extends BaseWrapper<NodeType> {
     }
 
     return result
+  }
+
+  findAll<K extends keyof HTMLElementTagNameMap>(
+    selector: K
+  ): DOMWrapper<HTMLElementTagNameMap[K]>[]
+  findAll<K extends keyof SVGElementTagNameMap>(
+    selector: K
+  ): DOMWrapper<SVGElementTagNameMap[K]>[]
+  findAll<T extends Element>(selector: string): DOMWrapper<T>[]
+  findAll(selector: string): DOMWrapper<Element>[] {
+    if (!(this.wrapperElement instanceof Element)) {
+      return []
+    }
+    return Array.from(
+      this.wrapperElement.querySelectorAll(selector),
+      createDOMWrapper
+    )
   }
 
   findAllComponents(selector: any): any {
