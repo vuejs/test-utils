@@ -80,24 +80,22 @@ export default abstract class BaseWrapper<ElementType extends Node>
       }
     }
 
-    const elements = this.findAllDOMElements(selector)
+    const elements = this.findAll(selector)
     if (elements.length > 0) {
-      return createDOMWrapper(elements[0])
+      return elements[0]
     }
 
     return createWrapperError('DOMWrapper')
   }
 
-  findAll<K extends keyof HTMLElementTagNameMap>(
+  abstract findAll<K extends keyof HTMLElementTagNameMap>(
     selector: K
   ): DOMWrapper<HTMLElementTagNameMap[K]>[]
-  findAll<K extends keyof SVGElementTagNameMap>(
+  abstract findAll<K extends keyof SVGElementTagNameMap>(
     selector: K
   ): DOMWrapper<SVGElementTagNameMap[K]>[]
-  findAll<T extends Element>(selector: string): DOMWrapper<T>[]
-  findAll(selector: string): DOMWrapper<Element>[] {
-    return this.findAllDOMElements(selector).map(createDOMWrapper)
-  }
+  abstract findAll<T extends Element>(selector: string): DOMWrapper<T>[]
+  abstract findAll(selector: string): DOMWrapper<Element>[]
 
   // searching by string without specifying component results in WrapperLike object
   findComponent<T extends never>(selector: string): WrapperLike

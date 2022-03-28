@@ -15,6 +15,7 @@ import { mergeDeep } from './utils'
 import { getRootNodes } from './utils/getRootNodes'
 import { emitted, recordEvent } from './emit'
 import BaseWrapper from './baseWrapper'
+import type { DOMWrapper } from './domWrapper'
 import {
   createDOMWrapper,
   registerFactory,
@@ -79,6 +80,17 @@ export class VueWrapper<
 
   getCurrentComponent() {
     return this.vm.$
+  }
+
+  findAll<K extends keyof HTMLElementTagNameMap>(
+    selector: K
+  ): DOMWrapper<HTMLElementTagNameMap[K]>[]
+  findAll<K extends keyof SVGElementTagNameMap>(
+    selector: K
+  ): DOMWrapper<SVGElementTagNameMap[K]>[]
+  findAll<T extends Element>(selector: string): DOMWrapper<T>[]
+  findAll(selector: string): DOMWrapper<Element>[] {
+    return this.findAllDOMElements(selector).map(createDOMWrapper)
   }
 
   private attachNativeEventListener(): void {
