@@ -21,7 +21,7 @@ if (__USE_BUILD__) {
 
 class TestPlugin {
   static install (app) {
-    app.component('foo-bar', defineComponent({
+    app.component('foo-bar-plugin-component', defineComponent({
       render() {
         return h('div', 'Foo Bar')
       }
