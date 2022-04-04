@@ -3,11 +3,13 @@ import { isNotNullOrUndefined } from '../utils'
 import { VNode, VNodeArrayChildren } from 'vue'
 
 export function getRootNodes(vnode: VNode): Node[] {
-  if (vnode.shapeFlag & (ShapeFlags.ELEMENT | ShapeFlags.SUSPENSE)) {
+  if (vnode.shapeFlag & ShapeFlags.ELEMENT) {
     return [vnode.el as Node]
   } else if (vnode.shapeFlag & ShapeFlags.COMPONENT) {
     const { subTree } = vnode.component!
     return getRootNodes(subTree)
+  } else if (vnode.shapeFlag & ShapeFlags.SUSPENSE) {
+    return getRootNodes(vnode.suspense!.activeBranch!)
   } else if (
     vnode.shapeFlag &
     (ShapeFlags.TEXT_CHILDREN | ShapeFlags.TELEPORT)

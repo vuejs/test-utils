@@ -1,5 +1,6 @@
 import SuspenseComponent from '../components/Suspense.vue'
 import { mount, flushPromises } from '../../src'
+import { defineComponent } from 'vue'
 
 let mockShouldError = false
 jest.mock('../utils', () => ({
@@ -31,5 +32,31 @@ describe('suspense', () => {
     await flushPromises()
 
     expect(wrapper.html()).toContain('Error!')
+  })
+
+  test('returns the element if it is a multi root element inside Suspense', () => {
+    const Async = defineComponent({
+      template: '<h1>Hello</h1><span id="my-span">There</span>'
+    })
+    const Component = defineComponent({
+      components: { Async },
+      template: '<Suspense><Async/></Suspense>'
+    })
+
+    const wrapper = mount(Component)
+    expect(wrapper.get('#my-span')).not.toBeNull()
+  })
+
+  test('returns the element if it is a root element inside Suspense', () => {
+    const Async = defineComponent({
+      template: '<div><h1>Hello</h1><span id="my-span">There</span></div>'
+    })
+    const Component = defineComponent({
+      components: { Async },
+      template: '<Suspense><Async/></Suspense>'
+    })
+
+    const wrapper = mount(Component)
+    expect(wrapper.get('#my-span')).not.toBeNull()
   })
 })
