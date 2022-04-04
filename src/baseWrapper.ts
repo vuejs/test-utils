@@ -197,8 +197,8 @@ export default abstract class BaseWrapper<ElementType extends Node>
   }
 
   attributes(): { [key: string]: string }
-  attributes(key: string): string
-  attributes(key?: string): { [key: string]: string } | string {
+  attributes(key: string): string | undefined
+  attributes(key?: string): { [key: string]: string } | string | undefined {
     const attributeMap: Record<string, string> = {}
     if (isElement(this.element)) {
       const attributes = Array.from(this.element.attributes)

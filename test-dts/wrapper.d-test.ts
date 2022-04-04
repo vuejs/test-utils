@@ -64,7 +64,8 @@ expectType<Element | undefined>(byClassArray[0].element)
 // emitted
 // event name
 let incrementEvent = wrapper.emitted<{ count: number }>('increment')
-expectType<{ count: number }>(incrementEvent[0])
+expectType<{ count: number }[] | undefined>(incrementEvent)
+expectType<{ count: number }>(incrementEvent![0])
 
 // without event name
 let allEvents = wrapper.emitted()
@@ -98,9 +99,9 @@ expectType<Element>(byClass.element)
 
 // attributes
 expectType<{ [key: string]: string }>(wrapper.attributes())
-expectType<string>(wrapper.attributes('key'))
+expectType<string | undefined>(wrapper.attributes('key'))
 expectType<{ [key: string]: string }>(domWrapper.attributes())
-expectType<string>(domWrapper.attributes('key'))
+expectType<string | undefined>(domWrapper.attributes('key'))
 
 // classes
 expectType<Array<string>>(wrapper.classes())
