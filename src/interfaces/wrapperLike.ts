@@ -99,8 +99,8 @@ export default interface WrapperLike {
   classes(className?: string): string[] | boolean
 
   attributes(): { [key: string]: string }
-  attributes(key: string): string
-  attributes(key?: string): { [key: string]: string } | string
+  attributes(key: string): string | undefined
+  attributes(key?: string): { [key: string]: string } | string | undefined
 
   text(): string
   exists(): boolean
