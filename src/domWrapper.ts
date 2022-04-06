@@ -66,7 +66,7 @@ export class DOMWrapper<NodeType extends Node> extends BaseWrapper<NodeType> {
     return results.filter((r: WrapperLike) => this.element.contains(r.element))
   }
 
-  private async setChecked(checked: boolean = true) {
+  private async setChecked(checked = true) {
     // typecast so we get type safety
     const element = this.element as unknown as HTMLInputElement
     const type = this.attributes().type
