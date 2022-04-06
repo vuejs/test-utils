@@ -1,5 +1,5 @@
-import { DomEventNameWithModifier } from 'src/constants/dom-events'
-import { TriggerOptions } from 'src/createDomEvent'
+import { DomEventNameWithModifier } from '../constants/dom-events'
+import { TriggerOptions } from '../createDomEvent'
 import {
   DefinedComponent,
   FindAllComponentsSelector,
