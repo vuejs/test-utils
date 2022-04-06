@@ -1945,3 +1945,32 @@ test('config.global mocks and stubs', () => {
 ::: tip
 Remember that this behavior is global, not on a mount by mount basis. You might need to enable/disable it before and after each test.
 :::
+
+## components
+
+### RouterLinkStub
+
+A component to stub the Vue Router `router-link` component when you don't want to mock or include a full router.
+
+You can use this component to find a `router-link` component in the render tree.
+
+**Usage:**
+
+Set as a stub in the mounting options:
+```js
+import { mount, RouterLinkStub } from '@vue/test-utils'
+
+const wrapper = mount(Component, {
+  global: {
+    stubs: {
+      RouterLink: RouterLinkStub,
+    },
+  },
+})
+
+expect(wrapper.findComponent(RouterLinkStub).props().to).toBe('/some/path')
+```
+
+**Usage with slot:**
+
+The `RouterLinkStub` component supports slot content and will return very basic values for its slot props. If you need more specific slot prop values for your tests, consider using a [real router](../guide/advanced/vue-router.html#using-a-real-router) so you can use a real `router-link` component. Alternatively, you can define your own `RouterLinkStub` component by copying the implementation from the test-utils package.
