@@ -26,10 +26,6 @@ function mergeAppConfig(
     globalProperties: {
       ...configGlobalConfig?.globalProperties,
       ...mountGlobalConfig?.globalProperties
-    },
-    compilerOptions: {
-      ...configGlobalConfig?.compilerOptions,
-      ...mountGlobalConfig?.compilerOptions
     }
   }
 }
