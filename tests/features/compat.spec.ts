@@ -3,13 +3,9 @@ import { mount } from '../../src'
 
 jest.mock('vue', () => mockVue)
 
-const { configureCompat, extend, defineComponent, h, config } = mockVue as any
+const { configureCompat, extend, defineComponent, h } = mockVue as any
 
 describe('@vue/compat build', () => {
-  beforeAll(() => {
-    config.compilerOptions.whitespace = 'condense'
-  })
-
   describe.each(['suppress-warning', false])(
     'when RENDER_FUNCTION compat is %p',
     (RENDER_FUNCTION) => {
