@@ -22,6 +22,8 @@
     "@types/jest": "27.4.1",
     "@types/node": "17.0.23",
     "@types/pretty": "^2.0.1",
+    "@typescript-eslint/eslint-plugin": "^5.18.0",
+    "@typescript-eslint/parser": "^5.18.0",
     "@vue/babel-plugin-jsx": "^1.1.1",
     "@vue/compat": "3.2.31",
     "@vue/compiler-dom": "3.2.31",
@@ -29,6 +31,9 @@
     "@vue/vue3-jest": "27.0.0-alpha.4",
     "babel-jest": "27.5.1",
     "babel-preset-jest": "27.5.1",
+    "eslint": "^8.12.0",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-plugin-prettier": "^4.0.0",
     "husky": "^7.0.4",
     "jest": "27.5.1",
     "jsdom": "^19.0.0",
@@ -62,8 +67,8 @@
     "test:build": "yarn jest --runInBand tests/ -use-build",
     "tsd": "tsc -p test-dts/tsconfig.tsd.json",
     "build": "yarn rollup -c rollup.config.js",
-    "lint": "prettier -c \"(src|tests)/**/*.(ts?(x)|vue)\"",
-    "lint:fix": "yarn lint --write",
+    "lint": "eslint --ext .ts src/ tests/",
+    "lint:fix": "yarn lint --fix",
     "docs:dev": "vitepress dev docs",
     "docs:build": "vitepress build docs",
     "vue-tsc": "vue-tsc --noEmit -p tsconfig.volar.json",
@@ -76,7 +81,7 @@
   },
   "lint-staged": {
     "*.ts": [
-      "prettier --parser=typescript --write"
+      "eslint --fix"
     ],
     "*.md": [
       "prettier --write"
@@ -97,5 +102,4 @@
     "url": "git+https://github.com/vuejs/test-utils.git"
   },
   "homepage": "https://github.com/vuejs/test-utils"
-
 }

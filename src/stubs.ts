@@ -141,8 +141,8 @@ function createStubOnceForType(
 
 export function stubComponents(
   stubs: Stubs = {},
-  shallow: boolean = false,
-  renderStubDefaultSlot: boolean = false
+  shallow = false,
+  renderStubDefaultSlot = false
 ) {
   const createdStubsMap: WeakMap<{} & VNodeTypes, ConcreteComponent> =
     new WeakMap()

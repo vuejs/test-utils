@@ -50,7 +50,7 @@ describe('class component', () => {
   })
 
   it('methods', () => {
-    let msg: string = ''
+    let msg = ''
 
     class MyComp extends Vue {
       hello() {
