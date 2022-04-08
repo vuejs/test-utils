@@ -2,6 +2,7 @@ import {
   transformVNodeArgs,
   Transition,
   TransitionGroup,
+  BaseTransition,
   Teleport,
   h,
   defineComponent,
@@ -13,7 +14,7 @@ import {
 import { hyphenate } from './utils/vueShared'
 import { matchName } from './utils/matchName'
 import { isComponent, isFunctionalComponent } from './utils'
-import { ComponentInternalInstance, BaseTransition } from '@vue/runtime-core'
+import { ComponentInternalInstance } from '@vue/runtime-core'
 import { unwrapLegacyVueExtendComponent } from './utils/vueCompatSupport'
 import { Stub, Stubs } from './types'
 import {
