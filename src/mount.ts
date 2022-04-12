@@ -397,7 +397,6 @@ export function mount(
       return h(component, props, slots)
     }
   })
-  addToDoNotStubComponents(Parent)
 
   const setProps = (newProps: Record<string, unknown>) => {
     for (const [k, v] of Object.entries(newProps)) {
@@ -409,6 +408,11 @@ export function mount(
 
   // create the app
   const app = createApp(Parent)
+  // the Parent type must not be stubbed
+  // but we can't add it directly, as createApp creates a copy
+  // and store it in app._component (since v3.2.32)
+  // So we store this one instead
+  addToDoNotStubComponents(app._component)
 
   // add tracking for emitted events
   // this must be done after `createApp`: https://github.com/vuejs/test-utils/issues/436
@@ -503,7 +507,7 @@ export function mount(
   // mount the app!
   const vm = app.mount(el)
 
-  // Ingore Avoid app logic that relies on enumerating keys on a component instance... warning
+  // Ignore "Avoid app logic that relies on enumerating keys on a component instance..." warning
   const warnSave = console.warn
   console.warn = () => {}
 
