@@ -26,7 +26,7 @@
     "@typescript-eslint/parser": "^5.19.0",
     "@vue/babel-plugin-jsx": "^1.1.1",
     "@vue/compat": "3.2.31",
-    "@vue/compiler-dom": "3.2.31",
+    "@vue/compiler-dom": "3.2.32",
     "@vue/compiler-sfc": "3.2.31",
     "@vue/vue3-jest": "27.0.0-alpha.4",
     "babel-jest": "27.5.1",
