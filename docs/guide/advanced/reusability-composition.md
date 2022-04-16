@@ -44,7 +44,7 @@ export function useUser(userId) {
   const user = ref()
   
   function fetchUser(id) {
-    fetch(`users/${id}`)
+    axios.get(`users/${id}`)
       .then(response => (user.value = response.data))
   }
 
@@ -58,6 +58,9 @@ To test this composable, you can create a simple `TestComponent` within the test
 composable the exact same way how the real components would use it.
 
 ```typescript
+// Mock API request
+jest.spyOn(axios, 'get').mockResolvedValue({ data: { id: 1, name: 'User' } })
+
 test('fetch user on mount', async () => {
   const TestComponent = defineComponent({
     props: {
