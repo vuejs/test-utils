@@ -2,7 +2,7 @@ import { mount, shallowMount } from '../src'
 import WithProps from './components/WithProps.vue'
 import PropWithSymbol from './components/PropWithSymbol.vue'
 import Hello from './components/Hello.vue'
-import { defineComponent, h } from 'vue'
+import { defineComponent, h, isRef, ref } from 'vue'
 import Title from './components/FunctionComponent'
 
 describe('props', () => {
@@ -155,6 +155,31 @@ describe('props', () => {
     expect(barCmp2.props()).toEqual({ foo: 'foo2 value' })
     expect(wrapper.find('#foo1').attributes().foo).toBe('new value')
     expect(wrapper.find('#foo2').attributes().foo).toBe('foo2 value')
+  })
+
+  it('should forward ref as raw prop', () => {
+    const TestComponent = defineComponent({
+      props: {
+        refProp: {
+          type: [Object],
+          required: true
+        }
+      },
+      setup(props) {
+        return () =>
+          h('div', [
+            h('h1', isRef(props.refProp) ? 'is ref' : 'is not ref'),
+            h('span', props.refProp.value)
+          ])
+      }
+    })
+
+    const refProp = ref('Some value')
+    const wrapper = mount(TestComponent, {
+      props: { refProp }
+    })
+    expect(wrapper.find('h1').text()).toBe('is ref')
+    expect(wrapper.find('span').text()).toBe('Some value')
   })
 
   it('returns reactive props on a stubbed component shallow case', async () => {

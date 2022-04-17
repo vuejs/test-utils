@@ -2,7 +2,7 @@ import {
   h,
   createApp,
   defineComponent,
-  reactive,
+  shallowReactive,
   FunctionalComponent,
   ComponentPublicInstance,
   ComponentOptionsWithObjectProps,
@@ -379,7 +379,7 @@ export function mount(
   const MOUNT_COMPONENT_REF = 'VTU_COMPONENT'
   // we define props as reactive so that way when we update them with `setProps`
   // Vue's reactivity system will cause a rerender.
-  const props = reactive({
+  const props = shallowReactive({
     ...options?.attrs,
     ...options?.propsData,
     ...options?.props,
