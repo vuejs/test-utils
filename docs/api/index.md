@@ -1096,8 +1096,12 @@ Finds a Vue Component instance and returns a `VueWrapper` if found. Returns `Err
 **Signature:**
 
 ```ts
-findComponent<T extends ComponentPublicInstance>(selector: new () => T): VueWrapper<T>
-findComponent<T extends ComponentPublicInstance>(selector: FindComponentSelector): VueWrapper<T>
+findComponent<T extends never>(selector: string): WrapperLike
+findComponent<T extends DefinedComponent>(selector: T | Exclude<FindComponentSelector, FunctionalComponent>): VueWrapper<InstanceType<T>>
+findComponent<T extends FunctionalComponent>(selector: T | string): DOMWrapper<Element>
+findComponent<T extends never>(selector: NameSelector | RefSelector): VueWrapper
+findComponent<T extends ComponentPublicInstance>(selector: T | FindComponentSelector): VueWrapper<T>
+findComponent(selector: FindComponentSelector): WrapperLike
 ```
 
 **Details:**
@@ -1194,12 +1198,29 @@ expect(childByCss.vm.$options.name).toBe('Root') // => still Root
 The reason for such behavior is that `RootComponent` and `ChildComponent` are sharing same DOM node and only first matching component is included for each unique DOM node
 :::
 
+:::info WrapperLike type when using CSS selector
+When using `wrapper.findComponent('.foo')` for example then VTU will return the `WrapperLike` type. This is because functional components
+would need a `DOMWrapper` otherwise a `VueWrapper`. You can force to return a `VueWrapper` by providing the correct component type:
+
+```typescript
+wrapper.findComponent('.foo') // returns WrapperLike
+wrapper.findComponent<typeof FooComponent>('.foo') // returns VueWrapper
+wrapper.findComponent<DefineComponent>('.foo') // returns VueWrapper
+```
+:::
+
 ### findAllComponents
 
 **Signature:**
 
 ```ts
-findAllComponents(selector: { name: string } | string): VueWrapper<T>[]
+findAllComponents<T extends never>(selector: string): WrapperLike[]
+findAllComponents<T extends DefinedComponent>(selector: T | Exclude<FindAllComponentsSelector, FunctionalComponent>): VueWrapper<InstanceType<T>>[]
+findAllComponents<T extends FunctionalComponent>(selector: string): DOMWrapper<Element>[]
+findAllComponents<T extends FunctionalComponent>(selector: T): DOMWrapper<Node>[]
+findAllComponents<T extends never>(selector: NameSelector): VueWrapper[]
+findAllComponents<T extends ComponentPublicInstance>(selector: T | FindAllComponentsSelector): VueWrapper<T>[]
+findAllComponents(selector: FindAllComponentsSelector): WrapperLike[]
 ```
 
 **Details:**
