@@ -358,6 +358,29 @@ describe('findComponent', () => {
     expect(compB[0].vm.$el.querySelector('.content').textContent).toBe('1')
   })
 
+  it('finds single by ref in v-for', () => {
+    const ChildComp = {
+      props: {
+        value: Number
+      },
+      template: '<span>{{value}}</span>'
+    }
+
+    const wrapper = mount({
+      components: { ChildComp },
+      template: `
+        <div>
+          <div v-for="value in 3" :key="value">
+            <ChildComp ref="child" :value="value" />
+          </div>
+        </div>
+      `
+    })
+    const child = wrapper.findComponent({ ref: 'child' })
+    expect(child.exists()).toBe(true)
+    expect(child.props('value')).toBe(1)
+  })
+
   // https://github.com/vuejs/test-utils/pull/188
   const slotComponent = defineComponent({
     name: 'slotA',

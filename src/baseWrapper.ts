@@ -125,7 +125,13 @@ export default abstract class BaseWrapper<ElementType extends Node>
     }
 
     if (typeof selector === 'object' && 'ref' in selector) {
-      const result = currentComponent.refs[selector.ref]
+      let result = currentComponent.refs[selector.ref]
+
+      // When using ref inside v-for, then refs contains array of component instances
+      if (Array.isArray(result)) {
+        result = result.length ? result[0] : undefined
+      }
+
       if (result && !(result instanceof HTMLElement)) {
         return createVueWrapper(null, result as ComponentPublicInstance)
       } else {
