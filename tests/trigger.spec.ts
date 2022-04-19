@@ -345,4 +345,22 @@ describe('trigger', () => {
       expect(clickHandler).not.toHaveBeenCalled()
     })
   })
+
+  it('dispatches event', async () => {
+    const Comp = defineComponent({
+      template: `
+        <input
+          @keyup.enter="$emit('enter')"
+          @keyup.esc="$emit('esc')"
+          @click="$emit('click')"
+        >
+      `
+    })
+
+    const wrapper = mount(Comp)
+
+    await wrapper.find('input').trigger('keyup.enter')
+
+    expect(wrapper.emitted().enter).toHaveLength(1)
+  })
 })
