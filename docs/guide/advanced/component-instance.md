@@ -72,6 +72,17 @@ A more thorough way to test this would be asserting against the rendered content
 Note: if you are using a `<script setup>` component, `vm` will not be available. That's because `<script setup>` components are [closed by default](https://github.com/vuejs/rfcs/blob/master/active-rfcs/0040-script-setup.md#exposing-components-public-interface). For these components, and in general, consider avoiding `vm` and asserting against the rendered markup.
 :::
 
+:::warning WrapperLike type when using CSS selector
+When using `wrapper.findComponent('.foo')` for example then VTU will return the `WrapperLike` type. This is because functional components
+would need a `DOMWrapper` otherwise a `VueWrapper`. You can force to return a `VueWrapper` by providing the correct component type:
+
+```typescript
+wrapper.findComponent('.foo') // returns WrapperLike
+wrapper.findComponent<typeof FooComponent>('.foo') // returns VueWrapper
+wrapper.findComponent<DefineComponent>('.foo') // returns VueWrapper
+```
+:::
+
 ## Conclusion
 
 - use `vm` to access the internal Vue instance
