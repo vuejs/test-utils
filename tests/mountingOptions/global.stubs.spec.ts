@@ -392,87 +392,149 @@ describe('mounting options: stubs', () => {
     )
   })
 
-  it('stubs transition by default', () => {
-    const Comp = {
-      template: `<transition><div id="content" /></transition>`
-    }
-    const wrapper = mount(Comp)
-
-    expect(wrapper.html()).toBe(
-      '<transition-stub>\n' +
-        '  <div id="content"></div>\n' +
-        '</transition-stub>'
-    )
-  })
-
-  it('opts out of stubbing transition by default', () => {
-    const Comp = {
-      template: `<transition><div id="content" /></transition>`
-    }
-    const wrapper = mount(Comp, {
-      global: {
-        stubs: {
-          transition: false
-        }
+  describe('transition', () => {
+    it('stubs transition by default', () => {
+      const Comp = {
+        template: `<transition><div id="content" /></transition>`
       }
+      const wrapper = mount(Comp)
+
+      expect(wrapper.html()).toBe(
+        '<transition-stub>\n' +
+          '  <div id="content"></div>\n' +
+          '</transition-stub>'
+      )
     })
 
-    // Vue removes <transition> at run-time and does it's magic, so <transition> should not
-    // appear in the html when it isn't stubbed.
-    expect(wrapper.html()).toBe('<div id="content"></div>')
-  })
-
-  it('opts out of stubbing transition-group by default', () => {
-    const Comp = {
-      template: `<transition-group><div key="content" id="content" /></transition-group>`
-    }
-    const wrapper = mount(Comp, {
-      global: {
-        stubs: {
-          'transition-group': false
-        }
+    it('opts out of stubbing transition by default', () => {
+      const Comp = {
+        template: `<transition><div id="content" /></transition>`
       }
+      const wrapper = mount(Comp, {
+        global: {
+          stubs: {
+            transition: false
+          }
+        }
+      })
+
+      // Vue removes <transition> at run-time and does it's magic, so <transition> should not
+      // appear in the html when it isn't stubbed.
+      expect(wrapper.html()).toBe('<div id="content"></div>')
     })
 
-    // Vue removes <transition-group> at run-time and does it's magic, so <transition-group> should not
-    // appear in the html when it isn't stubbed.
-    expect(wrapper.html()).toBe('<div id="content"></div>')
-  })
-
-  it('stubs transition-group by default', () => {
-    const Comp = {
-      template: `<transition-group><div key="a" id="content" /></transition-group>`
-    }
-    const wrapper = mount(Comp)
-    expect(wrapper.find('#content').exists()).toBe(true)
-  })
-
-  it('does not stub teleport by default', () => {
-    const Comp = {
-      template: `<teleport to="body"><div id="content" /></teleport>`
-    }
-    const wrapper = mount(Comp)
-
-    expect(wrapper.html()).toBe(
-      '<!--teleport start-->\n' + '<!--teleport end-->'
-    )
-  })
-
-  it('opts in to stubbing teleport ', () => {
-    const Comp = {
-      template: `<teleport to="body"><div id="content" /></teleport>`
-    }
-    const wrapper = mount(Comp, {
-      global: {
-        stubs: {
-          teleport: true
-        }
+    it('does not stub transition on shallow with false', () => {
+      const Comp = {
+        template: `<transition><div id="content" /></transition>`
       }
+      const wrapper = mount(Comp, {
+        shallow: true,
+        global: {
+          stubs: {
+            transition: false
+          }
+        }
+      })
+
+      // Vue removes <transition> at run-time and does it's magic, so <transition> should not
+      // appear in the html when it isn't stubbed.
+      expect(wrapper.html()).toBe('<div id="content"></div>')
+    })
+  })
+
+  describe('transition-group', () => {
+    it('stubs transition-group by default', () => {
+      const Comp = {
+        template: `<transition-group><div key="a" id="content" /></transition-group>`
+      }
+      const wrapper = mount(Comp)
+      expect(wrapper.find('#content').exists()).toBe(true)
     })
 
-    expect(wrapper.html()).toBe(
-      '<teleport-stub>\n' + '  <div id="content"></div>\n' + '</teleport-stub>'
-    )
+    it('opts out of stubbing transition-group by default', () => {
+      const Comp = {
+        template: `<transition-group><div key="content" id="content" /></transition-group>`
+      }
+      const wrapper = mount(Comp, {
+        global: {
+          stubs: {
+            'transition-group': false
+          }
+        }
+      })
+
+      // Vue removes <transition-group> at run-time and does it's magic, so <transition-group> should not
+      // appear in the html when it isn't stubbed.
+      expect(wrapper.html()).toBe('<div id="content"></div>')
+    })
+
+    it('does not stub transition-group on shallow with false', () => {
+      const Comp = {
+        template: `<transition-group><div key="content" id="content" /></transition-group>`
+      }
+      const wrapper = mount(Comp, {
+        shallow: true,
+        global: {
+          stubs: {
+            'transition-group': false
+          }
+        }
+      })
+
+      // Vue removes <transition-group> at run-time and does it's magic, so <transition-group> should not
+      // appear in the html when it isn't stubbed.
+      expect(wrapper.html()).toBe('<div id="content"></div>')
+    })
+  })
+
+  describe('teleport', () => {
+    it('does not stub teleport by default', () => {
+      const Comp = {
+        template: `<teleport to="body"><div id="content" /></teleport>`
+      }
+      const wrapper = mount(Comp)
+
+      expect(wrapper.html()).toBe(
+        '<!--teleport start-->\n' + '<!--teleport end-->'
+      )
+    })
+
+    it('opts in to stubbing teleport ', () => {
+      const Comp = {
+        template: `<teleport to="body"><div id="content" /></teleport>`
+      }
+      const wrapper = mount(Comp, {
+        global: {
+          stubs: {
+            teleport: true
+          }
+        }
+      })
+
+      expect(wrapper.html()).toBe(
+        '<teleport-stub>\n' +
+          '  <div id="content"></div>\n' +
+          '</teleport-stub>'
+      )
+    })
+
+    it('does not stub teleport with shallow', () => {
+      const Comp = {
+        template: `<teleport to="body"><div id="content" /></teleport>`
+      }
+      const wrapper = mount(Comp, {
+        shallow: true,
+        global: {
+          stubs: {
+            teleport: false
+          }
+        }
+      })
+
+      expect(wrapper.html()).toBe(
+        '<!--teleport start-->\n' + '<!--teleport end-->'
+      )
+    })
   })
 
   it('stubs component by key prior before name', () => {

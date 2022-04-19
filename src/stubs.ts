@@ -2,6 +2,7 @@ import {
   transformVNodeArgs,
   Transition,
   TransitionGroup,
+  BaseTransition,
   Teleport,
   h,
   defineComponent,
@@ -157,7 +158,12 @@ export function stubComponents(
     const type = nodeType as VNodeTypes | typeof Teleport
 
     // stub transition by default via config.global.stubs
-    if (type === Transition && 'transition' in stubs && stubs['transition']) {
+    if (
+      (type === Transition || type === BaseTransition) &&
+      'transition' in stubs
+    ) {
+      if (stubs.transition === false) return args
+
       return [
         createStub({
           name: 'transition',
@@ -169,11 +175,9 @@ export function stubComponents(
     }
 
     // stub transition-group by default via config.global.stubs
-    if (
-      type === TransitionGroup &&
-      'transition-group' in stubs &&
-      stubs['transition-group']
-    ) {
+    if (type === TransitionGroup && 'transition-group' in stubs) {
+      if (stubs['transition-group'] === false) return args
+
       return [
         createStub({
           name: 'transition-group',
@@ -185,7 +189,9 @@ export function stubComponents(
     }
 
     // stub teleport by default via config.global.stubs
-    if (type === Teleport && 'teleport' in stubs && stubs['teleport']) {
+    if (type === Teleport && 'teleport' in stubs) {
+      if (stubs.teleport === false) return args
+
       return [
         createStub({
           name: 'teleport',
