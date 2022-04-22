@@ -13,7 +13,7 @@ import domEvents from './constants/dom-events'
 import { VueElement, VueNode } from './types'
 import { mergeDeep } from './utils'
 import { getRootNodes } from './utils/getRootNodes'
-import { emitted, recordEvent } from './emit'
+import { emitted, recordEvent, removeEventHistory } from './emit'
 import BaseWrapper from './baseWrapper'
 import type { DOMWrapper } from './domWrapper'
 import {
@@ -182,6 +182,8 @@ export class VueWrapper<
         `wrapper.unmount() can only be called by the root wrapper`
       )
     }
+    // Clear emitted events cache for this component instance
+    removeEventHistory(this.vm)
 
     this.__app.unmount()
   }

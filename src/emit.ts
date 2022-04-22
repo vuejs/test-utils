@@ -11,7 +11,7 @@ const enum DevtoolsHooks {
   COMPONENT_EMIT = 'component:emit'
 }
 
-let events: Events
+let events: Events = {}
 
 export function emitted<T = unknown>(
   vm: ComponentPublicInstance,
@@ -28,7 +28,6 @@ export function emitted<T = unknown>(
 }
 
 export const attachEmitListener = () => {
-  events = {}
   // use devtools to capture this "emit"
   setDevtoolsHook(createDevTools(events), {})
 }
@@ -64,4 +63,9 @@ export const recordEvent = (
 
   // Record the event message sent by the emit
   events[cid][event].push(args)
+}
+
+export const removeEventHistory = (vm: ComponentPublicInstance): void => {
+  const cid = vm.$.uid
+  delete events[cid]
 }
