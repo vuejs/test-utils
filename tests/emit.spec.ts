@@ -364,4 +364,35 @@ describe('emitted', () => {
     expect(wrapper.emitted().bar[0]).toEqual(['mounted'])
     expect(wrapper.emitted().bar[1]).toEqual(['click'])
   })
+
+  it('does not clear all emitted event history on mount/unmount', async () => {
+    const Foo = defineComponent({
+      name: 'Foo',
+      emits: ['foo'],
+      setup(_, ctx) {
+        return () =>
+          h(
+            'div',
+            {
+              onClick: () => {
+                ctx.emit('foo', 'bar')
+              }
+            },
+            'hello world'
+          )
+      }
+    })
+
+    const wrapper1 = mount(Foo)
+    await wrapper1.trigger('click')
+    expect(wrapper1.emitted('foo')).toHaveLength(1)
+
+    const wrapper2 = mount(Foo)
+    await wrapper2.trigger('click')
+    expect(wrapper2.emitted('foo')).toHaveLength(1)
+    expect(wrapper1.emitted('foo')).toHaveLength(1) // ensuring that subsequent mount does not clear event history for other wrappers
+
+    wrapper1.unmount()
+    wrapper2.unmount()
+  })
 })
