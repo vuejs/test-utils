@@ -28,7 +28,7 @@ export function processSlot(source = '', Vue = vue) {
   )
   const renderFn = createRenderFunction(Vue)
   return (ctx = {}) => {
-    const result = renderFn()
+    const result = renderFn(ctx)
     const slotName = Object.keys(result.children)[0]
     return result.children[slotName](ctx)
   }
