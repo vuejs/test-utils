@@ -70,7 +70,7 @@ export class VueWrapper<
     // Recursive check subtree for nested root elements
     // <template>
     //   <WithMultipleRoots />
-    // </template
+    // </template>
     const checkTree = (subTree: VNode): boolean => {
       // if the subtree is an array of children, we have multiple root nodes
       if (subTree.shapeFlag === ShapeFlags.ARRAY_CHILDREN) return true
