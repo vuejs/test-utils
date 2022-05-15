@@ -510,5 +510,34 @@ describe('findComponent', () => {
           .classes('inside')
       ).toBe(true)
     })
+
+    it('finds top component when searching from nested node', () => {
+      const DeepNestedComponent = defineComponent({
+        template: '<div class="deep-nested"></div>'
+      })
+
+      const NestedComponent = defineComponent({
+        components: { DeepNestedComponent },
+        template: '<deep-nested-component />'
+      })
+
+      const RootComponent = defineComponent({
+        components: { NestedComponent },
+        template: '<nested-component />'
+      })
+
+      const wrapper = mount(RootComponent)
+      expect(
+        wrapper.find('.deep-nested').findComponent(DeepNestedComponent).exists()
+      ).toBe(true)
+
+      expect(
+        wrapper.find('.deep-nested').findComponent(NestedComponent).exists()
+      ).toBe(true)
+
+      expect(
+        wrapper.find('.deep-nested').findComponent(RootComponent).exists()
+      ).toBe(true)
+    })
   })
 })
