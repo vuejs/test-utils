@@ -24,6 +24,21 @@ describe('element', () => {
     expect(wrapper.element.nodeName).toBe('DIV')
   })
 
+  it('returns the VTU root element when mounting component with slot', () => {
+    const NestedComponent = defineComponent({
+      template: `<h1><slot></slot></h1>`
+    })
+
+    const RootComponent = defineComponent({
+      components: { NestedComponent },
+      template: `<nested-component>test</nested-component>`
+    })
+    const wrapper = mount(RootComponent)
+
+    expect(wrapper.element.tagName).toBe('H1')
+    expect(wrapper.html()).toBe('<h1>test</h1>')
+  })
+
   it('returns the VTU root element when mounting multiple root nodes', () => {
     const wrapper = mount(MultiRootText)
 
