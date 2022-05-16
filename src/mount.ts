@@ -2,7 +2,9 @@ import {
   h,
   createApp,
   defineComponent,
+  reactive,
   shallowReactive,
+  isRef,
   FunctionalComponent,
   ComponentPublicInstance,
   ComponentOptionsWithObjectProps,
@@ -379,12 +381,22 @@ export function mount(
   const MOUNT_COMPONENT_REF = 'VTU_COMPONENT'
   // we define props as reactive so that way when we update them with `setProps`
   // Vue's reactivity system will cause a rerender.
-  const props = shallowReactive({
+  const refs = shallowReactive<Record<string, unknown>>({})
+  const props = reactive<Record<string, unknown>>({})
+
+  Object.entries({
     ...options?.attrs,
     ...options?.propsData,
     ...options?.props,
     ref: MOUNT_COMPONENT_REF
+  }).forEach(([k, v]) => {
+    if (isRef(v)) {
+      refs[k] = v
+    } else {
+      props[k] = v
+    }
   })
+
   const global = mergeGlobalProperties(options?.global)
   if (isObjectComponent(component)) {
     component.components = { ...component.components, ...global.components }
@@ -394,7 +406,7 @@ export function mount(
   const Parent = defineComponent({
     name: 'VTU_ROOT',
     render() {
-      return h(component, props, slots)
+      return h(component as ComponentOptions, { ...props, ...refs }, slots)
     }
   })
 
