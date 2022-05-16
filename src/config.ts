@@ -1,10 +1,12 @@
-import { GlobalMountOptions } from './types'
+import { GlobalMountOptions, Stub } from './types'
 import { VueWrapper } from './vueWrapper'
 import { DOMWrapper } from './domWrapper'
 import { CustomCreateStub } from './stubs'
 
 export interface GlobalConfigOptions {
-  global: Required<GlobalMountOptions>
+  global: Required<Omit<GlobalMountOptions, 'stubs'>> & {
+    stubs?: Record<string, Stub>
+  }
   plugins: {
     VueWrapper: Pluggable<VueWrapper>
     DOMWrapper: Pluggable<DOMWrapper<Node>>
