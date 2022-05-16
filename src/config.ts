@@ -5,7 +5,7 @@ import { CustomCreateStub } from './stubs'
 
 export interface GlobalConfigOptions {
   global: Required<Omit<GlobalMountOptions, 'stubs'>> & {
-    stubs?: Record<string, Stub>
+    stubs: Record<string, Stub>
   }
   plugins: {
     VueWrapper: Pluggable<VueWrapper>
