@@ -3,7 +3,8 @@ import { mount } from '../../src'
 
 jest.mock('vue', () => mockVue)
 
-const { configureCompat, extend, defineComponent, h } = mockVue as any
+
+const { configureCompat, extend, defineComponent, h } = mockVue
 
 describe('@vue/compat build', () => {
   describe.each(['suppress-warning', false])(

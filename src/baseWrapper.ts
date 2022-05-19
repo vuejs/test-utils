@@ -1,6 +1,7 @@
 import { textContent } from './utils'
 import type { TriggerOptions } from './createDomEvent'
 import {
+  Component,
   ComponentInternalInstance,
   ComponentPublicInstance,
   FunctionalComponent,
@@ -115,6 +116,9 @@ export default abstract class BaseWrapper<ElementType extends Node>
   findComponent<T extends ComponentPublicInstance>(
     selector: T | FindComponentSelector
   ): VueWrapper<T>
+  // Find my CatchAll component
+  findComponent<T extends Component>(selector: T): DOMWrapper<Node>
+  findComponent<T extends Component>(selector: string): DOMWrapper<Element>
   // catch all declaration
   findComponent<T extends never>(selector: FindComponentSelector): WrapperLike
 

@@ -38,10 +38,10 @@ describe('mocks', () => {
         </div>
       `,
       computed: {
-        url() {
+        url(): string {
           return `/posts/${this.$route.params.id}`
         },
-        id() {
+        id(): string | string[] {
           return this.$route.params.id
         }
       },
