@@ -21,7 +21,7 @@
     "dist/index.d.ts"
   ],
   "devDependencies": {
-    "@babel/core": "^7.17.12",
+    "@babel/core": "^7.18.0",
     "@babel/preset-env": "^7.17.12",
     "@babel/types": "^7.17.12",
     "@rollup/plugin-commonjs": "^22.0.0",
