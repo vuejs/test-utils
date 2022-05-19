@@ -293,9 +293,9 @@ export function mount(
       },
       props: originalComponent.props || {},
       setup:
-        (_, { attrs, slots }) =>
+        (props, { attrs, slots }) =>
         () =>
-          h(originalComponent, attrs, slots),
+          h(originalComponent, { ...props, ...attrs }, slots),
       ...instanceOptions
     })
     addToDoNotStubComponents(originalComponent)
