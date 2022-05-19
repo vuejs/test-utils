@@ -1,5 +1,6 @@
 import { defineComponent, h } from 'vue'
 import { mount } from '../../src'
+import Title from '../components/FunctionComponent'
 
 describe('mountingOptions.props', () => {
   const Component = defineComponent({
@@ -84,5 +85,14 @@ describe('mountingOptions.props', () => {
     await button.trigger('click')
 
     expect(onCustomEvent).toHaveBeenCalledTimes(3)
+  })
+
+  test('props with functional component', async () => {
+    const wrapper = mount(Title, {
+      props: {
+        title: 'Hello'
+      }
+    })
+    expect(wrapper.text()).toBe('Hello')
   })
 })
