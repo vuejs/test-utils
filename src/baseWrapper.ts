@@ -2,8 +2,12 @@ import { textContent } from './utils'
 import type { TriggerOptions } from './createDomEvent'
 import {
   ComponentInternalInstance,
+  ComponentOptions,
   ComponentPublicInstance,
+  ComputedOptions,
+  CreateComponentPublicInstance,
   FunctionalComponent,
+  MethodOptions,
   nextTick
 } from 'vue'
 import { createDOMEvent } from './createDomEvent'
@@ -99,6 +103,29 @@ export default abstract class BaseWrapper<ElementType extends Node>
 
   // searching by string without specifying component results in WrapperLike object
   findComponent<T extends never>(selector: string): WrapperLike
+  // Find Component Options aka plain object
+  findComponent<
+    Props,
+    RawBindings = any,
+    D = any,
+    C extends ComputedOptions = ComputedOptions,
+    M extends MethodOptions = MethodOptions
+  >(
+    selector: ComponentOptions<Props, RawBindings, D, C, M>
+  ): VueWrapper<CreateComponentPublicInstance<Props, RawBindings, D, C, M>>
+  findComponent<T extends ComponentOptions>(
+    selector: string
+  ): VueWrapper<
+    T extends ComponentOptions<
+      infer Props,
+      infer RawBindings,
+      infer D,
+      infer C,
+      infer M
+    >
+      ? CreateComponentPublicInstance<Props, RawBindings, D, C, M>
+      : VueWrapper<CreateComponentPublicInstance>
+  >
   // searching for component created via defineComponent results in VueWrapper of proper type
   findComponent<T extends DefinedComponent>(
     selector: T | Exclude<FindComponentSelector, FunctionalComponent>
