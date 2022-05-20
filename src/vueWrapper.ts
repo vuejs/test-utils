@@ -75,19 +75,11 @@ export class VueWrapper<
       // if the subtree is an array of children, we have multiple root nodes
       if (subTree.shapeFlag === ShapeFlags.ARRAY_CHILDREN) return true
 
-      if (subTree.shapeFlag & ShapeFlags.STATEFUL_COMPONENT) {
+      if (
+        subTree.shapeFlag & ShapeFlags.STATEFUL_COMPONENT ||
+        subTree.shapeFlag & ShapeFlags.FUNCTIONAL_COMPONENT
+      ) {
         // Component has multiple children or slot with multiple children
-        if (
-          subTree.shapeFlag & ShapeFlags.ARRAY_CHILDREN ||
-          subTree.shapeFlag & ShapeFlags.SLOTS_CHILDREN
-        ) {
-          return true
-        }
-
-        if (subTree.component?.subTree) {
-          return checkTree(subTree.component.subTree)
-        }
-      } else if (subTree.shapeFlag & ShapeFlags.FUNCTIONAL_COMPONENT) {
         if (subTree.shapeFlag & ShapeFlags.ARRAY_CHILDREN) {
           return true
         }
