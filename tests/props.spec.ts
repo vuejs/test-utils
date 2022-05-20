@@ -4,6 +4,7 @@ import PropWithSymbol from './components/PropWithSymbol.vue'
 import Hello from './components/Hello.vue'
 import { defineComponent, h, isRef, ref } from 'vue'
 import Title from './components/FunctionComponent'
+import Issue1476 from './components/Issue1476.vue'
 
 describe('props', () => {
   it('returns a single prop applied to a component', () => {
@@ -180,6 +181,27 @@ describe('props', () => {
     })
     expect(wrapper.find('h1').text()).toBe('is ref')
     expect(wrapper.find('span').text()).toBe('Some value')
+  })
+
+  it('should keep props as same object', async () => {
+    // https://github.com/vuejs/test-utils/issues/1476
+    const wrapper = mount(Issue1476, {
+      props: {
+        availableFields: [{ name: 'Animals' }, { name: 'Cities' }]
+      }
+    })
+
+    expect(wrapper.find('.subField').exists()).toBe(false)
+
+    await wrapper.findAll('.field')[0].trigger('click')
+
+    expect(wrapper.find('.selectedField').exists()).toBe(true)
+    expect(wrapper.find('.selectedField').text()).toBe('Animals')
+
+    await wrapper.findAll('.field')[1].trigger('click')
+
+    expect(wrapper.find('.selectedField').exists()).toBe(true)
+    expect(wrapper.find('.selectedField').text()).toBe('Cities')
   })
 
   it('returns reactive props on a stubbed component shallow case', async () => {
