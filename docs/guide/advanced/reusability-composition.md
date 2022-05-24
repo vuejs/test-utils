@@ -180,7 +180,7 @@ test('provides correct data', () => {
 
 ### Testing `inject`
 
-When your Component uses `inject` and you need to pass data with `provide`, then you can use the `global.provides` option.
+When your Component uses `inject` and you need to pass data with `provide`, then you can use the `global.provide` option.
 
 ```vue
 <template>
@@ -200,7 +200,7 @@ The unit test could simply look like:
 test('renders correct data', () => {
   const wrapper = mount(MyComponent, {
     global: {
-      provides: {
+      provide: {
         'my-key': 'some-data'
       }
     }
@@ -215,4 +215,4 @@ test('renders correct data', () => {
 - test simple composables without a component and `@vue/test-utils`
 - create a test helper component to test more complex composables
 - create a test helper component to test your component provides the correct data with `provide`
-- use `global.provides` to pass data to your component which uses `inject`
+- use `global.provide` to pass data to your component which uses `inject`
