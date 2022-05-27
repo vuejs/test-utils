@@ -56,8 +56,8 @@ mount(AppWithDefine, {
 })
 
 expectError(
+  // @ts-expect-error wrong prop type should not compile
   mount(AppWithDefine, {
-    // @ts-expect-error wrong prop type should not compile
     props: { a: 2 }
   })
 )
@@ -318,6 +318,7 @@ mount(Foo, {
 
 expectError(
   mount(
+    // @ts-expect-error
     defineComponent({
       props: {
         baz: String,
@@ -328,7 +329,6 @@ expectError(
       }
     }),
     {
-      // @ts-expect-error
       props: {
         baz: 'hello'
       }

@@ -27,8 +27,8 @@ shallowMount(AppWithDefine, {
 })
 
 expectError(
+  // @ts-expect-error wrong prop type should not compile
   shallowMount(AppWithDefine, {
-    // @ts-expect-error wrong prop type should not compile
     props: { a: 2 }
   })
 )

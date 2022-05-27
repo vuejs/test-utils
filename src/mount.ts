@@ -22,7 +22,6 @@ import {
   EmitsOptions,
   ComputedOptions,
   ComponentPropsOptions,
-  ComponentProvideOptions,
   ComponentOptions,
   ConcreteComponent,
   Prop
@@ -132,8 +131,6 @@ export function mount<
   Extends extends ComponentOptionsMixin = ComponentOptionsMixin,
   E extends EmitsOptions = Record<string, any>,
   EE extends string = string,
-  Provide extends ComponentProvideOptions = ComponentProvideOptions,
-  RawOptions extends {} = {},
   PP = PublicProps,
   Props = Readonly<ExtractPropTypes<PropsOrPropOptions>>,
   Defaults = ExtractDefaultPropTypes<PropsOrPropOptions>
@@ -148,8 +145,6 @@ export function mount<
     Extends,
     E,
     EE,
-    Provide,
-    RawOptions,
     PP,
     Props,
     Defaults
@@ -171,8 +166,6 @@ export function mount<
       Extends,
       E,
       EE,
-      Provide,
-      RawOptions,
       PP,
       Props,
       Defaults
