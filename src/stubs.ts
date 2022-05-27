@@ -9,7 +9,8 @@ import {
   VNodeTypes,
   ConcreteComponent,
   ComponentPropsOptions,
-  ComponentObjectPropsOptions
+  ComponentObjectPropsOptions,
+  DefineComponent
 } from 'vue'
 import { hyphenate } from './utils/vueShared'
 import { matchName } from './utils/matchName'
@@ -78,7 +79,7 @@ export const createStub = ({
   name,
   type,
   renderStubDefaultSlot
-}: StubOptions) => {
+}: StubOptions): DefineComponent => {
   const anonName = 'anonymous-stub'
   const tag = name ? `${hyphenate(name)}-stub` : anonName
 
