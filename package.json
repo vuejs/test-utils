@@ -13,7 +13,8 @@
       "browser": "./dist/vue-test-utils.browser.js",
       "require": "./dist/vue-test-utils.cjs.js",
       "default": "./dist/vue-test-utils.cjs.js"
-    }
+    },
+    "./package.json": "./package.json"
   },
   "files": [
     "dist",
