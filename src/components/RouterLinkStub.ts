@@ -19,7 +19,7 @@ export const RouterLinkStub = defineComponent({
   name: 'RouterLinkStub',
 
   compatConfig: { MODE: 3 },
-  
+
   props: {
     to: {
       type: [String, Object],
