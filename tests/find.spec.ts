@@ -334,6 +334,66 @@ describe('findAll', () => {
       const wrapper = mount(MultipleRootRender)
       expect(wrapper.findAll('a')).toHaveLength(3)
     })
+
+    it('finds all with nested roots inside render function', () => {
+      const wrapper = mount({
+        render() {
+          return [
+            h('span', 'Text 1'),
+            [
+              h('span', 'Text 2'),
+              h('span', 'Text 3'),
+              [h('span', 'Text 4'), h('span', 'Text 5')]
+            ]
+          ]
+        }
+      })
+      expect(wrapper.findAll('span')).toHaveLength(5)
+    })
+
+    it('finds all deep nested root nodes', () => {
+      const ReturnSlot = defineComponent({
+        render() {
+          return this.$slots.default!({})
+        }
+      })
+      const NestedMultiRootComponent = defineComponent({
+        components: { ReturnSlot },
+        template: `
+          <span>Text 1</span>
+          <span>Text 2</span>
+          <ReturnSlot>
+            <span>Text 3</span>
+          </ReturnSlot>
+        `
+      })
+      const MultiRootComponent = defineComponent({
+        components: { NestedMultiRootComponent },
+        template: `
+          <span>Text 4</span>
+          <span>Text 5</span>
+          <NestedMultiRootComponent />
+        `
+      })
+
+      const Component = defineComponent({
+        components: { ReturnSlot, MultiRootComponent },
+        template: `
+          <span>Text 6</span>
+          <ReturnSlot>
+            <span>Text 7</span>
+            <ReturnSlot>
+              <span>Text 8</span>
+              <span>Text 9</span>
+              <MultiRootComponent />
+            </ReturnSlot>
+          </ReturnSlot>
+        `
+      })
+
+      const wrapper = mount(Component)
+      expect(wrapper.findAll('span')).toHaveLength(9)
+    })
   })
 
   // https://github.com/vuejs/test-utils/issues/1233
