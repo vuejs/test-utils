@@ -84,6 +84,12 @@ export interface MountingOptions<Props, Data = {}> {
    * @see https://next.vue-test-utils.vuejs.org/api/#slots
    */
   shallow?: boolean
+  /**
+   * Renders a component to HTML.
+   * @default false
+   * @see https://next.vue-test-utils.vuejs.org/api/#renderToString
+   */
+  renderToString?: boolean
 }
 
 export type Stub = boolean | Component

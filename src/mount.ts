@@ -26,6 +26,7 @@ import {
   ConcreteComponent,
   Prop
 } from 'vue'
+import { renderToString as baseRenderToString } from 'vue/server-renderer'
 
 import { MountingOptions, Slot } from './types'
 import {
@@ -54,7 +55,8 @@ const MOUNT_OPTIONS: Array<keyof MountingOptions<any>> = [
   'props',
   'slots',
   'global',
-  'shallow'
+  'shallow',
+  'renderToString'
 ]
 
 function getInstanceOptions(
@@ -516,6 +518,10 @@ export function mount(
     }
   }
 
+  if (options?.renderToString) {
+    return baseRenderToString(app) as any
+  }
+
   // mount the app!
   const vm = app.mount(el)
 
@@ -537,4 +543,8 @@ export function mount(
 
 export const shallowMount: typeof mount = (component: any, options?: any) => {
   return mount(component, { ...options, shallow: true })
+}
+
+export const renderToString: typeof mount = (component: any, options?: any) => {
+  return mount(component, { ...options, renderToString: true })
 }
