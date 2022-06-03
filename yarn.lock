@@ -1505,10 +1505,10 @@
   resolved "https://registry.yarnpkg.com/@types/json-schema/-/json-schema-7.0.11.tgz#d421b6c527a3037f7c84433fd2c4229e016863d3"
   integrity sha512-wOuvG1SN4Us4rez+tylwwwCV1psiNVOkJeM3AUWUNWg/jDQY2+HE/444y5gc+jBmRqASOm2Oeh5c1axHobwRKQ==
 
-"@types/node@*", "@types/node@17.0.38":
-  version "17.0.38"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-17.0.38.tgz#f8bb07c371ccb1903f3752872c89f44006132947"
-  integrity sha512-5jY9RhV7c0Z4Jy09G+NIDTsCZ5G0L5n+Z+p+Y7t5VJHM30bgwzSjVtlcBxqAj+6L/swIlvtOSzr8rBk/aNyV2g==
+"@types/node@*", "@types/node@17.0.39":
+  version "17.0.39"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-17.0.39.tgz#3652d82e2a16b4ea679d5ea3143b816c91b7e113"
+  integrity sha512-JDU3YLlnPK3WDao6/DlXLOgSNpG13ct+CwIO17V8q0/9fWJyeMJJ/VyZ1lv8kDprihvZMydzVwf0tQOqGiY2Nw==
 
 "@types/prettier@^2.1.5":
   version "2.6.1"
