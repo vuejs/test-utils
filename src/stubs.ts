@@ -83,13 +83,16 @@ export const createStub = ({
   const anonName = 'anonymous-stub'
   const tag = name ? `${hyphenate(name)}-stub` : anonName
 
-  const propsDeclaration = type
-    ? unwrapLegacyVueExtendComponent(type).props || {}
+  const componentOptions = type
+    ? unwrapLegacyVueExtendComponent(type) || {}
     : {}
 
   return defineComponent({
     name: name || anonName,
-    props: propsDeclaration,
+    props: componentOptions.props || {},
+    // fix #1550 - respect old-style v-model for shallow mounted components with @vue/compat
+    // @ts-expect-error
+    model: componentOptions.model,
     setup(props, { slots }) {
       return () => {
         // https://github.com/vuejs/test-utils/issues/1076
