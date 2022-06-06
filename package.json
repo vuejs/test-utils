@@ -32,7 +32,7 @@
     "@types/jest": "27.5.0",
     "@types/node": "17.0.39",
     "@types/pretty": "^2.0.1",
-    "@typescript-eslint/eslint-plugin": "^5.27.0",
+    "@typescript-eslint/eslint-plugin": "^5.27.1",
     "@typescript-eslint/parser": "^5.27.0",
     "@vue/babel-plugin-jsx": "^1.1.1",
     "@vue/compat": "3.2.36",
