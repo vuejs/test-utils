@@ -1,6 +1,6 @@
+import { renderToString as baseRenderToString } from 'vue/server-renderer'
 import {
   FunctionalComponent,
-  ComponentPublicInstance,
   ComponentOptionsWithObjectProps,
   ComponentOptionsWithArrayProps,
   ComponentOptionsWithoutProps,
@@ -19,60 +19,57 @@ import {
 } from 'vue'
 
 import { MountingOptions } from './types'
-import { VueWrapper } from './vueWrapper'
-import { trackInstance } from './utils/autoUnmount'
-import { createVueWrapper } from './wrapperFactory'
 import { createInstance } from './createInstance'
 
 // NOTE this should come from `vue`
 type PublicProps = VNodeProps & AllowedComponentProps & ComponentCustomProps
 
 // Class component (without vue-class-component) - no props
-export function mount<V>(
+export function renderToString<V>(
   originalComponent: {
     new (...args: any[]): V
     __vccOpts: any
   },
   options?: MountingOptions<any> & Record<string, any>
-): VueWrapper<ComponentPublicInstance<V>>
+): Promise<string>
 
 // Class component (without vue-class-component) - props
-export function mount<V, P>(
+export function renderToString<V, P>(
   originalComponent: {
     new (...args: any[]): V
     __vccOpts: any
     defaultProps?: Record<string, Prop<any>> | string[]
   },
   options?: MountingOptions<P & PublicProps> & Record<string, any>
-): VueWrapper<ComponentPublicInstance<V>>
+): Promise<string>
 
 // Class component - no props
-export function mount<V>(
+export function renderToString<V>(
   originalComponent: {
     new (...args: any[]): V
     registerHooks(keys: string[]): void
   },
   options?: MountingOptions<any> & Record<string, any>
-): VueWrapper<ComponentPublicInstance<V>>
+): Promise<string>
 
 // Class component - props
-export function mount<V, P>(
+export function renderToString<V, P>(
   originalComponent: {
     new (...args: any[]): V
     props(Props: P): any
     registerHooks(keys: string[]): void
   },
   options?: MountingOptions<P & PublicProps> & Record<string, any>
-): VueWrapper<ComponentPublicInstance<V>>
+): Promise<string>
 
 // Functional component with emits
-export function mount<Props, E extends EmitsOptions = {}>(
+export function renderToString<Props, E extends EmitsOptions = {}>(
   originalComponent: FunctionalComponent<Props, E>,
   options?: MountingOptions<Props & PublicProps> & Record<string, any>
-): VueWrapper<ComponentPublicInstance<Props>>
+): Promise<string>
 
 // Component declared with defineComponent
-export function mount<
+export function renderToString<
   PropsOrPropOptions = {},
   RawBindings = {},
   D = {},
@@ -105,27 +102,10 @@ export function mount<
     D
   > &
     Record<string, any>
-): VueWrapper<
-  InstanceType<
-    DefineComponent<
-      PropsOrPropOptions,
-      RawBindings,
-      D,
-      C,
-      M,
-      Mixin,
-      Extends,
-      E,
-      EE,
-      PP,
-      Props,
-      Defaults
-    >
-  >
->
+): Promise<string>
 
 // Component declared with no props
-export function mount<
+export function renderToString<
   Props = {},
   RawBindings = {},
   D = {},
@@ -148,13 +128,10 @@ export function mount<
     EE
   >,
   options?: MountingOptions<Props & PublicProps, D>
-): VueWrapper<
-  ComponentPublicInstance<Props, RawBindings, D, C, M, E, VNodeProps & Props>
-> &
-  Record<string, any>
+): Promise<string>
 
 // Component declared with { props: [] }
-export function mount<
+export function renderToString<
   PropNames extends string,
   RawBindings,
   D,
@@ -181,10 +158,10 @@ export function mount<
     Props
   >,
   options?: MountingOptions<Props & PublicProps, D>
-): VueWrapper<ComponentPublicInstance<Props, RawBindings, D, C, M, E>>
+): Promise<string>
 
 // Component declared with { props: { ... } }
-export function mount<
+export function renderToString<
   // the Readonly constraint allows TS to treat the type of { required: true }
   // as constant instead of boolean.
   PropsOptions extends Readonly<ComponentPropsOptions>,
@@ -209,55 +186,9 @@ export function mount<
     EE
   >,
   options?: MountingOptions<ExtractPropTypes<PropsOptions> & PublicProps, D>
-): VueWrapper<
-  ComponentPublicInstance<
-    ExtractPropTypes<PropsOptions>,
-    RawBindings,
-    D,
-    C,
-    M,
-    E,
-    VNodeProps & ExtractPropTypes<PropsOptions>
-  >
->
+): Promise<string>
 
-// implementation
-export function mount(
-  inputComponent: any,
-  options?: MountingOptions<any> & Record<string, any>
-): VueWrapper<any> {
-  const { app, props, el, MOUNT_COMPONENT_REF } = createInstance(
-    inputComponent,
-    options
-  )
-
-  // mount the app!
-  const vm = app.mount(el)
-
-  const setProps = (newProps: Record<string, unknown>) => {
-    for (const [k, v] of Object.entries(newProps)) {
-      props[k] = v
-    }
-
-    return vm.$nextTick()
-  }
-
-  // Ignore "Avoid app logic that relies on enumerating keys on a component instance..." warning
-  const warnSave = console.warn
-  console.warn = () => {}
-
-  const appRef = vm.$refs[MOUNT_COMPONENT_REF] as ComponentPublicInstance
-  // we add `hasOwnProperty` so Jest can spy on the proxied vm without throwing
-  // note that this is not necessary with Jest v27+ or Vitest, but is kept for compatibility with older Jest versions
-  appRef.hasOwnProperty = (property) => {
-    return Reflect.has(appRef, property)
-  }
-  console.warn = warnSave
-  const wrapper = createVueWrapper(app, appRef, setProps)
-  trackInstance(wrapper)
-  return wrapper
-}
-
-export const shallowMount: typeof mount = (component: any, options?: any) => {
-  return mount(component, { ...options, shallow: true })
+export function renderToString(component: any, options?: any) {
+  const { app } = createInstance(component, options)
+  return baseRenderToString(app)
 }
