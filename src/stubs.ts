@@ -91,7 +91,7 @@ export const createStub = ({
     name: name || anonName,
     props: componentOptions.props || {},
     // fix #1550 - respect old-style v-model for shallow mounted components with @vue/compat
-    // @ts-ignore
+    // @ts-expect-error
     model: componentOptions.model,
     setup(props, { slots }) {
       return () => {
