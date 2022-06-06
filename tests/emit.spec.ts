@@ -365,6 +365,35 @@ describe('emitted', () => {
     expect(wrapper.emitted().bar[1]).toEqual(['click'])
   })
 
+  it('captures pass through events', async () => {
+    const BaseInput = defineComponent({
+      props: {
+        modelValue: String
+      },
+      emits: ['update:modelValue'],
+      template: `<input :value="modelValue" @input="$emit('update:modelValue', $event.target.value)" />`
+    })
+
+    const CustomInput = defineComponent({
+      components: { BaseInput },
+      template: `<BaseInput v-bind="{ ...$attrs }"/>`
+    })
+
+    const wrapper = mount(CustomInput, {
+      props: {
+        modelValue: 'Text'
+      }
+    })
+
+    const input = wrapper.get('input')
+    await input.setValue('New Text')
+
+    const baseInput = wrapper.findComponent(BaseInput)
+    expect(baseInput.emitted('update:modelValue')).toEqual([['New Text']])
+
+    expect(wrapper.emitted('update:modelValue')).toEqual([['New Text']])
+  })
+
   it('does not clear all emitted event history on mount/unmount', async () => {
     const Foo = defineComponent({
       name: 'Foo',
