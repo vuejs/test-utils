@@ -12,7 +12,7 @@ describe('renderToString', () => {
 
     const wrapper = await renderToString(Component)
 
-    expect(wrapper).toBe('<div>Text content</div>')
+    expect(wrapper).toMatchInlineSnapshot(`"<div>Text content</div>"`)
   })
 
   it('returns correct html on multi root nodes', async () => {
@@ -22,7 +22,9 @@ describe('renderToString', () => {
 
     const wrapper = await renderToString(Component)
 
-    expect(wrapper).toBe('<!--[--><div>foo</div><div>bar</div><!--]-->')
+    expect(wrapper).toMatchInlineSnapshot(
+      `"<!--[--><div>foo</div><div>bar</div><!--]-->"`
+    )
   })
 
   it('returns correct html when onServerPrefetch is used', async () => {
@@ -50,6 +52,6 @@ describe('renderToString', () => {
 
     const wrapper = await renderToString(Component)
 
-    expect(wrapper).toBe('<div>Text content</div>')
+    expect(wrapper).toMatchInlineSnapshot(`"<div>Text content</div>"`)
   })
 })
