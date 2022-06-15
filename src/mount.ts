@@ -144,10 +144,7 @@ export function mount<
     Mixin,
     Extends,
     E,
-    EE,
-    PP,
-    Props,
-    Defaults
+    EE
   >,
   options?: MountingOptions<
     Partial<Defaults> & Omit<Props & PublicProps, keyof Defaults>,

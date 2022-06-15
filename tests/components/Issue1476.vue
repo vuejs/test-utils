@@ -4,10 +4,7 @@
       <button class="field" @click="selectedField = field">
         {{ field.name }}
       </button>
-      <div
-        v-if="selectedField === field"
-        class="selectedField"
-      >
+      <div v-if="selectedField === field" class="selectedField">
         {{ field.name }}
       </div>
     </template>
@@ -15,12 +12,14 @@
 </template>
 
 <script lang="ts">
-export default {
+import { defineComponent } from 'vue'
+
+export default defineComponent({
   props: {
-    availableFields: { type: Array, required: true }
+    availableFields: { type: Array as () => any[], required: true }
   },
   data: () => ({
-    selectedField: ''
+    selectedField: '' as any
   })
-}
+})
 </script>
