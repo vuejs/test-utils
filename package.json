@@ -49,7 +49,7 @@
     "jsdom": "^19.0.0",
     "jsdom-global": "^3.0.2",
     "lint-staged": "^13.0.1",
-    "prettier": "^2.7.0",
+    "prettier": "^2.7.1",
     "pretty": "^2.0.0",
     "reflect-metadata": "^0.1.13",
     "rollup": "^2.75.6",
