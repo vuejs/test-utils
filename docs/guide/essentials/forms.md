@@ -364,9 +364,9 @@ Assume we have a form that uses the Vuetify textarea:
 
 ```vue
 <template>
-  <form>
+  <form @submit.prevent="handleSubmit">
     <v-textarea v-model="description" ref="description" />
-    <button @click="handleClick">Send</button>
+    <button type="submit">Send</button>
   </form>
 </template>
 
@@ -379,8 +379,8 @@ export default {
     }
   },
   methods: {
-    handleClick() {
-      this.$emit('submit', this.description)
+    handleSubmit() {
+      this.$emit('submitted', this.description)
     }
   }
 }
@@ -390,15 +390,15 @@ export default {
 We can use `findComponent` to find the component instance, and then set its value.
 
 ```js
-test('emits textarea value on click', async () => {
+test('emits textarea value on submit', async () => {
   const wrapper = mount(CustomTextarea)
   const description = 'Some very long text...'
 
   await wrapper.findComponent({ ref: 'description' }).setValue(description)
 
-  wrapper.find('.submit').trigger('click')
+  wrapper.find('form').trigger('submit')
 
-  expect(wrapper.emitted('submit')[0][0]).toEqual({ description })
+  expect(wrapper.emitted('submitted')[0][0]).toEqual(description)
 })
 ```
 
