@@ -52,7 +52,7 @@
     "prettier": "^2.7.0",
     "pretty": "^2.0.0",
     "reflect-metadata": "^0.1.13",
-    "rollup": "^2.75.6",
+    "rollup": "^2.75.7",
     "rollup-plugin-typescript2": "^0.32.1",
     "ts-jest": "27.1.5",
     "tslib": "2.4.0",
