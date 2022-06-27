@@ -43,7 +43,7 @@
     "babel-preset-jest": "28.1.1",
     "eslint": "^8.18.0",
     "eslint-config-prettier": "^8.5.0",
-    "eslint-plugin-prettier": "^4.0.0",
+    "eslint-plugin-prettier": "^4.1.0",
     "husky": "^8.0.1",
     "jest": "27.5.1",
     "jsdom": "^20.0.0",
