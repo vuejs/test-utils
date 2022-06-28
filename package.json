@@ -33,7 +33,7 @@
     "@types/node": "18.0.0",
     "@types/pretty": "^2.0.1",
     "@typescript-eslint/eslint-plugin": "^5.30.0",
-    "@typescript-eslint/parser": "^5.29.0",
+    "@typescript-eslint/parser": "^5.30.0",
     "@vue/babel-plugin-jsx": "^1.1.1",
     "@vue/compat": "3.2.37",
     "@vue/compiler-dom": "3.2.37",
