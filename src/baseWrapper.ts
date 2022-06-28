@@ -248,7 +248,7 @@ export default abstract class BaseWrapper<ElementType extends Node>
   }
 
   exists() {
-    return !this.getCurrentComponent()?.isUnmounted
+    return true
   }
 
   get<K extends keyof HTMLElementTagNameMap>(

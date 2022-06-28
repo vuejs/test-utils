@@ -107,6 +107,10 @@ export class VueWrapper<
     return this.vm.$
   }
 
+  exists() {
+    return !this.getCurrentComponent().isUnmounted
+  }
+
   findAll<K extends keyof HTMLElementTagNameMap>(
     selector: K
   ): DOMWrapper<HTMLElementTagNameMap[K]>[]
