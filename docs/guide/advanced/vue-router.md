@@ -477,6 +477,7 @@ test('allows authenticated user to edit a post', async () => {
     }
   })
 
+  const push = jest.spyOn(router, 'push')
   await wrapper.find('button').trigger('click')
 
   expect(push).toHaveBeenCalledTimes(1)
