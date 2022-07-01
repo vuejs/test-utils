@@ -13,5 +13,5 @@ console.info = (...args) => {
 }
 
 if (__USE_BUILD__) {
-  jest.mock('./src', () => jest.requireActual('./dist/vue-test-utils.cjs'))
+  vi.mock('./src', () => vi.importActual('./dist/vue-test-utils.cjs'))
 }
