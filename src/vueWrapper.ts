@@ -168,7 +168,7 @@ export class VueWrapper<
   }
 
   emitted<T = unknown>(): Record<string, T[]>
-  emitted<T = unknown>(eventName: string): undefined | T[]
+  emitted<T = unknown[]>(eventName: string): undefined | T[]
   emitted<T = unknown>(
     eventName?: string
   ): undefined | T[] | Record<string, T[]> {
