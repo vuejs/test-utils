@@ -1,3 +1,5 @@
+import { vi } from 'vitest'
+
 const originalConsole = console.info
 
 console.info = (...args) => {
