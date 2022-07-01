@@ -18,6 +18,7 @@ export default defineConfig({
     docsBranch: 'main',
     editLinks: true,
     algolia: {
+      appId: '',
       apiKey: 'ee1b8516c9e5a5be9b6c25684eafc42f',
       indexName: 'vue_test_utils',
       searchParameters: {
