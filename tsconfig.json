@@ -12,6 +12,7 @@
     "allowSyntheticDefaultImports": true,
     "noUnusedLocals": true,
     "baseUrl": ".",
+    "types": ["vitest/globals"],
     "paths": {
       "vue": [
         "node_modules/vue/dist/vue.esm.js"

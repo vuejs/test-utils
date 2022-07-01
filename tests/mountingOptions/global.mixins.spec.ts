@@ -4,7 +4,7 @@ import { mount } from '../../src'
 
 describe('mounting options: mixins', () => {
   it('installs a mixin via `mixins`', () => {
-    const createdHook = jest.fn()
+    const createdHook = vi.fn()
     const mixin = {
       created() {
         createdHook()

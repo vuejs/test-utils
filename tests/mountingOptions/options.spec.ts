@@ -12,7 +12,7 @@ describe('mounting options: other', () => {
   })
 
   it('warns on deprecated `method` option and methods are preserved', () => {
-    const spy = jest.spyOn(console, 'warn').mockImplementationOnce(() => {})
+    const spy = vi.spyOn(console, 'warn').mockImplementationOnce(() => {})
 
     const TestComponent = defineComponent({
       template: '<div>{{ sayHi() }}</div>',

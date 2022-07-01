@@ -12,9 +12,9 @@ import { mount } from '../src'
 
 describe('lifecycles', () => {
   it('calls onMounted', async () => {
-    const beforeMountFn = jest.fn()
-    const onBeforeMountFn = jest.fn()
-    const onMountFn = jest.fn()
+    const beforeMountFn = vi.fn()
+    const onBeforeMountFn = vi.fn()
+    const onMountFn = vi.fn()
     const Component = defineComponent({
       beforeMount() {
         beforeMountFn()
@@ -34,9 +34,9 @@ describe('lifecycles', () => {
   })
 
   it('calls onUnmounted', async () => {
-    const beforeUnmountFn = jest.fn()
-    const onBeforeUnmountFn = jest.fn()
-    const onUnmountFn = jest.fn()
+    const beforeUnmountFn = vi.fn()
+    const onBeforeUnmountFn = vi.fn()
+    const onUnmountFn = vi.fn()
     const Component = defineComponent({
       beforeUnmount: beforeUnmountFn,
       setup() {
@@ -53,7 +53,7 @@ describe('lifecycles', () => {
     expect(onBeforeUnmountFn).not.toHaveBeenCalled()
     expect(onUnmountFn).not.toHaveBeenCalled()
 
-    const removeChildSpy = jest.spyOn(
+    const removeChildSpy = vi.spyOn(
       wrapper.element.parentElement!,
       'removeChild'
     )

@@ -11,8 +11,12 @@ const config: Partial<AppConfig> = {
 
 // AsyncComponents are documented here: https://github.com/vuejs/rfcs/blob/async-component/active-rfcs/0026-async-component-api.md
 describe('defineAsyncComponent', () => {
-  beforeAll(() => jest.useFakeTimers())
-  afterAll(() => jest.useRealTimers())
+  beforeAll(() => {
+    vi.useFakeTimers()
+  })
+  afterAll(() => {
+    vi.useRealTimers()
+  })
 
   it('works with the basic usage', async () => {
     const AsyncHello = defineAsyncComponent(
@@ -52,11 +56,11 @@ describe('defineAsyncComponent', () => {
     })
 
     const wrapper = mount(Comp, { global: { config } })
-    jest.advanceTimersByTime(35)
+    vi.advanceTimersByTime(35)
     await flushPromises()
     expect(wrapper.html()).toContain('Loading Component')
 
-    jest.advanceTimersByTime(100)
+    vi.advanceTimersByTime(100)
     await flushPromises()
     expect(wrapper.html()).toContain('Async Component')
   })

@@ -34,6 +34,7 @@
     "@typescript-eslint/eslint-plugin": "^5.30.0",
     "@typescript-eslint/parser": "^5.30.0",
     "@vitejs/plugin-vue": "^2.3.3",
+    "@vitejs/plugin-vue-jsx": "^1.3.10",
     "@vue/babel-plugin-jsx": "^1.1.1",
     "@vue/compat": "3.2.37",
     "@vue/compiler-dom": "3.2.37",
@@ -69,8 +70,8 @@
     "email": "lachlan.miller.1990@outlook.com"
   },
   "scripts": {
-    "test": "yarn vitest --runInBand tests/",
-    "test:build": "yarn vitest --runInBand tests/ -use-build",
+    "test": "yarn vitest",
+    "test:build": "yarn vitest -use-build",
     "tsd": "tsc -p test-dts/tsconfig.tsd.json",
     "build": "yarn rollup -c rollup.config.js",
     "lint": "eslint --ext .ts src/ tests/",

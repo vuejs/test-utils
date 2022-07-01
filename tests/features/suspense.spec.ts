@@ -3,7 +3,7 @@ import { mount, flushPromises } from '../../src'
 import { defineComponent } from 'vue'
 
 let mockShouldError = false
-jest.mock('../utils', () => ({
+vi.mock('../utils', () => ({
   simulateDelay: () => {
     if (mockShouldError) {
       throw new Error('Error!')

@@ -6,7 +6,7 @@ describe('enableAutoUnmount', () => {
   })
 
   it('calls the hook function', () => {
-    const hookMock = jest.fn()
+    const hookMock = vi.fn()
 
     enableAutoUnmount(hookMock)
 
@@ -14,13 +14,13 @@ describe('enableAutoUnmount', () => {
   })
 
   it('uses the hook function to unmount wrappers', () => {
-    const hookMock = jest.fn()
+    const hookMock = vi.fn()
 
     enableAutoUnmount(hookMock)
     const [unmountFn] = hookMock.mock.calls[0]
 
     const wrapper = mount({ template: '<p>test</p>' })
-    jest.spyOn(wrapper, 'unmount')
+    vi.spyOn(wrapper, 'unmount')
 
     unmountFn()
 

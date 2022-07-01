@@ -16,7 +16,7 @@ describe('emitted', () => {
 
   beforeEach(() => {
     consoleWarnSave = console.warn
-    console.warn = jest.fn()
+    console.warn = vi.fn()
   })
 
   afterEach(() => {

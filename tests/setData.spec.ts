@@ -95,7 +95,7 @@ describe('setData', () => {
   })
 
   it('does not set new properties', async () => {
-    jest.spyOn(console, 'warn').mockImplementationOnce(() => {})
+    vi.spyOn(console, 'warn').mockImplementationOnce(() => {})
 
     const Component = {
       template: `<div>{{ foo || 'fallback' }}</div>`

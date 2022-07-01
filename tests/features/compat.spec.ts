@@ -1,7 +1,7 @@
 import * as mockVue from '@vue/compat'
 import { mount } from '../../src'
 
-jest.mock('vue', () => mockVue)
+vi.mock('vue', () => mockVue)
 
 const { configureCompat, extend, defineComponent, h } = mockVue
 
@@ -136,8 +136,7 @@ describe('@vue/compat build', () => {
   it('correctly uses stubs when stub is legacy component', () => {
     configureCompat({
       MODE: 3,
-      GLOBAL_EXTEND: 'suppress-warning',
-      GLOBAL_MOUNT: 'suppress-warning'
+      GLOBAL_EXTEND: 'suppress-warning'
     })
 
     const Foo = {
@@ -190,7 +189,7 @@ describe('@vue/compat build', () => {
       }
     }
 
-    const onClick = jest.fn()
+    const onClick = vi.fn()
     const wrapper = mount(FunctionalComponent, {
       props: {
         class: 'foo',

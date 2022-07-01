@@ -38,7 +38,7 @@ describe('vm', () => {
 
     const wrapper = mount(Component)
 
-    jest.spyOn(wrapper.vm, 'toggle')
+    vi.spyOn(wrapper.vm, 'toggle')
 
     await wrapper.get('div').trigger('click')
 

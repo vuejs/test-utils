@@ -56,7 +56,7 @@ describe('teleport', () => {
     destination.id = 'far-away'
     document.body.appendChild(destination)
 
-    const onGreet = jest.fn()
+    const onGreet = vi.fn()
 
     const Comp = defineComponent({
       setup() {
@@ -85,7 +85,7 @@ describe('teleport', () => {
     destination.id = 'far-away'
     document.body.appendChild(destination)
 
-    const onGreet = jest.fn()
+    const onGreet = vi.fn()
 
     const Comp = defineComponent({
       setup() {

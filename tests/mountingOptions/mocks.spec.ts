@@ -15,7 +15,7 @@ describe('mocks', () => {
       state: {
         count: 1
       },
-      dispatch: jest.fn()
+      dispatch: vi.fn()
     }
 
     const wrapper = mount(Foo, {
@@ -53,7 +53,7 @@ describe('mocks', () => {
     })
 
     const $router = {
-      push: jest.fn()
+      push: vi.fn()
     }
     const $route = {
       params: {
