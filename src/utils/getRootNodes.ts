@@ -1,6 +1,6 @@
-import { ShapeFlags } from '@vue/shared'
 import { isNotNullOrUndefined } from '../utils'
 import { VNode, VNodeArrayChildren } from 'vue'
+import { ShapeFlags } from './vueShared'
 
 export function getRootNodes(vnode: VNode): Node[] {
   if (vnode.shapeFlag & ShapeFlags.ELEMENT) {
