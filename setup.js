@@ -15,8 +15,8 @@ console.info = (...args) => {
 }
 
 vi.mock('./src', () => {
-  if (!__DEV__) {
-    return vi.importActual('./dist/vue-test-utils.cjs')
+  if (!__USE_BUILD__) {
+    return vi.importActual('./dist/vue-test-utils.esm-bundler.mjs')
   } else {
     return vi.importActual('./src')
   }
