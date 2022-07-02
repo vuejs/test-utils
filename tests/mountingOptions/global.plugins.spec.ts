@@ -1,3 +1,4 @@
+import { describe, expect, test, it, vi } from 'vitest'
 import { h, App } from 'vue'
 
 import { mount } from '../../src'

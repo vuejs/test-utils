@@ -1,3 +1,4 @@
+import { describe, expect, it } from 'vitest'
 import { mount } from '../src'
 import Hello from './components/Hello.vue'
 import DefineExpose from './components/DefineExpose.vue'

@@ -1,3 +1,12 @@
+import {
+  afterAll,
+  beforeAll,
+  beforeEach,
+  describe,
+  expect,
+  it,
+  vi
+} from 'vitest'
 import { ComponentPublicInstance, h } from 'vue'
 
 import { mount, config, VueWrapper } from '../../src'

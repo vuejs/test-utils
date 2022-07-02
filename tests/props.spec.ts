@@ -1,3 +1,4 @@
+import { describe, expect, it } from 'vitest'
 import { mount, shallowMount } from '../src'
 import WithProps from './components/WithProps.vue'
 import PropWithSymbol from './components/PropWithSymbol.vue'

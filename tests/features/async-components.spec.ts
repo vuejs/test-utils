@@ -1,3 +1,4 @@
+import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest'
 import { defineAsyncComponent, defineComponent, h, AppConfig } from 'vue'
 import { mount, flushPromises } from '../../src'
 

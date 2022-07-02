@@ -1,3 +1,4 @@
+import { describe, expect, test, vi } from 'vitest'
 import SuspenseComponent from '../components/Suspense.vue'
 import { mount, flushPromises } from '../../src'
 import { defineComponent } from 'vue'

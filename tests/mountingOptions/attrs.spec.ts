@@ -1,3 +1,4 @@
+import { describe, expect, test } from 'vitest'
 import { defineComponent, h } from 'vue'
 import { mount } from '../../src'
 

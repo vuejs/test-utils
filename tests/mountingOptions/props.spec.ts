@@ -1,3 +1,4 @@
+import { describe, expect, test, vi } from 'vitest'
 import { defineComponent, h } from 'vue'
 import { mount } from '../../src'
 import Title from '../components/FunctionComponent'

@@ -1,3 +1,4 @@
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { h, defineComponent, defineAsyncComponent } from 'vue'
 
 import { config, flushPromises, mount, RouterLinkStub } from '../../src'

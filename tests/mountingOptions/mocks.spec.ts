@@ -1,3 +1,4 @@
+import { describe, expect, it, vi } from 'vitest'
 import { mount, RouterLinkStub } from '../../src'
 import { defineComponent } from 'vue'
 

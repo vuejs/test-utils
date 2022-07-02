@@ -1,3 +1,4 @@
+import { describe, expect, it, vi } from 'vitest'
 import { DefineComponent, defineComponent } from 'vue'
 import { mount, RouterLinkStub, shallowMount } from '../src'
 import Issue425 from './components/Issue425.vue'

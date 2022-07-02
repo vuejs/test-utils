@@ -1,3 +1,4 @@
+import { beforeEach, describe, expect, it, vi } from 'vitest'
 import * as mockVue from '@vue/compat'
 import { mount } from '../../src'
 

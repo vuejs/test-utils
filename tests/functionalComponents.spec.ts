@@ -1,3 +1,4 @@
+import { beforeEach, describe, expect, it } from 'vitest'
 import { DOMWrapper, mount, VueWrapper } from '../src'
 import { h, Slots } from 'vue'
 import Hello from './components/Hello.vue'

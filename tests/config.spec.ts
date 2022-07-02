@@ -1,3 +1,4 @@
+import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { defineComponent, ComponentPublicInstance, h, inject } from 'vue'
 import type { App } from 'vue'
 import { config, mount } from '../src'

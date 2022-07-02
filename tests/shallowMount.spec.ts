@@ -1,3 +1,4 @@
+import { describe, expect, it } from 'vitest'
 import { defineAsyncComponent, defineComponent } from 'vue'
 import { mount, shallowMount, VueWrapper } from '../src'
 import ComponentWithChildren from './components/ComponentWithChildren.vue'

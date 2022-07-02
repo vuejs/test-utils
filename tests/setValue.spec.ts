@@ -1,3 +1,4 @@
+import { describe, expect, it, vi } from 'vitest'
 import { defineComponent, h } from 'vue'
 import { mount, shallowMount } from '../src'
 import ComponentWithInput from './components/ComponentWithInput.vue'

@@ -1,3 +1,4 @@
+import { describe, expect, it } from 'vitest'
 import { mount } from '../../src'
 
 const innerHTML = '<input><span>Hello world</span>'
