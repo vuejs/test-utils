@@ -14,6 +14,10 @@ console.info = (...args) => {
   originalConsole(...args)
 }
 
-if (__USE_BUILD__) {
-  vi.mock('./src', () => vi.importActual('./dist/vue-test-utils.cjs'))
-}
+vi.mock('./src', () => {
+  if (!__DEV__) {
+    return vi.importActual('./dist/vue-test-utils.cjs')
+  } else {
+    return vi.importActual('./src')
+  }
+})

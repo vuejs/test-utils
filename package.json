@@ -70,7 +70,8 @@
   },
   "scripts": {
     "test": "yarn vitest",
-    "test:build": "yarn vitest -use-build",
+    "test:watch": "yarn vitest --watch",
+    "test:build": "yarn vitest --mode test-build",
     "tsd": "tsc -p test-dts/tsconfig.tsd.json",
     "build": "yarn rollup -c rollup.config.js",
     "lint": "eslint --ext .ts src/ tests/",
