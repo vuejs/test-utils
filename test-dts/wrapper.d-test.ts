@@ -62,6 +62,11 @@ byClassArray = domWrapper.findAll('.todo')
 expectType<Element | undefined>(byClassArray[0].element)
 
 // emitted
+
+// event name without specific type
+let incrementEventWithoutType = wrapper.emitted('increment')
+expectType<unknown[][] | undefined>(incrementEventWithoutType)
+
 // event name
 let incrementEvent = wrapper.emitted<{ count: number }>('increment')
 expectType<{ count: number }[] | undefined>(incrementEvent)
