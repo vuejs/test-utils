@@ -19,8 +19,7 @@ describe('defineAsyncComponent', () => {
     vi.useRealTimers()
   })
 
-  // TODO: Find out why this does not work
-  it.skip('works with the basic usage', async () => {
+  it('works with the basic usage', async () => {
     const AsyncHello = defineAsyncComponent(
       () => import('../components/Hello.vue')
     )
@@ -32,6 +31,7 @@ describe('defineAsyncComponent', () => {
 
     const wrapper = mount(Comp, { global: { config } })
     await flushPromises()
+    await vi.dynamicImportSettled()
     expect(wrapper.html()).toContain('Hello world')
   })
 
@@ -93,9 +93,7 @@ describe('defineAsyncComponent', () => {
     expect(wrapper.html()).toContain('Error Component')
   })
 
-  // TODO: Find out why this does not work
-  // Is it valid to have an AsyncComponent as the root? Was it ever?
-  it.skip('works when AsyncComponent is the root', async () => {
+  it('works when AsyncComponent is the root', async () => {
     const AsyncHello = defineAsyncComponent(
       () => import('../components/Hello.vue')
     )
@@ -107,6 +105,7 @@ describe('defineAsyncComponent', () => {
 
     const wrapper = mount(Comp, { global: { config } })
     await flushPromises()
+    await vi.dynamicImportSettled()
     expect(wrapper.html()).toContain('Hello world')
   })
 })
