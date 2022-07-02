@@ -136,7 +136,8 @@ describe('@vue/compat build', () => {
   it('correctly uses stubs when stub is legacy component', () => {
     configureCompat({
       MODE: 3,
-      GLOBAL_EXTEND: 'suppress-warning'
+      GLOBAL_EXTEND: 'suppress-warning',
+      GLOBAL_MOUNT: 'suppress-warning'
     })
 
     const Foo = {
