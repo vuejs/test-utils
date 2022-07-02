@@ -13,7 +13,8 @@ export default defineConfig({
   test: {
     globals: true,
     environment: 'jsdom',
-    setupFiles: [path.resolve(__dirname, './setup.js')]
+    setupFiles: [path.resolve(__dirname, './setup.js')],
+    include: ['tests/**/*.spec.ts']
   },
   resolve: {
     extensions: ['.vue', '.js', '.json', '.jsx', '.ts', '.tsx', '.node']
