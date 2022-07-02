@@ -1278,7 +1278,7 @@
   dependencies:
     "@types/node" "*"
 
-"@typescript-eslint/eslint-plugin@^5.30.0":
+"@typescript-eslint/eslint-plugin@^5.30.3":
   version "5.30.3"
   resolved "https://registry.npmmirror.com/@typescript-eslint/eslint-plugin/-/eslint-plugin-5.30.3.tgz#2f293e56b73c4f281e48d253af4a17f21a55d54c"
   integrity sha512-QEgE1uahnDbWEkZlidq7uKB630ny1NN8KbLPmznX+8hYsYpoV1/quG1Nzvs141FVuumuS7O0EpqYw3RB4AVzRg==
