@@ -39,6 +39,7 @@
     "@vue/compat": "3.2.37",
     "@vue/compiler-dom": "3.2.37",
     "@vue/compiler-sfc": "3.2.37",
+    "c8": "^7.11.3",
     "eslint": "^8.18.0",
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-prettier": "4.2.1",
@@ -70,6 +71,7 @@
   },
   "scripts": {
     "test": "yarn vitest",
+    "test:coverage": "yarn vitest --coverage",
     "test:watch": "yarn vitest --watch",
     "test:build": "yarn vitest --mode test-build",
     "tsd": "tsc -p test-dts/tsconfig.tsd.json",
