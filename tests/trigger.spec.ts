@@ -1,3 +1,4 @@
+import { describe, expect, it, vi } from 'vitest'
 import { defineComponent, h, ref } from 'vue'
 
 import { mount } from '../src'
@@ -51,7 +52,7 @@ describe('trigger', () => {
     })
 
     it('works with right modifier', async () => {
-      const handler = jest.fn()
+      const handler = vi.fn()
       const Component = {
         template: '<div @click.right="handler"/>',
         methods: { handler }
@@ -65,7 +66,7 @@ describe('trigger', () => {
     })
 
     it('works with middle modifier', async () => {
-      const handler = jest.fn()
+      const handler = vi.fn()
       const Component = {
         template: '<div @click.middle="handler"/>',
         methods: { handler }
@@ -79,7 +80,7 @@ describe('trigger', () => {
     })
 
     it('works with meta and key modifiers', async () => {
-      const handler = jest.fn()
+      const handler = vi.fn()
       const Component = {
         template: '<div @click.meta.right="handler"/>',
         methods: { handler }
@@ -117,7 +118,7 @@ describe('trigger', () => {
 
   describe('on keydown', () => {
     it('causes keydown handler to fire when "keydown" is triggered', async () => {
-      const keydownHandler = jest.fn()
+      const keydownHandler = vi.fn()
       const Component = {
         template: '<input @keydown="keydownHandler" />',
         methods: { keydownHandler }
@@ -142,7 +143,7 @@ describe('trigger', () => {
     })
 
     it('causes keydown handler to fire when "keydown.enter" is triggered', async () => {
-      const keydownHandler = jest.fn()
+      const keydownHandler = vi.fn()
       const Component = {
         template: '<input @keydown.enter="keydownHandler" />',
         methods: { keydownHandler }
@@ -178,7 +179,7 @@ describe('trigger', () => {
     })
 
     it('overwrites key if passed as a modifier', async () => {
-      const keydownHandler = jest.fn()
+      const keydownHandler = vi.fn()
       const Component = {
         template: '<input @keydown.enter="keydownHandler" />',
         methods: { keydownHandler }
@@ -193,7 +194,7 @@ describe('trigger', () => {
     })
 
     it('causes keydown handler to fire with multiple modifiers', async () => {
-      const keydownHandler = jest.fn()
+      const keydownHandler = vi.fn()
       const Component = {
         template: '<input @keydown.ctrl.shift.left="keydownHandler" />',
         methods: { keydownHandler }
@@ -212,7 +213,7 @@ describe('trigger', () => {
     })
 
     it('causes keydown handler to fire with the appropriate keyCode when wrapper.trigger("keydown", { keyCode: 65 }) is fired', async () => {
-      const keydownHandler = jest.fn()
+      const keydownHandler = vi.fn()
       const Component = {
         template: '<input @keydown="keydownHandler" />',
         methods: { keydownHandler }
@@ -225,7 +226,7 @@ describe('trigger', () => {
     })
 
     it('causes keydown handler to fire converting keyName in an appropriate keyCode when wrapper.trigger("keydown.${keyName}") is fired', async () => {
-      let keydownHandler = jest.fn()
+      let keydownHandler = vi.fn()
 
       const Component = {
         template: '<input @keydown="keydownHandler" />',
@@ -258,7 +259,7 @@ describe('trigger', () => {
       ]
 
       for (let element of validElementsToBeDisabled) {
-        const clickHandler = jest.fn()
+        const clickHandler = vi.fn()
         const Component = {
           template: `<${element} disabled @click="clickHandler" />`,
           methods: { clickHandler }
@@ -274,7 +275,7 @@ describe('trigger', () => {
       const invalidElementsToBeDisabled = ['div', 'span', 'a']
 
       for (let element of invalidElementsToBeDisabled) {
-        const clickHandler = jest.fn()
+        const clickHandler = vi.fn()
         const Component = {
           template: `<${element} disabled @click="clickHandler" />`,
           methods: { clickHandler }
@@ -298,7 +299,7 @@ describe('trigger', () => {
     ]
     for (let modifier of eventModifiers) {
       it(`handles .${modifier}`, async () => {
-        const keydownHandler = jest.fn()
+        const keydownHandler = vi.fn()
         const Component = {
           template: `<input @keydown.${modifier}="keydownHandler" />`,
           methods: { keydownHandler }
@@ -314,7 +315,7 @@ describe('trigger', () => {
 
   describe('custom data', () => {
     it('adds custom data to events', () => {
-      const updateHandler = jest.fn()
+      const updateHandler = vi.fn()
       const Component = {
         template: '<div @update="updateHandler" />',
         methods: { updateHandler }
@@ -332,7 +333,7 @@ describe('trigger', () => {
       const expectedErrorMessage =
         '[vue-test-utils]: you cannot set the target value of an event. See the notes section of the docs for more details—https://vue-test-utils.vuejs.org/api/wrapper/trigger.html'
 
-      const clickHandler = jest.fn()
+      const clickHandler = vi.fn()
       const Component = {
         template: '<div @click="clickHandler" />',
         methods: { clickHandler }

@@ -1,10 +1,11 @@
+import { describe, expect, test, it, vi } from 'vitest'
 import { h, App } from 'vue'
 
 import { mount } from '../../src'
 
 describe('mounting options: plugins', () => {
   it('installs a plugin via `plugins`', () => {
-    const installed = jest.fn()
+    const installed = vi.fn()
 
     class Plugin {
       static install() {
@@ -27,7 +28,7 @@ describe('mounting options: plugins', () => {
   })
 
   it('installs a plugin with options `plugins`', () => {
-    const installed = jest.fn()
+    const installed = vi.fn()
 
     class Plugin {
       static install(_app: App, ...options: any[]) {
@@ -53,14 +54,14 @@ describe('mounting options: plugins', () => {
 })
 
 test('installs plugins with and without options', () => {
-  const installed = jest.fn()
+  const installed = vi.fn()
   class Plugin {
     static install() {
       installed()
     }
   }
 
-  const installedWithOptions = jest.fn()
+  const installedWithOptions = vi.fn()
   class PluginWithOptions {
     static install(_app: App, ...args: any[]) {
       installedWithOptions(...args)

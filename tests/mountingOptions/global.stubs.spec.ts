@@ -1,3 +1,4 @@
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { h, defineComponent, defineAsyncComponent } from 'vue'
 
 import { config, flushPromises, mount, RouterLinkStub } from '../../src'
@@ -150,8 +151,8 @@ describe('mounting options: stubs', () => {
   })
 
   it('prevents lifecycle hooks triggering in a stub', () => {
-    const onBeforeMount = jest.fn()
-    const beforeCreate = jest.fn()
+    const onBeforeMount = vi.fn()
+    const beforeCreate = vi.fn()
     const Foo = {
       name: 'Foo',
       setup() {
@@ -180,7 +181,7 @@ describe('mounting options: stubs', () => {
   })
 
   it('uses a custom stub implementation', () => {
-    const onBeforeMount = jest.fn()
+    const onBeforeMount = vi.fn()
     const FooStub = {
       name: 'FooStub',
       setup() {
@@ -240,7 +241,7 @@ describe('mounting options: stubs', () => {
   })
 
   it('uses an sfc as a custom stub', () => {
-    const created = jest.fn()
+    const created = vi.fn()
     const HelloComp = {
       name: 'Hello',
       created() {

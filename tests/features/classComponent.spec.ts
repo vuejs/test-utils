@@ -1,3 +1,4 @@
+import { describe, expect, it } from 'vitest'
 import 'reflect-metadata'
 import { h } from 'vue'
 import { Options, Vue } from 'vue-class-component'

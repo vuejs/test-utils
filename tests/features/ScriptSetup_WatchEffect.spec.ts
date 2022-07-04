@@ -1,3 +1,4 @@
+import { expect, it } from 'vitest'
 import { mount } from '../../src'
 import ScriptSetup_WatchEffect from '../components/ScriptSetup_WatchEffect.vue'
 

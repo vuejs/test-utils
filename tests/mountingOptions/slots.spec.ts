@@ -1,3 +1,4 @@
+import { describe, expect, it, vi } from 'vitest'
 import { defineComponent, h } from 'vue'
 
 import { flushPromises, mount } from '../../src'
@@ -228,8 +229,8 @@ describe('slots', () => {
   })
 
   it('triggers child component lifecycles', async () => {
-    const parentMounted = jest.fn()
-    const childMounted = jest.fn()
+    const parentMounted = vi.fn()
+    const childMounted = vi.fn()
 
     const Parent = defineComponent({
       mounted() {

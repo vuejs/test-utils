@@ -1,10 +1,11 @@
+import { describe, expect, it, vi } from 'vitest'
 import { defineComponent } from 'vue'
 
 import { mount } from '../src'
 
 describe('Unmount', () => {
   it('works on single root component', () => {
-    const errorHandler = jest.fn()
+    const errorHandler = vi.fn()
     const Component = {
       template: `
         <div></div>
@@ -23,7 +24,7 @@ describe('Unmount', () => {
   })
 
   it('works on multi-root component', () => {
-    const errorHandler = jest.fn()
+    const errorHandler = vi.fn()
     const Component = defineComponent({
       template: `
         <div></div>

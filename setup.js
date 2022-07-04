@@ -1,3 +1,5 @@
+import { vi } from 'vitest'
+
 const originalConsole = console.info
 
 console.info = (...args) => {
@@ -12,6 +14,10 @@ console.info = (...args) => {
   originalConsole(...args)
 }
 
-if (__USE_BUILD__) {
-  jest.mock('./src', () => jest.requireActual('./dist/vue-test-utils.cjs'))
-}
+vi.mock('./src', () => {
+  if (!__USE_BUILD__) {
+    return vi.importActual('./dist/vue-test-utils.esm-bundler.mjs')
+  } else {
+    return vi.importActual('./src')
+  }
+})

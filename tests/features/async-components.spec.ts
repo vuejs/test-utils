@@ -1,3 +1,4 @@
+import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest'
 import { defineAsyncComponent, defineComponent, h, AppConfig } from 'vue'
 import { mount, flushPromises } from '../../src'
 
@@ -11,8 +12,12 @@ const config: Partial<AppConfig> = {
 
 // AsyncComponents are documented here: https://github.com/vuejs/rfcs/blob/async-component/active-rfcs/0026-async-component-api.md
 describe('defineAsyncComponent', () => {
-  beforeAll(() => jest.useFakeTimers())
-  afterAll(() => jest.useRealTimers())
+  beforeAll(() => {
+    vi.useFakeTimers()
+  })
+  afterAll(() => {
+    vi.useRealTimers()
+  })
 
   it('works with the basic usage', async () => {
     const AsyncHello = defineAsyncComponent(
@@ -26,6 +31,7 @@ describe('defineAsyncComponent', () => {
 
     const wrapper = mount(Comp, { global: { config } })
     await flushPromises()
+    await vi.dynamicImportSettled()
     expect(wrapper.html()).toContain('Hello world')
   })
 
@@ -52,11 +58,11 @@ describe('defineAsyncComponent', () => {
     })
 
     const wrapper = mount(Comp, { global: { config } })
-    jest.advanceTimersByTime(35)
+    vi.advanceTimersByTime(35)
     await flushPromises()
     expect(wrapper.html()).toContain('Loading Component')
 
-    jest.advanceTimersByTime(100)
+    vi.advanceTimersByTime(100)
     await flushPromises()
     expect(wrapper.html()).toContain('Async Component')
   })
@@ -87,9 +93,7 @@ describe('defineAsyncComponent', () => {
     expect(wrapper.html()).toContain('Error Component')
   })
 
-  // TODO: Find out why this does not work
-  // Is it valid to have an AsyncComponent as the root? Was it ever?
-  it.skip('works when AsyncComponent is the root', async () => {
+  it('works when AsyncComponent is the root', async () => {
     const AsyncHello = defineAsyncComponent(
       () => import('../components/Hello.vue')
     )
@@ -101,6 +105,7 @@ describe('defineAsyncComponent', () => {
 
     const wrapper = mount(Comp, { global: { config } })
     await flushPromises()
+    await vi.dynamicImportSettled()
     expect(wrapper.html()).toContain('Hello world')
   })
 })

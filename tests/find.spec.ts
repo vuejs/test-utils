@@ -1,3 +1,4 @@
+import { describe, expect, it } from 'vitest'
 import { defineComponent, h, nextTick, Fragment } from 'vue'
 import { mount, VueWrapper } from '../src'
 import SuspenseComponent from './components/Suspense.vue'

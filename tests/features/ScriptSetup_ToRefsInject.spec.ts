@@ -1,3 +1,4 @@
+import { expect, it } from 'vitest'
 import { mount } from '../../src'
 import ScriptSetup_ToRefsInject from '../components/ScriptSetup_ToRefsInject.vue'
 

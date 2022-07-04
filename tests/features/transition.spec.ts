@@ -1,3 +1,4 @@
+import { expect, test } from 'vitest'
 import { WithTransition } from '../components/WithTransition'
 import { mount } from '../../src'
 

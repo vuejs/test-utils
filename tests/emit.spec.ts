@@ -1,3 +1,4 @@
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import {
   defineComponent,
   FunctionalComponent,
@@ -16,7 +17,7 @@ describe('emitted', () => {
 
   beforeEach(() => {
     consoleWarnSave = console.warn
-    console.warn = jest.fn()
+    console.warn = vi.fn()
   })
 
   afterEach(() => {

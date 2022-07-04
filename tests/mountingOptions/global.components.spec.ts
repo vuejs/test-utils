@@ -1,3 +1,4 @@
+import { describe, expect, it, vi } from 'vitest'
 import { mount } from '../../src'
 import { defineComponent } from 'vue'
 
@@ -24,7 +25,7 @@ describe('global.components', () => {
     const GlobalComponent = {
       template: '<div>Global</div>'
     }
-    const spy = jest.spyOn(console, 'warn')
+    const spy = vi.spyOn(console, 'warn')
     const wrapper = mount(
       {
         template: '<div><global-component/></div>'
@@ -52,7 +53,7 @@ describe('global.components', () => {
     const GlobalComponent = {
       template: '<div>Global</div>'
     }
-    const spy = jest.spyOn(console, 'warn')
+    const spy = vi.spyOn(console, 'warn')
     const wrapper = mount(
       {
         template: '<div><global-component/></div>'

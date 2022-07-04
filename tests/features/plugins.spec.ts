@@ -1,3 +1,12 @@
+import {
+  afterAll,
+  beforeAll,
+  beforeEach,
+  describe,
+  expect,
+  it,
+  vi
+} from 'vitest'
 import { ComponentPublicInstance, h } from 'vue'
 
 import { mount, config, VueWrapper } from '../../src'
@@ -56,7 +65,7 @@ describe('Plugin#install', () => {
   })
 
   it('supports functions', () => {
-    const myMethod = jest.fn()
+    const myMethod = vi.fn()
     const plugin = () => ({ myMethod })
     config.plugins.VueWrapper.install(plugin)
     mountComponent().myMethod()
@@ -65,7 +74,7 @@ describe('Plugin#install', () => {
 
   describe('error states', () => {
     beforeAll(() => {
-      jest.spyOn(console, 'error').mockImplementation(() => {})
+      vi.spyOn(console, 'error').mockImplementation(() => {})
     })
 
     afterAll(() => {
@@ -107,7 +116,7 @@ describe('createStubs', () => {
     render: () => h('div', [h(Child1), h(Child1), h(Child2)])
   }
 
-  const customCreateStub = jest.fn(({ name }) => h(`${name}-custom-stub`))
+  const customCreateStub = vi.fn(({ name }) => h(`${name}-custom-stub`))
   beforeAll(() => {
     config.plugins.createStubs = customCreateStub
   })

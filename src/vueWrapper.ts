@@ -4,7 +4,6 @@ import {
   ComponentCustomProperties,
   ComponentPublicInstance
 } from 'vue'
-import { ShapeFlags } from '@vue/shared'
 // @ts-ignore todo - No DefinitelyTyped package exists for this
 import pretty from 'pretty'
 
@@ -22,6 +21,7 @@ import {
   WrapperType
 } from './wrapperFactory'
 import { VNode } from '@vue/runtime-core'
+import { ShapeFlags } from './utils/vueShared'
 
 export class VueWrapper<
   T extends Omit<
