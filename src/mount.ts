@@ -57,6 +57,24 @@ const MOUNT_OPTIONS: Array<keyof MountingOptions<any>> = [
   'shallow'
 ]
 
+type ComponentMountingOptions<T> = T extends DefineComponent<
+  infer PropsOrPropOptions,
+  any,
+  infer D,
+  any,
+  any
+>
+  ? MountingOptions<
+      Partial<ExtractDefaultPropTypes<PropsOrPropOptions>> &
+        Omit<
+          Readonly<ExtractPropTypes<PropsOrPropOptions>> & PublicProps,
+          keyof ExtractDefaultPropTypes<PropsOrPropOptions>
+        >,
+      D
+    > &
+      Record<string, any>
+  : MountingOptions<any>
+
 function getInstanceOptions(
   options: MountingOptions<any> & Record<string, any>
 ): Record<string, any> {
@@ -172,6 +190,11 @@ export function mount<
     >
   >
 >
+// component declared by vue-tsc ScriptSetup
+export function mount<T extends DefineComponent<any, any, any, any>>(
+  component: T,
+  options?: ComponentMountingOptions<T>
+): VueWrapper<InstanceType<T>>
 
 // Component declared with no props
 export function mount<
