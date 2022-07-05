@@ -52,11 +52,9 @@ test('allows authenticated user to edit a post', async () => {
     props: {
       isAuthenticated: true
     },
-    global: {
-      mocks: {
-        $route: mockRoute,
-        $router: mockRouter
-      }
+    mocks: {
+      $route: mockRoute,
+      $router: mockRouter
     }
   })
 
