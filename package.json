@@ -56,7 +56,7 @@
     "vitest": "0.17.0",
     "vue": "3.2.37",
     "vue-class-component": "8.0.0-rc.1",
-    "vue-router": "4.0.16",
+    "vue-router": "4.1.1",
     "vue-tsc": "0.38.2",
     "vuex": "4.0.2"
   },
