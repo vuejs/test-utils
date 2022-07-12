@@ -2,7 +2,9 @@ import {
   h,
   createApp,
   defineComponent,
+  reactive,
   shallowReactive,
+  isRef,
   FunctionalComponent,
   ComponentPublicInstance,
   ComponentOptionsWithObjectProps,
@@ -54,6 +56,24 @@ const MOUNT_OPTIONS: Array<keyof MountingOptions<any>> = [
   'global',
   'shallow'
 ]
+
+type ComponentMountingOptions<T> = T extends DefineComponent<
+  infer PropsOrPropOptions,
+  any,
+  infer D,
+  any,
+  any
+>
+  ? MountingOptions<
+      Partial<ExtractDefaultPropTypes<PropsOrPropOptions>> &
+        Omit<
+          Readonly<ExtractPropTypes<PropsOrPropOptions>> & PublicProps,
+          keyof ExtractDefaultPropTypes<PropsOrPropOptions>
+        >,
+      D
+    > &
+      Record<string, any>
+  : MountingOptions<any>
 
 function getInstanceOptions(
   options: MountingOptions<any> & Record<string, any>
@@ -170,6 +190,11 @@ export function mount<
     >
   >
 >
+// component declared by vue-tsc ScriptSetup
+export function mount<T extends DefineComponent<any, any, any, any>>(
+  component: T,
+  options?: ComponentMountingOptions<T>
+): VueWrapper<InstanceType<T>>
 
 // Component declared with no props
 export function mount<
@@ -273,7 +298,7 @@ export function mount(
   inputComponent: any,
   options?: MountingOptions<any> & Record<string, any>
 ): VueWrapper<any> {
-  // normalise the incoming component
+  // normalize the incoming component
   const originalComponent = unwrapLegacyVueExtendComponent(inputComponent)
   let component: ConcreteComponent
   const instanceOptions = getInstanceOptions(options ?? {})
@@ -293,9 +318,9 @@ export function mount(
       },
       props: originalComponent.props || {},
       setup:
-        (_, { attrs, slots }) =>
+        (props, { attrs, slots }) =>
         () =>
-          h(originalComponent, attrs, slots),
+          h(originalComponent, { ...props, ...attrs }, slots),
       ...instanceOptions
     })
     addToDoNotStubComponents(originalComponent)
@@ -379,12 +404,22 @@ export function mount(
   const MOUNT_COMPONENT_REF = 'VTU_COMPONENT'
   // we define props as reactive so that way when we update them with `setProps`
   // Vue's reactivity system will cause a rerender.
-  const props = shallowReactive({
+  const refs = shallowReactive<Record<string, unknown>>({})
+  const props = reactive<Record<string, unknown>>({})
+
+  Object.entries({
     ...options?.attrs,
     ...options?.propsData,
     ...options?.props,
     ref: MOUNT_COMPONENT_REF
+  }).forEach(([k, v]) => {
+    if (isRef(v)) {
+      refs[k] = v
+    } else {
+      props[k] = v
+    }
   })
+
   const global = mergeGlobalProperties(options?.global)
   if (isObjectComponent(component)) {
     component.components = { ...component.components, ...global.components }
@@ -394,7 +429,7 @@ export function mount(
   const Parent = defineComponent({
     name: 'VTU_ROOT',
     render() {
-      return h(component, props, slots)
+      return h(component as ComponentOptions, { ...props, ...refs }, slots)
     }
   })
 

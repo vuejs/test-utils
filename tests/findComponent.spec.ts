@@ -1,3 +1,4 @@
+import { describe, expect, it } from 'vitest'
 import { defineComponent, h, nextTick } from 'vue'
 import { mount } from '../src'
 import Hello from './components/Hello.vue'
@@ -358,6 +359,29 @@ describe('findComponent', () => {
     expect(compB[0].vm.$el.querySelector('.content').textContent).toBe('1')
   })
 
+  it('finds single by ref in v-for', () => {
+    const ChildComp = {
+      props: {
+        value: Number
+      },
+      template: '<span>{{value}}</span>'
+    }
+
+    const wrapper = mount({
+      components: { ChildComp },
+      template: `
+        <div>
+          <div v-for="value in 3" :key="value">
+            <ChildComp ref="child" :value="value" />
+          </div>
+        </div>
+      `
+    })
+    const child = wrapper.findComponent({ ref: 'child' })
+    expect(child.exists()).toBe(true)
+    expect(child.props('value')).toBe(1)
+  })
+
   // https://github.com/vuejs/test-utils/pull/188
   const slotComponent = defineComponent({
     name: 'slotA',
@@ -485,6 +509,35 @@ describe('findComponent', () => {
           .find('.nested')
           .findComponent({ ref: 'testRef' })
           .classes('inside')
+      ).toBe(true)
+    })
+
+    it('finds top component when searching from nested node', () => {
+      const DeepNestedComponent = defineComponent({
+        template: '<div class="deep-nested"></div>'
+      })
+
+      const NestedComponent = defineComponent({
+        components: { DeepNestedComponent },
+        template: '<deep-nested-component />'
+      })
+
+      const RootComponent = defineComponent({
+        components: { NestedComponent },
+        template: '<nested-component />'
+      })
+
+      const wrapper = mount(RootComponent)
+      expect(
+        wrapper.find('.deep-nested').findComponent(DeepNestedComponent).exists()
+      ).toBe(true)
+
+      expect(
+        wrapper.find('.deep-nested').findComponent(NestedComponent).exists()
+      ).toBe(true)
+
+      expect(
+        wrapper.find('.deep-nested').findComponent(RootComponent).exists()
       ).toBe(true)
     })
   })

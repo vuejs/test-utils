@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1
 
-exports[`shallowMount renders props for stubbed component in a snapshot 1`] = `
+exports[`shallowMount > renders props for stubbed component in a snapshot 1`] = `
 <div>
   <my-label-stub val="username"></my-label-stub>
   <async-component-stub></async-component-stub>

@@ -1,6 +1,8 @@
+import { describe, expect, it } from 'vitest'
 import { defineComponent, h, computed } from 'vue'
 
 import { mount } from '../src'
+import Title from './components/FunctionComponent'
 
 describe('setProps', () => {
   it('updates a primitive prop', async () => {
@@ -142,5 +144,15 @@ describe('setProps', () => {
     expect(() => FooResult.setProps({ baz: 'bin' })).toThrowError(
       'You can only use setProps on your mounted component'
     )
+  })
+
+  it('sets props for functional component', async () => {
+    const wrapper = mount(Title)
+
+    await wrapper.setProps({
+      title: 'Hello'
+    })
+
+    expect(wrapper.text()).toBe('Hello')
   })
 })

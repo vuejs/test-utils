@@ -4,7 +4,6 @@ import {
   ComponentCustomProperties,
   ComponentPublicInstance
 } from 'vue'
-import { ShapeFlags } from '@vue/shared'
 // @ts-ignore todo - No DefinitelyTyped package exists for this
 import pretty from 'pretty'
 
@@ -13,7 +12,7 @@ import domEvents from './constants/dom-events'
 import { VueElement, VueNode } from './types'
 import { mergeDeep } from './utils'
 import { getRootNodes } from './utils/getRootNodes'
-import { emitted, recordEvent } from './emit'
+import { emitted, recordEvent, removeEventHistory } from './emit'
 import BaseWrapper from './baseWrapper'
 import type { DOMWrapper } from './domWrapper'
 import {
@@ -21,6 +20,8 @@ import {
   registerFactory,
   WrapperType
 } from './wrapperFactory'
+import { VNode } from '@vue/runtime-core'
+import { ShapeFlags } from './utils/vueShared'
 
 export class VueWrapper<
   T extends Omit<
@@ -66,8 +67,32 @@ export class VueWrapper<
   }
 
   private get hasMultipleRoots(): boolean {
-    // if the subtree is an array of children, we have multiple root nodes
-    return this.vm.$.subTree.shapeFlag === ShapeFlags.ARRAY_CHILDREN
+    // Recursive check subtree for nested root elements
+    // <template>
+    //   <WithMultipleRoots />
+    // </template>
+    const checkTree = (subTree: VNode): boolean => {
+      // if the subtree is an array of children, we have multiple root nodes
+      if (subTree.shapeFlag === ShapeFlags.ARRAY_CHILDREN) return true
+
+      if (
+        subTree.shapeFlag & ShapeFlags.STATEFUL_COMPONENT ||
+        subTree.shapeFlag & ShapeFlags.FUNCTIONAL_COMPONENT
+      ) {
+        // Component has multiple children or slot with multiple children
+        if (subTree.shapeFlag & ShapeFlags.ARRAY_CHILDREN) {
+          return true
+        }
+
+        if (subTree.component?.subTree) {
+          return checkTree(subTree.component.subTree)
+        }
+      }
+
+      return false
+    }
+
+    return checkTree(this.vm.$.subTree)
   }
 
   protected getRootNodes(): VueNode[] {
@@ -80,6 +105,10 @@ export class VueWrapper<
 
   getCurrentComponent() {
     return this.vm.$
+  }
+
+  exists() {
+    return !this.getCurrentComponent().isUnmounted
   }
 
   findAll<K extends keyof HTMLElementTagNameMap>(
@@ -143,7 +172,7 @@ export class VueWrapper<
   }
 
   emitted<T = unknown>(): Record<string, T[]>
-  emitted<T = unknown>(eventName: string): undefined | T[]
+  emitted<T = unknown[]>(eventName: string): undefined | T[]
   emitted<T = unknown>(
     eventName?: string
   ): undefined | T[] | Record<string, T[]> {
@@ -182,6 +211,8 @@ export class VueWrapper<
         `wrapper.unmount() can only be called by the root wrapper`
       )
     }
+    // Clear emitted events cache for this component instance
+    removeEventHistory(this.vm)
 
     this.__app.unmount()
   }

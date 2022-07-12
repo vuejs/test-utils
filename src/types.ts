@@ -21,6 +21,7 @@ export interface NameSelector {
 export type FindAllComponentsSelector =
   | DefinedComponent
   | FunctionalComponent
+  | ComponentOptions
   | NameSelector
   | string
 export type FindComponentSelector = RefSelector | FindAllComponentsSelector

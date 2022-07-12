@@ -1,3 +1,4 @@
+import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { defineComponent, h, Teleport } from 'vue'
 import { mount } from '../../src'
 import WithTeleportPropsComp from '../components/WithTeleportPropsComp.vue'
@@ -56,7 +57,7 @@ describe('teleport', () => {
     destination.id = 'far-away'
     document.body.appendChild(destination)
 
-    const onGreet = jest.fn()
+    const onGreet = vi.fn()
 
     const Comp = defineComponent({
       setup() {
@@ -85,7 +86,7 @@ describe('teleport', () => {
     destination.id = 'far-away'
     document.body.appendChild(destination)
 
-    const onGreet = jest.fn()
+    const onGreet = vi.fn()
 
     const Comp = defineComponent({
       setup() {

@@ -1,3 +1,4 @@
+import { describe, expect, it } from 'vitest'
 import { Vue } from 'vue-class-component'
 import { defineComponent, h } from 'vue'
 

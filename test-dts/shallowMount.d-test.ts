@@ -97,7 +97,7 @@ wrapper = shallowMount(AppWithoutProps, {
   }
 })
 class ClassComponent extends Vue {
-  dataText: string = ''
+  dataText = ''
   get computedMsg(): string {
     return `Message: ${(this.$props as any).msg}`
   }

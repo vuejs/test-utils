@@ -1,5 +1,6 @@
 import { DOMWrapper } from './domWrapper'
 import { VueWrapper } from './vueWrapper'
+import BaseWrapper from './baseWrapper'
 import { mount, shallowMount } from './mount'
 import { MountingOptions } from './types'
 import { RouterLinkStub } from './components/RouterLinkStub'
@@ -16,6 +17,7 @@ export {
   RouterLinkStub,
   VueWrapper,
   DOMWrapper,
+  BaseWrapper,
   config,
   flushPromises,
   MountingOptions,

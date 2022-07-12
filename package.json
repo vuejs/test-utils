@@ -1,59 +1,64 @@
 {
   "name": "@vue/test-utils",
-  "version": "2.0.0-rc.20",
+  "version": "2.0.2",
   "license": "MIT",
   "main": "dist/vue-test-utils.cjs.js",
   "unpkg": "dist/vue-test-utils.browser.js",
   "types": "dist/index.d.ts",
-  "module": "dist/vue-test-utils.esm-bundler.js",
+  "module": "dist/vue-test-utils.esm-bundler.mjs",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/vue-test-utils.esm-bundler.mjs",
+      "browser": "./dist/vue-test-utils.browser.js",
+      "require": "./dist/vue-test-utils.cjs.js",
+      "default": "./dist/vue-test-utils.cjs.js"
+    },
+    "./package.json": "./package.json"
+  },
   "files": [
     "dist",
     "README.md",
     "dist/index.d.ts"
   ],
   "devDependencies": {
-    "@babel/core": "^7.17.9",
-    "@babel/preset-env": "^7.16.11",
-    "@babel/types": "^7.17.0",
-    "@rollup/plugin-commonjs": "^21.1.0",
-    "@rollup/plugin-json": "^4.1.0",
-    "@rollup/plugin-node-resolve": "^13.2.1",
-    "@rollup/plugin-replace": "^4.0.0",
-    "@types/jest": "27.4.1",
-    "@types/node": "17.0.25",
-    "@types/pretty": "^2.0.1",
-    "@typescript-eslint/eslint-plugin": "^5.20.0",
-    "@typescript-eslint/parser": "^5.20.0",
-    "@vue/babel-plugin-jsx": "^1.1.1",
-    "@vue/compat": "3.2.32",
-    "@vue/compiler-dom": "3.2.32",
-    "@vue/compiler-sfc": "3.2.32",
-    "@vue/vue3-jest": "27.0.0-alpha.4",
-    "babel-jest": "27.5.1",
-    "babel-preset-jest": "27.5.1",
-    "eslint": "^8.13.0",
-    "eslint-config-prettier": "^8.5.0",
-    "eslint-plugin-prettier": "^4.0.0",
-    "husky": "^7.0.4",
-    "jest": "27.5.1",
-    "jsdom": "^19.0.0",
-    "jsdom-global": "^3.0.2",
-    "lint-staged": "^12.3.8",
-    "prettier": "^2.6.2",
-    "pretty": "^2.0.0",
-    "reflect-metadata": "^0.1.13",
-    "rollup": "^2.70.2",
-    "rollup-plugin-typescript2": "^0.31.2",
-    "ts-jest": "27.1.4",
-    "tslib": "2.3.1",
-    "typescript": "4.6.3",
-    "vitepress": "^0.22.3",
-    "vue": "3.2.32",
-    "vue-class-component": "^8.0.0-rc.1",
-    "vue-jest": "^5.0.0-alpha.10",
-    "vue-router": "^4.0.14",
-    "vue-tsc": "0.34.7",
-    "vuex": "^4.0.2"
+    "@rollup/plugin-commonjs": "22.0.1",
+    "@rollup/plugin-json": "4.1.0",
+    "@rollup/plugin-node-resolve": "13.3.0",
+    "@rollup/plugin-replace": "4.0.0",
+    "@types/node": "18.0.0",
+    "@types/pretty": "2.0.1",
+    "@typescript-eslint/eslint-plugin": "5.30.4",
+    "@typescript-eslint/parser": "5.30.4",
+    "@vitejs/plugin-vue": "2.3.3",
+    "@vitejs/plugin-vue-jsx": "1.3.10",
+    "@vue/compat": "3.2.37",
+    "@vue/runtime-core": "3.2.37",
+    "@vue/compiler-dom": "3.2.37",
+    "@vue/compiler-sfc": "3.2.37",
+    "c8": "7.11.3",
+    "eslint": "8.19.0",
+    "eslint-config-prettier": "8.5.0",
+    "eslint-plugin-prettier": "4.2.1",
+    "husky": "8.0.1",
+    "jsdom": "20.0.0",
+    "jsdom-global": "3.0.2",
+    "lint-staged": "13.0.3",
+    "prettier": "2.7.1",
+    "pretty": "2.0.0",
+    "reflect-metadata": "0.1.13",
+    "rollup": "2.75.7",
+    "rollup-plugin-typescript2": "0.32.1",
+    "tslib": "2.4.0",
+    "typescript": "4.7.4",
+    "vitepress": "0.22.4",
+    "vite": "2.9.13",
+    "vitest": "0.17.0",
+    "vue": "3.2.37",
+    "vue-class-component": "8.0.0-rc.1",
+    "vue-router": "4.0.16",
+    "vue-tsc": "0.38.2",
+    "vuex": "4.0.2"
   },
   "peerDependencies": {
     "vue": "^3.0.1"
@@ -63,16 +68,18 @@
     "email": "lachlan.miller.1990@outlook.com"
   },
   "scripts": {
-    "test": "yarn jest --runInBand tests/",
-    "test:build": "yarn jest --runInBand tests/ -use-build",
+    "test": "vitest",
+    "test:coverage": "vitest --coverage",
+    "test:watch": "vitest --watch",
+    "test:build": "vitest --mode test-build",
     "tsd": "tsc -p test-dts/tsconfig.tsd.json",
-    "build": "yarn rollup -c rollup.config.js",
+    "build": "rollup -c rollup.config.js",
     "lint": "eslint --ext .ts src/ tests/",
-    "lint:fix": "yarn lint --fix",
+    "lint:fix": "pnpm run lint --fix",
     "docs:dev": "vitepress dev docs",
     "docs:build": "vitepress build docs",
     "vue-tsc": "vue-tsc --noEmit -p tsconfig.volar.json",
-    "prepublishOnly": "yarn build"
+    "prepublishOnly": "pnpm run build"
   },
   "husky": {
     "hooks": {
@@ -101,5 +108,15 @@
     "type": "git",
     "url": "git+https://github.com/vuejs/test-utils.git"
   },
-  "homepage": "https://github.com/vuejs/test-utils"
+  "homepage": "https://github.com/vuejs/test-utils",
+  "pnpm": {
+    "peerDependencyRules": {
+      "ignoreMissing": [
+        "@algolia/client-search",
+        "@types/react",
+        "react",
+        "react-dom"
+      ]
+    }
+  }
 }

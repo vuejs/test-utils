@@ -1,3 +1,4 @@
+import { afterEach, beforeEach, expect, test } from 'vitest'
 import { mount } from '../../src'
 import Navbar from './Navbar.vue'
 import Signup from './Signup.vue'

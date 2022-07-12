@@ -1,3 +1,4 @@
+import { describe, expect, it, vi } from 'vitest'
 import { defineComponent, ref } from 'vue'
 
 import { mount } from '../src'
@@ -95,7 +96,7 @@ describe('setData', () => {
   })
 
   it('does not set new properties', async () => {
-    jest.spyOn(console, 'warn').mockImplementationOnce(() => {})
+    vi.spyOn(console, 'warn').mockImplementationOnce(() => {})
 
     const Component = {
       template: `<div>{{ foo || 'fallback' }}</div>`

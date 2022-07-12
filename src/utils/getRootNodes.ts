@@ -1,6 +1,6 @@
-import { ShapeFlags } from '@vue/shared'
 import { isNotNullOrUndefined } from '../utils'
 import { VNode, VNodeArrayChildren } from 'vue'
+import { ShapeFlags } from './vueShared'
 
 export function getRootNodes(vnode: VNode): Node[] {
   if (vnode.shapeFlag & ShapeFlags.ELEMENT) {
@@ -25,9 +25,9 @@ export function getRootNodes(vnode: VNode): Node[] {
     }
     return result
   } else if (vnode.shapeFlag & ShapeFlags.ARRAY_CHILDREN) {
-    const children = (vnode.children as unknown as VNodeArrayChildren).flat(
-      Infinity
-    ) as VNode[]
+    const children = (
+      vnode.children as unknown as VNodeArrayChildren
+    ).flat() as VNode[]
 
     return children
       .flatMap((vnode) => getRootNodes(vnode))

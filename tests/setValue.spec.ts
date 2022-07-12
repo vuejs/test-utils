@@ -1,3 +1,4 @@
+import { describe, expect, it, vi } from 'vitest'
 import { defineComponent, h } from 'vue'
 import { mount, shallowMount } from '../src'
 import ComponentWithInput from './components/ComponentWithInput.vue'
@@ -60,7 +61,7 @@ describe('setValue', () => {
     })
 
     it('does not select an already selected element', async () => {
-      const handle = jest.fn()
+      const handle = vi.fn()
 
       const Component = {
         setup() {
@@ -119,7 +120,7 @@ describe('setValue', () => {
     })
 
     it('does not trigger a change event if the checkbox is already checked', async () => {
-      const listener = jest.fn()
+      const listener = vi.fn()
       const Comp = defineComponent({
         setup() {
           return () =>

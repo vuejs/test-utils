@@ -1,3 +1,4 @@
+import { describe, expect, test } from 'vitest'
 import { defineComponent } from 'vue'
 import { createStore, useStore } from 'vuex'
 

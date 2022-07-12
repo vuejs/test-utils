@@ -186,14 +186,12 @@ declare const FunctionalComponentEmit: FunctionalComponent<
     level: number
   },
   { hello: (foo: string, bar: string) => void }
-  >
+>
 
 mount(FunctionalComponent)
 mount(defineComponent(FunctionalComponent))
 
 mount(FunctionalComponentEmit)
-
-// @ts-ignore vue 3.0.2 doesn't work. FIX: https://github.com/vuejs/vue-next/pull/2494
 mount(defineComponent(FunctionalComponentEmit))
 
 // class component
@@ -204,7 +202,7 @@ mount(defineComponent(FunctionalComponentEmit))
   }
 })
 class ClassComponent extends Vue {
-  dataText: string = ''
+  dataText = ''
   get computedMsg(): string {
     return `Message: ${(this.$props as any).msg}`
   }
@@ -224,6 +222,7 @@ class CustomClassComponent<Props extends {} = {}> {
   private static __vccValue?: ComponentOptions
   static get __vccOpts(): ComponentOptions {
     if (this.__vccValue) return this.__vccValue
+    // eslint-disable-next-line @typescript-eslint/no-this-alias
     const CompConstructor = this
     return (this.__vccValue = {
       name: CompConstructor.name,
@@ -279,14 +278,20 @@ class WithPropCustomClassComponent extends CustomClassComponent<CustomClassCompo
 }
 
 expectError(
-  // @ts-expect-error should has props error
-  mount<WithPropCustomClassComponent, CustomClassComponentProps>(WithPropCustomClassComponent, {
-    props: {}
-  })
+  mount<WithPropCustomClassComponent, CustomClassComponentProps>(
+    // @ts-expect-error should has props error
+    WithPropCustomClassComponent,
+    {
+      props: {}
+    }
+  )
 )
-mount<WithPropCustomClassComponent, CustomClassComponentProps>(WithPropCustomClassComponent, {
-  props: { size: 'small' }
-})
+mount<WithPropCustomClassComponent, CustomClassComponentProps>(
+  WithPropCustomClassComponent,
+  {
+    props: { size: 'small' }
+  }
+)
 
 // endregion
 

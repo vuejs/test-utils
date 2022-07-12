@@ -1,3 +1,4 @@
+import { describe, expect, it } from 'vitest'
 import { h, inject } from 'vue'
 
 import { mount } from '../../src'

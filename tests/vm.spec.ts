@@ -1,3 +1,4 @@
+import { describe, expect, it, vi } from 'vitest'
 import { defineComponent, ref } from 'vue'
 import { mount } from '../src'
 
@@ -38,7 +39,7 @@ describe('vm', () => {
 
     const wrapper = mount(Component)
 
-    jest.spyOn(wrapper.vm, 'toggle')
+    vi.spyOn(wrapper.vm, 'toggle')
 
     await wrapper.get('div').trigger('click')
 

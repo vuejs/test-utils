@@ -1,9 +1,10 @@
+import { beforeEach, describe, expect, it, vi } from 'vitest'
 import * as mockVue from '@vue/compat'
 import { mount } from '../../src'
 
-jest.mock('vue', () => mockVue)
+vi.mock('vue', () => mockVue)
 
-const { configureCompat, extend, defineComponent, h } = mockVue as any
+const { configureCompat, extend, defineComponent, h } = mockVue
 
 describe('@vue/compat build', () => {
   describe.each(['suppress-warning', false])(
@@ -190,7 +191,7 @@ describe('@vue/compat build', () => {
       }
     }
 
-    const onClick = jest.fn()
+    const onClick = vi.fn()
     const wrapper = mount(FunctionalComponent, {
       props: {
         class: 'foo',

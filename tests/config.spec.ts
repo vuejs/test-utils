@@ -1,3 +1,4 @@
+import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { defineComponent, ComponentPublicInstance, h, inject } from 'vue'
 import type { App } from 'vue'
 import { config, mount } from '../src'
@@ -18,7 +19,7 @@ describe('config', () => {
       renderStubDefaultSlot: false
     }
 
-    jest.clearAllMocks()
+    vi.clearAllMocks()
   })
 
   describe('config merger', () => {
@@ -55,8 +56,8 @@ describe('config', () => {
   describe('config integrity', () => {
     it('should not leak config when plugins overwrite globalProperties', async () => {
       // test with a function because it's not an "easy to clone" primitive type
-      const globalRouterMock = { push: jest.fn() }
-      const pluginRouterMock = { push: jest.fn() }
+      const globalRouterMock = { push: vi.fn() }
+      const pluginRouterMock = { push: vi.fn() }
       const Component = defineComponent({ template: '<div />' })
 
       class Plugin {
@@ -121,14 +122,14 @@ describe('config', () => {
       expect(comp.find('#default-slot').exists()).toBe(true)
 
       // @ts-expect-error
-      let comp = mount(Component, {
+      let comp2 = mount(Component, {
         shallow: true,
         global: {
           renderStubDefaultSlot: 0
         }
       })
 
-      expect(comp.find('#default-slot').exists()).toBe(false)
+      expect(comp2.find('#default-slot').exists()).toBe(false)
     })
   })
 
@@ -256,7 +257,7 @@ describe('config', () => {
   })
 
   describe('mixins', () => {
-    const createdHook = jest.fn()
+    const createdHook = vi.fn()
     const mixin = {
       created() {
         createdHook()
@@ -278,7 +279,7 @@ describe('config', () => {
 
     it('concat with locally defined mixins', () => {
       config.global.mixins = [mixin]
-      const localHook = jest.fn()
+      const localHook = vi.fn()
       const localMixin = {
         created() {
           localHook(this.$options!.name)

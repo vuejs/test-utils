@@ -1,5 +1,7 @@
+import { describe, expect, test, vi } from 'vitest'
 import { defineComponent, h } from 'vue'
 import { mount } from '../../src'
+import Title from '../components/FunctionComponent'
 
 describe('mountingOptions.props', () => {
   const Component = defineComponent({
@@ -75,7 +77,7 @@ describe('mountingOptions.props', () => {
       emits: ['customEvent'],
       template: '<button @click="$emit(\'customEvent\', true)">Click</button>'
     }
-    const onCustomEvent = jest.fn()
+    const onCustomEvent = vi.fn()
     // Note that, as the component does not have any props declared, we need to cast the mounting props
     const wrapper = mount(Component, { props: { onCustomEvent } as never })
     const button = wrapper.find('button')
@@ -84,5 +86,14 @@ describe('mountingOptions.props', () => {
     await button.trigger('click')
 
     expect(onCustomEvent).toHaveBeenCalledTimes(3)
+  })
+
+  test('props with functional component', async () => {
+    const wrapper = mount(Title, {
+      props: {
+        title: 'Hello'
+      }
+    })
+    expect(wrapper.text()).toBe('Hello')
   })
 })

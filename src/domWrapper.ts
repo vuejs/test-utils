@@ -22,7 +22,11 @@ export class DOMWrapper<NodeType extends Node> extends BaseWrapper<NodeType> {
   }
 
   getCurrentComponent() {
-    return this.element.__vueParentComponent
+    let component = this.element.__vueParentComponent
+    while (component?.parent?.vnode.el === this.element) {
+      component = component.parent
+    }
+    return component
   }
 
   find<K extends keyof HTMLElementTagNameMap>(
