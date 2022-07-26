@@ -1,0 +1,17 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": ["config:base"],
+  // only 1 PR at the same time (to avoid cascading rebase)
+  "prConcurrentLimit": 1,
+  // auto-merge if build is OK
+  "automerge": true,
+  // group all minor dependencies, once a week
+  {
+    "matchPackagePatterns": ["*"],
+    "matchUpdateTypes": ["minor", "patch"],
+    "matchCurrentVersion": ">=1",
+    "groupName": "all non-major dependencies",
+    "groupSlug": "all-minor-patch",
+    "schedule": ["after 1am on Wednesday"]
+  }
+}
