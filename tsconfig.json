@@ -1,9 +1,13 @@
 {
   "compilerOptions": {
-    "target": "es5",
+    "target": "es2016",
     "outDir": "dist",
     "module": "esnext",
-    "lib": ["DOM", "ES2015", "ES2017"],
+    "lib": [
+      "DOM",
+      "ES2015",
+      "ES2017"
+    ],
     "strict": true,
     "jsx": "preserve",
     "moduleResolution": "node",
