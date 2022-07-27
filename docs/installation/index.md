@@ -1,10 +1,10 @@
 # Installation
 
 ```bash
-npm install --save-dev @vue/test-utils@next
+npm install --save-dev @vue/test-utils
 
 # or
-yarn add --dev @vue/test-utils@next
+yarn add --dev @vue/test-utils
 ```
 
 ## Usage
