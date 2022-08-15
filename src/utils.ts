@@ -74,6 +74,8 @@ export const mergeDeep = (
 
     if (Array.isArray(targetValue) && Array.isArray(sourceValue)) {
       target[key] = sourceValue
+    } else if (sourceValue instanceof Date) {
+      target[key] = sourceValue
     } else if (isObject(targetValue) && isObject(sourceValue)) {
       target[key] = mergeDeep(Object.assign({}, targetValue), sourceValue)
     } else {

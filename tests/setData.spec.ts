@@ -187,4 +187,31 @@ describe('setData', () => {
     await wrapper.setData({ state: { items: ['2', '3'] } })
     expect(wrapper.html()).toMatchInlineSnapshot(`"<div>2,3</div>"`)
   })
+
+  it('should keep Date object on setData', async () => {
+    const wrapper = mount(
+      {
+        template: '<div/>',
+        props: { modelValue: Date },
+        data() {
+          return { value: this.modelValue }
+        }
+      },
+      {
+        props: {
+          modelValue: new Date('2022-08-10T12:15:54Z')
+        }
+      }
+    )
+
+    expect(wrapper.vm.value).toBeInstanceOf(Date)
+    expect(wrapper.vm.value!.toISOString()).toBe('2022-08-10T12:15:54.000Z')
+
+    await wrapper.setData({
+      value: new Date('2022-08-11T12:15:54Z')
+    })
+
+    expect(wrapper.vm.value).toBeInstanceOf(Date)
+    expect(wrapper.vm.value!.toISOString()).toBe('2022-08-11T12:15:54.000Z')
+  })
 })
