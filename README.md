@@ -19,7 +19,7 @@ See the [docs](https://test-utils.vuejs.org/).
 
 ## Development
 
-Get started by running `yarn install`. You can run the tests with `yarn test`. That's it!
+Get started by running `pnpm install`. You can run the tests with `pnpm test`. That's it!
 
 ## Comparison with Vue Test Utils v1 (targeting Vue 2)
 
