@@ -20,8 +20,8 @@ assignees: ''
 <!-- A clear and concise description of what you expected to happen. -->
 
 **Related information:**
-- `@vue/test-utils` version:
-- `Vue` version:
+- `@vue/test-utils` version: 2.x.x <!-- For v1, please report at repository https://github.com/vuejs/vue-test-utils -->
+- `Vue` version: 3.x.x
 - `node` version:
 - `npm` (or `yarn`) version:
 
