@@ -27,7 +27,7 @@ specifiers:
   pretty: 2.0.0
   reflect-metadata: 0.1.13
   rollup: 2.78.0
-  rollup-plugin-typescript2: 0.32.1
+  rollup-plugin-typescript2: 0.33.0
   tslib: 2.4.0
   typescript: 4.7.4
   vite: 3.0.8
@@ -66,7 +66,7 @@ devDependencies:
   pretty: 2.0.0
   reflect-metadata: 0.1.13
   rollup: 2.78.0
-  rollup-plugin-typescript2: 0.32.1_nm5mlcuxlwr6samvke7b2fz27i
+  rollup-plugin-typescript2: 0.33.0_nm5mlcuxlwr6samvke7b2fz27i
   tslib: 2.4.0
   typescript: 4.7.4
   vite: 3.0.8
@@ -2995,8 +2995,8 @@ packages:
       glob: 7.2.3
     dev: true
 
-  /rollup-plugin-typescript2/0.32.1_nm5mlcuxlwr6samvke7b2fz27i:
-    resolution: {integrity: sha512-RanO8bp1WbeMv0bVlgcbsFNCn+Y3rX7wF97SQLDxf0fMLsg0B/QFF005t4AsGUcDgF3aKJHoqt4JF2xVaABeKw==}
+  /rollup-plugin-typescript2/0.33.0_nm5mlcuxlwr6samvke7b2fz27i:
+    resolution: {integrity: sha512-7ZXoZeX93kNb4/ICzOi2AlperVV6cAsNz8THqrbz+KNvpn47P2F/nFdK/BGhkoOsOwuYDuY57vccdZZrcd8/dA==}
     peerDependencies:
       rollup: '>=1.26.3'
       typescript: '>=2.4.0'
@@ -3004,7 +3004,6 @@ packages:
       '@rollup/pluginutils': 4.2.1
       find-cache-dir: 3.3.2
       fs-extra: 10.1.0
-      resolve: 1.22.1
       rollup: 2.78.0
       tslib: 2.4.0
       typescript: 4.7.4
