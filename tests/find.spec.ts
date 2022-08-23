@@ -41,6 +41,22 @@ describe('find', () => {
       expect(wrapper.find({ ref: 'plain' }).element).toBeInstanceOf(Text)
     })
 
+    it('works when ref is in v-for directive', () => {
+      const Component = defineComponent({
+        template: `
+          <div v-for="item in ['foo', 'bar']" :key="item">
+            <span :ref="\`span-\${item}\`" class="my-span" />
+          </div>
+        `
+      })
+
+      const wrapper = mount(Component)
+      expect(wrapper.find({ ref: 'span-foo' }).exists()).toBe(true)
+      expect(wrapper.find({ ref: 'span-foo' }).attributes('class')).toBe(
+        'my-span'
+      )
+    })
+
     it('does not find ref located in the same component but not in current DOM wrapper', () => {
       const Component = defineComponent({
         render() {

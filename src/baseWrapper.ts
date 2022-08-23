@@ -75,7 +75,12 @@ export default abstract class BaseWrapper<ElementType extends Node>
         return createWrapperError('DOMWrapper')
       }
 
-      const result = currentComponent.refs[selector.ref]
+      let result = currentComponent.refs[selector.ref]
+
+      // When using ref inside v-for, then refs contains array of component instances and nodes
+      if (Array.isArray(result)) {
+        result = result.length ? result[0] : undefined
+      }
 
       if (result instanceof Node) {
         return createDOMWrapper(result)
