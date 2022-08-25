@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import { mount } from '../src'
 import Hello from './components/Hello.vue'
-import { DefineComponent, defineComponent } from 'vue'
+import { DefineComponent, defineComponent, h } from 'vue'
 
 const compC = defineComponent({
   name: 'ComponentC',
@@ -79,5 +79,45 @@ describe('findAllComponents', () => {
       wrapper.findAllComponents<DefineComponent>('.in-child')[0].vm.$options
         .name
     ).toEqual('NestedChild')
+  })
+
+  it('findAllComponents with function slots', () => {
+    const ComponentA = defineComponent({
+      template: '<div><slot /></div>'
+    })
+    const ComponentB = defineComponent({
+      template: '<span>Text</span>'
+    })
+
+    const wrapper = mount({
+      components: { ComponentA, ComponentB },
+      render() {
+        return h(ComponentA, {}, () => [1, 2, 3].map(() => h(ComponentB)))
+      }
+    })
+    expect(wrapper.findAll('span')).toHaveLength(3)
+    expect(wrapper.findAllComponents(ComponentB)).toHaveLength(3)
+  })
+
+  it('findAllComponents with non-function slots', () => {
+    const ComponentA = defineComponent({
+      template: '<div><slot /></div>'
+    })
+    const ComponentB = defineComponent({
+      template: '<span>Text</span>'
+    })
+
+    const wrapper = mount({
+      components: { ComponentA, ComponentB },
+      render() {
+        return h(
+          ComponentA,
+          {},
+          [1, 2, 3].map(() => h(ComponentB))
+        )
+      }
+    })
+    expect(wrapper.findAll('span')).toHaveLength(3)
+    expect(wrapper.findAllComponents(ComponentB)).toHaveLength(3)
   })
 })

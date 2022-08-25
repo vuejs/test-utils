@@ -142,7 +142,7 @@ function findAllVNodes(
       const { activeBranch } = node.suspense
       aggregateChildren(nodes, [activeBranch])
     }
-    if (matches(node, selector)) {
+    if (matches(node, selector) && !matchingNodes.includes(node)) {
       matchingNodes.push(node)
     }
   }
