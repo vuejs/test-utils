@@ -40,6 +40,10 @@ describe('expose', () => {
     expect(wrapper.html()).toContain('1')
     // can access `count` as it is exposed via `defineExpose()`
     expect(wrapper.vm.count).toBe(1)
+
+    wrapper.vm.resetCount()
+
+    expect(wrapper.vm.count).toBe(0)
   })
 
   it('access vm with <script setup> even without defineExpose()', async () => {
