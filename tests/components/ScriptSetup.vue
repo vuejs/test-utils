@@ -9,9 +9,6 @@ const count = ref(0)
 const inc = () => {
   count.value++
 }
-const resetCount = () => {
-  count.value = 0
-}
 </script>
 
 <template>

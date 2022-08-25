@@ -54,9 +54,5 @@ describe('expose', () => {
     // can access `count` even if it is _not_ exposed
     // @ts-ignore we need better types here, see https://github.com/vuejs/test-utils/issues/972
     expect(wrapper.vm.count).toBe(1)
-
-    wrapper.vm.resetCount()
-
-    expect(wrapper.vm.count).toBe(0)
   })
 })
