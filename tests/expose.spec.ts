@@ -26,7 +26,6 @@ describe('expose', () => {
     const wrapper = mount(DefineExposeWithRenderFunction)
 
     // other is exposed vie `expose`
-    // @ts-ignore upstream issue, see https://github.com/vuejs/vue-next/issues/4397#issuecomment-957613874
     expect(wrapper.vm.other).toBe('other')
     // can't access `msg` as it is not exposed
     // and we are in a component with a setup returning a render function
@@ -41,6 +40,7 @@ describe('expose', () => {
     // can access `count` as it is exposed via `defineExpose()`
     expect(wrapper.vm.count).toBe(1)
 
+    // @ts-ignore we need better types here, see https://github.com/vuejs/test-utils/issues/972
     wrapper.vm.resetCount()
 
     expect(wrapper.vm.count).toBe(0)
