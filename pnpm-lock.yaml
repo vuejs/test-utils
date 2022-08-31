@@ -11,6 +11,7 @@ specifiers:
   '@typescript-eslint/parser': 5.36.1
   '@vitejs/plugin-vue': 3.0.3
   '@vitejs/plugin-vue-jsx': 2.0.0
+  '@vitest/coverage-c8': 0.22.1
   '@vue/compat': 3.2.38
   '@vue/compiler-dom': 3.2.38
   '@vue/compiler-sfc': 3.2.38
@@ -50,6 +51,7 @@ devDependencies:
   '@typescript-eslint/parser': 5.36.1_yqf6kl63nyoq5megxukfnom5rm
   '@vitejs/plugin-vue': 3.0.3_vite@3.0.9+vue@3.2.38
   '@vitejs/plugin-vue-jsx': 2.0.0_vite@3.0.9+vue@3.2.38
+  '@vitest/coverage-c8': 0.22.1_jsdom@20.0.0
   '@vue/compat': 3.2.38_vue@3.2.38
   '@vue/compiler-dom': 3.2.38
   '@vue/compiler-sfc': 3.2.38
@@ -914,6 +916,24 @@ packages:
     dependencies:
       vite: 3.0.9
       vue: 3.2.38
+    dev: true
+
+  /@vitest/coverage-c8/0.22.1_jsdom@20.0.0:
+    resolution: {integrity: sha512-KOOYpO7EGpaF+nD8GD+Y05D0JtZp12NUu6DdLXvBPqSOPo2HkZ7KNBtfR0rb6gOy3NLtGiWTYTzCwhajgb2HlA==}
+    dependencies:
+      c8: 7.12.0
+      vitest: 0.22.1_jsdom@20.0.0
+    transitivePeerDependencies:
+      - '@edge-runtime/vm'
+      - '@vitest/browser'
+      - '@vitest/ui'
+      - happy-dom
+      - jsdom
+      - less
+      - sass
+      - stylus
+      - supports-color
+      - terser
     dev: true
 
   /@volar/code-gen/0.40.5:
