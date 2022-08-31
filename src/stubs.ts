@@ -132,7 +132,7 @@ const resolveComponentStubByName = (componentName: string, stubs: Stubs) => {
 function createStubOnceForType(
   type: ConcreteComponent,
   factoryFn: () => ConcreteComponent,
-  cache: WeakMap<{} & VNodeTypes, ConcreteComponent>
+  cache: WeakMap<ConcreteComponent, ConcreteComponent>
 ): ConcreteComponent {
   const cachedStub = cache.get(type)
   if (cachedStub) {
@@ -149,7 +149,7 @@ export function stubComponents(
   shallow = false,
   renderStubDefaultSlot = false
 ) {
-  const createdStubsMap: WeakMap<{} & VNodeTypes, ConcreteComponent> =
+  const createdStubsMap: WeakMap<ConcreteComponent, ConcreteComponent> =
     new WeakMap()
 
   const createStubOnce = (
