@@ -95,7 +95,7 @@ function getInstanceOptions(
 }
 
 // Class component (without vue-class-component) - no props
-export function mount<V>(
+export function mount<V extends {}>(
   originalComponent: {
     new (...args: any[]): V
     __vccOpts: any
@@ -104,7 +104,7 @@ export function mount<V>(
 ): VueWrapper<ComponentPublicInstance<V>>
 
 // Class component (without vue-class-component) - props
-export function mount<V, P>(
+export function mount<V extends {}, P>(
   originalComponent: {
     new (...args: any[]): V
     __vccOpts: any
@@ -114,7 +114,7 @@ export function mount<V, P>(
 ): VueWrapper<ComponentPublicInstance<V>>
 
 // Class component - no props
-export function mount<V>(
+export function mount<V extends {}>(
   originalComponent: {
     new (...args: any[]): V
     registerHooks(keys: string[]): void
@@ -123,7 +123,7 @@ export function mount<V>(
 ): VueWrapper<ComponentPublicInstance<V>>
 
 // Class component - props
-export function mount<V, P>(
+export function mount<V extends {}, P>(
   originalComponent: {
     new (...args: any[]): V
     props(Props: P): any
@@ -133,7 +133,7 @@ export function mount<V, P>(
 ): VueWrapper<ComponentPublicInstance<V>>
 
 // Functional component with emits
-export function mount<Props, E extends EmitsOptions = {}>(
+export function mount<Props extends {}, E extends EmitsOptions = {}>(
   originalComponent: FunctionalComponent<Props, E>,
   options?: MountingOptions<Props & PublicProps> & Record<string, any>
 ): VueWrapper<ComponentPublicInstance<Props>>
@@ -151,7 +151,7 @@ export function mount<
   EE extends string = string,
   PP = PublicProps,
   Props = Readonly<ExtractPropTypes<PropsOrPropOptions>>,
-  Defaults = ExtractDefaultPropTypes<PropsOrPropOptions>
+  Defaults extends {} = ExtractDefaultPropTypes<PropsOrPropOptions>
 >(
   component: DefineComponent<
     PropsOrPropOptions,
@@ -200,7 +200,7 @@ export function mount<T extends DefineComponent<any, any, any, any>>(
 export function mount<
   Props = {},
   RawBindings = {},
-  D = {},
+  D extends {} = {},
   C extends ComputedOptions = {},
   M extends Record<string, Function> = {},
   E extends EmitsOptions = Record<string, any>,
@@ -229,7 +229,7 @@ export function mount<
 export function mount<
   PropNames extends string,
   RawBindings,
-  D,
+  D extends {},
   C extends ComputedOptions = {},
   M extends Record<string, Function> = {},
   E extends EmitsOptions = Record<string, any>,
@@ -261,7 +261,7 @@ export function mount<
   // as constant instead of boolean.
   PropsOptions extends Readonly<ComponentPropsOptions>,
   RawBindings,
-  D,
+  D extends {},
   C extends ComputedOptions = {},
   M extends Record<string, Function> = {},
   E extends EmitsOptions = Record<string, any>,
