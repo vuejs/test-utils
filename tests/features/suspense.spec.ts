@@ -1,4 +1,4 @@
-import { describe, expect, test, vi } from 'vitest'
+import { beforeEach, describe, expect, test, vi } from 'vitest'
 import SuspenseComponent from '../components/Suspense.vue'
 import { mount, flushPromises } from '../../src'
 import { defineComponent } from 'vue'
@@ -11,6 +11,10 @@ vi.mock('../utils', () => ({
     }
   }
 }))
+
+beforeEach(() => {
+  mockShouldError = false
+})
 
 describe('suspense', () => {
   test('fallback state', () => {
