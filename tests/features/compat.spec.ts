@@ -165,6 +165,12 @@ describe('@vue/compat build', () => {
   })
 
   it('wrapper.vm points to correct instance when component is wrapped with Vue.extend', () => {
+    configureCompat({
+      MODE: 3,
+      GLOBAL_EXTEND: 'suppress-warning',
+      GLOBAL_MOUNT: 'suppress-warning'
+    })
+
     const Component = extend({
       data() {
         return { foo: 'bar' }

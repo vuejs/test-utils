@@ -16,6 +16,9 @@ export default defineConfig({
     include: ['tests/**/*.spec.ts'],
     deps: {
       inline: ['vue', '@vue/compat']
+    },
+    sequence: {
+      shuffle: true
     }
   },
   resolve: {

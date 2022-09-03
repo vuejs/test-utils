@@ -395,19 +395,19 @@ describe('mounting options: stubs', () => {
 
   describe('transition', () => {
     it('stubs transition by default', () => {
-      const Comp = {
-        template: `<transition><div id="content" /></transition>`
+      const CompStubbedByDefault = {
+        template: `<transition><div id="content-stubbed-by-default" /></transition>`
       }
-      const wrapper = mount(Comp)
+      const wrapper = mount(CompStubbedByDefault)
 
       expect(wrapper.html()).toBe(
         '<transition-stub>\n' +
-          '  <div id="content"></div>\n' +
+          '  <div id="content-stubbed-by-default"></div>\n' +
           '</transition-stub>'
       )
     })
 
-    it('opts out of stubbing transition by default', () => {
+    it('opts out of stubbing transition', () => {
       const Comp = {
         template: `<transition><div id="content" /></transition>`
       }
