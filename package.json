@@ -32,7 +32,7 @@
     "@typescript-eslint/parser": "5.36.1",
     "@vitejs/plugin-vue": "3.0.3",
     "@vitejs/plugin-vue-jsx": "2.0.0",
-    "@vitest/coverage-c8": "0.22.1",
+    "@vitest/coverage-c8": "0.23.0",
     "@vue/compat": "3.2.38",
     "@vue/compiler-dom": "3.2.38",
     "@vue/compiler-sfc": "3.2.38",
