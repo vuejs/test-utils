@@ -6,10 +6,16 @@
   // auto-merge if build is OK
   "automerge": true,
   "packageRules": [
+    // group vitest packages update
+    {
+      groupName: 'vitest',
+      matchPackagePrefixes: ['@vitest/', 'vitest']
+    },
     // group vite packages update
     {
       groupName: 'vite',
       matchPackagePrefixes: ['@vitejs/', 'vite'],
+      excludePackagePrefixes: ['vitest']
     },
     // group all minor dependencies, once a week
     {
