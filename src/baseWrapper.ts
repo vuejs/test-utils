@@ -329,8 +329,12 @@ export default abstract class BaseWrapper<ElementType extends Node>
       'TEXTAREA',
       'INPUT'
     ]
-    const elementIsDisabled = this.attributes().disabled !== undefined && this.attributes().disabled !== 'false'
-    const elementCanBeDisabled = isElement(this.element) && validTagsToBeDisabled.includes(this.element.tagName)
+    const elementIsDisabled =
+      this.attributes().disabled !== undefined && 
+      this.attributes().disabled !== 'false'
+    const elementCanBeDisabled =
+      isElement(this.element) && 
+      validTagsToBeDisabled.includes(this.element.tagName)
     return elementIsDisabled && elementCanBeDisabled
   }
 
