@@ -401,7 +401,7 @@ describe('mounting options: stubs', () => {
       const wrapper = mount(CompStubbedByDefault)
 
       expect(wrapper.html()).toBe(
-        '<transition-stub>\n' +
+        '<transition-stub appear="false" persisted="false" css="true">\n' +
           '  <div id="content-stubbed-by-default"></div>\n' +
           '</transition-stub>'
       )
@@ -513,7 +513,7 @@ describe('mounting options: stubs', () => {
       })
 
       expect(wrapper.html()).toBe(
-        '<teleport-stub>\n' +
+        '<teleport-stub to="body">\n' +
           '  <div id="content"></div>\n' +
           '</teleport-stub>'
       )
