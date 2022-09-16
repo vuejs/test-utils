@@ -31,7 +31,7 @@ export type CustomCreateStub = (params: {
 
 interface StubOptions {
   name: string
-  type?: ConcreteComponent
+  type?: VNodeTypes | typeof Teleport
   renderStubDefaultSlot?: boolean
 }
 
@@ -89,7 +89,7 @@ export const createStub = ({
 
   return defineComponent({
     name: name || anonName,
-    props: componentOptions.props || {},
+    props: (componentOptions as ConcreteComponent).props || {},
     // fix #1550 - respect old-style v-model for shallow mounted components with @vue/compat
     // @ts-expect-error
     model: componentOptions.model,
@@ -171,7 +171,7 @@ export function stubComponents(
       return [
         createStub({
           name: 'transition',
-          type: type as any,
+          type,
           renderStubDefaultSlot: true
         }),
         props,
@@ -186,7 +186,7 @@ export function stubComponents(
       return [
         createStub({
           name: 'transition-group',
-          type: type as any,
+          type,
           renderStubDefaultSlot: true
         }),
         props,
@@ -201,7 +201,7 @@ export function stubComponents(
       return [
         createStub({
           name: 'teleport',
-          type: type as any,
+          type,
           renderStubDefaultSlot: true
         }),
         props,
