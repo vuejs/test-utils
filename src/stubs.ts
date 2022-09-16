@@ -171,9 +171,10 @@ export function stubComponents(
       return [
         createStub({
           name: 'transition',
+          type: type as any,
           renderStubDefaultSlot: true
         }),
-        undefined,
+        props,
         children
       ]
     }
@@ -185,9 +186,10 @@ export function stubComponents(
       return [
         createStub({
           name: 'transition-group',
+          type: type as any,
           renderStubDefaultSlot: true
         }),
-        undefined,
+        props,
         children
       ]
     }
@@ -199,9 +201,10 @@ export function stubComponents(
       return [
         createStub({
           name: 'teleport',
+          type: type as any,
           renderStubDefaultSlot: true
         }),
-        undefined,
+        props,
         () => children
       ]
     }
