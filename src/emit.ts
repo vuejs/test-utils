@@ -29,11 +29,11 @@ export function emitted<T = unknown>(
 
 export const attachEmitListener = () => {
   // use devtools to capture this "emit"
-  setDevtoolsHook(createDevTools(events), {})
+  setDevtoolsHook(createDevTools(), {})
 }
 
 // devtools hook only catches Vue component custom events
-function createDevTools(events: Events): any {
+function createDevTools(): any {
   return {
     emit(eventType, ...payload) {
       if (eventType !== DevtoolsHooks.COMPONENT_EMIT) return
