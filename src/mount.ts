@@ -45,8 +45,6 @@ import { trackInstance } from './utils/autoUnmount'
 import { createVueWrapper } from './wrapperFactory'
 
 // NOTE this should come from `vue`
-type PublicProps = VNodeProps & AllowedComponentProps & ComponentCustomProps
-
 const MOUNT_OPTIONS: Array<keyof MountingOptions<any>> = [
   'attachTo',
   'attrs',
@@ -56,24 +54,6 @@ const MOUNT_OPTIONS: Array<keyof MountingOptions<any>> = [
   'global',
   'shallow'
 ]
-
-type ComponentMountingOptions<T> = T extends DefineComponent<
-  infer PropsOrPropOptions,
-  any,
-  infer D,
-  any,
-  any
->
-  ? MountingOptions<
-      Partial<ExtractDefaultPropTypes<PropsOrPropOptions>> &
-        Omit<
-          Readonly<ExtractPropTypes<PropsOrPropOptions>> & PublicProps,
-          keyof ExtractDefaultPropTypes<PropsOrPropOptions>
-        >,
-      D
-    > &
-      Record<string, any>
-  : MountingOptions<any>
 
 function getInstanceOptions(
   options: MountingOptions<any> & Record<string, any>
@@ -93,6 +73,26 @@ function getInstanceOptions(
   }
   return resultOptions
 }
+
+type PublicProps = VNodeProps & AllowedComponentProps & ComponentCustomProps
+
+type ComponentMountingOptions<T> = T extends DefineComponent<
+  infer PropsOrPropOptions,
+  any,
+  infer D,
+  any,
+  any
+>
+  ? MountingOptions<
+      Partial<ExtractDefaultPropTypes<PropsOrPropOptions>> &
+        Omit<
+          Readonly<ExtractPropTypes<PropsOrPropOptions>> & PublicProps,
+          keyof ExtractDefaultPropTypes<PropsOrPropOptions>
+        >,
+      D
+    > &
+      Record<string, any>
+  : MountingOptions<any>
 
 // Class component (without vue-class-component) - no props
 export function mount<V extends {}>(
