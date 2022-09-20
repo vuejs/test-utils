@@ -76,70 +76,9 @@ function getInstanceOptions(
 
 type PublicProps = VNodeProps & AllowedComponentProps & ComponentCustomProps
 
-type ComponentMountingOptions<T> = T extends DefineComponent<
-  infer PropsOrPropOptions,
-  any,
-  infer D,
-  any,
-  any
->
-  ? MountingOptions<
-      Partial<ExtractDefaultPropTypes<PropsOrPropOptions>> &
-        Omit<
-          Readonly<ExtractPropTypes<PropsOrPropOptions>> & PublicProps,
-          keyof ExtractDefaultPropTypes<PropsOrPropOptions>
-        >,
-      D
-    > &
-      Record<string, any>
-  : MountingOptions<any>
-
-// Class component (without vue-class-component) - no props
-export function mount<V extends {}>(
-  originalComponent: {
-    new (...args: any[]): V
-    __vccOpts: any
-  },
-  options?: MountingOptions<any> & Record<string, any>
-): VueWrapper<ComponentPublicInstance<V>>
-
-// Class component (without vue-class-component) - props
-export function mount<V extends {}, P>(
-  originalComponent: {
-    new (...args: any[]): V
-    __vccOpts: any
-    defaultProps?: Record<string, Prop<any>> | string[]
-  },
-  options?: MountingOptions<P & PublicProps> & Record<string, any>
-): VueWrapper<ComponentPublicInstance<V>>
-
-// Class component - no props
-export function mount<V extends {}>(
-  originalComponent: {
-    new (...args: any[]): V
-    registerHooks(keys: string[]): void
-  },
-  options?: MountingOptions<any> & Record<string, any>
-): VueWrapper<ComponentPublicInstance<V>>
-
-// Class component - props
-export function mount<V extends {}, P>(
-  originalComponent: {
-    new (...args: any[]): V
-    props(Props: P): any
-    registerHooks(keys: string[]): void
-  },
-  options?: MountingOptions<P & PublicProps> & Record<string, any>
-): VueWrapper<ComponentPublicInstance<V>>
-
-// Functional component with emits
-export function mount<Props extends {}, E extends EmitsOptions = {}>(
-  originalComponent: FunctionalComponent<Props, E>,
-  options?: MountingOptions<Props & PublicProps> & Record<string, any>
-): VueWrapper<ComponentPublicInstance<Props>>
-
 // Component declared with defineComponent
 export function mount<
+  Extensions extends Record<string, any> = {},
   PropsOrPropOptions = {},
   RawBindings = {},
   D = {},
@@ -171,7 +110,7 @@ export function mount<
     Partial<Defaults> & Omit<Props & PublicProps, keyof Defaults>,
     D
   > &
-    Record<string, any>
+    Extensions
 ): VueWrapper<
   InstanceType<
     DefineComponent<
@@ -190,113 +129,11 @@ export function mount<
     >
   >
 >
-// component declared by vue-tsc ScriptSetup
-export function mount<T extends DefineComponent<any, any, any, any>>(
-  component: T,
-  options?: ComponentMountingOptions<T>
-): VueWrapper<InstanceType<T>>
-
-// Component declared with no props
-export function mount<
-  Props = {},
-  RawBindings = {},
-  D extends {} = {},
-  C extends ComputedOptions = {},
-  M extends Record<string, Function> = {},
-  E extends EmitsOptions = Record<string, any>,
-  Mixin extends ComponentOptionsMixin = ComponentOptionsMixin,
-  Extends extends ComponentOptionsMixin = ComponentOptionsMixin,
-  EE extends string = string
->(
-  componentOptions: ComponentOptionsWithoutProps<
-    Props,
-    RawBindings,
-    D,
-    C,
-    M,
-    E,
-    Mixin,
-    Extends,
-    EE
-  >,
-  options?: MountingOptions<Props & PublicProps, D>
-): VueWrapper<
-  ComponentPublicInstance<Props, RawBindings, D, C, M, E, VNodeProps & Props>
-> &
-  Record<string, any>
-
-// Component declared with { props: [] }
-export function mount<
-  PropNames extends string,
-  RawBindings,
-  D extends {},
-  C extends ComputedOptions = {},
-  M extends Record<string, Function> = {},
-  E extends EmitsOptions = Record<string, any>,
-  Mixin extends ComponentOptionsMixin = ComponentOptionsMixin,
-  Extends extends ComponentOptionsMixin = ComponentOptionsMixin,
-  EE extends string = string,
-  Props extends Readonly<{ [key in PropNames]?: any }> = Readonly<{
-    [key in PropNames]?: any
-  }>
->(
-  componentOptions: ComponentOptionsWithArrayProps<
-    PropNames,
-    RawBindings,
-    D,
-    C,
-    M,
-    E,
-    Mixin,
-    Extends,
-    EE,
-    Props
-  >,
-  options?: MountingOptions<Props & PublicProps, D>
-): VueWrapper<ComponentPublicInstance<Props, RawBindings, D, C, M, E>>
-
-// Component declared with { props: { ... } }
-export function mount<
-  // the Readonly constraint allows TS to treat the type of { required: true }
-  // as constant instead of boolean.
-  PropsOptions extends Readonly<ComponentPropsOptions>,
-  RawBindings,
-  D extends {},
-  C extends ComputedOptions = {},
-  M extends Record<string, Function> = {},
-  E extends EmitsOptions = Record<string, any>,
-  Mixin extends ComponentOptionsMixin = ComponentOptionsMixin,
-  Extends extends ComponentOptionsMixin = ComponentOptionsMixin,
-  EE extends string = string
->(
-  componentOptions: ComponentOptionsWithObjectProps<
-    PropsOptions,
-    RawBindings,
-    D,
-    C,
-    M,
-    E,
-    Mixin,
-    Extends,
-    EE
-  >,
-  options?: MountingOptions<ExtractPropTypes<PropsOptions> & PublicProps, D>
-): VueWrapper<
-  ComponentPublicInstance<
-    ExtractPropTypes<PropsOptions>,
-    RawBindings,
-    D,
-    C,
-    M,
-    E,
-    VNodeProps & ExtractPropTypes<PropsOptions>
-  >
->
 
 // implementation
-export function mount(
+export function mount<E>(
   inputComponent: any,
-  options?: MountingOptions<any> & Record<string, any>
+  options?: MountingOptions<any> & E
 ): VueWrapper<any> {
   // normalize the incoming component
   const originalComponent = unwrapLegacyVueExtendComponent(inputComponent)
@@ -561,3 +398,50 @@ export function mount(
 export const shallowMount: typeof mount = (component: any, options?: any) => {
   return mount(component, { ...options, shallow: true })
 }
+
+const C = defineComponent({
+  props: {
+    /**
+     * foo prop!
+     */
+    foo: String
+  },
+  render() {
+    return h('div')
+  }
+})
+
+interface E {
+  /**
+   * bar!!!
+   */
+  bar: number
+}
+
+export const myMount: typeof mount<E> = (component, options) => {
+  return mount(component, { ...options, shallow: true })
+}
+
+
+myMount(C, {
+  props: {
+    foo: 's'
+  },
+  bar: 1
+})
+
+mount(C, {
+  props: {
+    foo: 's'
+  }
+})
+
+// const myMount: typeof mount<Foo> = (c: any, o?: any) => {
+//   return mount(c, o)
+// }
+
+// myMount(C, {
+//   foo: {
+//   }
+//   // foo: 'string'
+// })
