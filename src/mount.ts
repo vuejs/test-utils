@@ -294,9 +294,9 @@ export function mount<
 >
 
 // implementation
-export function mount(
+export function mount<Ext = {}>(
   inputComponent: any,
-  options?: MountingOptions<any> & Record<string, any>
+  options?: MountingOptions<any> & Ext
 ): VueWrapper<any> {
   // normalize the incoming component
   const originalComponent = unwrapLegacyVueExtendComponent(inputComponent)
@@ -561,3 +561,24 @@ export function mount(
 export const shallowMount: typeof mount = (component: any, options?: any) => {
   return mount(component, { ...options, shallow: true })
 }
+
+const C = defineComponent({
+  render () {
+    return h('div')
+  } 
+})
+
+interface Foo {
+  /**
+   * it's foo
+   */
+  foo: string
+}
+
+const myMount: typeof mount<Foo> = (c: any, o?: any) => {
+  return mount(c, o)
+}
+
+myMount(C, {
+  foo: 'string'
+})
