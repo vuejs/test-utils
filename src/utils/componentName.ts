@@ -38,7 +38,9 @@ export const getComponentName = (
   type: VNodeTypes
 ): string => {
   if (isObjectComponent(type)) {
-    return getComponentNameInSetup(instance, type) || type.name || ''
+    return (
+      getComponentNameInSetup(instance, type) || type.name || type.__name || ''
+    )
   }
 
   if (isLegacyExtendedComponent(type)) {
