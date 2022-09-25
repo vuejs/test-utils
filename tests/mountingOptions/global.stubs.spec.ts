@@ -6,6 +6,7 @@ import Hello from '../components/Hello.vue'
 import ComponentWithoutName from '../components/ComponentWithoutName.vue'
 import ComponentWithSlots from '../components/ComponentWithSlots.vue'
 import ScriptSetupWithChildren from '../components/ScriptSetupWithChildren.vue'
+import AutoImportScriptSetup from '../components/AutoImportScriptSetup.vue'
 
 describe('mounting options: stubs', () => {
   let configStubsSave = config.global.stubs
@@ -391,6 +392,17 @@ describe('mounting options: stubs', () => {
         '<span>Stubbed ScriptSetup</span>\n' +
         '<span>Stubbed WithProps</span>'
     )
+  })
+
+  it('stubs a script setup component imported by unplugin-vue-components', () => {
+    const wrapper = mount(AutoImportScriptSetup, {
+      global: {
+        stubs: {
+          ScriptSetup: true
+        }
+      }
+    })
+    expect(wrapper.html()).toBe(`<script-setup-stub></script-setup-stub>`)
   })
 
   describe('transition', () => {

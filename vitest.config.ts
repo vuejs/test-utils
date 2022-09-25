@@ -2,9 +2,18 @@ import path from 'path'
 import { defineConfig } from 'vitest/config'
 import vue from '@vitejs/plugin-vue'
 import jsx from '@vitejs/plugin-vue-jsx'
+import Components from 'unplugin-vue-components/vite'
 
 export default defineConfig({
-  plugins: [vue(), jsx()],
+  plugins: [
+    vue(),
+    jsx(),
+    Components({
+      dts: false,
+      include: /AutoImportScriptSetup\.vue$/,
+      dirs: ['tests/components']
+    })
+  ],
   define: {
     __USE_BUILD__: process.env.NODE_ENV !== 'test-build',
     __BROWSER__: true,
