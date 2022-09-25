@@ -38,7 +38,12 @@ export const getComponentName = (
   type: VNodeTypes
 ): string => {
   if (isObjectComponent(type)) {
-    return getComponentNameInSetup(instance, type) || type.name || ''
+    return (
+      // If the component we stub is a script setup component and is automatically
+      // imported by unplugin-vue-components we can only get its name through
+      // the `__name` property.
+      getComponentNameInSetup(instance, type) || type.name || type.__name || ''
+    )
   }
 
   if (isLegacyExtendedComponent(type)) {
