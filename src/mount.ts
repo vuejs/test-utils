@@ -30,6 +30,7 @@ import {
 import { MountingOptions, Slot } from './types'
 import {
   isFunctionalComponent,
+  isObject,
   isObjectComponent,
   mergeGlobalProperties
 } from './utils'
@@ -474,7 +475,9 @@ export function mount(
       keyof Omit<AppConfig, 'isNativeTag'>,
       any
     ][]) {
-      app.config[k] = v
+      app.config[k] = isObject(app.config[k])
+        ? Object.assign(app.config[k]!, v)
+        : v
     }
   }
 

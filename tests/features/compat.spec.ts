@@ -3,8 +3,9 @@ import * as mockVue from '@vue/compat'
 import { mount } from '../../src'
 
 vi.mock('vue', () => mockVue)
-
 const { configureCompat, extend, defineComponent, h } = mockVue
+// @ts-expect-error @vue/compat does not expose default export in types
+const Vue = mockVue.default
 
 describe('@vue/compat build', () => {
   describe.each(['suppress-warning', false])(
@@ -212,5 +213,20 @@ describe('@vue/compat build', () => {
     expect(wrapper.html()).toBe(
       '<div class="foo" text="message" style="color: red;">message</div>'
     )
+  })
+
+  it('does not erase globalProperties added by messing with Vue.prototype', () => {
+    configureCompat({
+      MODE: 3,
+      GLOBAL_PROTOTYPE: 'suppress-warning'
+    })
+
+    Vue.prototype.$test = 1
+
+    const Component = { template: 'hello ' }
+    const wrapper = mount(Component)
+
+    // @ts-expect-error $test "magically" appears from "Vue.prototype" in compat build
+    expect(wrapper.vm.$test).toBe(1)
   })
 })
