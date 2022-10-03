@@ -105,4 +105,14 @@ describe('element', () => {
       '<div>foo</div><div>bar</div><div>baz</div>'
     )
   })
+
+  it('returns correct element for component which renders other component with array of vnodes in default slot', () => {
+    const Nested = {
+      template: '<div class="nested-root"><slot></slot></div>'
+    }
+    const Root = () => h(Nested, {}, [h('div', {}, 'foo'), h('div', {}, 'bar')])
+
+    const wrapper = mount(Root)
+    expect(wrapper.element.innerHTML).toBe('<div>foo</div><div>bar</div>')
+  })
 })
