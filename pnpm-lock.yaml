@@ -28,7 +28,7 @@ specifiers:
   pretty: 2.0.0
   reflect-metadata: 0.1.13
   rollup: 2.79.1
-  rollup-plugin-typescript2: 0.34.0
+  rollup-plugin-typescript2: 0.34.1
   tslib: 2.4.0
   typescript: 4.8.4
   unplugin-vue-components: 0.22.7
@@ -69,7 +69,7 @@ devDependencies:
   pretty: 2.0.0
   reflect-metadata: 0.1.13
   rollup: 2.79.1
-  rollup-plugin-typescript2: 0.34.0_gypgyaqhine6mwjfvh7icfhviq
+  rollup-plugin-typescript2: 0.34.1_gypgyaqhine6mwjfvh7icfhviq
   tslib: 2.4.0
   typescript: 4.8.4
   unplugin-vue-components: 0.22.7_vue@3.2.40
@@ -3332,8 +3332,8 @@ packages:
       glob: 7.2.3
     dev: true
 
-  /rollup-plugin-typescript2/0.34.0_gypgyaqhine6mwjfvh7icfhviq:
-    resolution: {integrity: sha512-dGtOz2kL6nQVgfIOmnA4Xh+5cFrs3bdu4jja/ej7WKR92RzOOixsn71LY5ZFFmKe1R677nUh+k2++NiY3un2PQ==}
+  /rollup-plugin-typescript2/0.34.1_gypgyaqhine6mwjfvh7icfhviq:
+    resolution: {integrity: sha512-P4cHLtGikESmqi1CA+tdMDUv8WbQV48mzPYt77TSTOPJpERyZ9TXdDgjSDix8Fkqce6soYz3+fa4lrC93IEkcw==}
     peerDependencies:
       rollup: '>=1.26.3'
       typescript: '>=2.4.0'
@@ -3342,6 +3342,7 @@ packages:
       find-cache-dir: 3.3.2
       fs-extra: 10.1.0
       rollup: 2.79.1
+      semver: 7.3.7
       tslib: 2.4.0
       typescript: 4.8.4
     dev: true
