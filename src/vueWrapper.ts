@@ -35,6 +35,7 @@ export class VueWrapper<
   private rootVM: ComponentPublicInstance | undefined | null
   private __app: App | null
   private __setProps: ((props: Record<string, unknown>) => void) | undefined
+  private cleanUpCallbacks: Array<() => void> = []
 
   constructor(
     app: App | null,
@@ -149,8 +150,12 @@ export class VueWrapper<
       // @see https://github.com/vuejs/rfcs/blob/master/active-rfcs/0030-emits-option.md#fallthrough-control
       if (emits.includes(eventName)) continue
 
-      element.addEventListener(eventName, (...args) => {
+      const eventListener: EventListener = (...args) => {
         recordEvent(vm.$, eventName, args)
+      }
+      element.addEventListener(eventName, eventListener)
+      this.cleanUpCallbacks.push(() => {
+        element.removeEventListener(eventName, eventListener)
       })
     }
   }
@@ -213,6 +218,9 @@ export class VueWrapper<
     }
     // Clear emitted events cache for this component instance
     removeEventHistory(this.vm)
+
+    this.cleanUpCallbacks.forEach((cb) => cb())
+    this.cleanUpCallbacks = []
 
     this.__app.unmount()
   }
