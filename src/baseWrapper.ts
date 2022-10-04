@@ -30,7 +30,9 @@ import type { DOMWrapper } from './domWrapper'
 import { createDOMWrapper, createVueWrapper } from './wrapperFactory'
 import { stringifyNode } from './utils/stringifyNode'
 import pretty from 'pretty'
+import { isMatch } from 'lodash'
 
+type Props = { [key: string]: any }
 export default abstract class BaseWrapper<ElementType extends Node>
   implements WrapperLike
 {
@@ -182,6 +184,46 @@ export default abstract class BaseWrapper<ElementType extends Node>
     return result ?? createWrapperError('VueWrapper')
   }
 
+  // searching for component created via defineComponent results in VueWrapper of proper type
+  findComponentByProps<T extends DefinedComponent>(
+    selector: T | Exclude<FindComponentSelector, FunctionalComponent>,
+    props: Props
+  ): VueWrapper<InstanceType<T>>
+  // searching for functional component results in DOMWrapper
+  findComponentByProps<T extends FunctionalComponent>(
+    selector: T,
+    props: Props
+  ): DOMWrapper<Node>
+  findComponentByProps<T extends FunctionalComponent>(
+    selector: string,
+    props: Props
+  ): DOMWrapper<Element>
+  // searching by name or ref always results in VueWrapper
+  findComponentByProps<T extends never>(
+    selector: NameSelector | RefSelector,
+    props: Props
+  ): VueWrapper
+  findComponentByProps<T extends ComponentPublicInstance>(
+    selector: T | FindComponentSelector,
+    props: Props
+  ): VueWrapper<T>
+  // catch all declaration
+  findComponentByProps<T extends never>(
+    selector: FindComponentSelector,
+    props: Props
+  ): WrapperLike
+
+  findComponentByProps(
+    selector: FindComponentSelector,
+    props: Props
+  ): WrapperLike {
+    const results = this.findAllComponents(selector)
+    const result = results.find((component) =>
+      isMatch(component.props(), props)
+    )
+    return result ?? createWrapperError('VueWrapper')
+  }
+
   findAllComponents<T extends never>(selector: string): WrapperLike[]
   findAllComponents<T extends DefinedComponent>(
     selector: T | Exclude<FindAllComponentsSelector, FunctionalComponent>
@@ -215,6 +257,45 @@ export default abstract class BaseWrapper<ElementType extends Node>
         : createDOMWrapper(c.vnode.el as Element)
     )
   }
+
+  findAllComponentsByProps<T extends never>(
+    selector: string,
+    props: Props
+  ): WrapperLike[]
+  findAllComponentsByProps<T extends DefinedComponent>(
+    selector: T | Exclude<FindAllComponentsSelector, FunctionalComponent>,
+    props: Props
+  ): VueWrapper<InstanceType<T>>[]
+  findAllComponentsByProps<T extends FunctionalComponent>(
+    selector: T,
+    props: Props
+  ): DOMWrapper<Node>[]
+  findAllComponentsByProps<T extends FunctionalComponent>(
+    selector: string,
+    props: Props
+  ): DOMWrapper<Element>[]
+  findAllComponentsByProps<T extends never>(
+    selector: NameSelector,
+    props: Props
+  ): VueWrapper[]
+  findAllComponentsByProps<T extends ComponentPublicInstance>(
+    selector: T | FindAllComponentsSelector,
+    props: Props
+  ): VueWrapper<T>[]
+  // catch all declaration
+  findAllComponentsByProps<T extends never>(
+    selector: FindAllComponentsSelector,
+    props: Props
+  ): WrapperLike[]
+
+  findAllComponentsByProps(
+    selector: FindComponentSelector,
+    props: Props
+  ): WrapperLike[] {
+    const results = this.findAllComponents(selector)
+    return results.filter((component) => isMatch(component.props(), props))
+  }
+
   abstract setValue(value?: any): Promise<void>
   html(): string {
     return this.getRootNodes()

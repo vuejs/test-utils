@@ -1209,6 +1209,88 @@ wrapper.findComponent<DefineComponent>('.foo') // returns VueWrapper
 ```
 :::
 
+### findComponentByProps
+
+Finds a Vue Component instance by its props and returns a `VueWrapper` if found. Returns `ErrorWrapper` otherwise.
+
+**Signature:**
+
+```ts
+findComponentByProps<T extends never>(selector: string, props: { [key: string]: any }): WrapperLike
+findComponentByProps<T extends DefinedComponent>(selector: T | Exclude<FindComponentSelector, FunctionalComponent>, props: { [key: string]: any }): VueWrapper<InstanceType<T>>
+findComponentByProps<T extends FunctionalComponent>(selector: T | string, props: { [key: string]: any }): DOMWrapper<Element>
+findComponentByProps<T extends never>(selector: NameSelector | RefSelector, props: { [key: string]: any }): VueWrapper
+findComponentByProps<T extends ComponentPublicInstance>(selector: T | FindComponentSelector, props: { [key: string]: any }): VueWrapper<T>
+findComponentByProps(selector: FindComponentSelector, props: { [key: string]: any }): WrapperLike
+```
+
+**Details:**
+
+`findComponentByProps` supports several syntaxes:
+
+| syntax         | example                                        | details                                                      |
+|----------------|------------------------------------------------|--------------------------------------------------------------|
+| querySelector  | `findComponent('.component', {title: 'Save'})` | Matches standard query selector.                             |
+| Component name | `findComponent({name: 'a', {title: 'Save'}})`  | matches PascalCase, snake-case, camelCase                    |
+| Component ref  | `findComponent({ref: 'ref', {title: 'Save'}})` | Can be used only on direct ref children of mounted component |
+| SFC            | `findComponent(Component, {title: 'Save'})`    | Pass an imported component directly                          |
+
+`Foo.vue`
+
+```vue
+<template>
+  <div class="foo">{{title}}</div>
+</template>
+
+<script>
+export default {
+  name: 'Foo',
+  props: ['title']
+}
+</script>
+```
+
+`Component.vue`:
+
+```vue
+<template>
+  <Foo data-test="foo" ref="foo" class="foo" title="Save"/>
+  <Foo data-test="foo" ref="foo" class="foo" title="Delete"/>
+</template>
+
+<script>
+import Foo from '@/Foo'
+
+export default {
+  components: { Foo },
+}
+</script>
+```
+
+`Component.spec.js`
+
+```js
+import { mount } from '@vue/test-utils'
+import Component from './Component.vue'
+
+import Foo from '@/Foo.vue'
+
+test('findComponentByProps', () => {
+  const wrapper = mount(Component)
+
+  // All the following queries would return a VueWrapper
+
+  wrapper.findComponent('.foo', {title: 'Save'})
+  wrapper.findComponent('[data-test="foo"]', {title: 'Save'})
+
+  wrapper.findComponent({ name: 'Foo' }, {title: 'Save'})
+
+  wrapper.findComponent({ ref: 'foo' }, {title: 'Save'})
+
+  wrapper.findComponent(Foo, {title: 'Save'})
+})
+```
+
 ### findAllComponents
 
 **Signature:**
@@ -1258,6 +1340,52 @@ test('findAllComponents', () => {
 :::warning Usage with CSS selectors
 `findAllComponents` has same behavior when used with CSS selector as [findComponent](#findcomponent)
 :::
+
+### findAllComponentsByProps
+
+**Signature:**
+
+```ts
+findAllComponentsByProps<T extends never>(selector: string, props: { [key: string]: any }): WrapperLike[]
+findAllComponentsByProps<T extends DefinedComponent>(selector: T | Exclude<FindAllComponentsSelector, FunctionalComponent>, props: { [key: string]: any }): VueWrapper<InstanceType<T>>[]
+findAllComponentsByProps<T extends FunctionalComponent>(selector: string, props: { [key: string]: any }): DOMWrapper<Element>[]
+findAllComponentsByProps<T extends FunctionalComponent>(selector: T, props: { [key: string]: any }): DOMWrapper<Node>[]
+findAllComponentsByProps<T extends never>(selector: NameSelector, props: { [key: string]: any }): VueWrapper[]
+findAllComponentsByProps<T extends ComponentPublicInstance>(selector: T | FindAllComponentsSelector, props: { [key: string]: any }): VueWrapper<T>[]
+findAllComponentsByProps(selector: FindAllComponentsSelector, props: { [key: string]: any }): WrapperLike[]
+```
+
+**Details:**
+
+Similar to `findComponent` but finds all Vue Component instances that match the query. Returns an array of `VueWrapper`.
+
+:::warning
+`ref` syntax is not supported in `findAllComponents`. All other query syntaxes are valid.
+:::
+
+`Component.vue`:
+
+```vue
+<template>
+  <FooComponent v-for="number in [1, 2, 2, 3, 3, 3]" :key="number" data-test="number" :value="number">
+    {{ number }}
+  </FooComponent>
+</template>
+```
+
+`Component.spec.js`:
+
+```js
+import { mount } from '@vue/test-utils'
+import Component from './Component.vue'
+
+test('findAllComponents', () => {
+  const wrapper = mount(Component)
+
+  // Returns an array of VueWrapper
+  wrapper.findAllComponents('[data-test="number"]', {value: 2})
+})
+```
 
 ### get
 

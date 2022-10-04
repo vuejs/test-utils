@@ -5,6 +5,7 @@ specifiers:
   '@rollup/plugin-json': 4.1.0
   '@rollup/plugin-node-resolve': 14.1.0
   '@rollup/plugin-replace': 4.0.0
+  '@types/lodash': ^4.14.186
   '@types/node': 18.0.6
   '@types/pretty': 2.0.1
   '@typescript-eslint/eslint-plugin': 5.38.1
@@ -24,6 +25,7 @@ specifiers:
   jsdom: 20.0.0
   jsdom-global: 3.0.2
   lint-staged: 13.0.3
+  lodash: ^4.17.21
   prettier: 2.7.1
   pretty: 2.0.0
   reflect-metadata: 0.1.13
@@ -46,6 +48,7 @@ devDependencies:
   '@rollup/plugin-json': 4.1.0_rollup@2.79.1
   '@rollup/plugin-node-resolve': 14.1.0_rollup@2.79.1
   '@rollup/plugin-replace': 4.0.0_rollup@2.79.1
+  '@types/lodash': 4.14.186
   '@types/node': 18.0.6
   '@types/pretty': 2.0.1
   '@typescript-eslint/eslint-plugin': 5.38.1_c7qepppml3d4ahu5cnfwqe6ltq
@@ -65,6 +68,7 @@ devDependencies:
   jsdom: 20.0.0
   jsdom-global: 3.0.2_jsdom@20.0.0
   lint-staged: 13.0.3
+  lodash: 4.17.21
   prettier: 2.7.1
   pretty: 2.0.0
   reflect-metadata: 0.1.13
@@ -762,6 +766,10 @@ packages:
 
   /@types/json-schema/7.0.11:
     resolution: {integrity: sha512-wOuvG1SN4Us4rez+tylwwwCV1psiNVOkJeM3AUWUNWg/jDQY2+HE/444y5gc+jBmRqASOm2Oeh5c1axHobwRKQ==}
+    dev: true
+
+  /@types/lodash/4.14.186:
+    resolution: {integrity: sha512-eHcVlLXP0c2FlMPm56ITode2AgLMSa6aJ05JTTbYbI+7EMkCEE5qk2E41d5g2lCVTqRe0GnnRFurmlCsDODrPw==}
     dev: true
 
   /@types/node/18.0.6:
@@ -2900,6 +2908,10 @@ packages:
 
   /lodash.merge/4.6.2:
     resolution: {integrity: sha512-0KpjqXRVvrYyCsX1swR/XTK0va6VQkQM6MNo7PqW77ByjAhoARA8EfrP1N4+KlKj8YS0ZUCtRT/YUuhyYDujIQ==}
+    dev: true
+
+  /lodash/4.17.21:
+    resolution: {integrity: sha512-v2kDEe57lecTulaDIuNTPy3Ry4gLGJ6Z1O3vE1krgXZNrsQ+LFTGHVxVjcXPs17LhbZVGedAJv8XZ1tvj5FvSg==}
     dev: true
 
   /log-update/4.0.0:
