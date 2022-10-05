@@ -6,9 +6,9 @@ functionality.
 
 Some use cases for plugins:
 
-1.  Aliasing existing public methods
-1.  Attaching matchers to the Wrapper instance
-1.  Attaching functionality to the Wrapper
+1. Aliasing existing public methods
+2. Attaching matchers to the Wrapper instance
+3. Attaching functionality to the Wrapper
 
 ## Wrapper Plugin
 
@@ -166,6 +166,19 @@ const wrapper = mount(Component, {
     }
   }
 })
+```
+
+## Using the plugin with TypeScript
+
+To use your custom wrapper plugin with [TypeScript](https://www.typescriptlang.org/) you have to declare your custom wrapper function. Therefore, add a file named `vue-test-utils.d.ts` with the following content:
+```typescript
+import { DOMWrapper } from '@vue/test-utils';
+
+declare module '@vue/test-utils' {
+  export class VueWrapper {
+    findByTestId(testId: string): DOMWrapper[];
+  }
+}
 ```
 
 ## Featuring Your Plugin

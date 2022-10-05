@@ -31,10 +31,12 @@ export class VueWrapper<
     $emit: (event: any, ...args: any[]) => void
   } & ComponentCustomProperties = ComponentPublicInstance
 > extends BaseWrapper<Node> {
-  private componentVM: T
-  private rootVM: ComponentPublicInstance | undefined | null
-  private __app: App | null
-  private __setProps: ((props: Record<string, unknown>) => void) | undefined
+  private readonly componentVM: T
+  private readonly rootVM: ComponentPublicInstance | undefined | null
+  private readonly __app: App | null
+  private readonly __setProps:
+    | ((props: Record<string, unknown>) => void)
+    | undefined
   private cleanUpCallbacks: Array<() => void> = []
 
   constructor(
