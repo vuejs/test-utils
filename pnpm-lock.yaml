@@ -31,7 +31,7 @@ specifiers:
   rollup-plugin-typescript2: 0.34.1
   tslib: 2.4.0
   typescript: 4.8.4
-  unplugin-vue-components: 0.22.7
+  unplugin-vue-components: 0.22.8
   vite: 3.1.4
   vitepress: 0.22.4
   vitest: 0.22.1
@@ -72,7 +72,7 @@ devDependencies:
   rollup-plugin-typescript2: 0.34.1_gypgyaqhine6mwjfvh7icfhviq
   tslib: 2.4.0
   typescript: 4.8.4
-  unplugin-vue-components: 0.22.7_vue@3.2.40
+  unplugin-vue-components: 0.22.8_vue@3.2.40
   vite: 3.1.4
   vitepress: 0.22.4
   vitest: 0.22.1_jsdom@20.0.1
@@ -2921,8 +2921,8 @@ packages:
       sourcemap-codec: 1.4.8
     dev: true
 
-  /magic-string/0.26.4:
-    resolution: {integrity: sha512-e5uXtVJ22aEpK9u1+eQf0fSxHeqwyV19K+uGnlROCxUhzwRip9tBsaMViK/0vC3viyPd5Gtucp3UmEp/Q2cPTQ==}
+  /magic-string/0.26.5:
+    resolution: {integrity: sha512-yXUIYOOQnEHKHOftp5shMWpB9ImfgfDJpapa38j/qMtTj5QHWucvxP4lUtuRmHT9vAzvtpHkWKXW9xBwimXeNg==}
     engines: {node: '>=12'}
     dependencies:
       sourcemap-codec: 1.4.8
@@ -3668,8 +3668,8 @@ packages:
     engines: {node: '>= 10.0.0'}
     dev: true
 
-  /unplugin-vue-components/0.22.7_vue@3.2.40:
-    resolution: {integrity: sha512-MJEAKJF9bRykTRvJ4WXF0FNMAyt1PX3iwpu2NN+li35sAKjQv6sC1col5aZDLiwDZDo2AGwxNkzLJFKaun9qHw==}
+  /unplugin-vue-components/0.22.8_vue@3.2.40:
+    resolution: {integrity: sha512-Musnwdtr6uj9Zopo4oeh4lp9+fJ2ArXVDzSiZxF4YC9v+pLnasKVKEEAjdXuQQ3u3KtntVw6PCscyAt52eS75g==}
     engines: {node: '>=14'}
     peerDependencies:
       '@babel/parser': ^7.15.8
@@ -3684,7 +3684,7 @@ packages:
       debug: 4.3.4
       fast-glob: 3.2.12
       local-pkg: 0.4.2
-      magic-string: 0.26.4
+      magic-string: 0.26.5
       minimatch: 5.1.0
       resolve: 1.22.1
       unplugin: 0.9.6
