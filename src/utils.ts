@@ -40,8 +40,14 @@ export function mergeGlobalProperties(
 
   const renderStubDefaultSlot =
     mountGlobal.renderStubDefaultSlot ??
-    config?.renderStubDefaultSlot ??
-    configGlobal?.renderStubDefaultSlot
+    (configGlobal.renderStubDefaultSlot || config?.renderStubDefaultSlot) ??
+    false
+
+  if (config.renderStubDefaultSlot === true) {
+    console.warn(
+      'config.renderStubDefaultSlot is deprecated, use config.global.renderStubDefaultSlot instead'
+    )
+  }
 
   return {
     mixins: [...(configGlobal.mixins || []), ...(mountGlobal.mixins || [])],

@@ -206,7 +206,7 @@ You can enable the old behavior like this:
 ```js
 import { config } from '@vue/test-utils'
 
-config.renderStubDefaultSlot = true
+config.global.renderStubDefaultSlot = true
 ```
 
 ### `destroy` is now `unmount` to match Vue 3
