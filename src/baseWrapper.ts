@@ -41,7 +41,7 @@ export default abstract class BaseWrapper<ElementType extends Node>
     return this.wrapperElement
   }
 
-  constructor(element: ElementType) {
+  protected constructor(element: ElementType) {
     this.wrapperElement = element
   }
 
