@@ -12,7 +12,10 @@ export interface GlobalConfigOptions {
     DOMWrapper: Pluggable<DOMWrapper<Node>>
     createStubs?: CustomCreateStub
   }
-  renderStubDefaultSlot: boolean
+  /**
+   * @deprecated use global.
+   */
+  renderStubDefaultSlot?: boolean
 }
 
 interface Plugin<Instance, O> {
@@ -80,6 +83,5 @@ export const config: GlobalConfigOptions = {
   plugins: {
     VueWrapper: new Pluggable(),
     DOMWrapper: new Pluggable()
-  },
-  renderStubDefaultSlot: false
+  }
 }

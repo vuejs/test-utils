@@ -731,11 +731,11 @@ describe('mounting options: stubs', () => {
     }
 
     afterEach(() => {
-      config.renderStubDefaultSlot = false
+      config.global.renderStubDefaultSlot = false
     })
 
     it('renders only the default stub slot only behind flag', () => {
-      config.renderStubDefaultSlot = true
+      config.global.renderStubDefaultSlot = true
 
       const wrapper = mount(Component, {
         global: {
@@ -750,7 +750,7 @@ describe('mounting options: stubs', () => {
     })
 
     it('renders none of the slots on a stub', () => {
-      config.renderStubDefaultSlot = false
+      config.global.renderStubDefaultSlot = false
       const wrapper = mount(Component, {
         global: {
           stubs: ['ComponentWithSlots']
@@ -764,7 +764,7 @@ describe('mounting options: stubs', () => {
     })
 
     it('renders the default slot of deeply nested stubs when renderStubDefaultSlot=true', () => {
-      config.renderStubDefaultSlot = true
+      config.global.renderStubDefaultSlot = true
 
       const SimpleSlot = {
         name: 'SimpleSlot',
