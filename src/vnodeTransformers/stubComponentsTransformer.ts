@@ -128,21 +128,6 @@ const resolveComponentStubByName = (componentName: string, stubs: Stubs) => {
   }
 }
 
-function createStubOnceForType(
-  type: ConcreteComponent,
-  factoryFn: () => ConcreteComponent,
-  cache: WeakMap<ConcreteComponent, ConcreteComponent>
-): ConcreteComponent {
-  const cachedStub = cache.get(type)
-  if (cachedStub) {
-    return cachedStub
-  }
-
-  const stub = factoryFn()
-  cache.set(type, stub)
-  return stub
-}
-
 interface CreateStubComponentsTransformerConfig {
   stubs?: Stubs
   shallow?: boolean
@@ -154,14 +139,6 @@ export function createStubComponentsTransformer({
   shallow = false,
   renderStubDefaultSlot = false
 }: CreateStubComponentsTransformerConfig): VTUVNodeTypeTransformer {
-  const createdStubsMap: WeakMap<ConcreteComponent, ConcreteComponent> =
-    new WeakMap()
-
-  const createStubOnce = (
-    type: ConcreteComponent,
-    factoryFn: () => ConcreteComponent
-  ) => createStubOnceForType(type, factoryFn, createdStubsMap)
-
   return function componentsTransformer(type, instance) {
     // stub teleport by default via config.global.stubs
     if ((type as any) === Teleport && 'teleport' in stubs) {
@@ -234,18 +211,12 @@ export function createStubComponentsTransformer({
         : { ...unwrappedStub }
       specializedStubComponent.props = unwrappedStub.props
 
-      const specializedStub = createStubOnce(
-        type,
-        () => specializedStubComponent
-      )
-      specializedStub.props = unwrappedStub.props
       registerStub({
         source: type,
-        stub: specializedStub,
+        stub: specializedStubComponent,
         originalStub: stub
       })
-      // pass the props and children, for advanced stubbing
-      return specializedStub
+      return specializedStubComponent
     }
 
     if (stub === false) {
@@ -264,19 +235,16 @@ export function createStubComponentsTransformer({
         throw new Error('Attempted to stub a non-component')
       }
 
-      const newStub = createStubOnce(
-        type,
-        () =>
-          config.plugins.createStubs?.({
-            name: stubName,
-            component: type
-          }) ??
-          createStub({
-            name: stubName,
-            type,
-            renderStubDefaultSlot
-          })
-      )
+      const newStub =
+        config.plugins.createStubs?.({
+          name: stubName,
+          component: type
+        }) ??
+        createStub({
+          name: stubName,
+          type,
+          renderStubDefaultSlot
+        })
       registerStub({ source: type, stub: newStub })
       return newStub
     }

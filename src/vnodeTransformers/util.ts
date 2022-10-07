@@ -22,11 +22,21 @@ export const createVNodeTransformer = ({
 }: {
   transformers: VTUVNodeTypeTransformer[]
 }): VNodeArgsTransformerFn => {
+  const transformationCache: WeakMap<
+    VNodeTransformerInputComponentType,
+    VNodeTransformerInputComponentType
+  > = new WeakMap()
+
   return (args: VNodeTransformerArgsType, instance: InstanceArgsType) => {
     const [originalType, ...restVNodeArgs] = args
 
     if (!isComponent(originalType)) {
       return [originalType, ...restVNodeArgs]
+    }
+
+    const cachedTransformation = transformationCache.get(originalType)
+    if (cachedTransformation) {
+      return [cachedTransformation, ...restVNodeArgs]
     }
 
     const componentType: VNodeTransformerInputComponentType = originalType
@@ -35,6 +45,8 @@ export const createVNodeTransformer = ({
       (type, transformer) => transformer(type, instance),
       componentType
     )
+    transformationCache.set(originalType, transformedType)
+
     return [transformedType, ...restVNodeArgs]
   }
 }
