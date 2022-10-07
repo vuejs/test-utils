@@ -231,10 +231,6 @@ export function createStubComponentsTransformer({
       // Set name when using shallow without stub
       const stubName = name || registeredName || componentName
 
-      if (!isComponent(type)) {
-        throw new Error('Attempted to stub a non-component')
-      }
-
       const newStub =
         config.plugins.createStubs?.({
           name: stubName,
