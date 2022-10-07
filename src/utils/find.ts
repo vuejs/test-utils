@@ -9,7 +9,7 @@ import { FindAllComponentsSelector } from '../types'
 import {
   getOriginalStubFromSpecializedStub,
   getOriginalVNodeTypeFromStub
-} from '../stubs'
+} from '../vnodeTransformers/stubComponentsTransformer'
 import { isComponent } from '../utils'
 import { matchName } from './matchName'
 import { unwrapLegacyVueExtendComponent } from './vueCompatSupport'

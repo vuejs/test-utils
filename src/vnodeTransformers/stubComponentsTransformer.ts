@@ -1,5 +1,5 @@
+import type { VTUVNodeTypeTransformer } from './util'
 import {
-  transformVNodeArgs,
   Transition,
   TransitionGroup,
   BaseTransition,
@@ -12,17 +12,16 @@ import {
   ComponentObjectPropsOptions,
   DefineComponent
 } from 'vue'
-import { hyphenate } from './utils/vueShared'
-import { matchName } from './utils/matchName'
-import { isComponent, isFunctionalComponent } from './utils'
-import { ComponentInternalInstance } from '@vue/runtime-core'
-import { unwrapLegacyVueExtendComponent } from './utils/vueCompatSupport'
-import { Stub, Stubs } from './types'
+import { hyphenate } from '../utils/vueShared'
+import { matchName } from '../utils/matchName'
+import { isComponent, isFunctionalComponent } from '../utils'
+import { unwrapLegacyVueExtendComponent } from '../utils/vueCompatSupport'
+import { Stub, Stubs } from '../types'
 import {
   getComponentName,
   getComponentRegisteredName
-} from './utils/componentName'
-import { config } from './config'
+} from '../utils/componentName'
+import { config } from '../config'
 
 export type CustomCreateStub = (params: {
   name: string
@@ -144,11 +143,17 @@ function createStubOnceForType(
   return stub
 }
 
-export function stubComponents(
-  stubs: Stubs = {},
+interface CreateStubComponentsTransformerConfig {
+  stubs?: Stubs
+  shallow?: boolean
+  renderStubDefaultSlot: boolean
+}
+
+export function createStubComponentsTransformer({
+  stubs = {},
   shallow = false,
   renderStubDefaultSlot = false
-) {
+}: CreateStubComponentsTransformerConfig): VTUVNodeTypeTransformer {
   const createdStubsMap: WeakMap<ConcreteComponent, ConcreteComponent> =
     new WeakMap()
 
@@ -157,144 +162,125 @@ export function stubComponents(
     factoryFn: () => ConcreteComponent
   ) => createStubOnceForType(type, factoryFn, createdStubsMap)
 
-  transformVNodeArgs((args, instance: ComponentInternalInstance | null) => {
-    const [nodeType, props, children, patchFlag, dynamicProps] = args
-    const type = nodeType as VNodeTypes | typeof Teleport
+  return function componentsTransformer(type, instance) {
+    // stub teleport by default via config.global.stubs
+    if ((type as any) === Teleport && 'teleport' in stubs) {
+      if (stubs.teleport === false) return type
+
+      return createStub({
+        name: 'teleport',
+        type,
+        renderStubDefaultSlot: true
+      })
+    }
 
     // stub transition by default via config.global.stubs
     if (
       (type === Transition || type === BaseTransition) &&
       'transition' in stubs
     ) {
-      if (stubs.transition === false) return args
+      if (stubs.transition === false) return type
 
-      return [
-        createStub({
-          name: 'transition',
-          type,
-          renderStubDefaultSlot: true
-        }),
-        props,
-        children
-      ]
+      return createStub({
+        name: 'transition',
+        type,
+        renderStubDefaultSlot: true
+      })
     }
 
     // stub transition-group by default via config.global.stubs
     if (type === TransitionGroup && 'transition-group' in stubs) {
-      if (stubs['transition-group'] === false) return args
+      if (stubs['transition-group'] === false) return type
 
-      return [
-        createStub({
-          name: 'transition-group',
-          type,
-          renderStubDefaultSlot: true
-        }),
-        props,
-        children
-      ]
+      return createStub({
+        name: 'transition-group',
+        type,
+        renderStubDefaultSlot: true
+      })
     }
 
-    // stub teleport by default via config.global.stubs
-    if (type === Teleport && 'teleport' in stubs) {
-      if (stubs.teleport === false) return args
-
-      return [
-        createStub({
-          name: 'teleport',
-          type,
-          renderStubDefaultSlot: true
-        }),
-        props,
-        () => children
-      ]
+    if (shouldNotStub(type)) {
+      return type
     }
 
-    if (isComponent(type) || isFunctionalComponent(type)) {
-      if (shouldNotStub(type)) {
-        return args
-      }
+    const registeredName = getComponentRegisteredName(instance, type)
+    const componentName = getComponentName(instance, type)
 
-      const registeredName = getComponentRegisteredName(instance, type)
-      const componentName = getComponentName(instance, type)
+    let stub = null
+    let name = null
 
-      let stub = null
-      let name = null
-
-      // Prio 1 using the key in locally registered components in the parent
-      if (registeredName) {
-        stub = resolveComponentStubByName(registeredName, stubs)
-        if (stub) {
-          name = registeredName
-        }
-      }
-
-      // Prio 2 using the name attribute in the component
-      if (!stub && componentName) {
-        stub = resolveComponentStubByName(componentName, stubs)
-        if (stub) {
-          name = componentName
-        }
-      }
-
-      // case 2: custom implementation
-      if (isComponent(stub)) {
-        const unwrappedStub = unwrapLegacyVueExtendComponent(stub)
-        const stubFn = isFunctionalComponent(unwrappedStub)
-          ? unwrappedStub
-          : null
-        const specializedStubComponent: ConcreteComponent = stubFn
-          ? (...args) => stubFn(...args)
-          : { ...unwrappedStub }
-        specializedStubComponent.props = unwrappedStub.props
-
-        const specializedStub = createStubOnce(
-          type,
-          () => specializedStubComponent
-        )
-        specializedStub.props = unwrappedStub.props
-        registerStub({
-          source: type,
-          stub: specializedStub,
-          originalStub: stub
-        })
-        // pass the props and children, for advanced stubbing
-        return [specializedStub, props, children, patchFlag, dynamicProps]
-      }
-
-      if (stub === false) {
-        // we explicitly opt out of stubbing this component
-        return args
-      }
-
-      // we return a stub by matching Vue's `h` function
-      // where the signature is h(Component, props, slots)
-      // case 1: default stub
-      if (stub === true || shallow) {
-        // Set name when using shallow without stub
-        const stubName = name || registeredName || componentName
-
-        if (!isComponent(type)) {
-          throw new Error('Attempted to stub a non-component')
-        }
-
-        const newStub = createStubOnce(type, () =>
-          config.plugins.createStubs
-            ? config.plugins.createStubs({
-                name: stubName,
-                component: type
-              })
-            : createStub({
-                name: stubName,
-                type,
-                renderStubDefaultSlot
-              })
-        )
-        registerStub({ source: type, stub: newStub })
-        return [newStub, props, children, patchFlag, dynamicProps]
+    // Prio 1 using the key in locally registered components in the parent
+    if (registeredName) {
+      stub = resolveComponentStubByName(registeredName, stubs)
+      if (stub) {
+        name = registeredName
       }
     }
 
-    // do not stub anything what is not a component
-    return args
-  })
+    // Prio 2 using the name attribute in the component
+    if (!stub && componentName) {
+      stub = resolveComponentStubByName(componentName, stubs)
+      if (stub) {
+        name = componentName
+      }
+    }
+
+    // case 2: custom implementation
+    if (isComponent(stub)) {
+      const unwrappedStub = unwrapLegacyVueExtendComponent(stub)
+      const stubFn = isFunctionalComponent(unwrappedStub) ? unwrappedStub : null
+      const specializedStubComponent: ConcreteComponent = stubFn
+        ? (...args) => stubFn(...args)
+        : { ...unwrappedStub }
+      specializedStubComponent.props = unwrappedStub.props
+
+      const specializedStub = createStubOnce(
+        type,
+        () => specializedStubComponent
+      )
+      specializedStub.props = unwrappedStub.props
+      registerStub({
+        source: type,
+        stub: specializedStub,
+        originalStub: stub
+      })
+      // pass the props and children, for advanced stubbing
+      return specializedStub
+    }
+
+    if (stub === false) {
+      // we explicitly opt out of stubbing this component
+      return type
+    }
+
+    // we return a stub by matching Vue's `h` function
+    // where the signature is h(Component, props, slots)
+    // case 1: default stub
+    if (stub === true || shallow) {
+      // Set name when using shallow without stub
+      const stubName = name || registeredName || componentName
+
+      if (!isComponent(type)) {
+        throw new Error('Attempted to stub a non-component')
+      }
+
+      const newStub = createStubOnce(
+        type,
+        () =>
+          config.plugins.createStubs?.({
+            name: stubName,
+            component: type
+          }) ??
+          createStub({
+            name: stubName,
+            type,
+            renderStubDefaultSlot
+          })
+      )
+      registerStub({ source: type, stub: newStub })
+      return newStub
+    }
+
+    return type
+  }
 }

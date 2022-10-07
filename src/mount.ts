@@ -24,7 +24,8 @@ import {
   ComponentPropsOptions,
   ComponentOptions,
   ConcreteComponent,
-  Prop
+  Prop,
+  transformVNodeArgs
 } from 'vue'
 
 import { MountingOptions, Slot } from './types'
@@ -37,7 +38,12 @@ import {
 import { processSlot } from './utils/compileSlots'
 import { VueWrapper } from './vueWrapper'
 import { attachEmitListener } from './emit'
-import { stubComponents, addToDoNotStubComponents, registerStub } from './stubs'
+import { createVNodeTransformer } from './vnodeTransformers/util'
+import {
+  createStubComponentsTransformer,
+  addToDoNotStubComponents,
+  registerStub
+} from './vnodeTransformers/stubComponentsTransformer'
 import {
   isLegacyFunctionalComponent,
   unwrapLegacyVueExtendComponent
@@ -522,7 +528,17 @@ export function mount(
   // stubs
   // even if we are using `mount`, we will still
   // stub out Transition and Transition Group by default.
-  stubComponents(global.stubs, options?.shallow, global?.renderStubDefaultSlot)
+  transformVNodeArgs(
+    createVNodeTransformer({
+      transformers: [
+        createStubComponentsTransformer({
+          stubs: global.stubs,
+          shallow: options?.shallow,
+          renderStubDefaultSlot: global.renderStubDefaultSlot
+        })
+      ]
+    })
+  )
 
   // users expect stubs to work with globally registered
   // components so we register stubs as global components to avoid
