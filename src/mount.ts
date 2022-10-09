@@ -30,6 +30,8 @@ import {
 
 import { MountingOptions, Slot } from './types'
 import {
+  getComponentsFromStubs,
+  getDirectivesFromStubs,
   isFunctionalComponent,
   isObject,
   isObjectComponent,
@@ -41,15 +43,16 @@ import { attachEmitListener } from './emit'
 import { createVNodeTransformer } from './vnodeTransformers/util'
 import {
   createStubComponentsTransformer,
-  addToDoNotStubComponents,
-  registerStub
+  addToDoNotStubComponents
 } from './vnodeTransformers/stubComponentsTransformer'
+import { createStubDirectivesTransformer } from './vnodeTransformers/stubDirectivesTransformer'
 import {
   isLegacyFunctionalComponent,
   unwrapLegacyVueExtendComponent
 } from './utils/vueCompatSupport'
 import { trackInstance } from './utils/autoUnmount'
 import { createVueWrapper } from './wrapperFactory'
+import { registerStub } from './stubs'
 
 // NOTE this should come from `vue`
 const MOUNT_OPTIONS: Array<keyof MountingOptions<any>> = [
@@ -338,7 +341,10 @@ export function mount(
   }
 
   addToDoNotStubComponents(component)
+  // We've just replaced our component with it's copy
+  // Let's register it as a stub so user can find it
   registerStub({ source: originalComponent, stub: component })
+
   const el = document.createElement('div')
 
   if (options?.attachTo) {
@@ -532,9 +538,12 @@ export function mount(
     createVNodeTransformer({
       transformers: [
         createStubComponentsTransformer({
-          stubs: global.stubs,
+          stubs: getComponentsFromStubs(global.stubs),
           shallow: options?.shallow,
           renderStubDefaultSlot: global.renderStubDefaultSlot
+        }),
+        createStubDirectivesTransformer({
+          directives: getDirectivesFromStubs(global.stubs)
         })
       ]
     })
@@ -551,7 +560,7 @@ export function mount(
   // ref: https://github.com/vuejs/test-utils/issues/249
   // ref: https://github.com/vuejs/test-utils/issues/425
   if (global?.stubs) {
-    for (const name of Object.keys(global.stubs)) {
+    for (const name of Object.keys(getComponentsFromStubs(global.stubs))) {
       if (!app.component(name)) {
         app.component(name, { name })
       }

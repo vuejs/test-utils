@@ -1,4 +1,5 @@
 import { isComponent } from '../utils'
+import { registerStub } from '../stubs'
 import { ConcreteComponent, transformVNodeArgs } from 'vue'
 
 type VNodeArgsTransformerFn = NonNullable<
@@ -9,8 +10,10 @@ type VNodeTransformerArgsType = TransformVNodeArgs[0]
 type InstanceArgsType = TransformVNodeArgs[1]
 type VNodeTransformerInputType = VNodeTransformerArgsType[0]
 
-type VNodeTransformerInputComponentType = VNodeTransformerInputType &
-  ConcreteComponent
+type ExtractComponentTypes<T> = T extends ConcreteComponent ? T : never
+
+type VNodeTransformerInputComponentType =
+  ExtractComponentTypes<VNodeTransformerInputType>
 
 export type VTUVNodeTypeTransformer = (
   inputType: VNodeTransformerInputComponentType,
@@ -45,7 +48,12 @@ export const createVNodeTransformer = ({
       (type, transformer) => transformer(type, instance),
       componentType
     )
-    transformationCache.set(originalType, transformedType)
+
+    if (originalType !== transformedType) {
+      transformationCache.set(originalType, transformedType)
+
+      registerStub({ source: originalType, stub: transformedType })
+    }
 
     return [transformedType, ...restVNodeArgs]
   }

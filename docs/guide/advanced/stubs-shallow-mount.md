@@ -1,6 +1,6 @@
 # Stubs and Shallow Mount
 
-Vue Test Utils provides some advanced features for _stubbing_ components. A _stub_ is where you replace an existing implementation of a custom component with a dummy component that doesn't do anything at all, which can simplify an otherwise complex test. Let's see an example.
+Vue Test Utils provides some advanced features for _stubbing_ components and directives. A _stub_ is where you replace an existing implementation of a custom component or directive with a dummy one that doesn't do anything at all, which can simplify an otherwise complex test. Let's see an example.
 
 ## Stubbing a single child component
 
@@ -238,6 +238,78 @@ test('stubs async component with resolving', async () => {
 })
 ```
 
+## Stubbing a directive
+
+Sometimes directives do quite complex things, like perform a lot of DOM manipulation which might result in errors in your tests (due to JSDOM not resembling entire DOM behavior). A common example is tooltip directives from various libraries, which usually rely heavily on measuring DOM nodes position/sizes.
+
+In this example, we have another `<App>` that renders a message with tooltip
+
+```js
+// tooltip directive declared somewhere, named `Tooltip`
+
+const App = {
+  directives: {
+    Tooltip
+  },
+  template: '<h1 v-tooltip title="Welcome tooltip">Welcome to Vue.js 3</h1>'
+}
+```
+
+We do not want `Tooltip` directive code to be executed in this test, we just want to assert the message is rendered. In this case, we could use the `stubs`, which appears in the `global` mounting option passing `vTooltip`.
+
+```js
+test('stubs component with custom template', () => {
+  const wrapper = mount(App, {
+    global: {
+      stubs: {
+        vTooltip: true
+      }
+    }
+  })
+
+  console.log(wrapper.html())
+  // <h1>Welcome to Vue.js 3</h1><span></span>
+
+  expect(wrapper.html()).toContain('Welcome to Vue.js 3')
+})
+```
+
+::: tip
+Usage of `vCustomDirective` naming scheme to differentiate between components and directives is inspired by [same approach](https://vuejs.org/api/sfc-script-setup.html#using-custom-directives) used in `<script setup>`
+:::
+
+Sometimes, we need a part of directive functionality (usually because some code relies on it). Let's assume our directive adds `with-tooltip` CSS class when executed and this is important behavior for our code. In this case we can swap `true` with our mock directive implementation
+
+```js
+test('stubs component with custom template', () => {
+  const wrapper = mount(App, {
+    global: {
+      stubs: {
+        vTooltip: {
+          beforeMount(el: Element) {
+            console.log('directive called')
+            el.classList.add('with-tooltip')
+          }
+        }
+      }
+    }
+  })
+
+  // 'directive called' logged to console
+
+  console.log(wrapper.html())
+  // <h1>Welcome to Vue.js 3</h1><span></span>
+
+  expect(wrapper.classes('with-tooltip')).toBe(true)
+})
+```
+
+We've just swapped our directive implementation with own one!
+
+::: warning
+Stubbing directives won't work on functional components due to lack of directive name inside of [withDirectives](https://vuejs.org/api/render-function.html#withdirectives) function. Consider mocking directive module via your testing framework if you need to mock directive used in functional component
+:::
+
 ## Default Slots and `shallow`
 
 Since `shallow` stubs out all the content of a components, any `<slot>` won't get rendered when using `shallow`. While this is not a problem in most cases, there are some scenarios where this isn't ideal.
@@ -314,6 +386,6 @@ So regardless of which mounting method you choose, we suggest keeping these guid
 
 ## Conclusion
 
-- use `global.stubs` to replace a component with a dummy one to simplify your tests
+- use `global.stubs` to replace a component or directive with a dummy one to simplify your tests
 - use `shallow: true` (or `shallowMount`) to stub out all child components
 - use `config.renderStubDefaultSlot` to render the default `<slot>` for a stubbed component
