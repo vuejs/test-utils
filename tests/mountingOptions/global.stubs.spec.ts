@@ -883,7 +883,7 @@ describe('mounting options: stubs', () => {
       expect(wrapper.classes()).toContain('DirectiveStubAdded')
     })
 
-    it('stubs directive as noop', () => {
+    it('stubs directive as noop when true passed as value', () => {
       const SomeDirective = () => {
         throw new Error('I will blow up!')
       }
@@ -902,6 +902,23 @@ describe('mounting options: stubs', () => {
       })
 
       expect(wrapper.html()).toBe('<div>text</div>')
+    })
+
+    it('does not stub directive as noop when false passed as value', () => {
+      const Component = {
+        template: '<div v-my-directive>text</div>',
+        directives: { MyDirective }
+      }
+
+      const wrapper = mount(Component, {
+        global: {
+          stubs: {
+            vMyDirective: false
+          }
+        }
+      })
+
+      expect(wrapper.html()).toBe('<div class="DirectiveAdded">text</div>')
     })
 
     it('stubs directive on child component', () => {

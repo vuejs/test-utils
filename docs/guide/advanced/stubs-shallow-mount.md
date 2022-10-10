@@ -255,7 +255,7 @@ const App = {
 }
 ```
 
-We do not want `Tooltip` directive code to be executed in this test, we just want to assert the message is rendered. In this case, we could use the `stubs`, which appears in the `global` mounting option passing `vTooltip`.
+We do not want the `Tooltip` directive code to be executed in this test, we just want to assert the message is rendered. In this case, we could use the `stubs`, which appears in the `global` mounting option passing `vTooltip`.
 
 ```js
 test('stubs component with custom template', () => {
@@ -268,7 +268,7 @@ test('stubs component with custom template', () => {
   })
 
   console.log(wrapper.html())
-  // <h1>Welcome to Vue.js 3</h1><span></span>
+  // <h1>Welcome to Vue.js 3</h1>
 
   expect(wrapper.html()).toContain('Welcome to Vue.js 3')
 })
@@ -298,7 +298,7 @@ test('stubs component with custom template', () => {
   // 'directive called' logged to console
 
   console.log(wrapper.html())
-  // <h1>Welcome to Vue.js 3</h1><span></span>
+  // <h1 class="with-tooltip">Welcome to Vue.js 3</h1>
 
   expect(wrapper.classes('with-tooltip')).toBe(true)
 })
@@ -307,7 +307,7 @@ test('stubs component with custom template', () => {
 We've just swapped our directive implementation with own one!
 
 ::: warning
-Stubbing directives won't work on functional components due to lack of directive name inside of [withDirectives](https://vuejs.org/api/render-function.html#withdirectives) function. Consider mocking directive module via your testing framework if you need to mock directive used in functional component
+Stubbing directives won't work on functional components or `<script setup>` due to lack of directive name inside of [withDirectives](https://vuejs.org/api/render-function.html#withdirectives) function. Consider mocking directive module via your testing framework if you need to mock directive used in functional component
 :::
 
 ## Default Slots and `shallow`

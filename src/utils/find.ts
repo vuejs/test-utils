@@ -43,8 +43,6 @@ export function matches(
   const nodeTypeCandidates: VNodeTypes[] = [
     nodeType,
     getOriginalComponentFromStub(nodeType)
-    // getOriginalVNodeTypeFromStub(nodeType),
-    // getOriginalStubFromSpecializedStub(nodeType)
   ].filter(Boolean) as VNodeTypes[]
 
   // our selector might be a stub itself

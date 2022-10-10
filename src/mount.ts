@@ -341,7 +341,7 @@ export function mount(
   }
 
   addToDoNotStubComponents(component)
-  // We've just replaced our component with it's copy
+  // We've just replaced our component with its copy
   // Let's register it as a stub so user can find it
   registerStub({ source: originalComponent, stub: component })
 

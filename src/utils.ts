@@ -170,12 +170,12 @@ export function getComponentsFromStubs(
 
 export function getDirectivesFromStubs(
   stubs: Stubs
-): Record<string, Directive> {
+): Record<string, Directive | true> {
   const normalizedStubs = convertStubsToRecord(stubs)
 
   return Object.fromEntries(
     Object.entries(normalizedStubs)
-      .filter(([key]) => isDirectiveKey(key))
+      .filter(([key, value]) => isDirectiveKey(key) && value !== false)
       .map(([key, value]) => [key.substring(1), value])
   ) as Record<string, Directive>
 }
