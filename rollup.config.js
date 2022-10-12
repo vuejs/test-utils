@@ -1,4 +1,4 @@
-import ts from 'rollup-plugin-typescript2'
+import ts from '@rollup/plugin-typescript'
 import resolve from '@rollup/plugin-node-resolve'
 import replace from '@rollup/plugin-replace'
 import commonjs from '@rollup/plugin-commonjs'
@@ -65,14 +65,11 @@ function createEntry(options) {
 
   config.plugins.push(
     ts({
-      check: format === 'es' && isBrowser,
-      tsconfigOverride: {
-        compilerOptions: {
-          declaration: format === 'es',
-          target: 'es5', // not sure what this should be?
-          module: format === 'cjs' ? 'es2015' : 'esnext'
-        },
-        exclude: ['tests']
+      include: ['src/**/*.ts', 'types/**/*.d.ts'],
+      compilerOptions: {
+        declaration: format === 'es',
+        target: 'es5', // not sure what this should be?
+        module: format === 'cjs' ? 'es2015' : 'esnext'
       }
     })
   )
