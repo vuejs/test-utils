@@ -4,7 +4,7 @@ import replace from '@rollup/plugin-replace'
 import commonjs from '@rollup/plugin-commonjs'
 import json from '@rollup/plugin-json'
 
-import pkg from './package.json'
+import pkg from './package.json' assert { type: 'json' }
 
 const banner = `
 /**
