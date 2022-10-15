@@ -63,12 +63,15 @@ const shouldNotStub = (type: ConcreteComponent) => doNotStubComponents.has(type)
 export const addToDoNotStubComponents = (type: ConcreteComponent) =>
   doNotStubComponents.add(type)
 
-const stringifySymbols = (props: ComponentPropsOptions) => {
+const normalizeStubProps = (props: ComponentPropsOptions) => {
   // props are always normalized to object syntax
   const $props = props as unknown as ComponentObjectPropsOptions
   return Object.keys($props).reduce((acc, key) => {
     if (typeof $props[key] === 'symbol') {
       return { ...acc, [key]: $props[key]?.toString() }
+    }
+    if (typeof $props[key] === 'function') {
+      return { ...acc, [key]: '[Function]' }
     }
     return { ...acc, [key]: $props[key] }
   }, {})
@@ -100,13 +103,11 @@ export const createStub = ({
         // causes an error.
         // Only a problem when shallow mounting. For this reason we iterate of the
         // props that will be passed and stringify any that are symbols.
-        const propsWithoutSymbols = stringifySymbols(props)
+        // Also having function text as attribute is useless and annoying so
+        // we replace it with "[Function]""
+        const stubProps = normalizeStubProps(props)
 
-        return h(
-          tag,
-          propsWithoutSymbols,
-          renderStubDefaultSlot ? slots : undefined
-        )
+        return h(tag, stubProps, renderStubDefaultSlot ? slots : undefined)
       }
     }
   })

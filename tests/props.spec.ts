@@ -274,6 +274,22 @@ describe('props', () => {
     expect(wrapper.text()).toEqual('hello')
   })
 
+  it('stub function props when shallow mounting', () => {
+    const Comp = defineComponent({
+      name: 'Comp',
+      template: `<div>Test</div>`,
+      props: ['fn']
+    })
+
+    const wrapper = shallowMount({
+      render() {
+        return h(Comp, { fn: () => {} })
+      }
+    })
+
+    expect(wrapper.html()).toBe('<comp-stub fn="[Function]"></comp-stub>')
+  })
+
   describe('edge case with symbol props and stubs', () => {
     it('works with Symbol as default', () => {
       const Comp = defineComponent({
