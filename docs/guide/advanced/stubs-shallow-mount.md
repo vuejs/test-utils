@@ -304,10 +304,10 @@ test('stubs component with custom template', () => {
 })
 ```
 
-We've just swapped our directive implementation with own one!
+We've just swapped our directive implementation with our own one!
 
 ::: warning
-Stubbing directives won't work on functional components or `<script setup>` due to lack of directive name inside of [withDirectives](https://vuejs.org/api/render-function.html#withdirectives) function. Consider mocking directive module via your testing framework if you need to mock directive used in functional component
+Stubbing directives won't work on functional components or `<script setup>` due to lack of directive name inside of [withDirectives](https://vuejs.org/api/render-function.html#withdirectives) function. Consider mocking directive module via your testing framework if you need to mock directive used in functional component. See https://github.com/vuejs/core/issues/6887 for proposal to unlock such functionality
 :::
 
 ## Default Slots and `shallow`

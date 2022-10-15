@@ -16,7 +16,7 @@ export function createStubDirectivesTransformer({
 
   return function directivesTransformer(type) {
     if (isObjectComponent(type) && type.directives) {
-      // We want to change component types as rare as possible
+      // We want to change component types as rarely as possible
       // So first we check if there are any directives we should stub
       const directivesToPatch = Object.keys(type.directives).filter(
         (key) => key in directives
