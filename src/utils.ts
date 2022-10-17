@@ -1,5 +1,11 @@
-import { GlobalMountOptions, RefSelector } from './types'
-import { ComponentOptions, ConcreteComponent, FunctionalComponent } from 'vue'
+import { GlobalMountOptions, RefSelector, Stub, Stubs } from './types'
+import {
+  Component,
+  ComponentOptions,
+  ConcreteComponent,
+  Directive,
+  FunctionalComponent
+} from 'vue'
 import { config } from './config'
 
 function mergeStubs(target: Record<string, any>, source: GlobalMountOptions) {
@@ -142,4 +148,40 @@ export function isRefSelector(
   selector: string | RefSelector
 ): selector is RefSelector {
   return typeof selector === 'object' && 'ref' in selector
+}
+
+export function convertStubsToRecord(stubs: Stubs) {
+  if (Array.isArray(stubs)) {
+    // ['Foo', 'Bar'] => { Foo: true, Bar: true }
+    return stubs.reduce((acc, current) => {
+      acc[current] = true
+      return acc
+    }, {} as Record<string, Stub>)
+  }
+
+  return stubs
+}
+
+const isDirectiveKey = (key: string) => key.match(/^v[A-Z].*/)
+
+export function getComponentsFromStubs(
+  stubs: Stubs
+): Record<string, Component | boolean> {
+  const normalizedStubs = convertStubsToRecord(stubs)
+
+  return Object.fromEntries(
+    Object.entries(normalizedStubs).filter(([key]) => !isDirectiveKey(key))
+  ) as Record<string, Component | boolean>
+}
+
+export function getDirectivesFromStubs(
+  stubs: Stubs
+): Record<string, Directive | true> {
+  const normalizedStubs = convertStubsToRecord(stubs)
+
+  return Object.fromEntries(
+    Object.entries(normalizedStubs)
+      .filter(([key, value]) => isDirectiveKey(key) && value !== false)
+      .map(([key, value]) => [key.substring(1), value])
+  ) as Record<string, Directive>
 }

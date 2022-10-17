@@ -5,11 +5,8 @@ import {
   VNodeNormalizedChildren,
   VNodeTypes
 } from 'vue'
+import { getOriginalComponentFromStub } from '../stubs'
 import { FindAllComponentsSelector } from '../types'
-import {
-  getOriginalStubFromSpecializedStub,
-  getOriginalVNodeTypeFromStub
-} from '../vnodeTransformers/stubComponentsTransformer'
 import { isComponent } from '../utils'
 import { matchName } from './matchName'
 import { unwrapLegacyVueExtendComponent } from './vueCompatSupport'
@@ -45,11 +42,13 @@ export function matches(
 
   const nodeTypeCandidates: VNodeTypes[] = [
     nodeType,
-    getOriginalVNodeTypeFromStub(nodeType),
-    getOriginalStubFromSpecializedStub(nodeType)
+    getOriginalComponentFromStub(nodeType)
   ].filter(Boolean) as VNodeTypes[]
 
-  if (nodeTypeCandidates.includes(selector)) {
+  // our selector might be a stub itself
+  const target = getOriginalComponentFromStub(selector) ?? selector
+
+  if (nodeTypeCandidates.includes(target)) {
     return true
   }
 

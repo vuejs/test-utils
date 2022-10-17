@@ -86,7 +86,7 @@ export interface MountingOptions<Props, Data = {}> {
   shallow?: boolean
 }
 
-export type Stub = boolean | Component
+export type Stub = boolean | Component | Directive
 export type Stubs = Record<string, Stub> | Array<string>
 export type GlobalMountOptions = {
   /**

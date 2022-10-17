@@ -1,6 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
-import { h, defineComponent, defineAsyncComponent } from 'vue'
-
+import { h, defineComponent, defineAsyncComponent, Directive } from 'vue'
 import { config, flushPromises, mount, RouterLinkStub } from '../../src'
 import Hello from '../components/Hello.vue'
 import ComponentWithoutName from '../components/ComponentWithoutName.vue'
@@ -852,5 +851,123 @@ describe('mounting options: stubs', () => {
     const stubAfterSecondRender = wrapper.findComponent({ name: 'FooBar' })
 
     expect(stub.vm).toBe(stubAfterSecondRender.vm)
+  })
+
+  describe('directives', () => {
+    const MyDirective: Directive = {
+      beforeMount(el: Element) {
+        el.classList.add('DirectiveAdded')
+      }
+    }
+
+    const MyDirectiveStub: Directive = {
+      beforeMount(el: Element) {
+        el.classList.add('DirectiveStubAdded')
+      }
+    }
+
+    it('stubs directive on root component', () => {
+      const Component = {
+        template: '<div v-my-directive>text</div>',
+        directives: { MyDirective }
+      }
+
+      const wrapper = mount(Component, {
+        global: {
+          stubs: {
+            vMyDirective: MyDirectiveStub
+          }
+        }
+      })
+
+      expect(wrapper.classes()).toContain('DirectiveStubAdded')
+    })
+
+    it('stubs directive as noop when true passed as value', () => {
+      const SomeDirective = () => {
+        throw new Error('I will blow up!')
+      }
+
+      const Component = {
+        template: '<div v-some-directive>text</div>',
+        directives: { SomeDirective }
+      }
+
+      const wrapper = mount(Component, {
+        global: {
+          stubs: {
+            vSomeDirective: true
+          }
+        }
+      })
+
+      expect(wrapper.html()).toBe('<div>text</div>')
+    })
+
+    it('does not stub directive as noop when false passed as value', () => {
+      const Component = {
+        template: '<div v-my-directive>text</div>',
+        directives: { MyDirective }
+      }
+
+      const wrapper = mount(Component, {
+        global: {
+          stubs: {
+            vMyDirective: false
+          }
+        }
+      })
+
+      expect(wrapper.html()).toBe('<div class="DirectiveAdded">text</div>')
+    })
+
+    it('stubs directive on child component', () => {
+      const Component = {
+        template: '<div v-my-directive>text</div>',
+        directives: { MyDirective }
+      }
+
+      const RootComponent = {
+        components: { ChildComponent: Component },
+        template: '<div><child-component class="child" /></div>'
+      }
+
+      const wrapper = mount(RootComponent, {
+        global: {
+          stubs: {
+            vMyDirective: MyDirectiveStub
+          }
+        }
+      })
+
+      expect(wrapper.find('.child').classes()).toContain('DirectiveStubAdded')
+    })
+
+    it('stubs directive on root component with script setup', () => {
+      const Component = {
+        setup() {
+          // @ts-ignore-error (directive used by script setup)
+          const vMyDirective = MyDirective
+        },
+        template: '<div v-my-directive>text</div>',
+        directives: { MyDirective }
+      }
+
+      const MyDirectiveStub: Directive = {
+        beforeMount(el: Element) {
+          el.classList.add('DirectiveStubAdded')
+        }
+      }
+
+      const wrapper = mount(Component, {
+        global: {
+          stubs: {
+            vMyDirective: MyDirectiveStub
+          }
+        }
+      })
+
+      expect(wrapper.classes()).toContain('DirectiveStubAdded')
+    })
   })
 })

@@ -541,4 +541,24 @@ describe('findComponent', () => {
       ).toBe(true)
     })
   })
+
+  it('finds a component without name by its definition when stubbing directives', () => {
+    const ChildComponent = { template: 'child' }
+
+    const Component = defineComponent({
+      template: '<div><other-name /></div>',
+      components: {
+        OtherName: ChildComponent
+      }
+    })
+
+    const wrapper = mount(Component, {
+      global: {
+        stubs: {
+          vFakeDirective: {}
+        }
+      }
+    })
+    expect(wrapper.findComponent(ChildComponent).exists()).toBe(true)
+  })
 })

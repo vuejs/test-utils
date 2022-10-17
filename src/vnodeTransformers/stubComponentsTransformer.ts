@@ -10,18 +10,19 @@ import {
   ConcreteComponent,
   ComponentPropsOptions,
   ComponentObjectPropsOptions,
-  DefineComponent
+  DefineComponent,
+  Component
 } from 'vue'
 import { hyphenate } from '../utils/vueShared'
 import { matchName } from '../utils/matchName'
 import { isComponent, isFunctionalComponent } from '../utils'
 import { unwrapLegacyVueExtendComponent } from '../utils/vueCompatSupport'
-import { Stub, Stubs } from '../types'
 import {
   getComponentName,
   getComponentRegisteredName
 } from '../utils/componentName'
 import { config } from '../config'
+import { registerStub } from '../stubs'
 
 export type CustomCreateStub = (params: {
   name: string
@@ -33,30 +34,6 @@ interface StubOptions {
   type?: VNodeTypes | typeof Teleport
   renderStubDefaultSlot?: boolean
 }
-
-const stubsMap: WeakMap<
-  ConcreteComponent,
-  { source: ConcreteComponent; originalStub?: ConcreteComponent }
-> = new WeakMap()
-export const registerStub = ({
-  source,
-  stub,
-  originalStub
-}: {
-  source: ConcreteComponent
-  stub: ConcreteComponent
-  originalStub?: ConcreteComponent
-}) => {
-  stubsMap.set(stub, { source, originalStub })
-}
-
-export const getOriginalVNodeTypeFromStub = (
-  type: ConcreteComponent
-): VNodeTypes | undefined => stubsMap.get(type)?.source
-
-export const getOriginalStubFromSpecializedStub = (
-  type: ConcreteComponent
-): VNodeTypes | undefined => stubsMap.get(type)?.originalStub
 
 const doNotStubComponents: WeakSet<ConcreteComponent> = new WeakSet()
 const shouldNotStub = (type: ConcreteComponent) => doNotStubComponents.has(type)
@@ -113,15 +90,10 @@ export const createStub = ({
   })
 }
 
-const resolveComponentStubByName = (componentName: string, stubs: Stubs) => {
-  if (Array.isArray(stubs) && stubs.length) {
-    // ['Foo', 'Bar'] => { Foo: true, Bar: true }
-    stubs = stubs.reduce((acc, current) => {
-      acc[current] = true
-      return acc
-    }, {} as Record<string, Stub>)
-  }
-
+const resolveComponentStubByName = (
+  componentName: string,
+  stubs: Record<string, Component | boolean>
+) => {
   for (const [stubKey, value] of Object.entries(stubs)) {
     if (matchName(componentName, stubKey)) {
       return value
@@ -130,7 +102,7 @@ const resolveComponentStubByName = (componentName: string, stubs: Stubs) => {
 }
 
 interface CreateStubComponentsTransformerConfig {
-  stubs?: Stubs
+  stubs?: Record<string, Component | boolean>
   shallow?: boolean
   renderStubDefaultSlot: boolean
 }
@@ -154,7 +126,7 @@ export function createStubComponentsTransformer({
 
     // stub transition by default via config.global.stubs
     if (
-      (type === Transition || type === BaseTransition) &&
+      (type === Transition || (type as any) === BaseTransition) &&
       'transition' in stubs
     ) {
       if (stubs.transition === false) return type
@@ -167,7 +139,7 @@ export function createStubComponentsTransformer({
     }
 
     // stub transition-group by default via config.global.stubs
-    if (type === TransitionGroup && 'transition-group' in stubs) {
+    if ((type as any) === TransitionGroup && 'transition-group' in stubs) {
       if (stubs['transition-group'] === false) return type
 
       return createStub({
@@ -207,16 +179,17 @@ export function createStubComponentsTransformer({
     if (isComponent(stub)) {
       const unwrappedStub = unwrapLegacyVueExtendComponent(stub)
       const stubFn = isFunctionalComponent(unwrappedStub) ? unwrappedStub : null
+
+      // Edge case: stub is component, we will not render stub but instead will create
+      // a new "copy" of stub component definition, but we want user still to be able
+      // to find our component by stub definition, so we register it manually
+      registerStub({ source: type, stub })
+
       const specializedStubComponent: ConcreteComponent = stubFn
         ? (...args) => stubFn(...args)
         : { ...unwrappedStub }
       specializedStubComponent.props = unwrappedStub.props
 
-      registerStub({
-        source: type,
-        stub: specializedStubComponent,
-        originalStub: stub
-      })
       return specializedStubComponent
     }
 
@@ -242,7 +215,6 @@ export function createStubComponentsTransformer({
           type,
           renderStubDefaultSlot
         })
-      registerStub({ source: type, stub: newStub })
       return newStub
     }
 
