@@ -35,6 +35,9 @@ export default defineConfig({
   },
   resolve: {
     extensions: ['.vue', '.js', '.json', '.jsx', '.ts', '.tsx', '.node'],
-    dedupe: ['vue', '@vue/compat']
+    dedupe: ['vue', '@vue/compat'],
+    alias: {
+      '@vue/compat': '@vue/compat/dist/vue.esm-bundler.js'
+    }
   }
 })
