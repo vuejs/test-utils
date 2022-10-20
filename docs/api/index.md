@@ -1633,6 +1633,12 @@ setValue(value: unknown, prop?: string): Promise<void>
 
   <input type="checkbox" v-model="checked" />
   <div v-if="checked">The input has been checked!</div>
+
+  <select v-model="multiselectValue" multiple>
+    <option value="value1"></option>
+    <option value="value2"></option>
+    <option value="value3"></option>
+  </select>
 </template>
 
 <script>
@@ -1640,7 +1646,8 @@ export default {
   data() {
     return {
       text: '',
-      checked: false
+      checked: false,
+      multiselectValue: []
     }
   }
 }
@@ -1668,6 +1675,15 @@ test('setValue on input text', () => {
 
   await wrapper.find('input[type="text"]').setValue('hello!')
   expect(wrapper.find('p').text()).toBe('Text: hello!')
+})
+
+test('setValue on multi select', () => {
+  const wrapper = mount(Component)
+
+  // For select without multiple
+  await wrapper.find('select').setValue('value1')
+  // For select with multiple
+  await wrapper.find('select').setValue(['value1', 'value3'])
 })
 ```
 

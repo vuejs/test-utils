@@ -30,12 +30,18 @@
         <option value="selectC"></option>
       </optgroup>
     </select>
+    <select v-model="multiselectVal" class="multiselect" multiple>
+      <option value="selectA"></option>
+      <option value="selectB"></option>
+      <option value="selectC"></option>
+    </select>
     <label id="label-el"></label>
 
     <span class="checkboxResult" v-if="checkboxVal">checkbox checked</span>
     <span class="counter">{{ counter }}</span>
     {{ textVal }}
     {{ selectVal }}
+    {{ multiselectVal }}
     {{ radioVal }}
     {{ lazy }}
   </div>
@@ -55,6 +61,7 @@ export default defineComponent({
       textareaVal: undefined,
       radioVal: undefined,
       selectVal: undefined,
+      multiselectVal: [],
       counter: 0
     }
   },

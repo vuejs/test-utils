@@ -105,16 +105,20 @@ export class DOMWrapper<NodeType extends Node> extends BaseWrapper<NodeType> {
       return this.setChecked(value)
     } else if (tagName === 'INPUT' && type === 'radio') {
       return this.setChecked(value)
-    } else if (
-      tagName === 'INPUT' ||
-      tagName === 'TEXTAREA' ||
-      tagName === 'SELECT'
-    ) {
+    } else if (tagName === 'SELECT') {
+      if (Array.isArray(value)) {
+        const selectElement = element as unknown as HTMLSelectElement
+        for (let i = 0; i < selectElement.options.length; i++) {
+          const option = selectElement.options[i]
+          option.selected = value.includes(option.value)
+        }
+      } else {
+        element.value = value
+      }
+      return this.trigger('change')
+    } else if (tagName === 'INPUT' || tagName === 'TEXTAREA') {
       element.value = value
 
-      if (tagName === 'SELECT') {
-        return this.trigger('change')
-      }
       this.trigger('input')
       // trigger `change` for `v-model.lazy`
       return this.trigger('change')

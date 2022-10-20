@@ -40,6 +40,9 @@ describe('setValue', () => {
 
       expect(select.element.value).toEqual('selectB')
       expect(wrapper.text()).toContain('selectB')
+
+      expect(wrapper.emitted('change')).toHaveLength(1)
+      expect(wrapper.emitted('input')).toBeUndefined()
     })
 
     it('as an option of a select as selected', async () => {
@@ -81,6 +84,37 @@ describe('setValue', () => {
       await input.setValue()
 
       expect(handle).toHaveBeenCalledTimes(1)
+    })
+
+    it('sets element of multiselect value', async () => {
+      const wrapper = mount(ComponentWithInput)
+      const select = wrapper.find<HTMLSelectElement>('select.multiselect')
+      await select.setValue(['selectA', 'selectC'])
+
+      const selectedOptions = Array.from(select.element.selectedOptions).map(
+        (o) => o.value
+      )
+      expect(selectedOptions).toEqual(['selectA', 'selectC'])
+      expect(wrapper.vm.multiselectVal).toEqual(['selectA', 'selectC'])
+
+      expect(wrapper.emitted('change')).toHaveLength(1)
+      expect(wrapper.emitted('input')).toBeUndefined()
+    })
+
+    it('overrides elements of multiselect', async () => {
+      const wrapper = mount(ComponentWithInput)
+      const select = wrapper.find<HTMLSelectElement>('select.multiselect')
+      await select.setValue(['selectA', 'selectC'])
+      await select.setValue(['selectB'])
+
+      const selectedOptions = Array.from(select.element.selectedOptions).map(
+        (o) => o.value
+      )
+      expect(selectedOptions).toEqual(['selectB'])
+      expect(wrapper.vm.multiselectVal).toEqual(['selectB'])
+
+      expect(wrapper.emitted('change')).toHaveLength(2)
+      expect(wrapper.emitted('input')).toBeUndefined()
     })
   })
 
