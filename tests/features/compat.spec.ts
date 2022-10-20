@@ -3,7 +3,7 @@ import * as mockVue from '@vue/compat'
 import { mount } from '../../src'
 
 vi.mock('vue', () => mockVue)
-const { configureCompat, extend, defineComponent, h } = mockVue
+const { configureCompat, defineComponent, h } = mockVue
 // @ts-expect-error @vue/compat does not expose default export in types
 const Vue = mockVue.default
 
@@ -46,7 +46,7 @@ describe('@vue/compat build', () => {
   it('finds components declared with legacy Vue.extend', () => {
     configureCompat({ MODE: 3, GLOBAL_EXTEND: 'suppress-warning' })
 
-    const LegacyComponent = extend({
+    const LegacyComponent = Vue.extend({
       template: '<div>LEGACY</div>'
     })
 
@@ -97,7 +97,7 @@ describe('@vue/compat build', () => {
       COMPONENT_FUNCTIONAL: 'suppress-warning'
     })
 
-    const Component = extend({
+    const Component = Vue.extend({
       functional: true,
       render: () => h('div', 'test')
     })
@@ -112,7 +112,7 @@ describe('@vue/compat build', () => {
       GLOBAL_EXTEND: 'suppress-warning'
     })
 
-    const Foo = extend({
+    const Foo = Vue.extend({
       name: 'Foo',
       template: '<div>original</div>'
     })
@@ -147,7 +147,7 @@ describe('@vue/compat build', () => {
       template: '<div>original</div>'
     }
 
-    const FooStub = extend({ template: '<div>stubbed</div>' })
+    const FooStub = Vue.extend({ template: '<div>stubbed</div>' })
 
     const Component = {
       components: { NamedAsNotFoo: Foo },
@@ -172,7 +172,7 @@ describe('@vue/compat build', () => {
       GLOBAL_MOUNT: 'suppress-warning'
     })
 
-    const Component = extend({
+    const Component = Vue.extend({
       data() {
         return { foo: 'bar' }
       },
