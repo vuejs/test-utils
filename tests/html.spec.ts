@@ -3,6 +3,12 @@ import { defineComponent, h } from 'vue'
 
 import { mount } from '../src'
 
+const nestedTemplate =
+  '<div><div class="element"><span>Text 1</span></div><div>Text 2</div></div>'
+const NestedNodes = defineComponent({
+  template: nestedTemplate
+})
+
 describe('html', () => {
   it('returns html when mounting single root node', () => {
     const Component = defineComponent({
@@ -14,6 +20,29 @@ describe('html', () => {
     const wrapper = mount(Component)
 
     expect(wrapper.html()).toBe('<div>Text content</div>')
+  })
+
+  it('returns formatted html string', () => {
+    const wrapper = mount(NestedNodes)
+
+    expect(wrapper.html()).toBe(
+      '<div>\n' +
+        '  <div class="element"><span>Text 1</span></div>\n' +
+        '  <div>Text 2</div>\n' +
+        '</div>'
+    )
+    expect(wrapper.html()).toBe(
+      '<div>\n' +
+        '  <div class="element"><span>Text 1</span></div>\n' +
+        '  <div>Text 2</div>\n' +
+        '</div>'
+    )
+  })
+
+  it('returns raw html string', () => {
+    const wrapper = mount(NestedNodes)
+
+    expect(wrapper.html({ raw: true })).toBe(nestedTemplate)
   })
 
   describe('multiple root components', () => {
@@ -33,6 +62,11 @@ describe('html', () => {
     it('returns the html when mounting multiple root nodes', () => {
       const wrapper = mount(Component)
       expect(wrapper.html()).toBe(originalTemplate.join('\n'))
+    })
+
+    it('returns the raw html when mounting multiple root nodes', () => {
+      const wrapper = mount(Component)
+      expect(wrapper.html({ raw: true })).toBe(originalTemplate.join(''))
     })
 
     it('returns the html when multiple root component is located inside other component', () => {

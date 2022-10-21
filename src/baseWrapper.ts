@@ -217,8 +217,9 @@ export default abstract class BaseWrapper<ElementType extends Node>
   }
   abstract setValue(value?: any): Promise<void>
 
-  html(): string {
+  html(options?: { raw?: boolean }): string {
     const stringNodes = this.getRootNodes().map((node) => stringifyNode(node))
+    if (options?.raw) return stringNodes.join('')
 
     return stringNodes
       .map((node) =>
