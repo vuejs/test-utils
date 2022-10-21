@@ -4,8 +4,6 @@ import {
   ComponentCustomProperties,
   ComponentPublicInstance
 } from 'vue'
-// @ts-ignore todo - No DefinitelyTyped package exists for this
-import pretty from 'pretty'
 
 import { config } from './config'
 import domEvents from './constants/dom-events'
