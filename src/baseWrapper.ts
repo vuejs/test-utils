@@ -29,7 +29,7 @@ import { isElement } from './utils/isElement'
 import type { DOMWrapper } from './domWrapper'
 import { createDOMWrapper, createVueWrapper } from './wrapperFactory'
 import { stringifyNode } from './utils/stringifyNode'
-import pretty from 'pretty'
+import beautify from 'js-beautify'
 
 export default abstract class BaseWrapper<ElementType extends Node>
   implements WrapperLike
@@ -216,9 +216,18 @@ export default abstract class BaseWrapper<ElementType extends Node>
     )
   }
   abstract setValue(value?: any): Promise<void>
+
   html(): string {
-    return this.getRootNodes()
-      .map((node) => pretty(stringifyNode(node)))
+    const stringNodes = this.getRootNodes().map((node) => stringifyNode(node))
+
+    return stringNodes
+      .map((node) =>
+        beautify.html(node, {
+          unformatted: ['code', 'pre', 'em', 'strong', 'span'],
+          indent_inner_html: true,
+          indent_size: 2
+        })
+      )
       .join('\n')
   }
 
