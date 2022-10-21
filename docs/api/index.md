@@ -1378,10 +1378,14 @@ test('getComponent', () => {
 
 Returns the HTML of an element.
 
+By default the output is formatted with [`js-beautify`](https://github.com/beautify-web/js-beautify)
+to make snapshots more readable. Use `raw: true` option to receive the unformatted html string.
+
 **Signature:**
 
 ```ts
 html(): string
+html(options?: { raw?: boolean }): string
 ```
 
 **Details:**
@@ -1405,7 +1409,13 @@ import Component from './Component.vue'
 test('html', () => {
   const wrapper = mount(Component)
 
-  expect(wrapper.html()).toBe('<div><p>Hello world</p></div>')
+  expect(wrapper.html()).toBe(
+    '<div>\n' +
+    '  <p>Hello world</p>\n' +
+    '</div>'
+  )
+
+  expect(wrapper.html({ raw: true })).toBe('<div><p>Hello world</p></div>')
 })
 ```
 
