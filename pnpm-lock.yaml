@@ -7,7 +7,7 @@ specifiers:
   '@rollup/plugin-replace': 5.0.1
   '@rollup/plugin-typescript': 9.0.2
   '@types/js-beautify': 1.13.3
-  '@types/node': 18.11.6
+  '@types/node': 18.11.7
   '@typescript-eslint/eslint-plugin': 5.41.0
   '@typescript-eslint/parser': 5.41.0
   '@vitejs/plugin-vue': 3.2.0
@@ -22,7 +22,7 @@ specifiers:
   eslint-config-prettier: 8.5.0
   eslint-plugin-prettier: 4.2.1
   husky: 8.0.1
-  js-beautify: 1.14.6
+  js-beautify: 1.14.7
   jsdom: 20.0.1
   jsdom-global: 3.0.2
   lint-staged: 13.0.3
@@ -48,7 +48,7 @@ devDependencies:
   '@rollup/plugin-replace': 5.0.1_rollup@3.2.3
   '@rollup/plugin-typescript': 9.0.2_bvn3ed5hy3sfde644tygjdj4ia
   '@types/js-beautify': 1.13.3
-  '@types/node': 18.11.6
+  '@types/node': 18.11.7
   '@typescript-eslint/eslint-plugin': 5.41.0_huremdigmcnkianavgfk3x6iou
   '@typescript-eslint/parser': 5.41.0_wyqvi574yv7oiwfeinomdzmc3m
   '@vitejs/plugin-vue': 3.2.0_vite@3.2.0+vue@3.2.41
@@ -63,7 +63,7 @@ devDependencies:
   eslint-config-prettier: 8.5.0_eslint@8.26.0
   eslint-plugin-prettier: 4.2.1_aniwkeyvlpmwkidetuytnokvcm
   husky: 8.0.1
-  js-beautify: 1.14.6
+  js-beautify: 1.14.7
   jsdom: 20.0.1
   jsdom-global: 3.0.2_jsdom@20.0.1
   lint-staged: 13.0.3
@@ -800,8 +800,8 @@ packages:
     resolution: {integrity: sha512-wOuvG1SN4Us4rez+tylwwwCV1psiNVOkJeM3AUWUNWg/jDQY2+HE/444y5gc+jBmRqASOm2Oeh5c1axHobwRKQ==}
     dev: true
 
-  /@types/node/18.11.6:
-    resolution: {integrity: sha512-j3CEDa2vd96K0AXF8Wur7UucACvnjkk8hYyQAHhUNciabZLDl9nfAEVUSwmh245OOZV15bRA3Y590Gi5jUcDJg==}
+  /@types/node/18.11.7:
+    resolution: {integrity: sha512-LhFTglglr63mNXUSRYD8A+ZAIu5sFqNJ4Y2fPuY7UlrySJH87rRRlhtVmMHplmfk5WkoJGmDjE9oiTfyX94CpQ==}
     dev: true
 
   /@types/resolve/1.20.2:
@@ -2674,8 +2674,8 @@ packages:
       istanbul-lib-report: 3.0.0
     dev: true
 
-  /js-beautify/1.14.6:
-    resolution: {integrity: sha512-GfofQY5zDp+cuHc+gsEXKPpNw2KbPddreEo35O6jT6i0RVK6LhsoYBhq5TvK4/n74wnA0QbK8gGd+jUZwTMKJw==}
+  /js-beautify/1.14.7:
+    resolution: {integrity: sha512-5SOX1KXPFKx+5f6ZrPsIPEY7NwKeQz47n3jm2i+XeHx9MoRsfQenlOP13FQhWvg8JRS0+XLO6XYUQ2GX+q+T9A==}
     engines: {node: '>=10'}
     hasBin: true
     dependencies:
@@ -3755,7 +3755,7 @@ packages:
     dependencies:
       '@types/chai': 4.3.3
       '@types/chai-subset': 1.3.3
-      '@types/node': 18.11.6
+      '@types/node': 18.11.7
       chai: 4.3.6
       debug: 4.3.4
       jsdom: 20.0.1
