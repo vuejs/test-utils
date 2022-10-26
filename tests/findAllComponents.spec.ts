@@ -1,4 +1,4 @@
-import { describe, expect, it } from 'vitest'
+import { describe, expect, it, vi } from 'vitest'
 import { mount } from '../src'
 import Hello from './components/Hello.vue'
 import { DefineComponent, defineComponent, h } from 'vue'
@@ -100,6 +100,7 @@ describe('findAllComponents', () => {
   })
 
   it('findAllComponents with non-function slots', () => {
+    const spy = vi.spyOn(console, 'warn').mockImplementation(() => {})
     const ComponentA = defineComponent({
       template: '<div><slot /></div>'
     })
@@ -119,5 +120,9 @@ describe('findAllComponents', () => {
     })
     expect(wrapper.findAll('span')).toHaveLength(3)
     expect(wrapper.findAllComponents(ComponentB)).toHaveLength(3)
+    // we're expecting a warning from Vue as we're using non-function slots
+    expect(spy.mock.calls[0][0]).toContain(
+      'Non-function value encountered for default slot'
+    )
   })
 })
