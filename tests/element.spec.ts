@@ -1,4 +1,4 @@
-import { describe, expect, it } from 'vitest'
+import { describe, expect, it, vi } from 'vitest'
 import { defineComponent, h } from 'vue'
 
 import { mount } from '../src'
@@ -107,6 +107,7 @@ describe('element', () => {
   })
 
   it('returns correct element for component which renders other component with array of vnodes in default slot', () => {
+    const spy = vi.spyOn(console, 'warn').mockImplementation(() => {})
     const Nested = {
       template: '<div class="nested-root"><slot></slot></div>'
     }
@@ -114,5 +115,9 @@ describe('element', () => {
 
     const wrapper = mount(Root)
     expect(wrapper.element.innerHTML).toBe('<div>foo</div><div>bar</div>')
+    // we're expecting a warning from Vue as we're using non-function slots
+    expect(spy.mock.calls[0][0]).toContain(
+      'Non-function value encountered for default slot'
+    )
   })
 })

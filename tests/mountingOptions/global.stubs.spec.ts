@@ -512,6 +512,7 @@ describe('mounting options: stubs', () => {
     })
 
     it('opts in to stubbing teleport ', () => {
+      const spy = vi.spyOn(console, 'warn')
       const Comp = {
         template: `<teleport to="body"><div id="content" /></teleport>`
       }
@@ -528,6 +529,9 @@ describe('mounting options: stubs', () => {
           '  <div id="content"></div>\n' +
           '</teleport-stub>'
       )
+      // Make sure that we don't have a warning when stubbing teleport
+      // https://github.com/vuejs/test-utils/issues/1829
+      expect(spy).not.toHaveBeenCalled()
     })
 
     it('does not stub teleport with shallow', () => {
