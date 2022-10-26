@@ -43,7 +43,7 @@
     "eslint-config-prettier": "8.5.0",
     "eslint-plugin-prettier": "4.2.1",
     "husky": "8.0.1",
-    "js-beautify": "1.14.6",
+    "js-beautify": "1.14.7",
     "jsdom": "20.0.1",
     "jsdom-global": "3.0.2",
     "lint-staged": "13.0.3",
