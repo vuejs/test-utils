@@ -86,6 +86,7 @@ export default defineConfig({
             text: 'Reusability and Composition',
             link: '/guide/advanced/reusability-composition'
           },
+          { text: 'Testing v-model', link: '/guide/advanced/v-model' },
           { text: 'Testing Vuex', link: '/guide/advanced/vuex' },
           { text: 'Testing Vue Router', link: '/guide/advanced/vue-router' },
           { text: 'Testing Teleport', link: '/guide/advanced/teleport' },
