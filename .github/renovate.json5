@@ -5,6 +5,8 @@
   "prConcurrentLimit": 1,
   // auto-merge if build is OK
   "automerge": true,
+  // ignore js-beautify updates until https://github.com/vuejs/test-utils/pull/1834 is resolved
+  "ignoreDeps": ["js-beautify"],
   "packageRules": [
     // group vitest packages update
     {
