@@ -7,7 +7,7 @@ specifiers:
   '@rollup/plugin-replace': 5.0.1
   '@rollup/plugin-typescript': 9.0.2
   '@types/js-beautify': 1.13.3
-  '@types/node': 18.11.6
+  '@types/node': 18.11.7
   '@typescript-eslint/eslint-plugin': 5.41.0
   '@typescript-eslint/parser': 5.41.0
   '@vitejs/plugin-vue': 3.2.0
@@ -48,7 +48,7 @@ devDependencies:
   '@rollup/plugin-replace': 5.0.1_rollup@3.2.3
   '@rollup/plugin-typescript': 9.0.2_bvn3ed5hy3sfde644tygjdj4ia
   '@types/js-beautify': 1.13.3
-  '@types/node': 18.11.6
+  '@types/node': 18.11.7
   '@typescript-eslint/eslint-plugin': 5.41.0_huremdigmcnkianavgfk3x6iou
   '@typescript-eslint/parser': 5.41.0_wyqvi574yv7oiwfeinomdzmc3m
   '@vitejs/plugin-vue': 3.2.0_vite@3.2.0+vue@3.2.41
@@ -800,8 +800,8 @@ packages:
     resolution: {integrity: sha512-wOuvG1SN4Us4rez+tylwwwCV1psiNVOkJeM3AUWUNWg/jDQY2+HE/444y5gc+jBmRqASOm2Oeh5c1axHobwRKQ==}
     dev: true
 
-  /@types/node/18.11.6:
-    resolution: {integrity: sha512-j3CEDa2vd96K0AXF8Wur7UucACvnjkk8hYyQAHhUNciabZLDl9nfAEVUSwmh245OOZV15bRA3Y590Gi5jUcDJg==}
+  /@types/node/18.11.7:
+    resolution: {integrity: sha512-LhFTglglr63mNXUSRYD8A+ZAIu5sFqNJ4Y2fPuY7UlrySJH87rRRlhtVmMHplmfk5WkoJGmDjE9oiTfyX94CpQ==}
     dev: true
 
   /@types/resolve/1.20.2:
@@ -3755,7 +3755,7 @@ packages:
     dependencies:
       '@types/chai': 4.3.3
       '@types/chai-subset': 1.3.3
-      '@types/node': 18.11.6
+      '@types/node': 18.11.7
       chai: 4.3.6
       debug: 4.3.4
       jsdom: 20.0.1
