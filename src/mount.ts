@@ -25,7 +25,8 @@ import {
   ComponentOptions,
   ConcreteComponent,
   Prop,
-  transformVNodeArgs
+  transformVNodeArgs,
+  ref
 } from 'vue'
 
 import { MountingOptions, Slot } from './types'
@@ -432,9 +433,15 @@ export function mount(
     component.components = { ...component.components, ...global.components }
   }
 
+  const componentRef = ref(null)
   // create the wrapper component
   const Parent = defineComponent({
     name: 'VTU_ROOT',
+    setup() {
+      return {
+        [MOUNT_COMPONENT_REF]: componentRef
+      }
+    },
     render() {
       return h(component as ComponentOptions, { ...props, ...refs }, slots)
     }
@@ -561,17 +568,12 @@ export function mount(
   // mount the app!
   const vm = app.mount(el)
 
-  // Ignore "Avoid app logic that relies on enumerating keys on a component instance..." warning
-  const warnSave = console.warn
-  console.warn = () => {}
-
-  const appRef = vm.$refs[MOUNT_COMPONENT_REF] as ComponentPublicInstance
+  const appRef = componentRef.value! as ComponentPublicInstance
   // we add `hasOwnProperty` so Jest can spy on the proxied vm without throwing
   // note that this is not necessary with Jest v27+ or Vitest, but is kept for compatibility with older Jest versions
   appRef.hasOwnProperty = (property) => {
     return Reflect.has(appRef, property)
   }
-  console.warn = warnSave
   const wrapper = createVueWrapper(app, appRef, setProps)
   trackInstance(wrapper)
   return wrapper
