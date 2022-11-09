@@ -1,9 +1,10 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { defineComponent, ComponentPublicInstance, h, inject } from 'vue'
-import type { App } from 'vue'
+import type { App, ComponentCustomProperties } from 'vue'
 import { config, mount } from '../src'
 import Hello from './components/Hello.vue'
 import ComponentWithSlots from './components/ComponentWithSlots.vue'
+import { Router } from 'vue-router'
 
 describe('config', () => {
   beforeEach(() => {
@@ -26,7 +27,7 @@ describe('config', () => {
     it('should merge the configs in the correct order', () => {
       config.global.config.globalProperties = {
         myProp: 1
-      }
+      } as unknown as ComponentCustomProperties & Record<string, any>
       config.global.components = { Hello }
 
       const comp = mount(ComponentWithSlots, {
@@ -38,7 +39,7 @@ describe('config', () => {
           config: {
             globalProperties: {
               myProp: 2
-            }
+            } as unknown as ComponentCustomProperties & Record<string, any>
           },
           renderStubDefaultSlot: true
         }
@@ -62,13 +63,14 @@ describe('config', () => {
 
       class Plugin {
         static install(_app: App) {
-          _app.config.globalProperties.$router = pluginRouterMock
+          _app.config.globalProperties.$router =
+            pluginRouterMock as unknown as Router
         }
       }
 
       config.global.config.globalProperties = {
-        $router: globalRouterMock
-      }
+        $router: globalRouterMock as unknown as Router
+      } as unknown as ComponentCustomProperties & Record<string, any>
 
       // first with plugin to overwrite globalRouterMock with pluginRouterMock
       const wrapper1 = mount(Component, {
