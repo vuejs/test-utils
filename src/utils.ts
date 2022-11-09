@@ -32,7 +32,7 @@ function mergeAppConfig(
     globalProperties: {
       ...configGlobalConfig?.globalProperties,
       ...mountGlobalConfig?.globalProperties
-    }
+    } as Required<GlobalMountOptions>['config']['globalProperties']
   }
 }
 
