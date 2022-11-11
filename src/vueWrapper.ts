@@ -21,6 +21,40 @@ import {
 import { VNode } from '@vue/runtime-core'
 import { ShapeFlags } from './utils/vueShared'
 
+/**
+ * Creates a proxy around the VM instance.
+ * This proxy returns the value from the setupState if there is one, or the one from the VM if not.
+ * See https://github.com/vuejs/core/issues/7103
+ */
+function createVMProxy<T extends ComponentPublicInstance>(
+  vm: T,
+  setupState: Record<string, any>
+): T {
+  return new Proxy(vm, {
+    get(vm, key, receiver) {
+      if (key in setupState) {
+        return Reflect.get(setupState, key, receiver)
+      } else {
+        return (vm as any)[key]
+      }
+    },
+    set(vm, key, value, receiver) {
+      if (key in setupState) {
+        return Reflect.set(setupState, key, value, receiver)
+      } else {
+        return Reflect.set(vm, key, value, receiver)
+      }
+    },
+    getOwnPropertyDescriptor(vm, property) {
+      if (property in setupState) {
+        return Reflect.getOwnPropertyDescriptor(setupState, property)
+      } else {
+        return Reflect.getOwnPropertyDescriptor(vm, property)
+      }
+    }
+  })
+}
+
 export class VueWrapper<
   T extends Omit<
     ComponentPublicInstance,
@@ -46,7 +80,7 @@ export class VueWrapper<
     this.__app = app
     // root is null on functional components
     this.rootVM = vm?.$root
-    // `vm.$.proxy` is what the template has access to
+    // `vm.$.setupState` is what the template has access to
     // so even if the component is closed (as they are by default for `script setup`)
     // a test will still be able to do something like
     // `expect(wrapper.vm.count).toBe(1)`
@@ -54,12 +88,14 @@ export class VueWrapper<
     // This does not work for functional components though (as they have no vm)
     // or for components with a setup that returns a render function (as they have an empty proxy)
     // in both cases, we return `vm` directly instead
-    this.componentVM =
+    if (
       vm &&
-      // a component with a setup that returns a render function will have no `devtoolsRawSetupState`
       (vm.$ as unknown as { devtoolsRawSetupState: any }).devtoolsRawSetupState
-        ? ((vm.$ as any).proxy as T)
-        : (vm as T)
+    ) {
+      this.componentVM = createVMProxy<T>(vm, (vm.$ as any).setupState)
+    } else {
+      this.componentVM = vm
+    }
     this.__setProps = setProps
 
     this.attachNativeEventListener()
