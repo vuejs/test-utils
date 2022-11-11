@@ -369,6 +369,13 @@ export default abstract class BaseWrapper<ElementType extends Node>
 
     if (this.element && !this.isDisabled()) {
       const event = createDOMEvent(eventString, options)
+      // see https://github.com/vuejs/test-utils/issues/1854
+      // fakeTimers provoke an issue as Date.now() always return the same value
+      // and Vue relies on it to determine if the handler should be invoked
+      // see https://github.com/vuejs/core/blob/5ee40532a63e0b792e0c1eccf3cf68546a4e23e9/packages/runtime-dom/src/modules/events.ts#L100-L104
+      // we workaround this issue by manually setting _vts to Date.now() + 1
+      // thus making sure the event handler is invoked
+      event._vts = Date.now() + 1
       this.element.dispatchEvent(event)
     }
 

@@ -364,4 +364,31 @@ describe('trigger', () => {
 
     expect(wrapper.emitted().enter).toHaveLength(1)
   })
+
+  // https://github.com/vuejs/test-utils/issues/1854
+  it('dispatches events even with fakeTimers', async () => {
+    const handlerSpy = vi.fn()
+
+    const Component = defineComponent({
+      setup() {
+        return { handlerSpy }
+      },
+      template: `
+      <div>
+        <a @click="handlerSpy">
+          <span @click="() => {}">Ok</span>
+        </a>
+      </div>
+      `
+    })
+
+    vi.useFakeTimers()
+    const wrapper = mount(Component)
+
+    expect(handlerSpy).not.toHaveBeenCalled()
+
+    await wrapper.get('span').trigger('click')
+
+    expect(handlerSpy).toHaveBeenCalled()
+  })
 })
