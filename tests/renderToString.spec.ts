@@ -27,31 +27,36 @@ describe('renderToString', () => {
     )
   })
 
-  it('returns correct html when onServerPrefetch is used', async () => {
+  it('returns correct html with pre-fetched data on server', async () => {
+    function fakeFetch(text: string) {
+      return new Promise<string>((resolve) => {
+        setTimeout(() => {
+          resolve(text)
+        }, 100)
+      })
+    }
+
     const Component = defineComponent({
       template: '<div>{{ text }}</div>',
       setup() {
-        const text = ref('')
+        const text = ref<string | null>(null)
 
-        onServerPrefetch(() => {
-          return new Promise((resolve) => {
-            setTimeout(() => {
-              text.value = 'Text content'
-              resolve(true)
-            }, 100)
-          })
+        onServerPrefetch(async () => {
+          text.value = await fakeFetch('onServerPrefetch')
         })
 
-        onMounted(() => {
-          text.value = 'Text content'
+        onMounted(async () => {
+          if (!text.value) {
+            text.value = await fakeFetch('onMounted')
+          }
         })
 
         return { text }
       }
     })
 
-    const wrapper = await renderToString(Component)
+    const contents = await renderToString(Component)
 
-    expect(wrapper).toMatchInlineSnapshot(`"<div>Text content</div>"`)
+    expect(contents).toBe('<div>onServerPrefetch</div>')
   })
 })
