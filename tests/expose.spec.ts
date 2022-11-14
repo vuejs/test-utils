@@ -6,6 +6,7 @@ import DefineExpose from './components/DefineExpose.vue'
 import DefineExposeWithRenderFunction from './components/DefineExposeWithRenderFunction.vue'
 import ScriptSetupExpose from './components/ScriptSetup_Expose.vue'
 import ScriptSetup from './components/ScriptSetup.vue'
+import ScriptSetupWithProps from './components/ScriptSetupWithProps.vue'
 
 describe('expose', () => {
   it('access vm on simple components', async () => {
@@ -75,5 +76,19 @@ describe('expose', () => {
 
     expect(spiedIncrement).toHaveBeenCalled()
     expect(wrapper.html()).toContain('0')
+  })
+
+  it('access props on vm with <script setup>', async () => {
+    const wrapper = mount(ScriptSetupWithProps, {
+      props: {
+        count: 2
+      }
+    })
+    // make sure that props are accessible on wrapper.vm
+    expect(wrapper.vm.count).toBe(2)
+    expect(wrapper.html()).toContain('2')
+
+    await wrapper.find('button').trigger('click')
+    expect(wrapper.html()).toContain('3')
   })
 })
