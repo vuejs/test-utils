@@ -2,6 +2,7 @@ import { GlobalMountOptions, RefSelector, Stub, Stubs } from './types'
 import {
   Component,
   ComponentOptions,
+  ComponentPublicInstance,
   ConcreteComponent,
   Directive,
   FunctionalComponent
@@ -184,4 +185,12 @@ export function getDirectivesFromStubs(
       .filter(([key, value]) => isDirectiveKey(key) && value !== false)
       .map(([key, value]) => [key.substring(1), value])
   ) as Record<string, Directive>
+}
+export function hasSetupState(
+  vm: ComponentPublicInstance
+): vm is ComponentPublicInstance & { setupState: Record<string, unknown> } {
+  return (
+    vm &&
+    (vm.$ as unknown as { devtoolsRawSetupState: any }).devtoolsRawSetupState
+  )
 }

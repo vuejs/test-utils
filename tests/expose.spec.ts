@@ -91,4 +91,23 @@ describe('expose', () => {
     await wrapper.find('button').trigger('click')
     expect(wrapper.html()).toContain('3')
   })
+
+  it('should not throw when mocking', async () => {
+    const spiedIncrement = vi.fn()
+    const wrapper = mount(ScriptSetup, {
+      global: {
+        mocks: {
+          count: -1,
+          inc: spiedIncrement
+        }
+      }
+    })
+    expect(wrapper.html()).toContain('-1')
+
+    await wrapper.find('button').trigger('click')
+    await nextTick()
+
+    expect(spiedIncrement).toHaveBeenCalled()
+    expect(wrapper.html()).toContain('-1')
+  })
 })

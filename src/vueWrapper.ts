@@ -8,7 +8,7 @@ import {
 import { config } from './config'
 import domEvents from './constants/dom-events'
 import { VueElement, VueNode } from './types'
-import { mergeDeep } from './utils'
+import { hasSetupState, mergeDeep } from './utils'
 import { getRootNodes } from './utils/getRootNodes'
 import { emitted, recordEvent, removeEventHistory } from './emit'
 import BaseWrapper from './baseWrapper'
@@ -107,10 +107,7 @@ export class VueWrapper<
     // This does not work for functional components though (as they have no vm)
     // or for components with a setup that returns a render function (as they have an empty proxy)
     // in both cases, we return `vm` directly instead
-    if (
-      vm &&
-      (vm.$ as unknown as { devtoolsRawSetupState: any }).devtoolsRawSetupState
-    ) {
+    if (hasSetupState(vm)) {
       this.componentVM = createVMProxy<T>(vm, (vm.$ as any).setupState)
     } else {
       this.componentVM = vm
