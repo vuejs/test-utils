@@ -1,4 +1,4 @@
-import { describe, expect, it } from 'vitest'
+import { describe, expect, it, vi } from 'vitest'
 import { nextTick } from 'vue'
 import { mount } from '../src'
 import Hello from './components/Hello.vue'
@@ -60,5 +60,20 @@ describe('expose', () => {
     wrapper.vm.count = 2
     await nextTick()
     expect(wrapper.html()).toContain('2')
+  })
+
+  it('spies on vm with <script setup> even without defineExpose()', async () => {
+    const wrapper = mount(ScriptSetup)
+
+    const spiedIncrement = vi
+      // @ts-ignore we need better types here, see https://github.com/vuejs/test-utils/issues/972
+      .spyOn(wrapper.vm, 'inc')
+      .mockImplementation(() => {})
+
+    await wrapper.find('button').trigger('click')
+    await nextTick()
+
+    expect(spiedIncrement).toHaveBeenCalled()
+    expect(wrapper.html()).toContain('0')
   })
 })

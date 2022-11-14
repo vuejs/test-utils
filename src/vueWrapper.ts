@@ -45,11 +45,28 @@ function createVMProxy<T extends ComponentPublicInstance>(
         return Reflect.set(vm, key, value, receiver)
       }
     },
+    has(vm, property) {
+      return Reflect.has(setupState, property) || Reflect.has(vm, property)
+    },
+    defineProperty(vm, key, attributes) {
+      if (key in setupState) {
+        return Reflect.defineProperty(setupState, key, attributes)
+      } else {
+        return Reflect.defineProperty(vm, key, attributes)
+      }
+    },
     getOwnPropertyDescriptor(vm, property) {
       if (property in setupState) {
         return Reflect.getOwnPropertyDescriptor(setupState, property)
       } else {
         return Reflect.getOwnPropertyDescriptor(vm, property)
+      }
+    },
+    deleteProperty(vm, property) {
+      if (property in setupState) {
+        return Reflect.deleteProperty(setupState, property)
+      } else {
+        return Reflect.deleteProperty(vm, property)
       }
     }
   })

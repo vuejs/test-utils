@@ -12,6 +12,6 @@ const inc = () => {
 </script>
 
 <template>
-  <button @click="inc">{{ count }}</button>
+  <button @click="inc()">{{ count }}</button>
   <Hello />
 </template>
