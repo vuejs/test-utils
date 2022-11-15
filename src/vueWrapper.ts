@@ -108,7 +108,7 @@ export class VueWrapper<
     // or for components with a setup that returns a render function (as they have an empty proxy)
     // in both cases, we return `vm` directly instead
     if (hasSetupState(vm)) {
-      this.componentVM = createVMProxy<T>(vm, (vm.$ as any).setupState)
+      this.componentVM = createVMProxy<T>(vm, vm.$.setupState)
     } else {
       this.componentVM = vm
     }

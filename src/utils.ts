@@ -188,7 +188,9 @@ export function getDirectivesFromStubs(
 }
 export function hasSetupState(
   vm: ComponentPublicInstance
-): vm is ComponentPublicInstance & { setupState: Record<string, unknown> } {
+): vm is ComponentPublicInstance & {
+  $: { setupState: Record<string, unknown> }
+} {
   return (
     vm &&
     (vm.$ as unknown as { devtoolsRawSetupState: any }).devtoolsRawSetupState
