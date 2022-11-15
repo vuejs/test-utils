@@ -33,6 +33,7 @@ import { MountingOptions, Slot } from './types'
 import {
   getComponentsFromStubs,
   getDirectivesFromStubs,
+  hasSetupState,
   isFunctionalComponent,
   isObject,
   isObjectComponent,
@@ -475,15 +476,23 @@ export function mount(
 
   // global mocks mixin
   if (global?.mocks) {
-    const mixin = {
+    const mixin = defineComponent({
       beforeCreate() {
         for (const [k, v] of Object.entries(
           global.mocks as { [key: string]: any }
         )) {
-          ;(this as any)[k] = v
+          // we need to differentiate components that are or not not `script setup`
+          // otherwise we run into a proxy set error
+          // due to https://github.com/vuejs/core/commit/f73925d76a76ee259749b8b48cb68895f539a00f#diff-ea4d1ddabb7e22e17e80ada458eef70679af4005df2a1a6b73418fec897603ceR404
+          // introduced in Vue v3.2.45
+          if (hasSetupState(this as any)) {
+            ;(this as any).$.setupState[k] = v
+          } else {
+            ;(this as any)[k] = v
+          }
         }
       }
-    }
+    })
 
     app.mixin(mixin)
   }
