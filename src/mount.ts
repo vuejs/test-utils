@@ -478,16 +478,35 @@ export function mount(
   if (global?.mocks) {
     const mixin = defineComponent({
       beforeCreate() {
-        for (const [k, v] of Object.entries(
-          global.mocks as { [key: string]: any }
-        )) {
-          // we need to differentiate components that are or not not `script setup`
-          // otherwise we run into a proxy set error
-          // due to https://github.com/vuejs/core/commit/f73925d76a76ee259749b8b48cb68895f539a00f#diff-ea4d1ddabb7e22e17e80ada458eef70679af4005df2a1a6b73418fec897603ceR404
-          // introduced in Vue v3.2.45
-          if (hasSetupState(this)) {
-            this.$.setupState[k] = v
-          } else {
+        // we need to differentiate components that are or not not `script setup`
+        // otherwise we run into a proxy set error
+        // due to https://github.com/vuejs/core/commit/f73925d76a76ee259749b8b48cb68895f539a00f#diff-ea4d1ddabb7e22e17e80ada458eef70679af4005df2a1a6b73418fec897603ceR404
+        // introduced in Vue v3.2.45
+        if (hasSetupState(this)) {
+          // add the mocks to setupState
+          for (const [k, v] of Object.entries(
+            global.mocks as { [key: string]: any }
+          )) {
+            // we do this in a try/catch, as some properties might be read-only
+            try {
+              this.$.setupState[k] = v
+              // eslint-disable-next-line no-empty
+            } catch (e) {}
+          }
+          // also intercept the proxy calls to make the mocks available on the instance
+          // (useful when a template access a global function like $t and the developer wants to mock it)
+          ;(this.$ as any).proxy = new Proxy((this.$ as any).proxy, {
+            get(target, key) {
+              if (key in global.mocks) {
+                return global.mocks[key as string]
+              }
+              return target[key]
+            }
+          })
+        } else {
+          for (const [k, v] of Object.entries(
+            global.mocks as { [key: string]: any }
+          )) {
             ;(this as any)[k] = v
           }
         }
@@ -604,8 +623,10 @@ export function mount(
   const appRef = componentRef.value! as ComponentPublicInstance
   // we add `hasOwnProperty` so Jest can spy on the proxied vm without throwing
   // note that this is not necessary with Jest v27+ or Vitest, but is kept for compatibility with older Jest versions
-  appRef.hasOwnProperty = (property) => {
-    return Reflect.has(appRef, property)
+  if (!app.hasOwnProperty) {
+    appRef.hasOwnProperty = (property) => {
+      return Reflect.has(appRef, property)
+    }
   }
   const wrapper = createVueWrapper(app, appRef, setProps)
   trackInstance(wrapper)
