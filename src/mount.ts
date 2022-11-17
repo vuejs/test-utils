@@ -203,7 +203,7 @@ export function mount<
   >
 >
 // component declared by vue-tsc ScriptSetup
-export function mount<T extends DefineComponent<any, any, any, any>>(
+export function mount<T extends DefineComponent<any, any, any, any, any>>(
   component: T,
   options?: ComponentMountingOptions<T>
 ): VueWrapper<InstanceType<T>>
