@@ -80,7 +80,6 @@ export const mergeDeep = (
   if (!isObject(target) || !isObject(source)) {
     return source
   }
-
   Object.keys(source).forEach((key) => {
     const targetValue = target[key]
     const sourceValue = source[key]

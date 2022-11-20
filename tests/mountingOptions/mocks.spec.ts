@@ -1,6 +1,8 @@
 import { describe, expect, it, vi } from 'vitest'
 import { mount, RouterLinkStub } from '../../src'
 import { defineComponent } from 'vue'
+import ScriptSetupWithI18n from '../components/ScriptSetupWithI18n.vue'
+import ComponentWithI18n from '../components/ComponentWithI18n.vue'
 
 describe('mocks', () => {
   it('mocks a vuex store', async () => {
@@ -74,5 +76,29 @@ describe('mocks', () => {
     expect(wrapper.html()).toContain('Go to post: 1')
     await wrapper.find('button').trigger('click')
     expect($router.push).toHaveBeenCalledWith('/posts/1')
+  })
+
+  it('mocks a global function in a script setup component', () => {
+    const wrapper = mount(ScriptSetupWithI18n, {
+      global: {
+        mocks: {
+          $t: () => 'mocked'
+        }
+      }
+    })
+    expect(wrapper.text()).toContain('hello')
+    expect(wrapper.text()).toContain('mocked')
+  })
+
+  it('mocks a global function in an option component', () => {
+    const wrapper = mount(ComponentWithI18n, {
+      global: {
+        mocks: {
+          $t: () => 'mocked'
+        }
+      }
+    })
+    expect(wrapper.text()).toContain('hello')
+    expect(wrapper.text()).toContain('mocked')
   })
 })
