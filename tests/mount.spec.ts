@@ -2,6 +2,8 @@ import { describe, expect, it, vi } from 'vitest'
 import { defineComponent } from 'vue'
 import { mount } from '../src'
 import HelloFromVitestPlayground from './components/HelloFromVitestPlayground.vue'
+import SimpleData from './components/SimpleData.vue'
+import SimpleDataClassComponent from './components/SimpleDataClassComponent.vue'
 
 describe('mount: general tests', () => {
   it('correctly handles component, throwing on mount', () => {
@@ -31,5 +33,56 @@ describe('mount: general tests', () => {
     mount(HelloFromVitestPlayground, { props: { count: 2 } })
 
     expect(spy).not.toHaveBeenCalled()
+  })
+
+  it('should respect a data callback when using mount/shallowmount on ClassComponent api component', async () => {
+    const wrapper = mount(SimpleDataClassComponent, {
+      data: () => {
+        return {
+          dataStringArray: ['setA', 'setB'],
+          dataString: 'setC'
+        }
+      }
+    })
+    expect(wrapper.html()).toEqual(
+      '<div>sArray:[\n  "setA",\n  "setB"\n  ]|s:setC</div>'
+    )
+  })
+
+  it('should respect a data callback when using mount/shallowmount on composition api component', async () => {
+    const wrapper = mount(SimpleData, {
+      data: () => {
+        return {
+          dataStringArray: ['setA', 'setB'],
+          dataString: 'setC'
+        }
+      }
+    })
+    expect(wrapper.html()).toEqual(
+      '<div>sArray:[\n  "setA",\n  "setB"\n  ]|s:setC</div>'
+    )
+  })
+
+  it('should respect a data callback when using mount/shallowmount on inline component', async () => {
+    const Component = {
+      template: `<div>sArray:{{dataStringArray}}|s:{{dataString}}</div>`,
+      data: () => ({
+        dataStringArray: ['initialA', 'initialB'],
+        dataString: 'initialC'
+      })
+    }
+
+    const wrapper = mount(Component, {
+      data: () => {
+        return {
+          dataStringArray: ['setA', 'setB'],
+          dataString: 'setC'
+        }
+      }
+    })
+
+    expect(wrapper.html()).toEqual(
+      '<div>sArray:[\n  "setA",\n  "setB"\n  ]|s:setC</div>'
+    )
   })
 })

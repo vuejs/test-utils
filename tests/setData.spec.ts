@@ -1,7 +1,8 @@
 import { describe, expect, it, vi } from 'vitest'
-import { defineComponent, ref } from 'vue'
-
+import { defineComponent } from 'vue'
 import { mount } from '../src'
+import SimpleData from './components/SimpleData.vue'
+import SimpleDataClassComponent from './components/SimpleDataClassComponent.vue'
 
 describe('setData', () => {
   it('sets component data', async () => {
@@ -111,20 +112,6 @@ describe('setData', () => {
     )
   })
 
-  it('does not modify composition API setup data', async () => {
-    const Component = defineComponent({
-      template: `<div>Count is: {{ count }}</div>`,
-      setup: () => ({ count: ref(1) })
-    })
-    const wrapper = mount(Component)
-
-    expect(wrapper.html()).toContain('Count is: 1')
-
-    expect(() => wrapper.setData({ count: 2 })).toThrowError(
-      'Cannot add property count'
-    )
-  })
-
   // https://github.com/vuejs/test-utils/issues/538
   it('updates data set via data mounting option using setData', async () => {
     const Comp = defineComponent<
@@ -213,5 +200,59 @@ describe('setData', () => {
 
     expect(wrapper.vm.value).toBeInstanceOf(Date)
     expect(wrapper.vm.value!.toISOString()).toBe('2022-08-11T12:15:54.000Z')
+  })
+
+  it('should handle setData on ClassComponent api component', async () => {
+    const wrapper = mount(SimpleDataClassComponent)
+    expect(wrapper.html()).toEqual(
+      '<div>sArray:[\n  "initialA",\n  "initialB"\n  ]|s:initialC</div>'
+    )
+
+    await wrapper.setData({
+      dataStringArray: ['setA', 'setB'],
+      dataString: 'setC'
+    })
+
+    expect(wrapper.html()).toEqual(
+      '<div>sArray:[\n  "setA",\n  "setB"\n  ]|s:setC</div>'
+    )
+  })
+
+  it('should handle setData on composition api component', async () => {
+    const wrapper = mount(SimpleData)
+    expect(wrapper.html()).toEqual(
+      '<div>sArray:[\n  "initialA",\n  "initialB"\n  ]|s:initialC</div>'
+    )
+
+    await wrapper.setData({
+      dataStringArray: ['setA', 'setB'],
+      dataString: 'setC'
+    })
+
+    expect(wrapper.html()).toEqual(
+      '<div>sArray:[\n  "setA",\n  "setB"\n  ]|s:setC</div>'
+    )
+  })
+
+  it('should handle setData on inline component component', async () => {
+    const Component = {
+      template: `<div>sArray:{{dataStringArray}}|s:{{dataString}}</div>`,
+      data: () => ({
+        dataStringArray: ['initialA', 'initialB'],
+        dataString: 'initialC'
+      })
+    }
+    const wrapper = mount(Component, {
+      data: () => {
+        return {
+          dataStringArray: ['setA', 'setB'],
+          dataString: 'setC'
+        }
+      }
+    })
+
+    expect(wrapper.html()).toEqual(
+      '<div>sArray:[\n  "setA",\n  "setB"\n  ]|s:setC</div>'
+    )
   })
 })

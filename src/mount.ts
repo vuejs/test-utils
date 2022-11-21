@@ -516,6 +516,24 @@ export function mount(
     app.mixin(mixin)
   }
 
+  // mixin for initial data of script setup composition components
+  if (options?.data) {
+    const providedData = options.data()
+    const mixin = defineComponent({
+      beforeCreate() {
+        if (hasSetupState(this)) {
+          for (const [k, v] of Object.entries(
+            providedData as { [key: string]: any }
+          )) {
+            this.$.setupState[k] = v
+          }
+        }
+      }
+    })
+
+    app.mixin(mixin)
+  }
+
   // AppConfig
   if (global.config) {
     for (const [k, v] of Object.entries(global.config) as [

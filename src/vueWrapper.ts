@@ -242,10 +242,16 @@ export class VueWrapper<
   }
 
   setData(data: Record<string, unknown>): Promise<void> {
-    mergeDeep(this.componentVM.$data, data)
+    //this.componentVM.$data is not defined on all composition api components
+    //script setup components store data in root node instead of $data
+    if (hasSetupState(this.vm)) {
+      const target = this.componentVM as Record<string, unknown>
+      mergeDeep(target, data)
+    } else {
+      mergeDeep(this.componentVM.$data, data)
+    }
     return nextTick()
   }
-
   setProps(props: Record<string, unknown>): Promise<void> {
     // if this VM's parent is not the root or if setProps does not exist, error out
     if (this.vm.$parent !== this.rootVM || !this.__setProps) {
