@@ -26,7 +26,7 @@
     "@rollup/plugin-json": "5.0.1",
     "@rollup/plugin-node-resolve": "15.0.1",
     "@rollup/plugin-replace": "5.0.1",
-    "@rollup/plugin-typescript": "9.0.2",
+    "@rollup/plugin-typescript": "10.0.0",
     "@types/js-beautify": "1.13.3",
     "@types/node": "18.11.9",
     "@typescript-eslint/eslint-plugin": "5.44.0",
