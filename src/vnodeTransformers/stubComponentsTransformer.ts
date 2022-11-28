@@ -4,6 +4,7 @@ import {
   TransitionGroup,
   BaseTransition,
   Teleport,
+  KeepAlive,
   h,
   defineComponent,
   VNodeTypes,
@@ -31,7 +32,7 @@ export type CustomCreateStub = (params: {
 
 interface StubOptions {
   name: string
-  type?: VNodeTypes | typeof Teleport
+  type?: VNodeTypes | typeof Teleport | typeof KeepAlive
   renderStubDefaultSlot?: boolean
 }
 
@@ -119,6 +120,17 @@ export function createStubComponentsTransformer({
 
       return createStub({
         name: 'teleport',
+        type,
+        renderStubDefaultSlot: true
+      })
+    }
+
+    // stub keep-alive by default via config.global.stubs
+    if ((type as any) === KeepAlive && 'keep-alive' in stubs) {
+      if (stubs['keep-alive'] === false) return type
+
+      return createStub({
+        name: 'keep-alive',
         type,
         renderStubDefaultSlot: true
       })
