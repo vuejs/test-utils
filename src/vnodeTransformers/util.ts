@@ -20,8 +20,8 @@ export type VTUVNodeTypeTransformer = (
   instance: InstanceArgsType
 ) => VNodeTransformerInputComponentType
 
-const isTeleport = (type: any): boolean => type.__isTeleport
-const isKeepAlive = (type: any): boolean => type.__isKeepAlive
+export const isTeleport = (type: any): boolean => type.__isTeleport
+export const isKeepAlive = (type: any): boolean => type.__isKeepAlive
 
 export const createVNodeTransformer = ({
   transformers
