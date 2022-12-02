@@ -553,6 +553,56 @@ describe('mounting options: stubs', () => {
     })
   })
 
+  describe('keep-alive', () => {
+    it('will omit the keep-alive tag by default', () => {
+      const Comp = {
+        template: `<keep-alive><div id="content" /></keep-alive>`
+      }
+      const wrapper = mount(Comp)
+
+      expect(wrapper.html()).toBe('<div id="content"></div>')
+    })
+
+    it('opts in to stubbing keep-alive ', () => {
+      const spy = vi.spyOn(console, 'warn')
+      const Comp = {
+        template: `<keep-alive><div id="content" /></keep-alive>`
+      }
+      const wrapper = mount(Comp, {
+        global: {
+          stubs: {
+            'keep-alive': true
+          }
+        }
+      })
+
+      expect(wrapper.html()).toBe(
+        '<keep-alive-stub>\n' +
+          '  <div id="content"></div>\n' +
+          '</keep-alive-stub>'
+      )
+      // Make sure that we don't have a warning when stubbing keep-alive
+      // https://github.com/vuejs/test-utils/issues/1888
+      expect(spy).not.toHaveBeenCalled()
+    })
+
+    it('does not stub keep-alive with shallow', () => {
+      const Comp = {
+        template: `<keep-alive><div id="content" /></keep-alive>`
+      }
+      const wrapper = mount(Comp, {
+        shallow: true,
+        global: {
+          stubs: {
+            'keep-alive': false
+          }
+        }
+      })
+
+      expect(wrapper.html()).toBe('<div id="content"></div>')
+    })
+  })
+
   it('stubs component by key prior before name', () => {
     const MyComponent = defineComponent({
       name: 'MyComponent',

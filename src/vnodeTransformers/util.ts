@@ -21,6 +21,7 @@ export type VTUVNodeTypeTransformer = (
 ) => VNodeTransformerInputComponentType
 
 const isTeleport = (type: any): boolean => type.__isTeleport
+const isKeepAlive = (type: any): boolean => type.__isKeepAlive
 
 export const createVNodeTransformer = ({
   transformers
@@ -41,9 +42,9 @@ export const createVNodeTransformer = ({
 
     const cachedTransformation = transformationCache.get(originalType)
     if (cachedTransformation) {
-      // https://github.com/vuejs/test-utils/issues/1829
-      // Teleport should return child nodes as a function
-      if (isTeleport(originalType)) {
+      // https://github.com/vuejs/test-utils/issues/1829 & https://github.com/vuejs/test-utils/issues/1888
+      // Teleport/KeepAlive should return child nodes as a function
+      if (isTeleport(originalType) || isKeepAlive(originalType)) {
         return [cachedTransformation, props, () => children, ...restVNodeArgs]
       }
       return [cachedTransformation, props, children, ...restVNodeArgs]
@@ -60,9 +61,9 @@ export const createVNodeTransformer = ({
       transformationCache.set(originalType, transformedType)
 
       registerStub({ source: originalType, stub: transformedType })
-      // https://github.com/vuejs/test-utils/issues/1829
-      // Teleport should return child nodes as a function
-      if (isTeleport(originalType)) {
+      // https://github.com/vuejs/test-utils/issues/1829 & https://github.com/vuejs/test-utils/issues/1888
+      // Teleport/KeepAlive should return child nodes as a function
+      if (isTeleport(originalType) || isKeepAlive(originalType)) {
         return [transformedType, props, () => children, ...restVNodeArgs]
       }
     }
