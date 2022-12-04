@@ -563,7 +563,7 @@ describe('mounting options: stubs', () => {
       expect(wrapper.html()).toBe('<div id="content"></div>')
     })
 
-    it('opts in to stubbing keep-alive ', () => {
+    it('opts in to stubbing keep-alive with keep-alive: true', () => {
       const spy = vi.spyOn(console, 'warn')
       const Comp = {
         template: `<keep-alive><div id="content" /></keep-alive>`
@@ -572,6 +572,52 @@ describe('mounting options: stubs', () => {
         global: {
           stubs: {
             'keep-alive': true
+          }
+        }
+      })
+
+      expect(wrapper.html()).toBe(
+        '<keep-alive-stub>\n' +
+          '  <div id="content"></div>\n' +
+          '</keep-alive-stub>'
+      )
+      // Make sure that we don't have a warning when stubbing keep-alive
+      // https://github.com/vuejs/test-utils/issues/1888
+      expect(spy).not.toHaveBeenCalled()
+    })
+
+    it('opts in to stubbing KeepAlive with KeepAlive: true', () => {
+      const spy = vi.spyOn(console, 'warn')
+      const Comp = {
+        template: `<KeepAlive><div id="content" /></KeepAlive>`
+      }
+      const wrapper = mount(Comp, {
+        global: {
+          stubs: {
+            KeepAlive: true
+          }
+        }
+      })
+
+      expect(wrapper.html()).toBe(
+        '<keep-alive-stub>\n' +
+          '  <div id="content"></div>\n' +
+          '</keep-alive-stub>'
+      )
+      // Make sure that we don't have a warning when stubbing keep-alive
+      // https://github.com/vuejs/test-utils/issues/1888
+      expect(spy).not.toHaveBeenCalled()
+    })
+
+    it('opts in to stubbing keep-alive with KeepAlive: true', () => {
+      const spy = vi.spyOn(console, 'warn')
+      const Comp = {
+        template: `<keep-alive><div id="content" /></keep-alive>`
+      }
+      const wrapper = mount(Comp, {
+        global: {
+          stubs: {
+            KeepAlive: true
           }
         }
       })

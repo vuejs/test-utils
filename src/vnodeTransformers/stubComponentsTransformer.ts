@@ -1,4 +1,4 @@
-import type { VTUVNodeTypeTransformer } from './util'
+import { isKeepAlive, isTeleport, VTUVNodeTypeTransformer } from './util'
 import {
   Transition,
   TransitionGroup,
@@ -115,7 +115,7 @@ export function createStubComponentsTransformer({
 }: CreateStubComponentsTransformerConfig): VTUVNodeTypeTransformer {
   return function componentsTransformer(type, instance) {
     // stub teleport by default via config.global.stubs
-    if ((type as any) === Teleport && 'teleport' in stubs) {
+    if (isTeleport(type) && 'teleport' in stubs) {
       if (stubs.teleport === false) return type
 
       return createStub({
@@ -125,9 +125,10 @@ export function createStubComponentsTransformer({
       })
     }
 
-    // stub keep-alive by default via config.global.stubs
-    if ((type as any) === KeepAlive && 'keep-alive' in stubs) {
-      if (stubs['keep-alive'] === false) return type
+    // stub keep-alive/KeepAlive by default via config.global.stubs
+    if (isKeepAlive(type) && ('keep-alive' in stubs || 'KeepAlive' in stubs)) {
+      if ('keep-alive' in stubs && stubs['keep-alive'] === false) return type
+      if ('KeepAlive' in stubs && stubs['KeepAlive'] === false) return type
 
       return createStub({
         name: 'keep-alive',
