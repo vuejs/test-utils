@@ -451,7 +451,7 @@ Using a real router with Composition API works the same as using a real router w
 a good practice to instantiate a new router object for each test, instead of importing the router directly from your app.
 
 ```js
-import { mount, flushPromises } from '@vue/test-utils'
+import { mount } from '@vue/test-utils'
 import { createRouter, createWebHistory } from 'vue-router'
 import { routes } from "@/router"
 
