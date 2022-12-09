@@ -14,16 +14,16 @@ assignees: ''
 <!-- A clear and concise description of what the bug is. -->
 
 **To Reproduce**
-<!-- Steps to reproduce the behavior or, even better, a link to a minimal reproduction (a repository with the minimum code to reproduce the issue is greatly appreciated). -->
+<!-- A link to a minimal reproduction (with the minimum code to reproduce the issue). 
+It takes just a few minutes to build a repro online with https://stackblitz.com/fork/github/vitest-dev/vitest/tree/main/examples/vue?initialPath=__vitest__
+-->
 
 **Expected behavior**
 <!-- A clear and concise description of what you expected to happen. -->
 
 **Related information:**
-- `@vue/test-utils` version: 2.x.x <!-- For v1, please report at repository https://github.com/vuejs/vue-test-utils -->
-- `Vue` version: 3.x.x
-- `node` version:
-- `npm` (or `yarn`) version:
+<!-- Output of  `npx envinfo --system --npmPackages vue,@vue/test-utils,vitest,jest` -->
+<!-- For test-utils v1 and Vue v2, please report at repository https://github.com/vuejs/vue-test-utils -->
 
 **Additional context**
 <!-- Add any other context about the problem here. -->
