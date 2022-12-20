@@ -55,7 +55,7 @@
     "unplugin-vue-components": "0.22.12",
     "vite": "4.0.1",
     "vitepress": "0.22.4",
-    "vitest": "0.26.0",
+    "vitest": "0.26.1",
     "vue": "3.2.45",
     "vue-class-component": "8.0.0-rc.1",
     "vue-router": "4.1.6",
