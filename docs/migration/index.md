@@ -239,7 +239,7 @@ wrapper.findAll('[data-test="token"]')[0];
 
 This statement is at the core of `@vue/test-utils`. But we do relate to the fact that migrating code bases and corresponding test suites to `vue@3` can be, in some scenarios, a pretty big effort. 
 
-This section tries to compile some common gotchas spotted by our community while doing their migrations and also updating their underlying test running stack to more modern versions. These are unrelated to `@vue/test-utils`, but we hope can help you out completing this important migration step.
+This section tries to compile some common gotchas spotted by our community while doing their migrations and also updating their underlying test running stack to more modern versions. These are unrelated to `@vue/test-utils`, but we hope it can help you out completing this important migration step.
 
 ### `@vue/vue3-jest` + `jest@^28`
 
@@ -261,7 +261,7 @@ module.exports = {
 
 #### Snapshots now include my comment nodes
 
-If you use snapshot testing and comment nodes are leaking into your snapshots, note that `comments` are now always [preserved](https://vuejs.org/api/application.html#app-config-compileroptions-comments) and only removed in production. You can override this behaviour by tweaking `app.config.compilerOptions` to removed them from snapshots as well: 
+If you use snapshot testing and comment nodes are leaking into your snapshots, note that `comments` are now always [preserved](https://vuejs.org/api/application.html#app-config-compileroptions-comments) and only removed in production. You can override this behaviour by tweaking `app.config.compilerOptions` to remove them from snapshots as well: 
   - via `vue-jest` [config](https://github.com/vuejs/vue-jest#compiler-options-in-vue-3).
     ```js
     // jest.config.js
