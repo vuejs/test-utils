@@ -232,3 +232,48 @@ wrapper.findAll('[data-test="token"]').at(0);
 ```js
 wrapper.findAll('[data-test="token"]')[0];
 ```
+
+## Test runners upgrade notes
+
+> Vue Test Utils is framework agnostic - you can use it with whichever test runner you like.
+
+This statement is at the core of `@vue/test-utils`. But we do relate to the fact that migrating code bases and corresponding test suites to `vue@3` can be, in some scenarios, a pretty big effort. 
+
+This section tries to compile some common gotchas spotted by our community while doing their migrations and also updating their underlying test running stack to more modern versions. These are unrelated to `@vue/test-utils`, but we hope can help you out completing this important migration step.
+
+### `@vue/vue3-jest` + `jest@^28`
+
+If you've decided to take the opportunity and upgrade your test runner tools to a more modern version, have these in mind.
+
+#### `ReferenceError: Vue is not defined` [vue-jest#479](https://github.com/vuejs/vue-jest/issues/479)
+
+When `jest-environment-jsdom` package is used, it defaults to load libraries from `package.json` [`browser` entry](https://jestjs.io/docs/configuration#testenvironmentoptions-object). You can override it to use `node` imports instead and fix this error:
+
+```js
+// jest.config.js
+module.exports = {
+  testEnvironmentOptions: {
+    customExportConditions: ["node", "node-addons"],
+  }
+}
+```
+<br/>
+
+#### Snapshots now include my comment nodes
+
+If you use snapshot testing and comment nodes are leaking into your snapshots, note that `comments` are now always [preserved](https://vuejs.org/api/application.html#app-config-compileroptions-comments) and only removed in production. You can override this behaviour by tweaking `app.config.compilerOptions` to removed them from snapshots as well: 
+  - via `vue-jest` [config](https://github.com/vuejs/vue-jest#compiler-options-in-vue-3).
+    ```js
+    // jest.config.js
+    module.exports = {
+      globals: {
+        'vue-jest': {
+          compilerOptions: {
+            comments: false
+          }
+        }
+      }
+    }
+    ```
+ - Via `@vue/test-utils` [`mountingOptions.global.config`](https://test-utils.vuejs.org/api/#global) either globally or on per-test basis.
+ 
