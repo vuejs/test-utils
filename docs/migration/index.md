@@ -217,6 +217,20 @@ Vue 3 renamed the `vm.$destroy` to `vm.$unmount`. Vue Test Utils has followed su
 
 Vue 3 united the `slot` and `scoped-slot` syntax under a single syntax, `v-slot`, which you can read about in the [the docs](https://v3.vuejs.org/guide/migration/slots-unification.html#overview). Since `slot` and `scoped-slot` are now merged, the `scopedSlots` mounting option is now deprecated - just use the `slots` mounting option for everything.
 
+### `slots`‘s scope is now exposed as `params`
+
+When using string templates for slot content, if not explicitly defined using a wrapping `<template #slot-name="scopeVar">` tag, slot scope becomes available as a `params` object when the slot is evaluated.
+
+```diff
+shallowMount(Component, {
+-  scopedSlots: {
++  slots: {
+-    default: '<p>{{props.index}},{{props.text}}</p>'
++    default: '<p>{{params.index}},{{params.text}}</p>'
+  }
+})
+````
+
 ### `findAll().at()` removed
 
 `findAll()` now returns an array of DOMWrappers.
