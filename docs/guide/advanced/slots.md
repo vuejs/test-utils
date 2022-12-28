@@ -139,7 +139,7 @@ test('layout full page layout', () => {
 
 ## Scoped Slots
 
-[Scoped slots](https://v3.vuejs.org/guide/component-slots.html#scoped-slots) and bindings are also supported.
+[Scoped slots](https://v3.vuejs.org/guide/component-slots.html#scoped-slots) and bindings are also supported. 
 
 ```js
 const ComponentWithSlots = {
@@ -158,8 +158,8 @@ const ComponentWithSlots = {
 test('scoped slots', () => {
   const wrapper = mount(ComponentWithSlots, {
     slots: {
-      scoped: `<template #scoped="params">
-        Hello {{ params.msg }}
+      scoped: `<template #scoped="scope">
+        Hello {{ scope.msg }}
         </template>
       `
     }
@@ -168,6 +168,19 @@ test('scoped slots', () => {
   expect(wrapper.html()).toContain('Hello world')
 })
 ```
+
+When using string templates for slot content, **if not explicitly defined using a wrapping `<template #scoped="scopeVar">` tag**, slot scope becomes available as a `params` object when the slot is evaluated.
+
+```js
+test('scoped slots', () => {
+  const wrapper = mount(ComponentWithSlots, {
+    slots: {
+      scoped: `Hello {{ params.msg }}` // no wrapping template tag provided, slot scope exposed as "params"
+    }
+  })
+
+  expect(wrapper.html()).toContain('Hello world')
+})
 
 ## Conclusion
 
