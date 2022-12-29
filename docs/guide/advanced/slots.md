@@ -181,6 +181,7 @@ test('scoped slots', () => {
 
   expect(wrapper.html()).toContain('Hello world')
 })
+```
 
 ## Conclusion
 
