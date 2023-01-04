@@ -101,4 +101,29 @@ describe('mocks', () => {
     expect(wrapper.text()).toContain('hello')
     expect(wrapper.text()).toContain('mocked')
   })
+
+  it('mocks a global function in an option component which includes the setup() option', () => {
+    const ComponentWithI18nAndSetupOption = defineComponent({
+      setup: () => ({
+        hello: 'hello'
+      }),
+      template: `
+        <div>{{ hello }}</div>
+        <!-- this emulates components that use a global function like $t for i18n -->
+        <!-- this function can be mocked using global.mocks -->
+        <div>{{ $t('world') }}</div>
+      `
+    })
+
+    const wrapper = mount(ComponentWithI18nAndSetupOption, {
+      global: {
+        mocks: {
+          $t: () => 'mocked'
+        }
+      }
+    })
+
+    expect(wrapper.text()).toContain('hello')
+    expect(wrapper.text()).toContain('mocked')
+  })
 })
