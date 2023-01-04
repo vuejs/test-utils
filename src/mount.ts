@@ -33,7 +33,7 @@ import { MountingOptions, Slot } from './types'
 import {
   getComponentsFromStubs,
   getDirectivesFromStubs,
-  hasSetupState,
+  isScriptSetup,
   isFunctionalComponent,
   isObject,
   isObjectComponent,
@@ -485,7 +485,7 @@ export function mount(
         // Also ensures not to include option API components in this this block
         // since they can also have setup state but need to be patched using
         // the regular method.
-        if (hasSetupState(this) && this.$.setupState.__isScriptSetup) {
+        if (isScriptSetup(this)) {
           // add the mocks to setupState
           for (const [k, v] of Object.entries(
             global.mocks as { [key: string]: any }

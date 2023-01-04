@@ -185,6 +185,7 @@ export function getDirectivesFromStubs(
       .map(([key, value]) => [key.substring(1), value])
   ) as Record<string, Directive>
 }
+
 export function hasSetupState(
   vm: ComponentPublicInstance
 ): vm is ComponentPublicInstance & {
@@ -193,5 +194,15 @@ export function hasSetupState(
   return (
     vm &&
     (vm.$ as unknown as { devtoolsRawSetupState: any }).devtoolsRawSetupState
+  )
+}
+
+export function isScriptSetup(
+  vm: ComponentPublicInstance
+): vm is ComponentPublicInstance & {
+  $: { setupState: Record<string, unknown> }
+} {
+  return (
+    vm && (vm.$ as unknown as { setupState: any }).setupState.__isScriptSetup
   )
 }
