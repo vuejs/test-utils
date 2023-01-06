@@ -5,7 +5,7 @@ specifiers:
   '@rollup/plugin-json': 6.0.0
   '@rollup/plugin-node-resolve': 15.0.1
   '@rollup/plugin-replace': 5.0.2
-  '@rollup/plugin-typescript': 10.0.1
+  '@rollup/plugin-typescript': 11.0.0
   '@types/js-beautify': 1.13.3
   '@types/node': 18.11.18
   '@typescript-eslint/eslint-plugin': 5.48.0
@@ -46,7 +46,7 @@ devDependencies:
   '@rollup/plugin-json': 6.0.0_rollup@3.9.1
   '@rollup/plugin-node-resolve': 15.0.1_rollup@3.9.1
   '@rollup/plugin-replace': 5.0.2_rollup@3.9.1
-  '@rollup/plugin-typescript': 10.0.1_hqjvco2e22ojmon3nhwchufpre
+  '@rollup/plugin-typescript': 11.0.0_hqjvco2e22ojmon3nhwchufpre
   '@types/js-beautify': 1.13.3
   '@types/node': 18.11.18
   '@typescript-eslint/eslint-plugin': 5.48.0_k73wpmdolxikpyqun3p36akaaq
@@ -914,8 +914,8 @@ packages:
       rollup: 3.9.1
     dev: true
 
-  /@rollup/plugin-typescript/10.0.1_hqjvco2e22ojmon3nhwchufpre:
-    resolution: {integrity: sha512-wBykxRLlX7EzL8BmUqMqk5zpx2onnmRMSw/l9M1sVfkJvdwfxogZQVNUM9gVMJbjRLDR5H6U0OMOrlDGmIV45A==}
+  /@rollup/plugin-typescript/11.0.0_hqjvco2e22ojmon3nhwchufpre:
+    resolution: {integrity: sha512-goPyCWBiimk1iJgSTgsehFD5OOFHiAknrRJjqFCudcW8JtWiBlK284Xnn4flqMqg6YAjVG/EE+3aVzrL5qNSzQ==}
     engines: {node: '>=14.0.0'}
     peerDependencies:
       rollup: ^2.14.0||^3.0.0
