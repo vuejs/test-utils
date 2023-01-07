@@ -23,7 +23,7 @@ specifiers:
   eslint-plugin-prettier: 4.2.1
   husky: 8.0.3
   js-beautify: 1.14.6
-  jsdom: 20.0.3
+  jsdom: 21.0.0
   jsdom-global: 3.0.2
   lint-staged: 13.1.0
   prettier: 2.8.1
@@ -53,7 +53,7 @@ devDependencies:
   '@typescript-eslint/parser': 5.48.0_iukboom6ndih5an6iafl45j2fe
   '@vitejs/plugin-vue': 4.0.0_vite@4.0.4+vue@3.2.45
   '@vitejs/plugin-vue-jsx': 3.0.0_vite@4.0.4+vue@3.2.45
-  '@vitest/coverage-c8': 0.26.3_jsdom@20.0.3
+  '@vitest/coverage-c8': 0.26.3_jsdom@21.0.0
   '@vue/compat': 3.2.45_vue@3.2.45
   '@vue/compiler-dom': 3.2.45
   '@vue/compiler-sfc': 3.2.45
@@ -64,8 +64,8 @@ devDependencies:
   eslint-plugin-prettier: 4.2.1_32m5uc2milwdw3tnkcq5del26y
   husky: 8.0.3
   js-beautify: 1.14.6
-  jsdom: 20.0.3
-  jsdom-global: 3.0.2_jsdom@20.0.3
+  jsdom: 21.0.0
+  jsdom-global: 3.0.2_jsdom@21.0.0
   lint-staged: 13.1.0
   prettier: 2.8.1
   reflect-metadata: 0.1.13
@@ -75,7 +75,7 @@ devDependencies:
   unplugin-vue-components: 0.22.12_rollup@3.9.1+vue@3.2.45
   vite: 4.0.4_@types+node@18.11.18
   vitepress: 0.22.4
-  vitest: 0.26.3_jsdom@20.0.3
+  vitest: 0.26.3_jsdom@21.0.0
   vue: 3.2.45
   vue-class-component: 8.0.0-rc.1_vue@3.2.45
   vue-router: 4.1.6_vue@3.2.45
@@ -1159,11 +1159,11 @@ packages:
       vue: 3.2.45
     dev: true
 
-  /@vitest/coverage-c8/0.26.3_jsdom@20.0.3:
+  /@vitest/coverage-c8/0.26.3_jsdom@21.0.0:
     resolution: {integrity: sha512-sjmVYPozajWY2DawzuvhYX6hEe/LD6p2xv9VmPvh1zzDeNNVCAnyLcvXoaSMQD522x9bqciuyPrlrnh2iNkE/w==}
     dependencies:
       c8: 7.12.0
-      vitest: 0.26.3_jsdom@20.0.3
+      vitest: 0.26.3_jsdom@21.0.0
     transitivePeerDependencies:
       - '@edge-runtime/vm'
       - '@vitest/browser'
@@ -2704,16 +2704,16 @@ packages:
       argparse: 2.0.1
     dev: true
 
-  /jsdom-global/3.0.2_jsdom@20.0.3:
+  /jsdom-global/3.0.2_jsdom@21.0.0:
     resolution: {integrity: sha512-t1KMcBkz/pT5JrvcJbpUR2u/w1kO9jXctaaGJ0vZDzwFnIvGWw9IDSRciT83kIs8Bnw4qpOl8bQK08V01YgMPg==}
     peerDependencies:
       jsdom: '>=10.0.0'
     dependencies:
-      jsdom: 20.0.3
+      jsdom: 21.0.0
     dev: true
 
-  /jsdom/20.0.3:
-    resolution: {integrity: sha512-SYhBvTh89tTfCD/CRdSOm13mOBa42iTaTyfyEWBdKcGdPxPtLFBXuHR8XHb33YNYaP+lLbmSvBTsnoesCNJEsQ==}
+  /jsdom/21.0.0:
+    resolution: {integrity: sha512-AIw+3ZakSUtDYvhwPwWHiZsUi3zHugpMEKlNPaurviseYoBqo0zBd3zqoUi3LPCNtPFlEP8FiW9MqCZdjb2IYA==}
     engines: {node: '>=14'}
     peerDependencies:
       canvas: ^2.5.0
@@ -3805,7 +3805,7 @@ packages:
       - stylus
     dev: true
 
-  /vitest/0.26.3_jsdom@20.0.3:
+  /vitest/0.26.3_jsdom@21.0.0:
     resolution: {integrity: sha512-FmHxU9aUCxTi23keF3vxb/Qp0lYXaaJ+jRLGOUmMS3qVTOJvgGE+f1VArupA6pEhaG2Ans4X+zV9dqM5WISMbg==}
     engines: {node: '>=v14.16.0'}
     hasBin: true
@@ -3834,7 +3834,7 @@ packages:
       acorn-walk: 8.2.0
       chai: 4.3.7
       debug: 4.3.4
-      jsdom: 20.0.3
+      jsdom: 21.0.0
       local-pkg: 0.4.2
       source-map: 0.6.1
       strip-literal: 1.0.0
