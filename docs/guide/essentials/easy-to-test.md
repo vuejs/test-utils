@@ -28,7 +28,7 @@ Notice how this list does not include elements such as internal methods, interme
 
 The rule of thumb is that **a test should not break on a refactor**, that is, when we change its internal implementation without changing its behavior. If that happens, the test might rely on implementation details.
 
-For example, let's assume a basic Counter component that features a button to increment a counter. We could write the following test:
+For example, let's assume a basic Counter component that features a button to increment a counter:
 
 ```vue
 <template>
