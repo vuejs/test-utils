@@ -47,7 +47,7 @@
     "jsdom": "21.0.0",
     "jsdom-global": "3.0.2",
     "lint-staged": "13.1.0",
-    "prettier": "2.8.1",
+    "prettier": "2.8.2",
     "reflect-metadata": "0.1.13",
     "rollup": "3.9.1",
     "tslib": "2.4.1",

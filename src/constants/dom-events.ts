@@ -93,18 +93,18 @@ export const keyCodesByKeyName = {
 
 export type KeyName = keyof typeof keyCodesByKeyName
 export type Modifier =
-  | typeof systemKeyModifiers[number]
-  | typeof mouseKeyModifiers[number]
+  | (typeof systemKeyModifiers)[number]
+  | (typeof mouseKeyModifiers)[number]
 
 export type DomEventNameWithModifier =
   | DomEventName
-  | `${DomEventName}.${typeof systemKeyModifiers[number]}`
-  | `click.${typeof mouseKeyModifiers[number]}`
-  | `click.${typeof systemKeyModifiers[number]}.${typeof mouseKeyModifiers[number]}`
+  | `${DomEventName}.${(typeof systemKeyModifiers)[number]}`
+  | `click.${(typeof mouseKeyModifiers)[number]}`
+  | `click.${(typeof systemKeyModifiers)[number]}.${(typeof mouseKeyModifiers)[number]}`
   | `${'keydown' | 'keyup'}.${keyof typeof keyCodesByKeyName}`
   | `${
       | 'keydown'
-      | 'keyup'}.${typeof systemKeyModifiers[number]}.${keyof typeof keyCodesByKeyName}`
+      | 'keyup'}.${(typeof systemKeyModifiers)[number]}.${keyof typeof keyCodesByKeyName}`
 
 const domEvents = {
   abort: {
