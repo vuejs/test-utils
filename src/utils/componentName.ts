@@ -1,5 +1,4 @@
-import { ComponentInternalInstance } from '@vue/runtime-core'
-import { VNodeTypes } from 'vue'
+import { ComponentInternalInstance, VNodeTypes } from 'vue'
 import { isFunctionalComponent, isObjectComponent } from '../utils'
 import {
   isLegacyExtendedComponent,

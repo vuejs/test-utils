@@ -21,6 +21,9 @@
     "README.md",
     "dist/index.d.ts"
   ],
+  "dependencies": {
+    "js-beautify": "1.14.6"
+  },
   "devDependencies": {
     "@rollup/plugin-commonjs": "24.0.0",
     "@rollup/plugin-json": "6.0.0",
@@ -37,13 +40,11 @@
     "@vue/compat": "3.2.45",
     "@vue/compiler-dom": "3.2.45",
     "@vue/compiler-sfc": "3.2.45",
-    "@vue/runtime-core": "3.2.45",
     "c8": "7.12.0",
     "eslint": "8.32.0",
     "eslint-config-prettier": "8.6.0",
     "eslint-plugin-prettier": "4.2.1",
     "husky": "8.0.3",
-    "js-beautify": "1.14.6",
     "jsdom": "21.0.0",
     "jsdom-global": "3.0.2",
     "lint-staged": "13.1.0",
@@ -63,6 +64,7 @@
     "vuex": "4.1.0"
   },
   "peerDependencies": {
+    "@vue/compiler-dom": "^3.0.1",
     "vue": "^3.0.1"
   },
   "author": {

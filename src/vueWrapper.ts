@@ -2,7 +2,8 @@ import {
   nextTick,
   App,
   ComponentCustomProperties,
-  ComponentPublicInstance
+  ComponentPublicInstance,
+  VNode
 } from 'vue'
 
 import { config } from './config'
@@ -18,7 +19,6 @@ import {
   registerFactory,
   WrapperType
 } from './wrapperFactory'
-import { VNode } from '@vue/runtime-core'
 import { ShapeFlags } from './utils/vueShared'
 
 /**
