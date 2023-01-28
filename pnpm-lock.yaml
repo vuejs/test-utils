@@ -22,7 +22,7 @@ specifiers:
   eslint-plugin-prettier: 4.2.1
   husky: 8.0.3
   js-beautify: 1.14.6
-  jsdom: 21.0.0
+  jsdom: 21.1.0
   jsdom-global: 3.0.2
   lint-staged: 13.1.0
   prettier: 2.8.3
@@ -55,7 +55,7 @@ devDependencies:
   '@typescript-eslint/parser': 5.49.0_7uibuqfxkfaozanbtbziikiqje
   '@vitejs/plugin-vue': 4.0.0_vite@4.0.4+vue@3.2.45
   '@vitejs/plugin-vue-jsx': 3.0.0_vite@4.0.4+vue@3.2.45
-  '@vitest/coverage-c8': 0.28.1_jsdom@21.0.0
+  '@vitest/coverage-c8': 0.28.1_jsdom@21.1.0
   '@vue/compat': 3.2.45_vue@3.2.45
   '@vue/compiler-dom': 3.2.45
   '@vue/compiler-sfc': 3.2.45
@@ -64,8 +64,8 @@ devDependencies:
   eslint-config-prettier: 8.6.0_eslint@8.32.0
   eslint-plugin-prettier: 4.2.1_cn4lalcyadplruoxa5mhp7j3dq
   husky: 8.0.3
-  jsdom: 21.0.0
-  jsdom-global: 3.0.2_jsdom@21.0.0
+  jsdom: 21.1.0
+  jsdom-global: 3.0.2_jsdom@21.1.0
   lint-staged: 13.1.0
   prettier: 2.8.3
   reflect-metadata: 0.1.13
@@ -75,7 +75,7 @@ devDependencies:
   unplugin-vue-components: 0.22.12_rollup@3.11.0+vue@3.2.45
   vite: 4.0.4_@types+node@18.11.18
   vitepress: 0.22.4
-  vitest: 0.28.1_jsdom@21.0.0
+  vitest: 0.28.1_jsdom@21.1.0
   vue: 3.2.45
   vue-class-component: 8.0.0-rc.1_vue@3.2.45
   vue-router: 4.1.6_vue@3.2.45
@@ -1159,13 +1159,13 @@ packages:
       vue: 3.2.45
     dev: true
 
-  /@vitest/coverage-c8/0.28.1_jsdom@21.0.0:
+  /@vitest/coverage-c8/0.28.1_jsdom@21.1.0:
     resolution: {integrity: sha512-h/5Te9wX/GFz5/8ett9bpDqMtV71XwbLc9kFafHBkM8zi5EixdmcTWl5h9JzzGMfdEQfmqIff3C0wzbMldDn7w==}
     dependencies:
       c8: 7.12.0
       picocolors: 1.0.0
       std-env: 3.3.1
-      vitest: 0.28.1_jsdom@21.0.0
+      vitest: 0.28.1_jsdom@21.1.0
     transitivePeerDependencies:
       - '@edge-runtime/vm'
       - '@vitest/browser'
@@ -2747,16 +2747,16 @@ packages:
       argparse: 2.0.1
     dev: true
 
-  /jsdom-global/3.0.2_jsdom@21.0.0:
+  /jsdom-global/3.0.2_jsdom@21.1.0:
     resolution: {integrity: sha512-t1KMcBkz/pT5JrvcJbpUR2u/w1kO9jXctaaGJ0vZDzwFnIvGWw9IDSRciT83kIs8Bnw4qpOl8bQK08V01YgMPg==}
     peerDependencies:
       jsdom: '>=10.0.0'
     dependencies:
-      jsdom: 21.0.0
+      jsdom: 21.1.0
     dev: true
 
-  /jsdom/21.0.0:
-    resolution: {integrity: sha512-AIw+3ZakSUtDYvhwPwWHiZsUi3zHugpMEKlNPaurviseYoBqo0zBd3zqoUi3LPCNtPFlEP8FiW9MqCZdjb2IYA==}
+  /jsdom/21.1.0:
+    resolution: {integrity: sha512-m0lzlP7qOtthD918nenK3hdItSd2I+V3W9IrBcB36sqDwG+KnUs66IF5GY7laGWUnlM9vTsD0W1QwSEBYWWcJg==}
     engines: {node: '>=14'}
     peerDependencies:
       canvas: ^2.5.0
@@ -3882,7 +3882,7 @@ packages:
       - stylus
     dev: true
 
-  /vitest/0.28.1_jsdom@21.0.0:
+  /vitest/0.28.1_jsdom@21.1.0:
     resolution: {integrity: sha512-F6wAO3K5+UqJCCGt0YAl3Ila2f+fpBrJhl9n7qWEhREwfzQeXlMkkCqGqGtzBxCSa8kv5QHrkshX8AaPTXYACQ==}
     engines: {node: '>=v14.16.0'}
     hasBin: true
@@ -3916,7 +3916,7 @@ packages:
       cac: 6.7.14
       chai: 4.3.7
       debug: 4.3.4
-      jsdom: 21.0.0
+      jsdom: 21.1.0
       local-pkg: 0.4.2
       pathe: 1.1.0
       picocolors: 1.0.0
