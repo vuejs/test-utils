@@ -50,7 +50,10 @@ describe('isVisible', () => {
         }
       }
     }
-    const wrapper = mount(Comp)
+    // TODO: attachTo can be removed when https://github.com/jsdom/jsdom/issues/3502 is fixed
+    // with jsdom v21.1, getComputedStyle is cached and not updated for elements not in the DOM
+    // so the test fails (because the element is checked a first time)
+    const wrapper = mount(Comp, { attachTo: document.body })
 
     expect(wrapper.find('span').isVisible()).toBe(true)
     await wrapper.find('button').trigger('click')
@@ -73,7 +76,10 @@ describe('isVisible', () => {
         }
       }
     }
-    const wrapper = mount(Comp, {})
+    // TODO: attachTo can be removed when https://github.com/jsdom/jsdom/issues/3502 is fixed
+    // with jsdom v21.1, getComputedStyle is cached and not updated for elements not in the DOM
+    // so the test fails (because the element is checked a first time)
+    const wrapper = mount(Comp, { attachTo: document.body })
 
     expect(wrapper.find('span').isVisible()).toBe(true)
     await wrapper.find('button').trigger('click')
