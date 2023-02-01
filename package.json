@@ -67,6 +67,9 @@
     "@vue/compiler-dom": "^3.0.1",
     "vue": "^3.0.1"
   },
+  "optionalDependencies": {
+    "@vue/compiler-dom": "^3.0.1"
+  },
   "author": {
     "name": "Lachlan Miller",
     "email": "lachlan.miller.1990@outlook.com"
