@@ -194,7 +194,7 @@ export function mount<
       M,
       Mixin,
       Extends,
-      E,
+      EmitsOptions,
       EE,
       PP,
       Props,
