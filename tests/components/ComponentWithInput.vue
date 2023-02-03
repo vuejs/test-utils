@@ -14,6 +14,7 @@
       value="radioBarResult"
     />
     <input type="text" v-model="textVal" />
+    <input type="text" maxlength="5" v-model="textValWithMaxLength" />
     <input id="lazy" type="text" v-model.lazy="lazy" />
     <textarea v-model="textareaVal"></textarea>
     <select v-model="selectVal">
@@ -57,6 +58,7 @@ export default defineComponent({
     return {
       checkboxVal: undefined,
       textVal: undefined,
+      textValWithMaxLength: undefined,
       lazy: undefined,
       textareaVal: undefined,
       radioVal: undefined,

@@ -117,6 +117,10 @@ export class DOMWrapper<NodeType extends Node> extends BaseWrapper<NodeType> {
       }
       return this.trigger('change')
     } else if (tagName === 'INPUT' || tagName === 'TEXTAREA') {
+      if (
+        element.hasAttribute('maxlength') &&
+        element.maxLength < value
+      ) value = value.slice(0, element.maxLength);
       element.value = value
 
       this.trigger('input')

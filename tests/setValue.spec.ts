@@ -15,6 +15,13 @@ describe('setValue', () => {
       expect(input.element.value).toBe('foo')
     })
 
+    it('slice value, when input el has maxLength prop', () => {
+      const wrapper = mount(ComponentWithInput)
+      const input = wrapper.find<HTMLInputElement>('input[maxlength="5"]')
+      input.setValue('123456')
+      expect(input.element.value).toBe('12345')
+    })
+
     it('sets element of textarea value', async () => {
       const wrapper = mount(ComponentWithInput)
       const textarea = wrapper.find<HTMLTextAreaElement>('textarea')
