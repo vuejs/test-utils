@@ -16,6 +16,7 @@ const Editor = {
     label: String,
     modelValue: String
   },
+  emits: ['update:modelValue'],
   template: `<div>
     <label>{{label}}</label>
     <input :value="modelValue" @input="$emit('update:modelValue', $event.target.value)">
@@ -30,7 +31,7 @@ const App {
   components: {
     Editor
   },
-  template: `<editor v-model="text" label="test" />`
+  template: `<editor v-model="text" label="test" />`,
   data(){
     return {
       text: 'test'
@@ -69,7 +70,8 @@ const MoneyEditor = {
     <input :value="currency" @input="$emit('update:currency', $event.target.value)"/>
     <input :value="modelValue" type="number" @input="$emit('update:modelValue', $event.target.value)"/>
   </div>`,
-  props: ['currency', 'modelValue']
+  props: ['currency', 'modelValue'],
+  emits: ['update:currency', 'update:modelValue']
 }
 ```
 
