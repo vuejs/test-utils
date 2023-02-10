@@ -1797,6 +1797,12 @@ await wrapper.trigger('keydown', { keyCode: 65 })
 You should use `await` when you call `trigger` to ensure that Vue updates the DOM before you make an assertion.
 :::
 
+::: warning
+Some events, like clicking on a checkbox to change its `v-model`,
+will only work if the test uses `attachTo: document.body`.
+Otherwise, the `change` event will not be triggered, and the `v-model` value does not change.
+:::
+
 ### unmount
 
 Unmount the application from the DOM.
