@@ -1886,7 +1886,7 @@ function shallowMount(Component, options?: MountingOptions): VueWrapper
 **Signature:**
 
 ```ts
-enableAutoUnmount(hook: (callback: Function) => void));
+enableAutoUnmount(hook: (callback: () => void) => void);
 disableAutoUnmount(): void;
 ```
 
