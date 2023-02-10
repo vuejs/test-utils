@@ -184,7 +184,7 @@ Le test unitaire devrait ressembler à ça :
 
 ```typescript
 test('affiche de la donnée correcte', () => {
-  const wrapper = mount(MyComponent, {
+  const wrapper = mount(MonComposant, {
     global: {
       provide: {
         'ma-clef': 'données',

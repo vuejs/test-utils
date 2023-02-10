@@ -44,7 +44,7 @@ test('mounts a component', () => {
 
 Notice that `mount` accepts a second parameter to define the component's state configuration.
 
-**Example: mounting with component props and a Vue App plugin**
+**Exemple : mounting with component props and a Vue App plugin**
 
 ```js
 const wrapper = mount(Component, {
@@ -1886,7 +1886,7 @@ function shallowMount(Component, options?: MountingOptions): VueWrapper
 **Signature:**
 
 ```ts
-enableAutoUnmount(hook: Function));
+enableAutoUnmount(hook: (callback: () => void) => void);
 disableAutoUnmount(): void;
 ```
 
@@ -1941,7 +1941,7 @@ type GlobalMountOptions = {
 
 Instead of configuring mounting options on a per test basis, you can configure them for your entire test suite. These will be used by default every time you `mount` a component. If desired, you can then override your defaults on a per test basis.
 
-**Example:**
+**Exemple :**
 
 An example might be globally mocking the `$t` variable from vue-i18n and a component:
 
@@ -1954,11 +1954,11 @@ An example might be globally mocking the `$t` variable from vue-i18n and a compo
 </template>
 
 <script>
-import MyComponent from '@/components/MyComponent'
+import MonComposant from '@/components/MonComposant'
 
 export default {
   components: {
-    MyComponent
+    MonComposant
   }
 }
 </script>
@@ -1970,12 +1970,12 @@ export default {
 import { config, mount } from '@vue/test-utils'
 import { defineComponent } from 'vue'
 
-const MyComponent = defineComponent({
+const MonComposant = defineComponent({
   template: `<div>My component</div>`
 })
 
 config.global.stubs = {
-  MyComponent
+  MonComposant
 }
 
 config.global.mocks = {

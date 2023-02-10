@@ -83,7 +83,7 @@ The below plugin adds a method `findByTestId` to the `VueWrapper` instance. This
 
 Usage:
 
-`MyComponent.vue`:
+`MonComposant.vue`:
 
 ```vue
 <template>
@@ -93,10 +93,10 @@ Usage:
 </template>
 ```
 
-`MyComponent.spec.js`:
+`MonComposant.spec.js`:
 
 ```js
-const wrapper = mount(MyComponent)
+const wrapper = mount(MonComposant)
 wrapper.findByTestId('name-input') // returns a VueWrapper or DOMWrapper
 ```
 

@@ -9,7 +9,7 @@ export function disableAutoUnmount() {
   wrapperInstances.length = 0
 }
 
-export function enableAutoUnmount(hook: Function) {
+export function enableAutoUnmount(hook: (callback: () => void) => void) {
   if (isEnabled) {
     throw new Error('enableAutoUnmount cannot be called more than once')
   }

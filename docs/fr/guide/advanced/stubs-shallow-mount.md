@@ -194,13 +194,13 @@ export default defineComponent({
 // App.js
 const App = defineComponent({
   components: {
-    MyComponent: defineAsyncComponent(() => import('./AsyncComponent'))
+    MonComposant: defineAsyncComponent(() => import('./AsyncComponent'))
   },
-  template: '<MyComponent/>'
+  template: '<MonComposant/>'
 })
 ```
 
-The first behaviour is using the key defined in your component which loads the async component. In this example we used to key "MyComponent".
+The first behaviour is using the key defined in your component which loads the async component. In this example we used to key "MonComposant".
 It is not required to use `async/await` in the test case, because the component has been stubbed out before resolving.
 
 ```js
@@ -208,7 +208,7 @@ test('stubs async component without resolving', () => {
   const wrapper = mount(App, {
     global: {
       stubs: {
-        MyComponent: true
+        MonComposant: true
       }
     }
   })
