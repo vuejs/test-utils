@@ -1,6 +1,7 @@
 import { describe, expect, it, vi } from 'vitest'
 import { defineComponent } from 'vue'
 import { mount } from '../src'
+import DefinePropsAndDefineEmits from './components/DefinePropsAndDefineEmits.vue'
 import HelloFromVitestPlayground from './components/HelloFromVitestPlayground.vue'
 
 describe('mount: general tests', () => {
@@ -31,5 +32,16 @@ describe('mount: general tests', () => {
     mount(HelloFromVitestPlayground, { props: { count: 2 } })
 
     expect(spy).not.toHaveBeenCalled()
+  })
+
+  it('should mount a component with props, emits and slot (#1973)', () => {
+    const wrapper = mount(DefinePropsAndDefineEmits, {
+      props: {
+        placement: 'end'
+      },
+      slots: { default: 'Hello' }
+    })
+    expect(wrapper.get('div').text()).toContain('Hello')
+    expect(wrapper.get('div').classes()).toContain('end')
   })
 })
