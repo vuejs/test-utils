@@ -1,41 +1,41 @@
-# Testing Teleport
+# Tester Teleport
 
-Vue 3 comes with a new built-in component: `<Teleport>`, which allows components to "teleport" their content far outside of their own `<template>`. Most tests written with Vue Test Utils are scoped to the component passed to `mount`, which introduces some complexity when it comes to testing a component that is teleported outside of the component where it is initially rendered.
+Vue 3 offre un nouveau composant intégré : `<Teleport>`, qui permet aux composants de "téléporter" leur contenu très loin de leur propre `<template>`. La plupart des tests écrits avec Vue Test Utils sont limités au composant passé à `mount`, ce qui introduit une certaine complexité lorsqu'il s'agit de tester un composant qui est téléporté en dehors du composant où il est initialement rendu.
 
-Here are some strategies and techniques for testing components using `<Teleport>`.
+Voici quelques techniques pour tester les composants en utilisant `<Teleport>`.
 
 ::: tip
-If you want to test the rest of your component, ignoring teleport, you can stub `teleport` by passing `teleport: true` in the [global stubs option](../../api/#global-stubs).
+Si vous voulez tester le reste de votre composant en ignorant le "teleport", vous pouvez utiliser un composant de substitution (`stub`) pour les composants "teleport" en passant `teleport: true` dans l'[option globale de stubs](../../api/#global-stubs).
 :::
 
-## Example
+## Un Exemple
 
-In this example we are testing a `<Navbar>` component. It renders a `<Signup>` component inside of a `<Teleport>`. The `target` prop of `<Teleport>` is an element located outside of the `<Navbar>` component.
+Dans cet exemple, nous testons un composant `<Navbar>`. Il affiche un composant `<SignUp>` à l'intérieur d'un `<Teleport>`. La propriété `target` de `<Teleport>` est un élément situé en dehors du composant `<Navbar>`.
 
-This is the `Navbar.vue` component:
+Voici le composant `Navbar.vue` :
 
 ```vue
 <template>
   <Teleport to="#modal">
-    <Signup />
+    <SignUp />
   </Teleport>
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue'
-import Signup from './Signup.vue'
+import { defineComponent } from 'vue';
+import SignUp from './Signup.vue';
 
 export default defineComponent({
   components: {
-    Signup
-  }
-})
+    SignUp,
+  },
+});
 </script>
 ```
 
-It simply teleports a `<Signup>` somewhere else. It's simple for the purpose of this example.
+Cela téléporte simplement un composant `<SignUp>` quelque part ailleurs. Restons simple pour cet exemple.
 
-`Signup.vue` is a form that validates if `username` is greater than 8 characters. If it is, when submitted, it emits a `signup` event with the `username` as the payload. Testing that will be our goal.
+`SignUp.vue` est un formulaire qui valide si `username` est supérieur à 8 caractères. Si c'est le cas, lors de la soumission du formulaire, il émet un événement `signup` accompagné du `username`. Notre objectif sera de le tester.
 
 ```vue
 <template>
@@ -51,143 +51,144 @@ export default {
   emits: ['signup'],
   data() {
     return {
-      username: ''
-    }
+      username: '',
+    };
   },
   computed: {
     error() {
-      return this.username.length < 8
-    }
+      return this.username.length < 8;
+    },
   },
   methods: {
     submit() {
       if (!this.error) {
-        this.$emit('signup', this.username)
+        this.$emit('signup', this.username);
       }
-    }
-  }
-}
+    },
+  },
+};
 </script>
 ```
 
-## Mounting the Component
+## Monter le Composant
 
-Starting with a minimal test:
+Commençons avec un test simple :
 
 ```ts
-import { mount } from '@vue/test-utils'
-import Navbar from './Navbar.vue'
-import Signup from './Signup.vue'
+import { mount } from '@vue/test-utils';
+import Navbar from './Navbar.vue';
+import Signup from './Signup.vue';
 
-test('emits a signup event when valid', async () => {
-  const wrapper = mount(Navbar)
-})
+test('émet un évènement signup quand le formulaire est soumit', async () => {
+  const wrapper = mount(Navbar);
+  // ... Suite du test
+});
 ```
 
-Running this test will give you a warning: `[Vue warn]: Failed to locate Teleport target with selector "#modal"`. Let's create it:
+Exécuter ce test vous donnera un avertissement (`warning`) : `[Vue warn]: Failed to locate Teleport target with selector "#modal"`. Créons-le :
 
 ```ts {5-15}
-import { mount } from '@vue/test-utils'
-import Navbar from './Navbar.vue'
-import Signup from './Signup.vue'
+import { mount } from '@vue/test-utils';
+import Navbar from './Navbar.vue';
+import Signup from './Signup.vue';
 
 beforeEach(() => {
-  // create teleport target
-  const el = document.createElement('div')
-  el.id = 'modal'
-  document.body.appendChild(el)
+  // nous crééons la cible de teleport
+  const el = document.createElement('div');
+  el.id = 'modal';
+  document.body.appendChild(el);
 })
 
 afterEach(() => {
-  // clean up
-  document.body.outerHTML = ''
-})
+  // nous nettoyons un peu
+  document.body.outerHTML = '';
+});
 
 test('teleport', async () => {
-  const wrapper = mount(Navbar)
-})
+  const wrapper = mount(Navbar);
+});
 ```
 
-We are using Jest for this example, which does not reset the DOM every test. For this reason, it's good to clean up after each test with `afterEach`.
+Nous utilisons Jest pour cet exemple, qui ne réinitialise pas le DOM à chaque test. C'est pourquoi il est bon de nettoyer après chaque test avec `afterEach`.
 
-## Interacting with the Teleported Component
+## Interagir avec le Composant Téléporté
 
-The next thing to do is fill out the username input. Unfortunately, we cannot use `wrapper.find('input')`. Why not? A quick `console.log(wrapper.html())` shows us:
+La prochaine étape consiste à remplir le champ "nom d'utilisateur". Malheureusement, nous ne pouvons pas utiliser `wrapper.find('input')`. Pourquoi ? Un rapide `console.log(wrapper.html())` nous montre que :
 
 ```html
-<!--teleport start-->
-<!--teleport end-->
+<!--teleport commence ici-->
+<!--teleport termine ici-->
 ```
 
-We see some comments used by Vue to handle `<Teleport>` - but no `<input>`. That's because the `<Signup>` component (and its HTML) are not rendered inside of `<Navbar>` anymore - it was teleported outside.
+Nous voyons certains commentaires utilisés par Vue pour gérer `<Teleport>` - mais pas de `<input>` ici. C'est parce que le composant `<Signup>` (et son HTML) ne sont plus affichés à l'intérieur de `<Navbar>` - il a été téléporté à l'extérieur.
 
-Although the actual HTML is teleported outside, it turns out the Virtual DOM associated with `<Navbar>` maintains a reference to the original component. This means you can use `getComponent` and `findComponent`, which operate on the Virtual DOM, not the regular DOM.
+Bien que le HTML réel soit téléporté à l'extérieur, il semble que le DOM virtuel associé à `<Navbar>` maintienne une référence au composant d'origine. Cela signifie que vous pouvez utiliser `getComponent` et `findComponent`, qui fonctionnent sur le DOM virtuel, pas sur le DOM régulier.
 
 ```ts {12}
 beforeEach(() => {
   // ...
-})
+});
 
 afterEach(() => {
   // ...
-})
+});
 
 test('teleport', async () => {
-  const wrapper = mount(Navbar)
+  const wrapper = mount(Navbar);
 
-  wrapper.getComponent(Signup) // got it!
-})
+  wrapper.getComponent(Signup); // le composant est bien récupéré ici !
+});
 ```
 
-`getComponent` returns a `VueWrapper`. Now you can use methods like `get`, `find` and `trigger`.
+`getComponent` retourne un `VueWrapper`. Maintenant, vous pouvez utiliser des méthodes telles que `get`, `find` et `trigger`.
 
-Let's finish the test:
+Finissons le test :
 
 ```ts {4-8}
 test('teleport', async () => {
-  const wrapper = mount(Navbar)
+  const wrapper = mount(Navbar);
 
-  const signup = wrapper.getComponent(Signup)
-  await signup.get('input').setValue('valid_username')
-  await signup.get('form').trigger('submit.prevent')
+  const signup = wrapper.getComponent(Signup);
+  await signup.get('input').setValue('nom_d_utilisateur_valide');
+  await signup.get('form').trigger('submit.prevent');
 
-  expect(signup.emitted().signup[0]).toEqual(['valid_username'])
-})
+  expect(signup.emitted().signup[0]).toEqual(['nom_d_utilisateur_valide']);
+});
 ```
 
-It passes!
+Cela fonctionne !
 
-The full test:
+Le test complet :
 
 ```ts
-import { mount } from '@vue/test-utils'
-import Navbar from './Navbar.vue'
-import Signup from './Signup.vue'
+import { mount } from '@vue/test-utils';
+import Navbar from './Navbar.vue';
+import Signup from './Signup.vue';
 
 beforeEach(() => {
-  // create teleport target
-  const el = document.createElement('div')
-  el.id = 'modal'
-  document.body.appendChild(el)
-})
+  // nous crééons la cible de teleport
+  const el = document.createElement('div');
+  el.id = 'modal';
+  document.body.appendChild(el);
+});
 
 afterEach(() => {
-  // clean up
-  document.body.outerHTML = ''
-})
+  // nous nettoyons un peu
+  document.body.outerHTML = '';
+});
 
 test('teleport', async () => {
-  const wrapper = mount(Navbar)
+  const wrapper = mount(Navbar);
 
-  const signup = wrapper.getComponent(Signup)
-  await signup.get('input').setValue('valid_username')
-  await signup.get('form').trigger('submit.prevent')
+  const signup = wrapper.getComponent(Signup);
+  await signup.get('input').setValue('nom_d_utilisateur_valide');
+  await signup.get('form').trigger('submit.prevent');
 
-  expect(signup.emitted().signup[0]).toEqual(['valid_username'])
-})
+  expect(signup.emitted().signup[0]).toEqual(['nom_d_utilisateur_valide']);
+});
 ```
 
 ## Conclusion
 
-- Create a teleport target with `document.createElement`.
-- Find teleported components using `getComponent` or `findComponent` which operate on the Virtual DOM level.
+- Créez une cible de téléportation avec `document.createElement`.
+- Trouvez les composants téléportés à l'aide de `getComponent` ou `findComponent` qui fonctionnent au niveau du DOM virtuel.

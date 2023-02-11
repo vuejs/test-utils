@@ -69,7 +69,7 @@ const frLocaleConfig: DefaultTheme.LocaleConfig & Omit<DefaultTheme.Config, "loc
         { text: 'Tester Vue Router', link: '/fr/guide/advanced/vue-router' },
         { text: 'Tester Teleport', link: '/fr/guide/advanced/teleport' },
         {
-          text: 'Stubs and Shallow Mount',
+          text: 'Composants de Substitution (Stubs) et Montage Partiel',
           link: '/fr/guide/advanced/stubs-shallow-mount'
         }
       ]

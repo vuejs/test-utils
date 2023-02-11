@@ -1,121 +1,121 @@
-# Testing Vue Router
+# Tester Vue Router
 
-This article will present two ways to test an application using Vue Router:
+Cet article présentera deux façons de tester une application en utilisant Vue Router :
 
-1. Using the real Vue Router, which is more production like but also may lead to complexity when testing larger applications
-2. Using a mocked router, allowing for more fine grained control of the testing environment.
+1. En utilisant le Vue Router réel, qui est plus proche de la production, mais peut également entraîner de la complexité lors du test d'applications plus importantes.
+2. En utilisant un routeur simulé, permettant un contrôle plus complet de l'environnement de test.
 
-Notice that Vue Test Utils does not provide any special functions to assist with testing components that rely on Vue Router.
+Veuillez noter que Vue Test Utils ne fournit pas de fonctions spéciales pour aider à tester les composants qui dépendent de Vue Router.
 
-## Using a Mocked Router
+## Utiliser un Router Simulé
 
-You can use a mocked router to avoid caring about the implementation details of Vue Router in your unit tests.
+Vous pouvez utiliser un routeur simulé pour éviter de vous préoccuper des détails d'implémentation de Vue Router dans vos tests unitaires.
 
-Instead of using a real Vue Router instance, we can create a mock version which only implements the features we are interested in. We can do this using a combination of `jest.mock` (if you are using Jest), and `global.components`.
+Au lieu d'utiliser une instance réelle de Vue Router, nous pouvons créer une version simulée qui ne met en œuvre que les fonctionnalités qui nous intéressent. Nous pouvons le faire en utilisant une combinaison de `jest.mock` (si vous utilisez Jest) et de `global.components`.
 
-When we mock out a dependency, it's usually because **we are not interested in testing its behavior**. We don't want to test clicking `<router-link>` navigates to the correct page - of course it does! We might be interested in ensuring that the `<a>` has the correct `to` attribute, though.
+Lorsque nous simulons une dépendance, c'est généralement parce que **nous ne sommes pas intéressés par le test de son comportement**. Nous ne voulons pas tester si le clic sur `<router-link>` redirige vers la bonne page - nous savons déjà que c'est le cas ! Nous pourrions plutôt être intéressés par la vérification que la balise `<a>` possède un attribut `to` correct.
 
-Let's see a more realistic example! This component shows a button that will redirect an authenticated user to the edit post page (based on the current route parameters). An unauthenticated user should be redirected to a `/404` route.
+Regardons un exemple plus réaliste ! Ce composant affiche un bouton qui redirigera un utilisateur authentifié vers la page d'édition de publication (en fonction des paramètres de la route actuelle). Un utilisateur non authentifié devrait être redirigé vers une route `/404`.
 
 ```js
 const Component = {
-  template: `<button @click="redirect">Click to Edit</button>`,
+  template: `<button @click="redirect">Cliquer pour éditer</button>`,
   props: ['isAuthenticated'],
   methods: {
     redirect() {
       if (this.isAuthenticated) {
-        this.$router.push(`/posts/${this.$route.params.id}/edit`)
+        this.$router.push(`/posts/${this.$route.params.id}/edit`);
       } else {
-        this.$router.push('/404')
+        this.$router.push('/404');
       }
-    }
-  }
-}
+    },
+  },
+};
 ```
 
-We could use a real router, then navigate to the correct route for this component, then after clicking the button assert that the correct page is rendered... however, this is a lot of setup for a relatively simple test. At its core, the test we want to write is "if authenticated, redirect to X, otherwise redirect to Y". Let's see how we might accomplish this by mocking the routing using the `global.mocks` property:
+Nous pourrions utiliser un routeur réel, puis naviguer jusqu'à la route correcte pour ce composant, et, après avoir cliqué sur le bouton, vérifier que la bonne page est affichée... cependant, cela nécessite beaucoup de configuration pour un test relativement simple. Au fond, le test que nous voulons écrire est "si authentifié, rediriger vers X, sinon rediriger vers Y". Voyons comment nous pourrions accomplir cela en simulant le routage en utilisant la propriété `global.mocks` :
 
 ```js
 import { mount } from '@vue/test-utils';
 
-test('allows authenticated user to edit a post', async () => {
+test('autorise un utilisateur authentifié d\'éditer une publication', async () => {
   const mockRoute = {
     params: {
-      id: 1
-    }
-  }
+      id: 1,
+    },
+  };
   const mockRouter = {
-    push: jest.fn()
-  }
+    push: jest.fn(),
+  };
 
   const wrapper = mount(Component, {
     props: {
-      isAuthenticated: true
+      isAuthenticated: true,
     },
     global: {
       mocks: {
         $route: mockRoute,
-        $router: mockRouter
-      }
-    }
-  })
+        $router: mockRouter,
+      },
+    },
+  });
 
-  await wrapper.find('button').trigger('click')
+  await wrapper.find('button').trigger('click');
 
-  expect(mockRouter.push).toHaveBeenCalledTimes(1)
-  expect(mockRouter.push).toHaveBeenCalledWith('/posts/1/edit')
-})
+  expect(mockRouter.push).toHaveBeenCalledTimes(1);
+  expect(mockRouter.push).toHaveBeenCalledWith('/posts/1/edit');
+});
 
-test('redirect an unauthenticated user to 404', async () => {
+test('redirige un utilisateur non authentifié sur 404', async () => {
   const mockRoute = {
     params: {
-      id: 1
-    }
-  }
+      id: 1,
+    },
+  };
   const mockRouter = {
-    push: jest.fn()
-  }
+    push: jest.fn(),
+  };
 
   const wrapper = mount(Component, {
     props: {
-      isAuthenticated: false
+      isAuthenticated: false,
     },
     global: {
       mocks: {
         $route: mockRoute,
-        $router: mockRouter
-      }
-    }
-  })
+        $router: mockRouter,
+      },
+    },
+  });
 
-  await wrapper.find('button').trigger('click')
+  await wrapper.find('button').trigger('click');
 
-  expect(mockRouter.push).toHaveBeenCalledTimes(1)
-  expect(mockRouter.push).toHaveBeenCalledWith('/404')
-})
+  expect(mockRouter.push).toHaveBeenCalledTimes(1);
+  expect(mockRouter.push).toHaveBeenCalledWith('/404');
+});
 ```
 
-We used `global.mocks` to provide the necessary dependencies (`this.$route` and `this.$router`) to set an ideal state for each test.
+Nous avons utilisé `global.mocks` pour fournir les dépendances nécessaires (`this.$route` et `this.$router`) pour définir un état idéal pour chaque test.
 
-We were then able to use `jest.fn()` to monitor how many times, and with which arguments, `this.$router.push` was called with. Best of all, we don't have to deal with the complexity or caveats of Vue Router in our test! We were only concerned with testing the app logic.
+Nous avons ensuite pu utiliser `jest.fn()` pour surveiller combien de fois et avec quels arguments `this.$router.push` a été appelé. Le plus important, c'est que nous n'avons pas à gérer la complexité de Vue Router dans notre test ! Nous nous sommes seulement occupés du test de la logique de l'application.
 
 :::tip
-You might want to test the entire system in an end-to-end manner. You could consider a framework like [Cypress](https://www.cypress.io/) for full system tests using a real browser.
+Il se peut que vous souhaitiez tester l'ensemble du système de manière bout-en-bout. Vous pourriez considérer un framework comme [Cypress](https://www.cypress.io/) pour des tests système complets en utilisant un véritable navigateur.
 :::
 
-## Using a Real Router
+## Utiliser un Router Réel
 
-Now we have seen how to use a mocked router, let's take a look at using the real Vue Router.
+Maintenant que nous avons vu comment utiliser un routeur simulé, examinons l'utilisation du véritable Vue Router.
 
-Let's create a basic blogging application that uses Vue Router. The posts are listed on the `/posts` route:
+Créons une application de blog basique qui utilise Vue Router. Les articles sont répertoriés sur la route `/posts` :
 
 ```js
 const App = {
   template: `
-    <router-link to="/posts">Go to posts</router-link>
+    <router-link to="/posts">Aller aux publications</router-link>
     <router-view />
-  `
-}
+  `,
+};
 
 const Posts = {
   template: `
@@ -128,30 +128,30 @@ const Posts = {
   `,
   data() {
     return {
-      posts: [{ id: 1, name: 'Testing Vue Router' }]
-    }
-  }
-}
+      posts: [{ id: 1, name: 'Tester Vue Router' }],
+    };
+  },
+};
 ```
 
-The root of the app displays a `<router-link>` leading to `/posts`, where we list the posts.
+La racine de l'application affiche un `<router-link>` menant à `/posts`, où nous listons les articles.
 
-The real router looks like this. Notice that we're exporting the routes separately from the route, so that we can instantiate a new router for each individual test later.
+Le véritable routeur ressemble à ceci. Remarquez que nous exportons les routes séparément du routeur, de sorte que nous puissions instancier un nouveau routeur pour chaque test individuel plus tard.
 
 ```js
-import { createRouter, createWebHistory } from 'vue-router'
+import { createRouter, createWebHistory } from 'vue-router';
 
 const routes = [
   {
     path: '/',
     component: {
-      template: 'Welcome to the blogging app'
-    }
+      template: 'Bienvenue sur le blog',
+    },
   },
   {
     path: '/posts',
-    component: Posts
-  }
+    component: Posts,
+  },
 ];
 
 const router = createRouter({
@@ -164,18 +164,18 @@ export { routes };
 export default router;
 ```
 
-The best way to illustrate how to test an app using Vue Router is to let the warnings guide us. The following minimal test is enough to get us going:
+La meilleure façon d'illustrer comment tester une application à l'aide de Vue Router est de laisser les avertissements (`warnings`) nous guider. Le test minimal suivant suffit pour nous lancer :
 
 ```js
-import { mount } from '@vue/test-utils'
+import { mount } from '@vue/test-utils';
 
 test('routing', () => {
-  const wrapper = mount(App)
-  expect(wrapper.html()).toContain('Welcome to the blogging app')
-})
+  const wrapper = mount(App);
+  expect(wrapper.html()).toContain('Bienvenue sur le blog');
+});
 ```
 
-The test fails. It also prints two warnings:
+Le test échoue. Il affiche également deux `warnings` :
 
 ```bash
 console.warn node_modules/@vue/runtime-core/dist/runtime-core.cjs.js:39
@@ -185,97 +185,97 @@ console.warn node_modules/@vue/runtime-core/dist/runtime-core.cjs.js:39
   [Vue warn]: Failed to resolve component: router-view
 ```
 
-The `<router-link>` and `<router-view>` component are not found. We need to install Vue Router! Since Vue Router is a plugin, we install it using the `global.plugins` mounting option:
+Les composants `<router-link>` et `<router-view>` ne sont pas trouvés. Nous devons installer Vue Router ! Comme Vue Router est un plugin, nous l'installons en utilisant l'option de `mount` : `global.plugins` :
 
 ```js {10,11,12}
-import { mount } from '@vue/test-utils'
-import { createRouter, createWebHistory } from 'vue-router'
-import { routes } from "@/router" // This import should point to your routes file declared above
+import { mount } from '@vue/test-utils';
+import { createRouter, createWebHistory } from 'vue-router';
+import { routes } from "@/router"; // Cet import devrait pointer vers votre fichier de configuration des routes.
 
 const router = createRouter({
   history: createWebHistory(),
   routes: routes,
-})
+});
 
 test('routing', () => {
   const wrapper = mount(App, {
     global: {
-      plugins: [router]
-    }
-  })
-  expect(wrapper.html()).toContain('Welcome to the blogging app')
-})
+      plugins: [router],
+    },
+  });
+  expect(wrapper.html()).toContain('Bienvenue sur le blog');
+});
 ```
 
-Those two warnings are now gone - but now we have another warning:
+Les deux `warnings` sont maintenant résolus - mais nous en avons maintenant un nouveau :
 
-```js
+```bash
 console.warn node_modules/vue-router/dist/vue-router.cjs.js:225
   [Vue Router warn]: Unexpected error when starting the router: TypeError: Cannot read property '_history' of null
 ```
 
-Although it's not entirely clear from the warning, it's related to the fact that **Vue Router 4 handles routing asynchronously**.
+Le `warning` n'est pas très explicite. En fait, cela est lié au fait que **Vue Router 4 gère le routage de manière asynchrone**.
 
-Vue Router provides an `isReady` function that tell us when router is ready. We can then `await` it to ensure the initial navigation has happened.
+Vue Router fournit une fonction `isReady` qui nous informe lorsque le routeur est prêt. Nous pouvons alors l'`await` pour nous assurer que la navigation initiale a eu lieu.
 
 ```js {11,12}
-import { mount } from '@vue/test-utils'
-import { createRouter, createWebHistory } from 'vue-router'
-import { routes } from "@/router"
+import { mount } from '@vue/test-utils';
+import { createRouter, createWebHistory } from 'vue-router';
+import { routes } from "@/router";
 
 const router = createRouter({
   history: createWebHistory(),
   routes: routes,
-})
+});
 
 test('routing', async () => {
-  router.push('/')
+  router.push('/');
 
-  // After this line, router is ready
-  await router.isReady()
+  // Après cette ligne, le router est prêt
+  await router.isReady();
 
   const wrapper = mount(App, {
     global: {
-      plugins: [router]
-    }
-  })
-  expect(wrapper.html()).toContain('Welcome to the blogging app')
-})
+      plugins: [router],
+    },
+  });
+  expect(wrapper.html()).toContain('Bienvenue sur le blog');
+});
 ```
 
-The test is now passing! It was quite a bit of work, but now we make sure the application is properly navigating to the initial route.
+Le test passe maintenant ! Cela a été assez laborieux, mais désormais nous nous assurons que l'application navigue correctement vers la route initiale.
 
-Now let's navigate to `/posts` and make sure the routing is working as expected:
+Maintenant, allons sur `/posts` et assurons-nous que le routage fonctionne comme prévu :
 
 ```js {19,20}
-import { mount } from '@vue/test-utils'
-import { createRouter, createWebHistory } from 'vue-router'
-import { routes } from "@/router"
+import { mount } from '@vue/test-utils';
+import { createRouter, createWebHistory } from 'vue-router';
+import { routes } from "@/router";
 
 const router = createRouter({
   history: createWebHistory(),
   routes: routes,
-})
+});
 
 test('routing', async () => {
-  router.push('/')
-  await router.isReady()
+  router.push('/');
+  await router.isReady();
 
   const wrapper = mount(App, {
     global: {
-      plugins: [router]
-    }
-  })
-  expect(wrapper.html()).toContain('Welcome to the blogging app')
+      plugins: [router],
+    },
+  });
+  expect(wrapper.html()).toContain('Bienvenue sur le blog');
 
-  await wrapper.find('a').trigger('click')
-  expect(wrapper.html()).toContain('Testing Vue Router')
-})
+  await wrapper.find('a').trigger('click');
+  expect(wrapper.html()).toContain('Tester Vue Router');
+});
 ```
 
-Again, another somewhat cryptic error:
+Encore une fois, une erreur assez difficile à comprendre :
 
-```js
+```bash
 console.warn node_modules/@vue/runtime-core/dist/runtime-core.cjs.js:39
   [Vue warn]: Unhandled error during execution of native event handler
     at <RouterLink to="/posts" >
@@ -284,176 +284,175 @@ console.error node_modules/@vue/runtime-core/dist/runtime-core.cjs.js:211
   TypeError: Cannot read property '_history' of null
 ```
 
-Again, due to Vue Router 4's new asynchronous nature, we need to `await` the routing to complete before making any assertions.
+Encore une fois, en raison de la nature asynchrone de Vue Router 4, nous devons `await` la navigation pour être terminée avant de faire des vérifications.
 
-In this case, however, there is no _hasNavigated_ hook we can await on. One alternative is to use the `flushPromises` function exported from Vue Test Utils:
+Cependant, il n'y a pas de `hook` `hasNavigated` sur lequel nous pouvons attendre. Une alternative est d'utiliser la fonction `flushPromises` exportée de Vue Test Utils :
 
 ```js {1,20}
-import { mount, flushPromises } from '@vue/test-utils'
-import { createRouter, createWebHistory } from 'vue-router'
-import { routes } from "@/router"
+import { mount, flushPromises } from '@vue/test-utils';
+import { createRouter, createWebHistory } from 'vue-router';
+import { routes } from "@/router";
 
 const router = createRouter({
   history: createWebHistory(),
   routes: routes,
-})
+});
 
 test('routing', async () => {
-  router.push('/')
-  await router.isReady()
+  router.push('/');
+  await router.isReady();
 
   const wrapper = mount(App, {
     global: {
-      plugins: [router]
-    }
-  })
-  expect(wrapper.html()).toContain('Welcome to the blogging app')
+      plugins: [router],
+    },
+  });
+  expect(wrapper.html()).toContain('Welcome to the blogging app');
 
-  await wrapper.find('a').trigger('click')
-  await flushPromises()
-  expect(wrapper.html()).toContain('Testing Vue Router')
-})
+  await wrapper.find('a').trigger('click');
+  await flushPromises();
+  expect(wrapper.html()).toContain('Testing Vue Router');
+});
 ```
 
-It _finally_ passes. Great! This is all very manual, however - and this is for a tiny, trivial app. This is the reason using a mocked router is a common approach when testing Vue components using Vue Test Utils. In case you prefer to keep using a real router, keep in mind that each test should use it's own instance of the router like so:
+Cela passe enfin. Super ! Cependant, c'est très manuel - et cela concerne une petite application triviale. C'est pour cette raison que l'utilisation d'un routeur simulé est une approche courante lors des tests de composants Vue avec Vue Test Utils. Si vous préférez continuer à utiliser un routeur réel, gardez à l'esprit que chaque test doit utiliser son propre instance du routeur de cette manière :
 
 ```js {1,20}
-import { mount, flushPromises } from '@vue/test-utils'
-import { createRouter, createWebHistory } from 'vue-router'
-import { routes } from "@/router"
+import { mount, flushPromises } from '@vue/test-utils';
+import { createRouter, createWebHistory } from 'vue-router';
+import { routes } from "@/router";
 
 let router;
 beforeEach(async () => {
   router = createRouter({
     history: createWebHistory(),
     routes: routes,
-  })
+  });
 });
 
 test('routing', async () => {
-  router.push('/')
-  await router.isReady()
+  router.push('/');
+  await router.isReady();
 
   const wrapper = mount(App, {
     global: {
-      plugins: [router]
-    }
-  })
-  expect(wrapper.html()).toContain('Welcome to the blogging app')
+      plugins: [router],
+    },
+  });
+  expect(wrapper.html()).toContain('Bienvenue sur le blog');
 
-  await wrapper.find('a').trigger('click')
-  await flushPromises()
-  expect(wrapper.html()).toContain('Testing Vue Router')
+  await wrapper.find('a').trigger('click');
+  await flushPromises();
+  expect(wrapper.html()).toContain('Tester Vue Router');
 })
 ```
 
-## Using a mocked router with Composition API
+## Utiliser un Router Simulé avec l'API de Composition
 
-Vue router 4 allows for working with the router and route inside the `setup` function with the composition API.
+Vue Router 4 permet de travailler avec le routeur et les routes à l'intérieur de la fonction `setup` avec l'API de Composition.
 
-Consider the same demo component rewritten using the composition API.
+Considérons le même composant démo réécrit en utilisant l'API de Composition.
 
 ```js
-import { useRouter, useRoute } from 'vue-router'
+import { useRouter, useRoute } from 'vue-router';
 
 const Component = {
-  template: `<button @click="redirect">Click to Edit</button>`,
+  template: `<button @click="redirect">Cliquer pour éditer</button>`,
   props: ['isAuthenticated'],
   setup (props) {
-    const router = useRouter()
-    const route = useRoute()
+    const router = useRouter();
+    const route = useRoute();
 
     const redirect = () => {
       if (props.isAuthenticated) {
-        router.push(`/posts/${route.params.id}/edit`)
+        router.push(`/posts/${route.params.id}/edit`);
       } else {
-        router.push('/404')
+        router.push('/404');
       }
-    }
+    };
 
     return {
-      redirect
-    }
-  }
-}
+      redirect,
+    };
+  },
+};
 ```
 
-This time in order to test the component, we will use jest's ability to mock an imported resource, `vue-router` and mock both the router and route directly.
+Cette fois, pour tester le composant, nous utiliserons la capacité de Jest à simuler une ressource importée, `vue-router`, et simulerons directement le routeur et la route.
 
 ```js
-import { useRouter, useRoute } from 'vue-router'
+import { useRouter, useRoute } from 'vue-router';
 
 jest.mock('vue-router', () => ({
   useRoute: jest.fn(),
   useRouter: jest.fn(() => ({
-    push: () => {}
-  }))
-}))
+    push: () => {},
+  })),
+}));
 
-test('allows authenticated user to edit a post', () => {
+test('autorise un utilisateur authentifié à éditer une publication', async() => {
   useRoute.mockImplementationOnce(() => ({
     params: {
-      id: 1
-    }
-  }))
+      id: 1,
+    },
+  }));
 
-  const push = jest.fn()
+  const push = jest.fn();
   useRouter.mockImplementationOnce(() => ({
-    push
-  }))
+    push,
+  }));
 
   const wrapper = mount(Component, {
     props: {
-      isAuthenticated: true
+      isAuthenticated: true,
     },
     global: {
-      stubs: ["router-link", "router-view"], // Stubs for router-link and router-view in case they're rendered in your template
-    }
-  })
+      stubs: ["router-link", "router-view"], // Composants de remplacement (`Stubs`) pour router-link et router-view au cas où ils sont affichés dans notre composant
+    },
+  });
 
-  await wrapper.find('button').trigger('click')
+  await wrapper.find('button').trigger('click');
 
-  expect(push).toHaveBeenCalledTimes(1)
-  expect(push).toHaveBeenCalledWith('/posts/1/edit')
+  expect(push).toHaveBeenCalledTimes(1);
+  expect(push).toHaveBeenCalledWith('/posts/1/edit');
 })
 
-test('redirect an unauthenticated user to 404', () => {
+test('redirige un utilisateur non authentifié vers la page 404', async() => {
   useRoute.mockImplementationOnce(() => ({
     params: {
-      id: 1
-    }
-  }))
+      id: 1,
+    },
+  }));
 
-  const push = jest.fn()
+  const push = jest.fn();
   useRouter.mockImplementationOnce(() => ({
-    push
-  }))
+    push,
+  }));
 
   const wrapper = mount(Component, {
     props: {
-      isAuthenticated: false
-    }
+      isAuthenticated: false,
+    },
     global: {
-      stubs: ["router-link", "router-view"], // Stubs for router-link and router-view in case they're rendered in your template
-    }
-  })
+      stubs: ["router-link", "router-view"], // Composants de remplacement (`Stubs`) pour router-link et router-view au cas où ils sont affichés dans notre composant
+    },
+  });
 
-  await wrapper.find('button').trigger('click')
+  await wrapper.find('button').trigger('click');
 
-  expect(push).toHaveBeenCalledTimes(1)
-  expect(push).toHaveBeenCalledWith('/404')
-})
+  expect(push).toHaveBeenCalledTimes(1);
+  expect(push).toHaveBeenCalledWith('/404');
+});
 ```
 
-## Using a real router with Composition API
+## Utiliser un Router Réel avec l'API de Composition
 
-Using a real router with Composition API works the same as using a real router with Options API. Keep in mind that, just as is the case with Options API, it's considered
-a good practice to instantiate a new router object for each test, instead of importing the router directly from your app.
+En utilisant un routeur réel avec l'API de Composition, cela fonctionne de la même manière qu'en utilisant un routeur réel avec l'API d'options. Gardez à l'esprit que, tout comme avec l'API d'options, il est considéré comme une bonne pratique d'instancier un nouvel objet de routeur pour chaque test, au lieu d'importer directement le routeur depuis votre application.
 
 ```js
-import { mount } from '@vue/test-utils'
-import { createRouter, createWebHistory } from 'vue-router'
-import { routes } from "@/router"
+import { mount } from '@vue/test-utils';
+import { createRouter, createWebHistory } from 'vue-router';
+import { routes } from "@/router";
 
 let router;
 
@@ -461,36 +460,36 @@ beforeEach(async () => {
   router = createRouter({
     history: createWebHistory(),
     routes: routes,
-  })
+  });
 
-  router.push('/')
-  await router.isReady()
+  router.push('/');
+  await router.isReady();
 });
 
-test('allows authenticated user to edit a post', async () => {
+test('autorise un utilisateur authentifié à éditer une publication', async () => {
   const wrapper = mount(Component, {
     props: {
-      isAuthenticated: true
+      isAuthenticated: true,
     },
     global: {
       plugins: [router],
-    }
-  })
+    },
+  });
 
-  const push = jest.spyOn(router, 'push')
-  await wrapper.find('button').trigger('click')
+  const push = jest.spyOn(router, 'push');
+  await wrapper.find('button').trigger('click');
 
-  expect(push).toHaveBeenCalledTimes(1)
-  expect(push).toHaveBeenCalledWith('/posts/1/edit')
-})
+  expect(push).toHaveBeenCalledTimes(1);
+  expect(push).toHaveBeenCalledWith('/posts/1/edit');
+});
 ```
 
-For those who prefer a non-manual approach, the library [vue-router-mock](https://github.com/posva/vue-router-mock) created by Posva is also available as an alternative.
+La bibliothèque [vue-router-mock](https://github.com/posva/vue-router-mock) créée par Posva est également disponible en tant qu'alternative pour ceux qui préfèrent une approche non manuelle.
 
 ## Conclusion
 
-- You can use a real router instance in your tests.
-- There are some caveats, though: Vue Router 4 is asynchronous, and we need to take it into account when writing tests.
-- For more complex applications, consider mocking the router dependency and focus on testing the underlying logic.
-- Make use of your test runner's stubbing/mocking functionality where possible.
-- Use `global.mocks` to mock global dependencies, such as `this.$route` and `this.$router`.
+- Vous pouvez utiliser une instance de routeur réelle dans vos tests.
+- Cependant, il y a quelques avertissements à prendre en compte : Vue Router 4 est asynchrone et nous devons en tenir compte lors de l'écriture de tests.
+- Pour les applications plus complexes, considérez la simulation de la dépendance du routeur et concentrez-vous sur le test de la logique sous-jacente.
+- Utilisez la fonctionnalité de simulation (`mocking`) de votre exécuteur de tests si possible.
+- Utilisez `global.mocks` pour simuler les dépendances globales, telles que `this.$route` et `this.$router`.

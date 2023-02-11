@@ -24,7 +24,7 @@ interface MountingOptions<Props, Data = {}> {
 function mount(Component, options?: MountingOptions): VueWrapper
 ```
 
-**Usage :**
+**Utilisation :**
 
 `mount` est la méthode principale exposée par Vue Test Utils. Elle crée une application Vue 3 qui contient et rend le composant en cours de test. En retour, il crée un wrapper pour agir et vérifier le comportement du composant.
 
@@ -75,7 +75,7 @@ Spécifie le nœud pour monter le composant dessus.
 attachTo?: HTMLElement | string
 ```
 
-**Usage :**
+**Utilisation :**
 
 Peut être un sélecteur CSS valide ou un [`Element`](https://developer.mozilla.org/fr-FR/docs/Web/API/Element) connecté au document.
 
@@ -124,7 +124,7 @@ Définie les attributs HTML d'un composant.
 attrs?: Record<string, unknown>
 ```
 
-**Usage :**
+**Utilisation :**
 
 `Component.spec.js`:
 
@@ -178,7 +178,7 @@ Remplace la `data` par défaut d'un composant. Doit être une fonction.
 data?: () => {} extends Data ? any : Data extends object ? Partial<Data> : any
 ```
 
-**Usage :**
+**Utilisation :**
 
 `Component.vue`
 
@@ -227,7 +227,7 @@ Définie les `props` d'un composant lorsqu'il est monté.
 props?: (RawProps & Props) | ({} extends Props ? null : never)
 ```
 
-**Usage :**
+**Utilisation :**
 
 `Component.vue`:
 
@@ -277,7 +277,7 @@ type Slot = VNode | string | { render: Function } | Function | Component
 slots?: { [key: string]: Slot } & { default?: Slot }
 ```
 
-**Usage :**
+**Utilisation :**
 
 Les `slots` peuvent être une `string` ou toute définition de composant valide importée d'un fichier `.vue` ou directement fourni.
 
@@ -350,7 +350,7 @@ Enregistre les composants de manière globale pour le composant monté.
 components?: Record<string, Component | object>
 ```
 
-**Usage :**
+**Utilisation :**
 
 `Component.vue`:
 
@@ -420,7 +420,7 @@ Enregistre une [directive](https://v3.vuejs.org/api/directives.html#directives) 
 directives?: Record<string, Directive>
 ```
 
-**Usage :**
+**Utilisation :**
 
 `Component.spec.js`:
 
@@ -454,7 +454,7 @@ Enregistre un [mixin](https://v3.vuejs.org/guide/mixins.html) de manière global
 mixins?: ComponentOptions[]
 ```
 
-**Usage :**
+**Utilisation :**
 
 `Component.spec.js`:
 
@@ -481,7 +481,7 @@ Simule une propriété d'instance globale. Peut être utilisé pour simuler `thi
 mocks?: Record<string, any>
 ```
 
-**Usage :**
+**Utilisation :**
 
 ::: warning
 Ceci est conçu pour simuler des variables injectées par des plugins tiers, pas les propriétés natives de Vue telles que `$root`, `$children`, etc.
@@ -540,7 +540,7 @@ Installe des plugins sur le composant monté.
 plugins?: (Plugin | [Plugin, ...any[]])[]
 ```
 
-**Usage :**
+**Utilisation :**
 
 `Component.spec.js`:
 
@@ -586,7 +586,7 @@ Fournit de la data à destination de la fonction `setup` via `inject`.
 provide?: Record<any, any>
 ```
 
-**Usage :**
+**Utilisation :**
 
 `Component.vue`:
 
@@ -657,7 +657,7 @@ Affiche le contenu du`slot default`, même en utilisant `shallow` ou `shallowMou
 renderStubDefaultSlot?: boolean
 ```
 
-**Usage :**
+**Utilisation :**
 
 **false** par défaut.
 
@@ -721,9 +721,9 @@ Définit un composant de remplacement (`stub`) global sur le composant monté.
 stubs?: Record<any, any>
 ```
 
-**Usage :**
+**Utilisation :**
 
-It stubs `Transition` and `TransitionGroup` by default.
+Substitue `Transition` et `TransitionGroup` par défaut.
 
 `Component.vue`:
 
@@ -733,59 +733,59 @@ It stubs `Transition` and `TransitionGroup` by default.
 </template>
 
 <script>
-import Foo from '@/Foo.vue'
+import Foo from '@/Foo.vue';
 
 export default {
-  components: { Foo }
-}
+  components: { Foo },
+};
 </script>
 ```
 
 `Component.spec.js`:
 
 ```js
-import { mount } from '@vue/test-utils'
-import Component from './Component.vue'
+import { mount } from '@vue/test-utils';
+import Component from './Component.vue';
 
-test('global.stubs using array syntax', () => {
+test('global.stubs en utilisant la syntaxe en tableau', () => {
   const wrapper = mount(Component, {
     global: {
-      stubs: ['Foo']
-    }
+      stubs: ['Foo'],
+    },
   });
 
-  expect(wrapper.html()).toEqual('<div><foo-stub></div>')
+  expect(wrapper.html()).toEqual('<div><foo-stub></div>');
 });
 
-test('global.stubs using object syntax', () => {
+test('global.stubs en utilisant la syntaxe en objet', () => {
   const wrapper = mount(Component, {
     global: {
-      stubs: { Foo: true }
-    }
+      stubs: { Foo: true },
+    },
   });
 
-  expect(wrapper.html()).toEqual('<div><foo-stub></div>')
+  expect(wrapper.html()).toEqual('<div><foo-stub></div>');
 });
 
-test('global.stubs using a custom component', () => {
+test('global.stubs en utilisant un composant personnalisé', () => {
   const CustomStub = {
     name: 'CustomStub',
-    template: '<p>custom stub content</p>'
+    template: '<p>Contenu personnalisé du composant de substitution</p>',
   }
 
   const wrapper = mount(Component, {
     global: {
-      stubs: { Foo: CustomStub }
-    }
+      stubs: { Foo: CustomStub },
+    },
   });
 
-  expect(wrapper.html()).toEqual('<div><p>custom stub content</p></div>')
+  expect(wrapper.html()).toEqual('<div><p>Contenu personnalisé du composant de substitution</p></div>');
 });
 ```
 
 ### shallow
 
-Stubs out all child components from the component.
+Substitue tous les composants enfants du composant.
 
 **Signature :**
 
@@ -793,9 +793,9 @@ Stubs out all child components from the component.
 shallow?: boolean
 ```
 
-**Usage :**
+**Utilisation :**
 
-Defaults to **false**.
+**false** par défaut.
 
 `Component.vue`
 
@@ -810,39 +810,39 @@ export default {
   components: {
     AComponent,
     AnotherComponent
-  }
-}
+  },
+};
 </script>
 ```
 
 `Component.spec.js`
 
 ```js
-import { mount } from '@vue/test-utils'
-import Component from './Component.vue'
+import { mount } from '@vue/test-utils';
+import Component from './Component.vue';
 
 test('shallow', () => {
   const wrapper = mount(Component, { shallow: true });
 
   expect(wrapper.html()).toEqual(
-    `<a-component-stub></a-component-stub><another-component></another-component>`
-  )
-}
+    `<a-component-stub></a-component-stub><another-component></another-component>`,
+  );
+});
 ```
 
 ::: tip
-`shallowMount()` is an alias to mounting a component with `shallow: true`.
+Utiliser `shallowMount()` revient à monter un composant avec l'option `shallow: true`.
 :::
 
-## Wrapper methods
+## Méthodes de Wrapper
 
-When you use `mount`, a `VueWrapper` is returned with a number of useful methods for testing. A `VueWrapper` is a thin wrapper around your component instance.
+Lorsque vous utilisez `mount`, un `VueWrapper` est retourné avec un certain nombre de méthodes utiles pour les tests. Un `VueWrapper` est une enveloppe autour de votre instance de composant.
 
-Notice that methods like `find` return a `DOMWrapper`, which is a thin wrapper around the DOM nodes in your component and its children. Both implement a similar API.
+Notez que des méthodes telles que `find` retournent un `DOMWrapper`, qui est une enveloppe autour des nœuds DOM dans votre composant et ses enfants. Les deux implémentent une API similaire.
 
 ### attributes
 
-Returns attributes on a DOM node.
+Retourne les attributs d'un nœud du DOM.
 
 **Signature :**
 
@@ -852,7 +852,7 @@ attributes(key: string): string
 attributes(key?: string): { [key: string]: string } | string
 ```
 
-**Usage :**
+**Utilisation :**
 
 `Component.vue`:
 
@@ -865,24 +865,24 @@ attributes(key?: string): { [key: string]: string } | string
 export default {
   data() {
     return {
-      className: 'bar'
-    }
-  }
-}
+      className: 'bar',
+    };
+  },
+};
 </script>
 ```
 
 `Component.spec.js`:
 
 ```js
-import { mount } from '@vue/test-utils'
-import Component from './Component.vue'
+import { mount } from '@vue/test-utils';
+import Component from './Component.vue';
 
-test('attributes', () => {
-  const wrapper = mount(Component)
+test('attributs', () => {
+  const wrapper = mount(Component);
 
-  expect(wrapper.attributes('id')).toBe('foo')
-  expect(wrapper.attributes('class')).toBe('bar')
+  expect(wrapper.attributes('id')).toBe('foo');
+  expect(wrapper.attributes('class')).toBe('bar');
 });
 ```
 
@@ -896,9 +896,9 @@ classes(className: string): boolean
 classes(className?: string): string[] | boolean
 ```
 
-**Usage :**
+**Utilisation :**
 
-Returns an array of classes on an element.
+Retourne les classes d'un élément sous la forme d'un tableau.
 
 `Component.vue`:
 
@@ -911,21 +911,21 @@ Returns an array of classes on an element.
 `Component.spec.js`:
 
 ```js
-import { mount } from '@vue/test-utils'
-import Component from './Component.vue'
+import { mount } from '@vue/test-utils';
+import Component from './Component.vue';
 
 test('classes', () => {
   const wrapper = mount(Component)
 
-  expect(wrapper.classes()).toContain('my-span')
-  expect(wrapper.classes('my-span')).toBe(true)
-  expect(wrapper.classes('not-existing')).toBe(false)
+  expect(wrapper.classes()).toContain('my-span');
+  expect(wrapper.classes('my-span')).toBe(true);
+  expect(wrapper.classes('not-existing')).toBe(false);
 });
 ```
 
 ### emitted
 
-Returns all the emitted events from the Component.
+Retourne tous les évènements émis par un Composant.
 
 **Signature :**
 
@@ -935,9 +935,9 @@ emitted<T = unknown>(eventName: string): undefined | T[]
 emitted<T = unknown>(eventName?: string): undefined | T[] | Record<string, T[]>
 ```
 
-**Usage :**
+**Utilisation :**
 
-The arguments are stored in an array, so you can verify which arguments were emitted along with each event.
+Les arguments sont stockés dans un tableau, de sorte que vous pouvez vérifier les arguments qui ont été émis avec chaque événement.
 
 `Component.vue`:
 
@@ -945,34 +945,34 @@ The arguments are stored in an array, so you can verify which arguments were emi
 <script>
 export default {
   created() {
-    this.$emit('greet', 'hello')
-    this.$emit('greet', 'goodbye')
-  }
-}
+    this.$emit('politesse', 'bonjour');
+    this.$emit('politesse', 'au revoir');
+  },
+};
 </script>
 ```
 
 `Component.spec.js`:
 
 ```js
-import { mount } from '@vue/test-utils'
-import Component from './Component.vue'
+import { mount } from '@vue/test-utils';
+import Component from './Component.vue';
 
 test('emitted', () => {
   const wrapper = mount(Component)
 
-  // wrapper.emitted() equals to { greet: [ ['hello'], ['goodbye'] ] }
+  // wrapper.emitted() sera égal à { politesse: [ ['bonjour'], ['au revoir'] ] }
 
-  expect(wrapper.emitted()).toHaveProperty('greet')
-  expect(wrapper.emitted().greet).toHaveLength(2)
-  expect(wrapper.emitted().greet[0]).toEqual(['hello'])
-  expect(wrapper.emitted().greet[1]).toEqual(['goodbye'])
+  expect(wrapper.emitted()).toHaveProperty('politesse');
+  expect(wrapper.emitted().greet).toHaveLength(2);
+  expect(wrapper.emitted().greet[0]).toEqual(['bonjour']);
+  expect(wrapper.emitted().greet[1]).toEqual(['au revoir']);
 });
 ```
 
 ### exists
 
-Verify whether an element exists or not.
+Vérifie si un élément existe ou non.
 
 **Signature :**
 
@@ -980,9 +980,9 @@ Verify whether an element exists or not.
 exists(): boolean
 ```
 
-**Usage :**
+**Utilisation :**
 
-You can use the same syntax `querySelector` implements.
+Nous pouvons utiliser la même syntaxe que `querySelector` implémente.
 
 `Component.vue`:
 
@@ -995,20 +995,20 @@ You can use the same syntax `querySelector` implements.
 `Component.spec.js`:
 
 ```js
-import { mount } from '@vue/test-utils'
-import Component from './Component.vue'
+import { mount } from '@vue/test-utils';
+import Component from './Component.vue';
 
-test('exists', () => {
-  const wrapper = mount(Component)
+test('existe', () => {
+  const wrapper = mount(Component);
 
-  expect(wrapper.find('span').exists()).toBe(true)
-  expect(wrapper.find('p').exists()).toBe(false)
+  expect(wrapper.find('span').exists()).toBe(true);
+  expect(wrapper.find('p').exists()).toBe(false);
 });
 ```
 
 ### find
 
-Finds an element and returns a `DOMWrapper` if one is found.
+Cherche un élément et retourne un `DOMWrapper` si un élément est trouvé.
 
 **Signature :**
 
@@ -1020,9 +1020,9 @@ find(selector: string): DOMWrapper<Element>
 find<T extends Node = Node>(selector: string | RefSelector): DOMWrapper<T>;
 ```
 
-**Usage :**
+**Utilisation :**
 
-You can use the same syntax `querySelector` implements. `find` is basically an alias for `querySelector`. In addition you can search for element refs.
+Vous pouvez utiliser la même syntaxe qu'implémente `querySelector`. `find` est en quelque sorte un alias pour `querySelector`. En plus, vous pouvez rechercher des références d'éléments.
 
 `Component.vue`:
 
@@ -1037,22 +1037,22 @@ You can use the same syntax `querySelector` implements. `find` is basically an a
 `Component.spec.js`:
 
 ```js
-import { mount } from '@vue/test-utils'
-import Component from './Component.vue'
+import { mount } from '@vue/test-utils';
+import Component from './Component.vue';
 
-test('find', () => {
-  const wrapper = mount(Component)
+test('cherche', () => {
+  const wrapper = mount(Component);
 
-  wrapper.find('span') //=> found; returns DOMWrapper
-  wrapper.find('[data-test="span"]') //=> found; returns DOMWrapper
-  wrapper.find({ ref: 'span' }); //=> found; returns DOMWrapper
-  wrapper.find('p') //=> nothing found; returns ErrorWrapper
+  wrapper.find('span') //=> trouvé; retourne DOMWrapper
+  wrapper.find('[data-test="span"]') //=> trouvé; retourne DOMWrapper
+  wrapper.find({ ref: 'span' }); //=> trouvé; retourne DOMWrapper
+  wrapper.find('p') //=> rien de trouvé; retourne ErrorWrapper
 });
 ```
 
 ### findAll
 
-Similar to `find`, but instead returns an array of `DOMWrapper`.
+Similaire à `find`, mais retourne un tableau de `DomWrapper`.
 
 **Signature :**
 
@@ -1063,7 +1063,7 @@ findAll<T extends Element>(selector: string): DOMWrapper<T>[]
 findAll(selector: string): DOMWrapper<Element>[]
 ```
 
-**Usage :**
+**Utilisation :**
 
 `Component.vue`:
 
@@ -1078,20 +1078,20 @@ findAll(selector: string): DOMWrapper<Element>[]
 `Component.spec.js`:
 
 ```js
-import { mount } from '@vue/test-utils'
-import BaseTable from './BaseTable.vue'
+import { mount } from '@vue/test-utils';
+import BaseTable from './BaseTable.vue';
 
-test('findAll', () => {
-  const wrapper = mount(BaseTable)
+test('trouve plusieurs éléments', () => {
+  const wrapper = mount(BaseTable);
 
-  // .findAll() returns an array of DOMWrappers
-  const thirdRow = wrapper.findAll('span')[2]
+  // .findAll() retourne un tableau de DOMWrappers
+  const thirdRow = wrapper.findAll('span')[2];
 });
 ```
 
 ### findComponent
 
-Finds a Vue Component instance and returns a `VueWrapper` if found. Returns `ErrorWrapper` otherwise.
+Trouve une instance de composant Vue et renvoie un `VueWrapper` si trouvé. Renvoie un `ErrorWrapper` sinon.
 
 **Signature :**
 
@@ -1104,16 +1104,16 @@ findComponent<T extends ComponentPublicInstance>(selector: T | FindComponentSele
 findComponent(selector: FindComponentSelector): WrapperLike
 ```
 
-**Usage :**
+**Utilisation :**
 
-`findComponent` supports several syntaxes:
+`findComponent` supporte plusieurs syntaxes :
 
-| syntax         | example                       | details                                                      |
-| -------------- | ----------------------------- | ------------------------------------------------------------ |
-| querySelector  | `findComponent('.component')` | Matches standard query selector.                             |
-| Component name | `findComponent({name: 'a'})`  | matches PascalCase, snake-case, camelCase                    |
-| Component ref  | `findComponent({ref: 'ref'})` | Can be used only on direct ref children of mounted component |
-| SFC            | `findComponent(Component)`    | Pass an imported component directly                          |
+| Syntaxe          | Exemple                       | Détails                                                  |
+|------------------|-------------------------------|----------------------------------------------------------|
+| querySelector    | `findComponent('.component')` | Trouve comme à un sélecteur de requête standard.         |
+| Nom du Composant | `findComponent({name: 'a'})`  | Trouve en PascalCase, snake-case et camelCase.           |
+| Ref du Composant | `findComponent({ref: 'ref'})` | Trouve la reference directe d'un composant enfant monté. |
+| SFC              | `findComponent(Component)`    | Trouve directement un composant importé.                 |
 
 `Foo.vue`
 
@@ -1124,8 +1124,8 @@ findComponent(selector: FindComponentSelector): WrapperLike
 
 <script>
 export default {
-  name: 'Foo'
-}
+  name: 'Foo',
+};
 </script>
 ```
 
@@ -1137,75 +1137,74 @@ export default {
 </template>
 
 <script>
-import Foo from '@/Foo'
+import Foo from '@/Foo';
 
 export default {
-  components: { Foo }
-}
+  components: { Foo },
+};
 </script>
 ```
 
 `Component.spec.js`
 
 ```js
-import { mount } from '@vue/test-utils'
-import Component from './Component.vue'
+import { mount } from '@vue/test-utils';
+import Component from './Component.vue';
 
-import Foo from '@/Foo.vue'
+import Foo from '@/Foo.vue';
 
-test('findComponent', () => {
-  const wrapper = mount(Component)
+test('trouve le composant', () => {
+  const wrapper = mount(Component);
 
-  // All the following queries would return a VueWrapper
+  // Toutes les requêtes suivantes retourneront un `VueWrapper`
 
-  wrapper.findComponent('.foo')
-  wrapper.findComponent('[data-test="foo"]')
+  wrapper.findComponent('.foo');
+  wrapper.findComponent('[data-test="foo"]');
 
   wrapper.findComponent({ name: 'Foo' });
 
   wrapper.findComponent({ ref: 'foo' });
 
-  wrapper.findComponent(Foo)
+  wrapper.findComponent(Foo);
 });
 ```
 
 :::warning
-If `ref` in component points to HTML element, `findComponent` will return empty wrapper. This is intended behaviour
+Si `ref` dans le composant pointe vers un élément HTML, `findComponent` renverra un conteneur vide. Cela est un comportement normal.
 :::
 
-:::warning Usage with CSS selectors
-Using `findComponent` with CSS selector might have confusing behavior
+:::warning Utilisation avec des sélecteurs CSS
+L'utilisation de `findComponent` avec un sélecteur CSS peut avoir un comportement confus.
 
-Consider this example:
+Voici un exemple :
 
 ```js
 const ChildComponent = {
   name: 'Child',
-  template: '<div class="child"></div>'
-}
+  template: '<div class="child"></div>',
+};
 const RootComponent = {
   name: 'Root',
   components: { ChildComponent },
-  template: '<child-component class="root" />'
-}
-const wrapper = mount(RootComponent)
-const rootByCss = wrapper.findComponent('.root') // => finds Root
-expect(rootByCss.vm.$options.name).toBe('Root')
-const childByCss = wrapper.findComponent('.child')
-expect(childByCss.vm.$options.name).toBe('Root') // => still Root
+  template: '<child-component class="root" />',
+};
+const wrapper = mount(RootComponent);
+const rootByCss = wrapper.findComponent('.root'); // => trouve Root
+expect(rootByCss.vm.$options.name).toBe('Root');
+const childByCss = wrapper.findComponent('.child');
+expect(childByCss.vm.$options.name).toBe('Root'); // => toujours Root
 ```
 
-The reason for such behavior is that `RootComponent` and `ChildComponent` are sharing same DOM node and only first matching component is included for each unique DOM node
+La raison de ce comportement est que `RootComponent` et `ChildComponent` partagent le même nœud DOM et que seul le premier composant correspondant est inclus pour chaque nœud DOM unique.
 :::
 
-:::info WrapperLike type when using CSS selector
-When using `wrapper.findComponent('.foo')` for example then VTU will return the `WrapperLike` type. This is because functional components
-would need a `DOMWrapper` otherwise a `VueWrapper`. You can force to return a `VueWrapper` by providing the correct component type:
+:::info Type WrapperLike en utilisant un sélecteur CSS
+Lors de l'utilisation de `wrapper.findComponent('.foo')` par exemple, VTU renverra le type `WrapperLike`. Cela est dû au fait que les composants fonctionnels auraient besoin d'un `DOMWrapper` sinon d'un `VueWrapper`. Vous pouvez forcer le retour d'un `VueWrapper` en fournissant le type de composant correct :
 
 ```typescript
-wrapper.findComponent('.foo') // returns WrapperLike
-wrapper.findComponent<typeof FooComponent>('.foo') // returns VueWrapper
-wrapper.findComponent<DefineComponent>('.foo') // returns VueWrapper
+wrapper.findComponent('.foo'); // retourne WrapperLike
+wrapper.findComponent<typeof FooComponent>('.foo'); // retourne VueWrapper
+wrapper.findComponent<DefineComponent>('.foo'); // retourne VueWrapper
 ```
 :::
 
@@ -1223,12 +1222,12 @@ findAllComponents<T extends ComponentPublicInstance>(selector: T | FindAllCompon
 findAllComponents(selector: FindAllComponentsSelector): WrapperLike[]
 ```
 
-**Usage :**
+**Utilisation :**
 
-Similar to `findComponent` but finds all Vue Component instances that match the query. Returns an array of `VueWrapper`.
+Similaire à `findComponent` mais trouve toutes les instances de composant Vue qui correspondent à la requête. Renvoie un tableau de `VueWrapper`.
 
 :::warning
-`ref` syntax is not supported in `findAllComponents`. All other query syntaxes are valid.
+La syntaxe `ref` n'est pas prise en charge dans findAllComponents. Toutes les autres syntaxes de requête sont valides.
 :::
 
 `Component.vue`:
@@ -1244,24 +1243,24 @@ Similar to `findComponent` but finds all Vue Component instances that match the 
 `Component.spec.js`:
 
 ```js
-import { mount } from '@vue/test-utils'
-import Component from './Component.vue'
+import { mount } from '@vue/test-utils';
+import Component from './Component.vue';
 
-test('findAllComponents', () => {
-  const wrapper = mount(Component)
+test('trouve tous les composants', () => {
+  const wrapper = mount(Component);
 
-  // Returns an array of VueWrapper
-  wrapper.findAllComponents('[data-test="number"]')
+  // Retourne un tableau de VueWrapper
+  wrapper.findAllComponents('[data-test="number"]');
 });
 ```
 
-:::warning Usage with CSS selectors
-`findAllComponents` has same behavior when used with CSS selector as [findComponent](#findcomponent)
+:::warning Utilisation avec des sélecteurs CSS
+`findAllComponents` a le même comportement lorsqu'il est utilisé avec un sélecteur CSS tout comme [findComponent](#findcomponent).
 :::
 
 ### get
 
-Gets an element and returns a `DOMWrapper` if found. Otherwise it throws an error.
+Récupère un élément et retourne un `DOMWrapper` si trouvé. Renvoie une erreur dans le cas contraire.
 
 **Signature :**
 
@@ -1272,11 +1271,11 @@ get<T extends Element>(selector: string): Omit<DOMWrapper<T>, 'exists'>
 get(selector: string): Omit<DOMWrapper<Element>, 'exists'>
 ```
 
-**Usage :**
+**Utilisation :**
 
-It is similar to `find`, but `get` throws instead of returning a ErrorWrapper.
+Similaire à `find`, mais `get` retourne une exception au lieu de renvoyer un `ErrorWrapper`.
 
-As a rule of thumb, always use get except when you are asserting something doesn't exist. In that case use [`find`](#find).
+En règle générale, utilisez toujours `get` sauf lorsque vous vérifiez que quelque chose n'existe pas. Dans ce cas, utilisez `find`.
 
 `Component.vue`:
 
@@ -1289,21 +1288,21 @@ As a rule of thumb, always use get except when you are asserting something doesn
 `Component.spec.js`:
 
 ```js
-import { mount } from '@vue/test-utils'
-import Component from './Component.vue'
+import { mount } from '@vue/test-utils';
+import Component from './Component.vue';
 
 test('get', () => {
-  const wrapper = mount(Component)
+  const wrapper = mount(Component);
 
-  wrapper.get('span') //=> found; returns DOMWrapper
+  wrapper.get('span'); //=> trouvé; retourne DOMWrapper
 
-  expect(() => wrapper.get('.not-there')).toThrowError()
+  expect(() => wrapper.get('.not-there')).toThrowError();
 });
 ```
 
 ### getComponent
 
-Gets a Vue Component instance and returns a `VueWrapper` if found. Otherwise it throws an error.
+Récupère une instance de composant Vue et renvoie un `VueWrapper` si trouvé. Sinon, il génère une erreur.
 
 **Signature :**
 
@@ -1313,18 +1312,18 @@ getComponent<T extends ComponentPublicInstance>(selector: { name: string } | { r
 getComponent<T extends ComponentPublicInstance>(selector: any): Omit<VueWrapper<T>, 'exists'>
 ```
 
-**Usage :**
+**Utilisation :**
 
-It is similar to `findComponent`, but `getComponent` throws instead of returning a ErrorWrapper.
+Similaire à `findComponent`, mais `getComponent` retourne une exception au lieu de renvoyer un `ErrorWrapper`.
 
-**Supported syntax:**
+**Syntaxes supportées :**
 
-| syntax         | example                      | details                                                      |
-| -------------- | ---------------------------- | ------------------------------------------------------------ |
-| querySelector  | `getComponent('.component')` | Matches standard query selector.                             |
-| Component name | `getComponent({name: 'a'})`  | matches PascalCase, snake-case, camelCase                    |
-| Component ref  | `getComponent({ref: 'ref'})` | Can be used only on direct ref children of mounted component |
-| SFC            | `getComponent(Component)`    | Pass an imported component directly                          |
+| Syntaxe          | Exemple                      | Détails                                                  |
+|------------------|------------------------------|----------------------------------------------------------|
+| querySelector    | `getComponent('.component')` | Trouve comme à un sélecteur de requête standard.         |
+| Nom du Composant | `getComponent({name: 'a'})`  | Trouve en PascalCase, snake-case et camelCase.           |
+| Ref du Composant | `getComponent({ref: 'ref'})` | Trouve la reference directe d'un composant enfant monté. |
+| SFC              | `getComponent(Component)`    | Trouve directement un composant importé.                 |
 
 `Foo.vue`
 
@@ -1335,8 +1334,8 @@ It is similar to `findComponent`, but `getComponent` throws instead of returning
 
 <script>
 export default {
-  name: 'Foo'
-}
+  name: 'Foo',
+};
 </script>
 ```
 
@@ -1348,38 +1347,37 @@ export default {
 </template>
 
 <script>
-import Foo from '@/Foo'
+import Foo from '@/Foo';
 
 export default {
-  components: { Foo }
-}
+  components: { Foo },
+};
 </script>
 ```
 
 `Component.spec.js`
 
 ```js
-import { mount } from '@vue/test-utils'
-import Component from './Component.vue'
+import { mount } from '@vue/test-utils';
+import Component from './Component.vue';
 
-import Foo from '@/Foo.vue'
+import Foo from '@/Foo.vue';
 
 test('getComponent', () => {
-  const wrapper = mount(Component)
+  const wrapper = mount(Component);
 
-  wrapper.getComponent({ name: 'foo' }); // returns a VueWrapper
-  wrapper.getComponent(Foo) // returns a VueWrapper
+  wrapper.getComponent({ name: 'foo' }); // retourne un VueWrapper
+  wrapper.getComponent(Foo); // retourne un VueWrapper
 
-  expect(() => wrapper.getComponent('.not-there')).toThrowError()
+  expect(() => wrapper.getComponent('.not-there')).toThrowError();
 });
 ```
 
 ### html
 
-Returns the HTML of an element.
+Renvoie le HTML d'un élément.
 
-By default the output is formatted with [`js-beautify`](https://github.com/beautify-web/js-beautify)
-to make snapshots more readable. Use `raw: true` option to receive the unformatted html string.
+Par défaut, la sortie est formatée avec [`js-beautify`](https://github.com/beautify-web/js-beautify) pour rendre les instantanés plus lisibles. Utilisez l'option `raw: true` pour recevoir la chaîne HTML non formatée.
 
 **Signature :**
 
@@ -1388,14 +1386,14 @@ html(): string
 html(options?: { raw?: boolean }): string
 ```
 
-**Usage :**
+**Utilisation :**
 
 `Component.vue`:
 
 ```vue
 <template>
   <div>
-    <p>Hello world</p>
+    <p>Bonjour tout le monde</p>
   </div>
 </template>
 ```
@@ -1403,25 +1401,25 @@ html(options?: { raw?: boolean }): string
 `Component.spec.js`:
 
 ```js
-import { mount } from '@vue/test-utils'
-import Component from './Component.vue'
+import { mount } from '@vue/test-utils';
+import Component from './Component.vue';
 
 test('html', () => {
-  const wrapper = mount(Component)
+  const wrapper = mount(Component);
 
   expect(wrapper.html()).toBe(
     '<div>\n' +
-    '  <p>Hello world</p>\n' +
+    '  <p>Bonjour tout le monde</p>\n' +
     '</div>'
-  )
+  );
 
-  expect(wrapper.html({ raw: true })).toBe('<div><p>Hello world</p></div>')
+  expect(wrapper.html({ raw: true })).toBe('<div><p>Bonjour tout le monde</p></div>');
 });
 ```
 
 ### isVisible
 
-Verify whether an element is visible or not.
+Vérifie si un élément est visible ou non.
 
 **Signature :**
 
@@ -1429,22 +1427,23 @@ Verify whether an element is visible or not.
 isVisible(): boolean
 ```
 
-**Usage :**
+**Utilisation :**
 
 ```js
 const Component = {
-  template: `<div v-show="false"><span /></div>`
-}
+  template: `<div v-show="false"><span /></div>`,
+};
 
 test('isVisible', () => {
-  const wrapper = mount(Component)
+  const wrapper = mount(Component);
 
-  expect(wrapper.find('span').isVisible()).toBe(false)
+  expect(wrapper.find('span').isVisible()).toBe(false);
 });
 ```
 
 ### props
 
+Retourne les propriétés (`props`) passées à un Composant Vue.
 Returns props passed to a Vue Component.
 
 **Signature :**
@@ -1455,7 +1454,7 @@ props(selector: string): any
 props(selector?: string): { [key: string]: any } | any
 ```
 
-**Usage :**
+**Utilisation :**
 
 `Component.vue`:
 
@@ -1465,9 +1464,9 @@ export default {
   props: {
     truthy: Boolean,
     object: Object,
-    string: String
-  }
-}
+    string: String,
+  },
+};
 ```
 
 ```vue
@@ -1476,45 +1475,45 @@ export default {
 </template>
 
 <script>
-import Component from '@/Component'
+import Component from '@/Component';
 
 export default {
-  components: { Component }
-}
+  components: { Component },
+};
 </script>
 ```
 
 `Component.spec.js`:
 
 ```js
-import { mount } from '@vue/test-utils'
-import Component from './Component.vue'
+import { mount } from '@vue/test-utils';
+import Component from './Component.vue';
 
 test('props', () => {
   const wrapper = mount(Component, {
-    global: { stubs: ['Foo'] }
+    global: { stubs: ['Foo'] },
   });
 
   const foo = wrapper.getComponent({ name: 'Foo' });
 
-  expect(foo.props('truthy')).toBe(true)
+  expect(foo.props('truthy')).toBe(true);
   expect(foo.props('object')).toEqual({});
-  expect(foo.props('notExisting')).toEqual(undefined)
+  expect(foo.props('notExisting')).toEqual(undefined);
   expect(foo.props()).toEqual({
     truthy: true,
     object: {},
-    string: 'string'
+    string: 'string',
   });
 });
 ```
 
 :::tip
-As a rule of thumb, test against the effects of a passed prop (a DOM update, an emitted event, and so on). This will make tests more powerful than simply asserting that a prop is passed.
+En règle générale, testez les effets d'une `prop` transmise (une mise à jour du DOM, un événement émis, etc.). Cela rendra les tests plus puissants que de simplement vérifier qu'une prop a été transmise.
 :::
 
 ### setData
 
-Updates component internal data.
+Met à jour les données internes d'un composant.
 
 **Signature :**
 
@@ -1522,53 +1521,53 @@ Updates component internal data.
 setData(data: Record<string, any>): Promise<void>
 ```
 
-**Usage :**
+**Utilisation :**
 
-`setData` does not allow setting new properties that are not defined in the component.
+`setData` ne permet pas de définir de nouvelles propriétés qui ne sont pas définies dans le composant.
 
-Also, notice that `setData` does not modify composition API `setup()` data.
+De plus, notez que `setData` ne modifie pas les données de la fonction l'API de Composition : `setup()`.
 
 `Component.vue`:
 
 ```vue
 <template>
-  <div>Count: {{ count }}</div>
+  <div>Compteur: {{ count }}</div>
 </template>
 
 <script>
 export default {
   data() {
     return {
-      count: 0
-    }
-  }
-}
+      count: 0,
+    };
+  },
+};
 </script>
 ```
 
 `Component.spec.js`:
 
 ```js
-import { mount } from '@vue/test-utils'
-import Component from './Component.vue'
+import { mount } from '@vue/test-utils';
+import Component from './Component.vue';
 
 test('setData', async () => {
-  const wrapper = mount(Component)
-  expect(wrapper.html()).toContain('Count: 0')
+  const wrapper = mount(Component);
+  expect(wrapper.html()).toContain('Compteur: 0');
 
   await wrapper.setData({ count: 1 });
 
-  expect(wrapper.html()).toContain('Count: 1')
+  expect(wrapper.html()).toContain('Compteur: 1');
 });
 ```
 
 ::: warning
-You should use `await` when you call `setData` to ensure that Vue updates the DOM before you make an assertion.
+Vous devriez utiliser `await` lorsque vous appelez `setData` pour vous assurer que Vue met à jour le DOM avant de faire une vérification.
 :::
 
 ### setProps
 
-Updates component props.
+Met à jour les `props` d'un composant.
 
 **Signature :**
 
@@ -1576,7 +1575,7 @@ Updates component props.
 setProps(props: Record<string, any>): Promise<void>
 ```
 
-**Usage :**
+**Utilisation :**
 
 `Component.vue`:
 
@@ -1588,43 +1587,43 @@ setProps(props: Record<string, any>): Promise<void>
 <script>
 export default {
   props: ['message']
-}
+};
 </script>
 ```
 
 `Component.spec.js`
 
 ```js
-import { mount } from '@vue/test-utils'
-import Component from './Component.vue'
+import { mount } from '@vue/test-utils';
+import Component from './Component.vue';
 
-test('updates prop', async () => {
+test('met à jour les props', async () => {
   const wrapper = mount(Component, {
     props: {
-      message: 'hello'
-    }
+      message: 'Bonjour'
+    },
   });
 
-  expect(wrapper.html()).toContain('hello')
+  expect(wrapper.html()).toContain('Bonjour');
 
-  await wrapper.setProps({ message: 'goodbye' });
+  await wrapper.setProps({ message: 'Au revoir' });
 
-  expect(wrapper.html()).toContain('goodbye')
+  expect(wrapper.html()).toContain('Au revoir');
 });
 ```
 
 ::: warning
-You should use `await` when you call `setProps` to ensure that Vue updates the DOM before you make an assertion.
+Vous devriez utiliser `await` lorsque vous appelez `setProps` pour vous assurer que Vue met à jour le DOM avant de faire une vérification.
 :::
 
 ### setValue
 
-Sets a value on DOM element. Including:
+Définit une valeur sur un élément du DOM. Incluant :
 
 - `<input>`
-  - `type="checkbox"` and `type="radio"` are detected and will have `element.checked` set.
+  - `type="checkbox"` et `type="radio"` sont détectés et auront `element.checked` de coché.
 - `<select>`
-  - `<option>` is detected and will have `element.selected` set.
+  - `<option>` est détecté et aura `element.selected` de coché.
 
 **Signature :**
 
@@ -1632,17 +1631,17 @@ Sets a value on DOM element. Including:
 setValue(value: unknown, prop?: string): Promise<void>
 ```
 
-**Usage :**
+**Utilisation :**
 
 `Component.vue`:
 
 ```vue
 <template>
   <input type="text" v-model="text" />
-  <p>Text: {{ text }}</p>
+  <p>Texte : {{ text }}</p>
 
   <input type="checkbox" v-model="checked" />
-  <div v-if="checked">The input has been checked!</div>
+  <div v-if="checked">La case a été cochée !</div>
 
   <select v-model="multiselectValue" multiple>
     <option value="value1"></option>
@@ -1657,53 +1656,53 @@ export default {
     return {
       text: '',
       checked: false,
-      multiselectValue: []
-    }
-  }
-}
+      multiselectValue: [],
+    };
+  },
+};
 </script>
 ```
 
 `Component.spec.js`:
 
 ```js
-import { mount } from '@vue/test-utils'
-import Component from './Component.vue'
+import { mount } from '@vue/test-utils';
+import Component from './Component.vue';
 
-test('setValue on checkbox', async () => {
-  const wrapper = mount(Component)
+test('setValue sur une checkbox', async () => {
+  const wrapper = mount(Component);
 
-  await wrapper.find('input[type="checkbox"]').setValue(true)
-  expect(wrapper.find('div')).toBe(true)
+  await wrapper.find('input[type="checkbox"]').setValue(true);
+  expect(wrapper.find('div')).toBe(true);
 
-  await wrapper.find('input[type="checkbox"]').setValue(false)
-  expect(wrapper.find('div')).toBe(false)
+  await wrapper.find('input[type="checkbox"]').setValue(false);
+  expect(wrapper.find('div')).toBe(false);
 });
 
-test('setValue on input text', () => {
-  const wrapper = mount(Component)
+test('setValue sur un champ texte', async () => {
+  const wrapper = mount(Component);
 
-  await wrapper.find('input[type="text"]').setValue('hello!')
-  expect(wrapper.find('p').text()).toBe('Text: hello!')
+  await wrapper.find('input[type="text"]').setValue('Bonjour !');
+  expect(wrapper.find('p').text()).toBe('Texte: Bonjour !');
 });
 
-test('setValue on multi select', () => {
-  const wrapper = mount(Component)
+test('setValue sur une liste déroulante à choix multiples', async () => {
+  const wrapper = mount(Component);
 
-  // For select without multiple
-  await wrapper.find('select').setValue('value1')
-  // For select with multiple
-  await wrapper.find('select').setValue(['value1', 'value3'])
+  // Pour des select à choix unique
+  await wrapper.find('select').setValue('value1');
+  // FPour des select à choix multiples
+  await wrapper.find('select').setValue(['value1', 'value3']);
 });
 ```
 
 ::: warning
-You should use `await` when you call `setValue` to ensure that Vue updates the DOM before you make an assertion.
+Vous devriez utiliser `await` lorsque vous appelez `setValue` pour vous assurer que Vue met à jour le DOM avant de faire une vérification.
 :::
 
 ### text
 
-Returns the text content of an element.
+Retourne le texte contenu dans un élément.
 
 **Signature :**
 
@@ -1711,32 +1710,32 @@ Returns the text content of an element.
 text(): string
 ```
 
-**Usage :**
+**Utilisation :**
 
 `Component.vue`:
 
 ```vue
 <template>
-  <p>Hello world</p>
+  <p>Bonjour tout le monde</p>
 </template>
 ```
 
 `Component.spec.js`:
 
 ```js
-import { mount } from '@vue/test-utils'
-import Component from './Component.vue'
+import { mount } from '@vue/test-utils';
+import Component from './Component.vue';
 
 test('text', () => {
-  const wrapper = mount(Component)
+  const wrapper = mount(Component);
 
-  expect(wrapper.find('p').text()).toBe('Hello world')
+  expect(wrapper.find('p').text()).toBe('Bonjour tout le monde');
 });
 ```
 
 ### trigger
 
-Triggers a DOM event, for example `click`, `submit` or `keyup`.
+Déclenche un évènement du DOM, par exemple `click`, `submit` ou `keyup`.
 
 **Signature :**
 
@@ -1751,55 +1750,55 @@ interface TriggerOptions {
 trigger(eventString: string, options?: TriggerOptions | undefined): Promise<void>
 ```
 
-**Usage :**
+**Utilisation :**
 
 `Component.vue`:
 
 ```vue
 <template>
-  <span>Count: {{ count }}</span>
-  <button @click="count++">Click me</button>
+  <span>Compteur: {{ count }}</span>
+  <button @click="count++">Cliquer ici</button>
 </template>
 
 <script>
 export default {
   data() {
     return {
-      count: 0
-    }
-  }
-}
+      count: 0,
+    };
+  },
+};
 </script>
 ```
 
 `Component.spec.js`:
 
 ```js
-import { mount } from '@vue/test-utils'
-import Component from './Component.vue'
+import { mount } from '@vue/test-utils';
+import Component from './Component.vue';
 
 test('trigger', async () => {
-  const wrapper = mount(Component)
+  const wrapper = mount(Component);
 
-  await wrapper.find('button').trigger('click')
+  await wrapper.find('button').trigger('click');
 
-  expect(wrapper.find('span').text()).toBe('Count: 1')
+  expect(wrapper.find('span').text()).toBe('Compteur: 1');
 });
 ```
 
-Note that `trigger` accepts a second argument to pass options to the triggered Event:
+Notez que `trigger` accepte un second argument pour transmettre des options à l'événement déclenché :
 
 ```js
 await wrapper.trigger('keydown', { keyCode: 65 });
 ```
 
 ::: warning
-You should use `await` when you call `trigger` to ensure that Vue updates the DOM before you make an assertion.
+Vous devriez utiliser `await` lorsque vous appelez `trigger` pour vous assurer que Vue met à jour le DOM avant de faire une vérification.
 :::
 
 ### unmount
 
-Unmount the application from the DOM.
+Démonte l'application du DOM.
 
 **Signature :**
 
@@ -1807,9 +1806,9 @@ Unmount the application from the DOM.
 unmount(): void
 ```
 
-**Usage :**
+**Utilisation :**
 
-It only works on the root `VueWrapper` returned from `mount`. Useful for manual clean-up after tests.
+Il ne fonctionne que sur le `VueWrapper` racine renvoyé par `mount`. Utile pour un nettoyage manuel après les tests.
 
 `Component.vue`:
 
@@ -1817,28 +1816,28 @@ It only works on the root `VueWrapper` returned from `mount`. Useful for manual 
 <script>
 export default {
   unmounted() {
-    console.log('unmounted!')
-  }
-}
+    console.log('démonté !');
+  },
+};
 </script>
 ```
 
 `Component.spec.js`:
 
 ```js
-import { mount } from '@vue/test-utils'
-import Component from './Component.vue'
+import { mount } from '@vue/test-utils';
+import Component from './Component.vue';
 
 test('unmount', () => {
-  const wrapper = mount(Component)
+  const wrapper = mount(Component);
 
-  wrapper.unmount()
-  // Component is removed from DOM.
-  // console.log has been called with 'unmounted!'
+  wrapper.unmount();
+  // Le composant est supprimé du DOM.
+  // console.log a été appelé avec 'démonté !'
 });
 ```
 
-## Wrapper properties
+## Propriétés de Wrapper
 
 ### vm
 
@@ -1848,19 +1847,19 @@ test('unmount', () => {
 vm: ComponentPublicInstance
 ```
 
-**Usage :**
+**Utilisation :**
 
-The `Vue` app instance. You can access all of the [instance methods](https://v3.vuejs.org/api/instance-methods.html) and [instance properties](https://v3.vuejs.org/api/instance-properties.html).
+L'instance d'application `Vue`. Vous pouvez accéder à toutes les [méthodes d'instance](https://v3.vuejs.org/api/instance-methods.html) et [propriétés d'instance](https://v3.vuejs.org/api/instance-properties.html).
 
-Notice that `vm` is only available on a `VueWrapper`.
+Notez que `vm` n'est disponible que sur un `VueWrapper`.
 
 :::tip
-As a rule of thumb, test against the effects of a passed prop (a DOM update, an emitted event, and so on). This will make tests more powerful than simply asserting that a prop is passed.
+En règle générale, testez les effets d'une `prop` transmise (une mise à jour du DOM, un événement émis, etc.). Cela rendra les tests plus puissants que simplement de faire une vérification sur le passage d'une prop.
 :::
 
 ## shallowMount
 
-Creates a Wrapper that contains the mounted and rendered Vue component to test with all children stubbed out.
+Crée un `Wrapper` qui contient le composant Vue monté et rendu pour le tester avec tous les enfants remplacés par des composants de substitution (`stubs`).
 
 **Signature :**
 
@@ -1877,9 +1876,9 @@ interface MountingOptions<Props, Data = {}> {
 function shallowMount(Component, options?: MountingOptions): VueWrapper
 ```
 
-**Usage :**
+**Utilisation :**
 
-`shallowMount` behaves exactly like `mount`, but it stubs all child components by default. Essentially, `shallowMount(Component)` is an alias of `mount(Component, { shallow: true })`.
+`shallowMount` se comporte exactement comme `mount`, mais il remplace par défaut tous les composants enfants par des composants de substitution (`stubs`). Notez que, `shallowMount(Component)` est un alias de `mount(Component, { shallow: true })`.
 
 ## enableAutoUnmount
 
@@ -1890,18 +1889,19 @@ enableAutoUnmount(hook: Function));
 disableAutoUnmount(): void;
 ```
 
-**Usage :**
+**Utilisation :**
 
-`enableAutoUnmount` allows to automatically destroy Vue wrappers. Destroy logic is passed as callback to `hook` Function.
-Common usage is to use `enableAutoUnmount` with teardown helper functions provided by your test framework, such as `afterEach`:
+`enableAutoUnmount` permet de détruire automatiquement les `Wrappers` Vue. La logique de destruction est transmise en tant que callback à la fonction `hook`.
+
+Une utilisation courante consiste à utiliser `enableAutoUnmount` avec des fonctions fournies par votre cadre de test, telles que `afterEach` :
 
 ```ts
-import { enableAutoUnmount } from '@vue/test-utils'
+import { enableAutoUnmount } from '@vue/test-utils';
 
-enableAutoUnmount(afterEach)
+enableAutoUnmount(afterEach);
 ```
 
-`disableAutoUnmount` might be useful if you want this behavior only in specific subset of your test suite and you want to explicitly disable this behavior
+`disableAutoUnmount` peut être utile si vous voulez ce comportement uniquement dans un sous-ensemble spécifique de vos tests et si vous souhaitez désactiver explicitement ce comportement.
 
 ## flushPromises
 
@@ -1911,11 +1911,11 @@ enableAutoUnmount(afterEach)
 flushPromises(): Promise<unknown>
 ```
 
-**Usage :**
+**Utilisation :**
 
-`flushPromises` flushes all resolved promise handlers. This helps make sure async operations such as promises or DOM updates have happened before asserting against them.
+`flushPromises` procède à la résolution de toutes les `Promise` en cours. Cela aide à s'assurer que les opérations asynchrones telles que les `Promise` ou les mises à jour du DOM se sont produites avant de les vérifier.
 
-Check out [Making HTTP requests](../guide/advanced/http-requests.md) to see an example of `flushPromises` in action.
+Consultez la section [Faire des requêtes HTTP](../guide/advanced/http-requests.md) pour voir un exemple de `flushPromises` en action.
 
 ## config
 
@@ -1937,20 +1937,20 @@ type GlobalMountOptions = {
 }
 ```
 
-**Usage :**
+**Utilisation :**
 
-Instead of configuring mounting options on a per test basis, you can configure them for your entire test suite. These will be used by default every time you `mount` a component. If desired, you can then override your defaults on a per test basis.
+Au lieu de configurer les options de `mount` pour chaque test, vous pouvez les configurer pour l'ensemble de votre suite de tests. Ceux-ci seront utilisés par défaut chaque fois que vous montez un composant. Si vous le souhaitez, vous pouvez ensuite remplacer vos valeurs par défaut pour chaque test.
 
 **Exemple :**
 
-An example might be globally mocking the `$t` variable from vue-i18n and a component:
+Un exemple pourrait être de simuler globalement la variable `$t` de `vue-i18n` et d'un composant :
 
 `Component.vue`:
 
 ```vue
 <template>
   <p>{{ $t('message') }}</p>
-  <my-component />
+  <mon-component />
 </template>
 
 <script>
@@ -1958,52 +1958,52 @@ import MonComposant from '@/components/MonComposant'
 
 export default {
   components: {
-    MonComposant
-  }
-}
+    MonComposant,
+  },
+};
 </script>
 ```
 
 `Component.spec.js`:
 
 ```js {1,8-10,12-14}
-import { config, mount } from '@vue/test-utils'
-import { defineComponent } from 'vue'
+import { config, mount } from '@vue/test-utils';
+import { defineComponent } from 'vue';
 
 const MonComposant = defineComponent({
-  template: `<div>My component</div>`
+  template: `<div>Mon composant</div>`,
 });
 
 config.global.stubs = {
-  MonComposant
-}
+  MonComposant,
+};
 
 config.global.mocks = {
-  $t: (text) => text
-}
+  $t: (text) => text,
+};
 
-test('config.global mocks and stubs', () => {
-  const wrapper = mount(Component)
+test('config.global substitue le composant', () => {
+  const wrapper = mount(Component);
 
-  expect(wrapper.html()).toBe('<p>message</p><div>My component</div>')
+  expect(wrapper.html()).toBe('<p>message</p><div>Mon composant</div>');
 });
 ```
 
 ::: tip
-Remember that this behavior is global, not on a mount by mount basis. You might need to enable/disable it before and after each test.
+Rappelez-vous que ce comportement est global, et non sur une base montage par montage. Il peut être nécessaire de l'activer / le désactiver avant et après chaque test.
 :::
 
-## composants
+## Composants
 
 ### RouterLinkStub
 
-A component to stub the Vue Router `router-link` component when you don't want to mock or include a full router.
+Un composant pour substituer le composant `router-link` de Vue Router lorsque vous ne voulez pas le faire ou inclure un routeur complet.
 
-You can use this component to find a `router-link` component in the render tree.
+Vous pouvez utiliser ce composant pour trouver un composant `router-link` dans l'arbre de rendu.
 
-**Usage :**
+**Utilisation :**
 
-Set as a stub in the mounting options:
+Définit un composant de remplacement dans les options de `mount` :
 ```js
 import { mount, RouterLinkStub } from '@vue/test-utils';
 
@@ -2018,6 +2018,6 @@ const wrapper = mount(Component, {
 expect(wrapper.findComponent(RouterLinkStub).props().to).toBe('/some/path');
 ```
 
-**Usage with slot:**
+**Utilisation avec slot:**
 
-The `RouterLinkStub` component supports slot content and will return very basic values for its slot props. If you need more specific slot prop values for your tests, consider using a [real router](../guide/advanced/vue-router.html#using-a-real-router) so you can use a real `router-link` component. Alternatively, you can define your own `RouterLinkStub` component by copying the implementation from the test-utils package.
+Le composant `RouterLinkStub` prend en charge le contenu du `slot` et renvoie des valeurs très simples pour ses propriétés de `slot`. Si vous avez besoin de valeurs de propriétés de `slot` plus spécifiques pour vos tests, il est conseillé d'utiliser un [vrai routeur](../guide/advanced/vue-router.html#using-a-real-router) pour pouvoir utiliser un vrai composant `router-link`. Alternativement, vous pouvez définir votre propre composant `RouterLinkStub` en copiant l'implémentation de la dépendance `test-utils`.
