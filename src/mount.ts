@@ -342,7 +342,8 @@ export function mount(
     component = originalComponent
   }
 
-  addToDoNotStubComponents(component)
+  // Don't stub component only on root level, but still stub if used inside
+  addToDoNotStubComponents(component, true)
   // We've just replaced our component with its copy
   // Let's register it as a stub so user can find it
   registerStub({ source: originalComponent, stub: component })

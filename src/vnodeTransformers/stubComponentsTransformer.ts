@@ -36,10 +36,14 @@ interface StubOptions {
   renderStubDefaultSlot?: boolean
 }
 
-const doNotStubComponents: WeakSet<ConcreteComponent> = new WeakSet()
+const doNotStubComponents = new WeakMap<ConcreteComponent, boolean>()
 const shouldNotStub = (type: ConcreteComponent) => doNotStubComponents.has(type)
-export const addToDoNotStubComponents = (type: ConcreteComponent) =>
-  doNotStubComponents.add(type)
+const shouldNotStubRoot = (type: ConcreteComponent) =>
+  !!doNotStubComponents.get(type)
+export const addToDoNotStubComponents = (
+  type: ConcreteComponent,
+  onlyRoot?: boolean
+) => doNotStubComponents.set(type, !!onlyRoot)
 
 const normalizeStubProps = (props: ComponentPropsOptions) => {
   // props are always normalized to object syntax
@@ -163,7 +167,10 @@ export function createStubComponentsTransformer({
     }
 
     if (shouldNotStub(type)) {
-      return type
+      // Either don't stub everytime or only on root level
+      if (!instance?.parent || !shouldNotStubRoot(type)) {
+        return type
+      }
     }
 
     const registeredName = getComponentRegisteredName(instance, type)
