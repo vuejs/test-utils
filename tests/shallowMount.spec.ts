@@ -74,7 +74,7 @@ describe('shallowMount', () => {
     )
   })
 
-  it('stubs stub instance of same component', () => {
+  it('stub instance of same component', () => {
     const wrapper = mount(RecursiveComponent, {
       shallow: true,
       props: {
