@@ -36,15 +36,6 @@ interface StubOptions {
   renderStubDefaultSlot?: boolean
 }
 
-const doNotStubComponents = new WeakMap<ConcreteComponent, boolean>()
-const shouldNotStub = (type: ConcreteComponent) => doNotStubComponents.has(type)
-const shouldNotStubRoot = (type: ConcreteComponent) =>
-  !!doNotStubComponents.get(type)
-export const addToDoNotStubComponents = (
-  type: ConcreteComponent,
-  onlyRoot?: boolean
-) => doNotStubComponents.set(type, !!onlyRoot)
-
 const normalizeStubProps = (props: ComponentPropsOptions) => {
   // props are always normalized to object syntax
   const $props = props as unknown as ComponentObjectPropsOptions
@@ -106,13 +97,18 @@ const resolveComponentStubByName = (
   }
 }
 
-interface CreateStubComponentsTransformerConfig {
+export interface CreateStubComponentsTransformerConfig {
+  rootComponents: {
+    legacy?: Component
+    component?: Component
+  }
   stubs?: Record<string, Component | boolean>
   shallow?: boolean
   renderStubDefaultSlot: boolean
 }
 
 export function createStubComponentsTransformer({
+  rootComponents,
   stubs = {},
   shallow = false,
   renderStubDefaultSlot = false
@@ -166,11 +162,15 @@ export function createStubComponentsTransformer({
       })
     }
 
-    if (shouldNotStub(type)) {
-      // Either don't stub everytime or only on root level
-      if (!instance?.parent || !shouldNotStubRoot(type)) {
-        return type
-      }
+    if (
+      // Don't stub VTU_ROOT component
+      !instance ||
+      // Don't stub mounted component on root level
+      (rootComponents.component === type && !instance?.parent) ||
+      // Don't stub component with compat wrapper
+      (rootComponents.legacy && rootComponents.legacy === type)
+    ) {
+      return type
     }
 
     const registeredName = getComponentRegisteredName(instance, type)
@@ -225,7 +225,7 @@ export function createStubComponentsTransformer({
       // Set name when using shallow without stub
       const stubName = name || registeredName || componentName
 
-      const newStub =
+      return (
         config.plugins.createStubs?.({
           name: stubName,
           component: type
@@ -235,7 +235,7 @@ export function createStubComponentsTransformer({
           type,
           renderStubDefaultSlot
         })
-      return newStub
+      )
     }
 
     return type

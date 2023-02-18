@@ -45,7 +45,7 @@ import { attachEmitListener } from './emit'
 import { createVNodeTransformer } from './vnodeTransformers/util'
 import {
   createStubComponentsTransformer,
-  addToDoNotStubComponents
+  CreateStubComponentsTransformerConfig
 } from './vnodeTransformers/stubComponentsTransformer'
 import { createStubDirectivesTransformer } from './vnodeTransformers/stubDirectivesTransformer'
 import {
@@ -315,6 +315,9 @@ export function mount(
   let component: ConcreteComponent
   const instanceOptions = getInstanceOptions(options ?? {})
 
+  const rootComponents: CreateStubComponentsTransformerConfig['rootComponents'] =
+    {}
+
   if (
     isFunctionalComponent(originalComponent) ||
     isLegacyFunctionalComponent(originalComponent)
@@ -335,15 +338,14 @@ export function mount(
           h(originalComponent, { ...props, ...attrs }, slots),
       ...instanceOptions
     })
-    addToDoNotStubComponents(originalComponent)
+    rootComponents.legacy = originalComponent
   } else if (isObjectComponent(originalComponent)) {
     component = { ...originalComponent, ...instanceOptions }
   } else {
     component = originalComponent
   }
 
-  // Don't stub component only on root level, but still stub if used inside
-  addToDoNotStubComponents(component, true)
+  rootComponents.component = component
   // We've just replaced our component with its copy
   // Let's register it as a stub so user can find it
   registerStub({ source: originalComponent, stub: component })
@@ -465,11 +467,6 @@ export function mount(
 
   // create the app
   const app = createApp(Parent)
-  // the Parent type must not be stubbed
-  // but we can't add it directly, as createApp creates a copy
-  // and store it in app._component (since v3.2.32)
-  // So we store this one instead
-  addToDoNotStubComponents(app._component)
 
   // add tracking for emitted events
   // this must be done after `createApp`: https://github.com/vuejs/test-utils/issues/436
@@ -577,6 +574,7 @@ export function mount(
     createVNodeTransformer({
       transformers: [
         createStubComponentsTransformer({
+          rootComponents,
           stubs: getComponentsFromStubs(global.stubs),
           shallow: options?.shallow,
           renderStubDefaultSlot: global.renderStubDefaultSlot
