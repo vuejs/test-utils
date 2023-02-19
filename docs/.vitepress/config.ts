@@ -93,7 +93,8 @@ export default defineConfig({
           {
             text: 'Stubs and Shallow Mount',
             link: '/guide/advanced/stubs-shallow-mount'
-          }
+          },
+          { text: 'Server-side rendering', link: '/guide/advanced/ssr' }
         ]
       },
       {
