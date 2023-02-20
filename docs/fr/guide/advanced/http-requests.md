@@ -4,11 +4,11 @@ Les frameworks de tests modernes proposent déjà de nombreuses fonctionnalités
 
 Cependant, il s'agit d'une fonctionnalité importante à tester et il y a quelques pièges à connaître.
 
-Dans cette section, nous explorons certains modèles pour effectuer, simuler et vérifier les requêtes HTTP.
+Dans cette section, nous explorons certains exemples pour effectuer, simuler et vérifier les requêtes HTTP.
 
 ## Une liste d'articles d'un blog
 
-Commençons avec un scénario de base. Le composant `PostList` suivant rend une liste d'articles de blog extraits d'une API externe. Pour obtenir ces articles, le composant comporte un élément `button` qui déclenche la requête :
+Commençons avec un scénario de base. Le composant `PostList` suivant rend une liste d'articles de blog extraits d'une API externe. Pour obtenir ces articles, le composant comporte un élément `button` qui déclenche la requête&nbsp;:
 
 ```vue
 <template>
@@ -40,7 +40,7 @@ export default {
 
 Il y a plusieurs choses à faire pour tester correctement ce composant.
 
-Notre premier objectif est de tester ce composant **sans appeler réellement l'API**. Cela créerait un test fragile et potentiellement lent.
+Notre premier objectif est de tester ce composant **sans réellement appeler l'API**. Cela créerait un test fragile et potentiellement lent.
 
 Dans un second temps, nous devons vérifier que le composant a effectué le bon appel avec les paramètres appropriés. Nous n'obtiendrons pas de résultats de cette API, mais nous devons toujours nous assurer d'avoir demandé les bonnes ressources.
 
@@ -80,7 +80,7 @@ test('récupère les articles en appuyant sur le bouton', async () => {
 });
 ```
 
-Faites attention de bien ajouter le préfixe `mock` à la variable `mockPostList`. Sinon, vous obtiendrez l'erreur : "The module factory of `jest.mock()` is not allowed to reference any out-of-scope variables.". C'est spécifique à `jest` et vous pouvez en savoir plus sur ce comportement [dans leur documentation](https://jestjs.io/fr/docs/es6-class-mocks#calling-jestmock-with-the-module-factory-parameter).
+Faites attention de bien ajouter le préfixe `mock` à la variable `mockPostList`. Sinon, vous obtiendrez l'erreur&nbsp;: "The module factory of `jest.mock()` is not allowed to reference any out-of-scope variables.". C'est spécifique à `jest` et vous pouvez en savoir plus sur ce comportement [dans leur documentation](https://jestjs.io/fr/docs/es6-class-mocks#calling-jestmock-with-the-module-factory-parameter).
 
 Remarquez également comment nous avons `await` `flushPromises` et ensuite interagi avec le composant. Nous le faisons pour nous assurer que le DOM a été mis à jour avant que les vérifications ne s'exécutent.
 
@@ -90,9 +90,9 @@ Il existe plusieurs façons de définir des `mocks` dans Jest. Celui utilisé da
 
 ### Vérifier un message de chargement
 
-Bien, ce composant `PostList` est assez fonctionnel, mais il lui manque des fonctionnalités utiles. Améliorons-le pour qu'il affiche un message pendant le chargement de nos articles !
+Bien, ce composant `PostList` est assez fonctionnel, mais il lui manque des fonctionnalités utiles. Améliorons-le pour qu'il affiche un message pendant le chargement de nos articles&nbsp;!
 
-De plus, désactivons également l'élément `<button>` pendant le chargement. Nous ne voulons pas que les utilisateurs continuent à envoyer des requêtes durant le téléchargement !
+De plus, désactivons également l'élément `<button>` pendant le chargement. Nous ne voulons pas que les utilisateurs continuent à envoyer des requêtes durant le téléchargement&nbsp;!
 
 ```vue {2,4,19,24,28}
 <template>
@@ -160,9 +160,9 @@ test('affiche le message de chargement pendant le téléchargement', async () =>
 
 Un scénario typique pour des applications plus complexes consiste à déclencher une action Vuex qui effectue la requête HTTP.
 
-Cela n'est pas différent de l'exemple décrit ci-dessus. Nous pouvons vouloir charger le `store` tel quel et simuler (`mock`) des services tels que `axios`. De cette façon, nous simulons les limites de notre système, ce qui nous permet d'avoir un plus haut degré de confiance dans nos tests.
+Cela n'est pas différent de l'exemple décrit ci-dessus. Nous pouvons vouloir charger le `store` tel quel et simuler (`mocker`) des services tels que `axios`. De cette façon, nous simulons les limites de notre système, ce qui nous permet d'avoir un plus haut degré de confiance dans nos tests.
 
-Vous pouvez consulter la documentation [Tester Vuex](vuex.md) pour plus d'informations sur les tests Vuex avec Vue Test Utils.
+Vous pouvez consulter la documentation [Tester Vuex](./vuex.md) pour plus d'informations sur les tests Vuex avec Vue Test Utils.
 
 ## Conclusion
 

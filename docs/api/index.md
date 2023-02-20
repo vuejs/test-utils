@@ -1960,11 +1960,11 @@ An example might be globally mocking the `$t` variable from vue-i18n and a compo
 </template>
 
 <script>
-import MonComposant from '@/components/MonComposant'
+import MyComponent from '@/components/MyComponent'
 
 export default {
   components: {
-    MonComposant
+    MyComponent
   }
 }
 </script>
@@ -1976,12 +1976,12 @@ export default {
 import { config, mount } from '@vue/test-utils'
 import { defineComponent } from 'vue'
 
-const MonComposant = defineComponent({
+const MyComponent = defineComponent({
   template: `<div>My component</div>`
 })
 
 config.global.stubs = {
-  MonComposant
+  MyComponent
 }
 
 config.global.mocks = {

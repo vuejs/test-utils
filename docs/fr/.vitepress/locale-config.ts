@@ -71,7 +71,8 @@ const frLocaleConfig: DefaultTheme.LocaleConfig & Omit<DefaultTheme.Config, "loc
         {
           text: 'Composants de Substitution (Stubs) et Montage Partiel',
           link: '/fr/guide/advanced/stubs-shallow-mount'
-        }
+        },
+        { text: 'Tester le Rendu côté Serveur (SSR)', link: '/fr/guide/advanced/ssr' }
       ]
     },
     {

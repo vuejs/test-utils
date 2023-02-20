@@ -2,7 +2,7 @@
 
 Les plugins ajoutent des fonctionnalités au niveau global à l'API de Vue Test Utils. C'est la méthode officielle pour étendre l'API de Vue Test Utils avec une logique, des méthodes ou des fonctionnalités personnalisées.
 
-Des cas d'utilisation pour les plugins :
+Des cas d'utilisation pour les plugins&nbsp;:
 
 1. Remplacer des méthodes publiques existantes.
 2. Attacher des correspondances à l'instance `Wrapper`.
@@ -10,7 +10,7 @@ Des cas d'utilisation pour les plugins :
 
 ## Plugin du `Wrapper`
 
-### Utiliser un Plugin
+### Utilisation d'un Plugin
 
 Vous pouvez installer des plugins en appelant la méthode `config.plugins.VueWrapper.install()`. Cela doit être fait avant d'appeler `mount`.
 
@@ -27,7 +27,7 @@ import MonPlugin from './myPlugin';
 config.plugins.VueWrapper.install(MyPlugin);
 ```
 
-Vous pouvez aussi passer quelques options :
+Vous pouvez aussi passer quelques options&nbsp;:
 
 ```js
 config.plugins.VueWrapper.install(MonPlugin, { optionUne: true, optionDeux: "abc" });
@@ -45,7 +45,7 @@ Un plugin Vue Test Utils est tout simplement une fonction qui reçoit l'instance
 
 #### Plugin de base
 
-Ci-dessous se trouve un plugin simple pour ajouter un `alias` pratique pour mapper `wrapper.element` à `wrapper.$el` :
+Ci-dessous se trouve un plugin simple pour ajouter un `alias` pratique pour mapper `wrapper.element` à `wrapper.$el`&nbsp;:
 
 ```js
 // setup.js
@@ -53,13 +53,13 @@ import { config } from '@vue/test-utils';
 
 const monPluginAlias = (wrapper) => {
   return {
-    $el: wrapper.element // simple alias
+    $el: wrapper.element, // simple alias
   };
 };
 
 // Appellez `install` sur le type que vous voulez étendre avec votre plugin.
-// Voud pouvez écrire un plugin de n'importe quel type dans `config.plugins`.
-config.plugins.VueWrapper.install(monPluginAlias)
+// Vous pouvez écrire un plugin de n'importe quel type dans `config.plugins`.
+config.plugins.VueWrapper.install(monPluginAlias);
 ```
 
 Et dans vos tests, vous pourrez utiliser votre plugin après `mount`.
@@ -74,7 +74,7 @@ console.log(wrapper.$el.innerHTML); // 🔌 Plugin
 
 Le plugin ci-dessous ajoute une méthode `findByTestId` à l'instance `VueWrapper`. Cela encourage à utiliser une stratégie de sélection basée sur des attributs uniquement créés pour les tests sur vos composants Vue.
 
-Utilisation :
+Utilisation&nbsp;:
 
 `MonComposant.vue`:
 
@@ -93,7 +93,7 @@ const wrapper = mount(MonComposant);
 wrapper.findByTestId('name-input'); // retourne un VueWrapper ou DOMWrapper
 ```
 
-Implémentation du plugin :
+Implémentation du plugin&nbsp;:
 
 ```js
 import { config } from '@vue/test-utils-next';
@@ -117,11 +117,11 @@ const DataTestIdPlugin = (wrapper) => {
 config.plugins.VueWrapper.install(DataTestIdPlugin);
 ```
 
-## Plugin de composants de remplacement (Stub)
+## Plugin de composants de substitution (Stub)
 
 L'option `config.plugins.createStubs` permet de remplacer la création par défaut des composants (que nous appellerons `stubs`) fournie par VTU.
 
-Plusieurs cas d'utilisation :
+Plusieurs cas d'utilisation&nbsp;:
 * Vous voulez ajouter plus de logique dans les `stubs` (par exemple des slots nommés).
 * Vous voulez utiliser des `stubs` différents pour plusieurs composants (par exemple des composants `stub` d'une bibliothèque).
 
@@ -145,12 +145,14 @@ const wrapper = mount(Component, {
   },
 });
 ```
+
 … ou de …
+
 ```javascript
 const wrapper = shallowMount(Component);
 ```
 
-Mais ne sera pas appelé si vous spécifiez explicitement un `stub` :
+Mais ne sera pas appelé si vous spécifiez explicitement un `stub`&nbsp;:
 ```javascript
 const wrapper = mount(Component, {
   global: {
@@ -161,9 +163,9 @@ const wrapper = mount(Component, {
 });
 ```
 
-## Utiliser un Plugin avec TypeScript
+## Utilisation d'un Plugin avec TypeScript
 
-Pour utiliser votre plugin de wrapper personnalisé avec [TypeScript](https://www.typescriptlang.org/fr/), vous devez déclarer votre fonction de wrapper personnalisée. Par conséquent, ajoutez un fichier nommé `vue-test-utils.d.ts` avec le contenu suivant :
+Pour utiliser votre plugin de wrapper personnalisé avec [TypeScript](https://www.typescriptlang.org/fr/), vous devez déclarer votre fonction de wrapper personnalisée. Par conséquent, ajoutez un fichier nommé `vue-test-utils.d.ts` avec le contenu suivant&nbsp;:
 ```typescript
 import { DOMWrapper } from '@vue/test-utils';
 

@@ -1,13 +1,14 @@
 # Tester les formulaires
 
 Les formulaires dans Vue peuvent être aussi simples que des formulaires HTML classiques ou à l'inverse des arborescences complexes d'éléments de formulaire de composants Vue personnalisés.
+
 Nous passerons progressivement en revue les moyens d'interagir avec les éléments d'un formulaire, de définir leurs valeurs et de déclencher des événements.
 
 Les méthodes que nous utiliserons le plus seront `setValue()` et `trigger()`.
 
 ## Interagir avec les éléments d'un formulaire
 
-Jetons un œil à un formulaire très basique :
+Jetons un œil à un formulaire très basique&nbsp;:
 
 ```vue
 <template>
@@ -38,7 +39,7 @@ export default {
 
 La manière la plus courante de lier un `input` à une donnée dans Vue est d'utiliser `v-model`. Comme vous le savez probablement déjà, Vue gère les événements émis par chaque élément de formulaire et les propriétés qu'il accepte, ce qui facilite la façon de les gérer.
 
-Pour modifier la valeur d'un `input` dans VTU, vous pouvez utiliser la méthode `setValue()`. Elle accepte un paramètre, le plus souvent une `string` ou un `boolean`, et renvoie une `Promise` qui se `resolve` après que Vue a mis à jour le DOM.
+Pour modifier la valeur d'un `input` dans VTU, vous pouvez utiliser la méthode `setValue()`. Elle accepte un paramètre, le plus souvent une `string` ou un `boolean`, et renvoie une `Promise` qui se `resolve` après que Vue ait mis à jour le DOM.
 
 ```js
 test('définit une valeur', async () => {
@@ -53,7 +54,7 @@ test('définit une valeur', async () => {
 
 Comme vous pouvez le constater, `setValue` définit la propriété `value` de l'`input` avec ce que nous lui passons.
 
-Nous utilisons `await` pour nous assurer que Vue a terminé la mise à jour et que la nouvelle valeur se reflète dans le DOM, avant de faire des vérifications.
+Nous utilisons `await` pour nous assurer que Vue ait terminé la mise à jour et que la nouvelle valeur se reflète bien dans le DOM avant de faire des vérifications.
 
 ### Déclencher des évènements
 
@@ -105,7 +106,7 @@ Maintenant que nous connaissons les bases, plongeons dans des exemples plus comp
 
 ### Travailler avec des éléments de formulaire divers
 
-Nous avons vu que `setValue` fonctionne avec les `input` simples, mais est beaucoup plus polyvalent : il peut définir la valeur sur divers types d'`input`.
+Nous avons vu que `setValue` fonctionne avec les `input` simples, mais est en vérité beaucoup plus polyvalent&nbsp;: il peut définir la valeur sur divers types d'`input`.
 
 Examinons un formulaire plus complexe, qui comporte plusieurs types d'`input`.
 
@@ -185,7 +186,6 @@ Nous avons défini les valeurs dans notre formulaire, il est maintenant temps de
 
 Les événements ne sont pas toujours des simples `click`. Vue vous permet d'écouter tous les types d'événements DOM, d'ajouter des modificateurs spéciaux tels que `.prevent` et plus encore. Regardons comment nous pouvons les tester.
 
-In our form above, we moved the event from the `button` to the `form` element. This is a good practice to follow, as this allows you to submit a form by hitting the `enter` key, which is a more native approach.
 Dans notre formulaire ci-dessus, nous avons déplacé l'événement du `button` vers l'élément `form`. C'est une bonne pratique à suivre, car cela vous permet de soumettre un formulaire en appuyant sur la touche `entrée`, ce qui est une approche plus native.
 
 Pour déclencher l'évènement `submit`, nous utilisons à nouveau la méthode `trigger`.
@@ -222,7 +222,7 @@ Pour tester le modificateur d'événement, nous avons directement copié-collé 
 Les modificateurs d'événements natifs tels que `.prevent` et `.stop` sont spécifiques à Vue et nous n'avons pas besoin de les tester, Vue le fait déjà.
 :::
 
-Ensuite, nous faisons une simple vérification : est-ce que le formulaire a émis l'événement et les données sont-elles correctes.
+Ensuite, nous faisons une simple vérification&nbsp;: est-ce que le formulaire a émis l'événement et les données sont-elles correctes.
 
 #### Soumission de formulaire native
 
@@ -230,13 +230,14 @@ Le déclenchement d'un événement `submit` sur un élément `<form>` imite le c
 
 #### Plusieurs modificateurs sur un même évènement
 
-Supposons que vous ayez un formulaire très détaillé et très complexe, avec une gestion d'interaction utilisateur spéciale. Comment pouvons-nous le tester ?
+Supposons que vous ayez un formulaire très détaillé et très complexe, avec une gestion d'interaction utilisateur spéciale. Comment pouvons-nous le tester&nbsp;?
 
 ```html
 <input @keydown.meta.c.exact.prevent="captureCopy" v-model="input" />
 ```
 
 Supposons que nous ayons une entrée qui gère lorsque l'utilisateur fait `cmd` + `c`, et que nous voulons l'intercepter et l'empêcher de copier. Tester cela est aussi simple que de copier et coller l'événement du composant vers la méthode `trigger()`.
+
 ```js
 test('gère des évènements complexes', async () => {
   const wrapper = mount(Component);
@@ -246,11 +247,11 @@ test('gère des évènements complexes', async () => {
   // faites les vérifications ici
 });
 ```
-Vue Test Utils lit l'événement et applique les propriétés appropriées à l'objet événement. Dans ce cas, cela correspondra à quelque chose comme ceci :
+Vue Test Utils lit l'événement et applique les propriétés appropriées à l'objet événement. Dans ce cas, cela correspondra à quelque chose comme ceci&nbsp;:
 
 ```js
 // {
-  // ... other properties
+  // ... autres propriétés
   // "key": "c",
   // "metaKey": true
 // }
@@ -289,7 +290,7 @@ export default {
 ```js
 import Form from './Form.vue';
 
-test('émets un évènement seulement si l\'on perd le focus sur un bouton', () => {
+test('émet un évènement seulement si l\'on perd le focus du bouton', () => {
   const wrapper = mount(Form);
 
   const componentToGetFocus = wrapper.find('button');
@@ -302,7 +303,7 @@ test('émets un évènement seulement si l\'on perd le focus sur un bouton', () 
 });
 ```
 
-ci, nous supposons que notre code vérifie à l'intérieur de l'objet `event` si `relatedTarget` est un bouton ou non. Nous pouvons simplement passer une référence de l'élément, en imitant ce qui se produirait si l'utilisateur clique sur un `button` après avoir tapé quelque chose dans l'`input`.
+Ici, nous supposons que notre code vérifie à l'intérieur de l'objet `event` si `relatedTarget` est un bouton ou non. Nous pouvons simplement passer une référence de l'élément, en imitant ce qui se produirait si l'utilisateur clique sur un `button` après avoir tapé quelque chose dans l'`input`.
 
 ## Interagir avec des `input` de Vue
 
@@ -310,7 +311,7 @@ Les `input` ne sont pas toujours des éléments simples. Nous utilisons souvent 
 
 Le test de formulaires utilisant de tels `input` peut être intimidant au début, mais avec quelques règles simples, cela devient rapidement un jeu d'enfant.
 
-Ci-dessous se trouve un composant qui comprend un `label` et un `input` :
+Ci-dessous se trouve un composant qui comprend un `label` et un `input`&nbsp;:
 
 ```vue
 <template>
@@ -333,7 +334,7 @@ export default {
 </script>
 ```
 
-Ce composant Vue émet également ce que vous tapez. Vous pouvez l'utiliser comme ceci :
+Ce composant Vue émet également ce que vous tapez. Vous pouvez l'utiliser comme ceci&nbsp;:
 
 ```html
 <custom-input v-model="input" label="Texte" class="text-input" />
@@ -357,7 +358,7 @@ Imaginons que votre composant `input` n'est pas aussi simple, car vous utilisez 
 
 Le cas échéant, vous pouvez définir la valeur directement en utilisant l'instance du composant et la méthode `setValue`.
 
-Supposons que nous ayons un formulaire qui utilise la `<textarea>` Vuetify :
+Supposons que nous ayons un formulaire qui utilise la `<textarea>` Vuetify&nbsp;:
 
 ```vue
 <template>

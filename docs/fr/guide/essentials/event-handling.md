@@ -29,7 +29,7 @@ Pour tester complètement ce composant, nous devrions vérifier qu'un événemen
 
 ## Tester les évènements émis
 
-Pour ce faire, nous allons nous appuyer sur la méthode `emitted()`. Elle **renvoie un objet avec tous les événements émis par le composant** et leurs arguments dans un tableau. Voyons comment cela fonctionne :
+Pour ce faire, nous allons nous appuyer sur la méthode `emitted()`. Elle **renvoie un objet avec tous les événements émis par le composant** et leurs arguments dans un tableau. Voyons comment elle fonctionne&nbsp;:
 
 ```js
 test('émet un évènement lorsque le bouton est cliqué', () => {
@@ -42,15 +42,15 @@ test('émet un évènement lorsque le bouton est cliqué', () => {
 });
 ```
 
-> Si vous n'avez pas vu `trigger()` auparavant, ne vous inquiétez pas. Il est utilisé pour simuler une interaction utilisateur. Vous pouvez en apprendre plus dans [Formulaires](./forms).
+> Si vous n'avez pas vu `trigger()` auparavant, ne vous inquiétez pas. Il est utilisé pour simuler une interaction utilisateur. Vous pouvez en apprendre plus dans [Tester les formulaires](./forms).
 
-La première chose à noter est que `emitted()` renvoie un objet, où chaque clé correspond à un événement émis. Dans ce cas, `increment`.
+La première chose à noter est que `emitted()` renvoie un objet, où chaque clé correspond à un événement émis. Dans notre cas&nbsp;: `increment`.
 
 Ce test devrait passer. Nous nous sommes assurés d'avoir émis un événement avec le nom approprié.
 
 ## Tester les arguments de l'évènement
 
-C'est bien - mais nous pouvons faire encore mieux ! Assurons-nous d'émettre les bons arguments lorsque `this.$emit('increment', this.count)` est appelé.
+C'est pas mal … mais nous pouvons faire encore mieux&nbsp;! Assurons-nous d'émettre les bons arguments lorsque `this.$emit('increment', this.count)` est appelé.
 
 La prochaine étape consiste à vérifier que l'événement contient la valeur de `count`. Nous pouvons le faire en passant un argument à `emitted()`.
 
@@ -140,7 +140,7 @@ test('émet un évènement avec le compteur quand le boutton est cliqué', () =>
 });
 ```
 
-En testant des données complexes telles que des objets, cela ne diffère pas des tests de valeurs simples telles que des nombres ou des chaînes de caractères.
+En testant des types complexes tels que des objets, cela ne diffère pas des tests de types primaires tels que des nombres ou des chaînes de caractères.
 
 ## API de Composition
 

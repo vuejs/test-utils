@@ -19,7 +19,7 @@ Voir la [documentation](https://test-utils.vuejs.org/fr).
 
 ## Développement
 
-Commencez en exécutant la commande `pnpm install`. Vous pouvez exécuter les tests avec la commande `pnpm test`. C'est tout !
+Commencez en exécutant la commande `pnpm install`. Vous pouvez exécuter les tests avec la commande `pnpm test`. C'est tout&nbsp;!
 
 ## Comparaison avec Vue Test Utils v1 (qui cible Vue 2)
 

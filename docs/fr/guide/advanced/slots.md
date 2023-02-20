@@ -4,7 +4,7 @@ Vue Test Utils offre des fonctionnalités utiles pour tester les composants qui 
 
 ## Un exemple simple
 
-Vous pourriez avoir un composant `<layout>` générique qui utilise un `slot` par défaut pour afficher du contenu. Par exemple :
+Vous pourriez avoir un composant `<layout>` générique qui utilise un `slot` par défaut pour afficher du contenu. Par exemple&nbsp;:
 
 ```js
 const Layout = {
@@ -18,8 +18,8 @@ const Layout = {
         Merci de votre visite.
       </footer>
     </div>
-  `
-}
+  `,
+};
 ```
 
 Vous pourriez vouloir écrire un test pour vous assurer que le contenu du `slot` par défaut est bien affiché. VTU fournit l'option de `mount()`: `slots`.
@@ -36,7 +36,7 @@ test('affiche le slot par défaut', () => {
 });
 ```
 
-Le test passe ! Dans cet exemple, nous transmettons du contenu texte au `slot` par défaut. Si vous voulez être encore plus spécifique et vérifier que le contenu du `slot` par défaut est rendu à l'intérieur de `<main>`, vous pourriez changer la vérification :
+Le test passe&nbsp;! Dans cet exemple, nous transmettons du texte au `slot` par défaut. Si vous voulez être encore plus spécifique et vérifier que le contenu du `slot` par défaut est rendu à l'intérieur de `<main>`, vous pourriez changer la vérification&nbsp;:
 
 ```js
 test('affiche le slot par défaut', () => {
@@ -52,7 +52,7 @@ test('affiche le slot par défaut', () => {
 
 ## Slots Nommés
 
-Vous pourriez avoir un composant `<layout>` plus complexe avec certains `slots` nommés. Par exemple :
+Vous pourriez avoir un composant `<layout>` plus complexe avec certains `slots` nommés. Par exemple&nbsp;:
 
 ```js
 const Layout = {
@@ -93,7 +93,7 @@ test('affiche tous les slots', () => {
 
 ## Slots Multiples
 
-Vous pouvez aussi passer un tableau de `slots` :
+Vous pouvez aussi passer un tableau de `slots`&nbsp;:
 
 ```js
 test('affiche la page', () => {
@@ -113,7 +113,7 @@ test('affiche la page', () => {
 
 ## Utilisation avancée
 
-Vous pouvez également passer une fonction de rendu, un objet avec un `template` ou même un composant importé à partir d'un fichier `vue` à la fonction `mount`, dans les options de `slots` :
+Vous pouvez également passer une fonction de rendu, un objet avec un `template` ou même un composant importé à partir d'un fichier `vue` à la fonction `mount`, dans les options de `slots`&nbsp;:
 
 ```js
 import { h } from 'vue';
@@ -126,8 +126,8 @@ test('affiche la page entière', () => {
       main: h('div', 'Contenu principal'),
       sidebar: { template: '<div>Barre latérale</div>' },
       footer: '<div>Pied de page</div>',
-    }
-  })
+    },
+  });
 
   expect(wrapper.html()).toContain('<div>Haut de page</div>');
   expect(wrapper.html()).toContain('<div>Contenu principal</div>');
@@ -139,7 +139,7 @@ test('affiche la page entière', () => {
 
 ## Slots à portée limitée (Scoped Slots)
 
-[Les slots à portée limitée](https://v3.vuejs.org/guide/component-slots.html#scoped-slots) et les `bindings` sont aussi supportés par VTU. 
+[Les slots à portée limitée](https://v3.vuejs.org/guide/component-slots.html#scoped-slots) et les liaisons de données (`bindings`) sont aussi supportés par VTU. 
 
 ```js
 const ComponentWithSlots = {
@@ -185,7 +185,7 @@ test('slot à portée limitée', () => {
 
 ## Conclusion
 
-- Utilisez l'option de `mount()` : `slots` pour tester que les composants utilisant `<slot>` affiche correctement le contenu.
+- Utilisez l'option de `mount()`&nbsp;: `slots` pour tester que les composants utilisant `<slot>` affiche correctement le contenu.
 - Le contenu peut être une `string`, une fonction de rendu ou un composant Vue importé.
 - Utilisez `default` pour le `slot` par défaut et le nom exact pour les `slots` nommés.
 - Les `slots` à portée limitée et le raccourci `#` sont également pris en charge.

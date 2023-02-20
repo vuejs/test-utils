@@ -2,9 +2,9 @@
 
 [`mount`](/fr/api/#mount) renvoie un `VueWrapper` avec de nombreuses méthodes pratiques pour tester les composants Vue. Parfois, vous souhaiterez accéder à l'instance Vue sous-jacente. Vous pouvez y accéder via la propriété `vm`.
 
-## Un Exemple Simple
+## Un exemple simple
 
-Voici un composant simple qui combine des `props` et `data` pour afficher une salutation :
+Voici un composant simple qui combine des `props` et `data` pour afficher une salutation&nbsp;:
 
 ```ts
 test('affiche une salutation', () => {
@@ -13,7 +13,7 @@ test('affiche une salutation', () => {
     props: ['msg1'],
     data() {
       return {
-        msg2: 'tout le monde'
+        msg2: 'tout le monde',
       };
     },
   };
@@ -28,7 +28,7 @@ test('affiche une salutation', () => {
 });
 ```
 
-Regardons ce qui est disponible dans `vm` avec `console.log(wrapper.vm)` :
+Regardons ce qui est disponible dans `vm` avec `console.log(wrapper.vm)`&nbsp;:
 
 ```js
 console.log(wrapper.vm);
@@ -39,13 +39,13 @@ console.log(wrapper.vm);
 // }
 ```
 
-Nous retrouvons à la fois `msg1` et `msg2` ! D'autres éléments comme les `methods` et les `computed` apparaîtront également, si elles sont définies. Lors de l'écriture d'un test, il est généralement recommandé de vérifier sur le DOM (en utilisant quelque chose comme `wrapper.html()`). Cependant, dans de rares circonstances, vous pourriez avoir besoin d'accéder à l'instance Vue sous-jacente.
+Nous retrouvons à la fois `msg1` et `msg2`&nbsp;! D'autres éléments comme les `methods` et les `computed` apparaîtront également, si elles sont définies. Lors de l'écriture d'un test, il est généralement recommandé de vérifier les résultats dans le DOM (en utilisant quelque chose comme `wrapper.html()`). Cependant, dans de rares circonstances, vous pourriez avoir besoin d'accéder à l'instance Vue sous-jacente.
 
 ## Utilisation avec `getComponent` et `findComponent`
 
-`getComponent` et `findComponent` retourne un `VueWrapper` - semblable à celui que nous retourne `mount()`. This means you can also access all the same properties, including `vm`, on the result of `getComponent` or `findComponent`.
+`getComponent` et `findComponent` retourne un `VueWrapper` - semblable à celui que nous retourne `mount()`. Cela veut dire que vous pouvez accéder aux mêmes propriétés, incluant `vm`, par le résultat de `getComponent` ou `findComponent`.
 
-Prenons un exemple simple :
+Prenons un exemple simple&nbsp;:
 
 ```js
 test('vérifie que les bonnes props sont passées', () => {
@@ -66,14 +66,10 @@ test('vérifie que les bonnes props sont passées', () => {
 });
 ```
 
-Une manière plus approfondie de tester cela consisterait à vérifier par rapport au contenu affiché. En faisant cela, vous affirmez que la bonne `prop` est passée et affichée.
-
-::: tip
-Note : si vous utilisez un composant `<script setup>`, `vm` ne sera pas disponible. C'est parce que les composants `<script setup>` sont [fermés par défaut](https://github.com/vuejs/rfcs/blob/master/active-rfcs/0040-script-setup.md#exposing-components-public-interface). Pour ces composants, et en général, évitez `vm` et faites vos vérifications par rapport à ce qui est affiché.
-:::
+Une manière plus approfondie de tester cela consisterait à vérifier le contenu affiché. En faisant cela, vous vérifiez que la bonne `prop` est passée et affichée.
 
 :::warning Le type `WrapperLike` en utilisant un sélecteur CSS 
-Lors de l'utilisation de `wrapper.findComponent('.foo')` par exemple, VTU renverra le type `WrapperLike`. C'est parce que les composants fonctionnels auraient besoin d'un `DOMWrapper` sinon d'un `VueWrapper`. Vous pouvez forcer le retour d'un `VueWrapper` en fournissant le type de composant correct :
+Lors de l'utilisation de `wrapper.findComponent('.foo')` par exemple, VTU renverra le type `WrapperLike`. C'est parce que les composants fonctionnels auraient besoin d'un `DOMWrapper` au lieu d'un `VueWrapper`. Vous pouvez forcer le retour d'un `VueWrapper` en fournissant le type de composant correct&nbsp;:
 
 ```typescript
 wrapper.findComponent('.foo'); // retourne un `WrapperLike`.

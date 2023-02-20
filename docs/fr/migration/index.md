@@ -1,12 +1,12 @@
 # Migrer depuis Vue Test Utils v1
 
-Voici une révision des modifications de VTU v1 à VTU v2 et quelques extraits de code pour montrer les modifications nécessaires à la migration. Si vous rencontrez un bug ou une différence de comportement non documentée ici, veuillez [ouvrir un ticket](https://github.com/vuejs/test-utils/issues/new).
+Voici une liste des modifications de VTU v1 à VTU v2 et quelques extraits de code pour montrer les modifications nécessaires à la migration. Si vous rencontrez un bug ou une différence de comportement non documentée ici, veuillez [ouvrir un ticket](https://github.com/vuejs/test-utils/issues/new).
 
 ## Changements
 
 ### `propsData` est maintenant `props`
 
-Dans VTU v1, vous passiez les `props` à l'aide de l'option `mount()` : `propsData`. Cela pouvait porter à confusion, car vous déclariez les props dans l'option `props` dans vos composants Vue. Maintenant, vous pouvez passer les `props` à l'aide de l'option de `mount()` : `props`. `propsData` restera néanmoins pris en charge par souci de compatibilité.
+Dans VTU v1, vous passiez les `props` à l'aide de l'option `mount()`&nbsp;: `propsData`. Cela pouvait porter à confusion, car vous déclariez les props dans l'option `props` dans vos composants Vue. Maintenant, vous pouvez passer les `props` à l'aide de l'option de `mount()`&nbsp;: `props`. `propsData` restera néanmoins pris en charge par souci de compatibilité.
 
 **Avant**:
 
@@ -18,7 +18,7 @@ const App = {
 const wrapper = mount(App, {
   propsData: {
     foo: 'bar',
-  }
+  },
 });
 ```
 
@@ -32,17 +32,17 @@ const App = {
 const wrapper = mount(App, {
   props: {
     foo: 'bar',
-  }
+  },
 });
 ```
 
-### Plus de `createLocalVue`
+### Suppression de `createLocalVue`
 
 En Vue 2, il était courant pour les plugins de modifier l'instance globale de Vue et d'attacher diverses méthodes au prototype. Depuis Vue 3, ce n'est plus le cas - vous créez une nouvelle application Vue à l'aide de `createApp` plutôt que `new Vue`, et installez les plugins avec `createApp(App).use(/* ... */)`.
 
-Pour éviter de polluer l'instance globale de Vue dans Vue Test Utils v1, nous avons fourni une fonction `createLocalVue` et une option pour `mount()` : `localVue`. Cela vous permettrait d'avoir une instance Vue isolée pour chaque test, évitant que les tests interfèrent entre eux. Ce n'est plus un problème en Vue 3, car les plugins, les mixins, etc. ne modifient pas l'instance globale de Vue.
+Pour éviter de polluer l'instance globale de Vue dans Vue Test Utils v1, nous avons fourni une fonction `createLocalVue` et une option pour `mount()`&nbsp;: `localVue`. Cela vous permettrait d'avoir une instance Vue isolée pour chaque test, évitant que les tests interfèrent entre eux. Ce n'est plus un problème en Vue 3, car les plugins, les mixins, etc. ne modifient pas l'instance globale de Vue.
 
-La plupart du temps, dans le cas où vous auriez du utilisé `createLocalVue` et l'option de `mount()` `localVue` pour installer un plugin, un mixin ou une directive, vous pouvez dorénavant utiliser l'option `global`. Voici un exemple de composant et de test qui utilisait `localVue`, et comment cela se présente maintenant (en utilisant `global.plugins`, Vuex étant un plugin) :
+La plupart du temps, dans le cas où vous auriez dû utiliser `createLocalVue` et l'option de `mount()` `localVue` pour installer un plugin, un mixin ou une directive, vous pouvez utiliser l'option `global`. Voici un exemple de composant et de test qui utilisait `localVue`, et comment cela se présente maintenant (en utilisant `global.plugins`, Vuex étant un plugin)&nbsp;:
 
 **Avant**:
 
@@ -67,7 +67,7 @@ const store = new Vuex.Store({
 const wrapper = mount(App, {
   store,
   localVue,
-})
+});
 ```
 
 **Après**:
@@ -97,9 +97,9 @@ const wrapper = mount(App, {
 });
 ```
 
-### `mocks` and `stubs` sont maintenant dans `global`
+### `mocks` et `stubs` sont maintenant dans `global`
 
-Les `mocks` et les `stubs` sont appliqués à tous les composants, pas seulement à celui que vous passez à `mount()`. Pour aller dans ce sens, les `mocks` et les `stubs` sont dans la nouvelle option de `mount()` `global` :
+Les simulations (`mocks`) et les composants de substitution (`stubs`) sont appliqués à tous les composants, pas seulement à celui que vous passez à `mount()`. Pour aller dans ce sens, les `mocks` et les `stubs` sont dans la nouvelle option de `mount()` `global`&nbsp;:
 
 **Avant**:
 
@@ -143,9 +143,9 @@ const wrapper = mount(App, {
 
 ### `shallowMount` et `renderStubDefaultSlot`
 
-`shallowMount` est destiné à substituer tous les composants personnalisés. Comme dans Vue Test Utils v1, les composants substitués affichent toujours leur `<slot/>` par défaut. Bien que ce ne soit pas intentionnel, certains utilisateurs appréciaient cette fonctionnalité. Néanmoins, ce comportement est corrigé en v2 - **le contenu du slot pour un composant substitué n'est pas affiché**.
+`shallowMount` est destiné à substituer tous les composants enfants. Comme dans Vue Test Utils v1, les composants substitués affichent toujours leur `<slot/>` par défaut. Bien que ce ne soit pas intentionnel, certains utilisateurs appréciaient cette fonctionnalité. Néanmoins, ce comportement est corrigé en v2 - **le contenu du slot pour un composant substitué n'est donc plus affiché**.
 
-Prenons le code suivant :
+Prenons le code suivant&nbsp;:
 
 ```js
 import { shallowMount } from '@vue/test-utils';
@@ -199,7 +199,7 @@ describe('App', () => {
 });
 ```
 
-Vous pouvez restaurer l'ancien comportement de la manière suivante :
+Vous pouvez restaurer l'ancien comportement de la manière suivante&nbsp;:
 
 ```js
 import { config } from '@vue/test-utils';
@@ -209,17 +209,17 @@ config.global.renderStubDefaultSlot = true;
 
 ### `destroy` est maintenant `unmount` pour correspondre Vue 3
 
-Vue 3 a renommé `vm.$destroy` en `vm.$unmount`. Vue Test Utils a suivi le mouvement : `wrapper.destroy()` est maintenant `wrapper.unmount()`.
+Vue 3 a renommé `vm.$destroy` en `vm.$unmount`. Vue Test Utils a suivi le mouvement&nbsp;: `wrapper.destroy()` est maintenant `wrapper.unmount()`.
 
 ### `scopedSlots` est maintenant fusionné avec `slots`
 
 Vue 3 a unifié la syntaxe `slot` et `scoped-slot` en une seule syntaxe, `v-slot`. Vous pouvez en apprendre plus à ce sujet dans [la documentation](https://v3.vuejs.org/guide/migration/slots-unification.html#overview). Puisque `slot` et `scoped-slot` sont maintenant fusionnés, l'option de `mount()` `scopedSlots` est maintenant obsolète - utilisez simplement l'option de `mount()` `slots` pour tout dorénavant.
 
-### La portée des `slots` est maintenant exposé dans `params`
+### La portée des `slots` est maintenant exposée dans `params`
 
 Lors de l'utilisation de `template` pour le contenu d'un `slot`, si ce n'est pas explicitement défini à l'aide d'un tag `<template #slot-name="scopeVar">`, la portée d'un `slot` devient disponible dans l'objet `params` lorsque le `slot` est monté.
 
-```diff
+```diff javascript
 shallowMount(Component, {
 -  scopedSlots: {
 +  slots: {
@@ -245,7 +245,7 @@ wrapper.findAll('[data-test="token"]').at(0);
 wrapper.findAll('[data-test="token"]')[0];
 ```
 
-## Notes sur les mises à niveau des exécuteurs de tests.
+## Notes sur les mises à niveau des gestionnaires de tests
 
 > Vue Test Utils est un outil indépendant de tout framework - vous pouvez l'utiliser avec le gestionnaire de tests de votre choix.
 
@@ -255,11 +255,11 @@ Cette section essaie de regrouper les pièges courants repérés par notre commu
 
 ### `@vue/vue3-jest` + `jest@^28`
 
-Si vous avez décidé de mettre à niveau vos gestionnaires de tests vers une version plus moderne, gardez cela à l'esprit.
+Si vous avez décidé de mettre à niveau vos gestionnaires de tests vers une version plus moderne, jetez un coup d'œil aux points suivants.
 
 #### `ReferenceError: Vue is not defined` [vue-jest#479](https://github.com/vuejs/vue-jest/issues/479)
 
-Lorsque la dépendance `jest-environment-jsdom` est utilisée, elle utilise par défaut les librairies de l'[entrée `browser`](https://jestjs.io/fr/docs/configuration#testenvironmentoptions-object) du `package.json`. Vous pouvez la surcharger pour utiliser des importations `node` à la place et corriger cette erreur :
+Lorsque la dépendance `jest-environment-jsdom` est utilisée, elle utilise par défaut les librairies de l'[entrée `browser`](https://jestjs.io/fr/docs/configuration#testenvironmentoptions-object) du `package.json`. Vous pouvez la surcharger pour utiliser des importations `node` à la place et corriger cette erreur&nbsp;:
 
 ```js
 // jest.config.js
@@ -273,7 +273,7 @@ module.exports = {
 
 #### Les `snapshots` incluent maintenant les commentaires
 
-Si vous utilisez les tests `snapshot` et que les commentaires restent dans vos `snapshots`, notez que les `commentaires` sont désormais toujours [préservés](https://vuejs.org/api/application.html#app-config-compileroptions-comments) et ne sont supprimés qu'en production. Vous pouvez remplacer ce comportement en ajustant `app.config.compilerOptions` pour les supprimer des instantanés également :
+Si vous utilisez les tests `snapshot` et que les commentaires restent dans vos `snapshots`, notez que les `commentaires` sont désormais toujours [préservés](https://vuejs.org/api/application.html#app-config-compileroptions-comments) et ne sont supprimés qu'en production. Vous pouvez remplacer ce comportement en ajustant `app.config.compilerOptions` pour les supprimer des instantanées également&nbsp;:
   - Avec `vue-jest` [config](https://github.com/vuejs/vue-jest#compiler-options-in-vue-3).
     ```js
     // jest.config.js

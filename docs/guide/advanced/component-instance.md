@@ -65,12 +65,7 @@ test('asserts correct props are passed', () => {
 })
 ```
 
-A more thorough way to test this would be asserting against the rendered content. Doing this means you asserts the correct prop is passed *and* rendered. 
-
-::: tip
-
-Note: if you are using a `<script setup>` component, `vm` will not be available. That's because `<script setup>` components are [closed by default](https://github.com/vuejs/rfcs/blob/master/active-rfcs/0040-script-setup.md#exposing-components-public-interface). For these components, and in general, consider avoiding `vm` and asserting against the rendered markup.
-:::
+A more thorough way to test this would be asserting against the rendered content. Doing this means you asserts the correct prop is passed *and* rendered.
 
 :::warning WrapperLike type when using CSS selector
 When using `wrapper.findComponent('.foo')` for example then VTU will return the `WrapperLike` type. This is because functional components

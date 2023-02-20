@@ -1,6 +1,6 @@
 # Tester Teleport
 
-Vue 3 offre un nouveau composant intégré : `<Teleport>`, qui permet aux composants de "téléporter" leur contenu très loin de leur propre `<template>`. La plupart des tests écrits avec Vue Test Utils sont limités au composant passé à `mount`, ce qui introduit une certaine complexité lorsqu'il s'agit de tester un composant qui est téléporté en dehors du composant où il est initialement rendu.
+Vue 3 offre un nouveau composant intégré&nbsp;: `<Teleport>`, qui permet aux composants de "téléporter" leur contenu très loin de leur propre `<template>`. La plupart des tests écrits avec Vue Test Utils sont limités au composant passé à `mount`, ce qui introduit une certaine complexité lorsqu'il s'agit de tester un composant qui est téléporté en dehors du composant où il est initialement rendu.
 
 Voici quelques techniques pour tester les composants en utilisant `<Teleport>`.
 
@@ -12,7 +12,7 @@ Si vous voulez tester le reste de votre composant en ignorant le "teleport", vou
 
 Dans cet exemple, nous testons un composant `<Navbar>`. Il affiche un composant `<SignUp>` à l'intérieur d'un `<Teleport>`. La propriété `target` de `<Teleport>` est un élément situé en dehors du composant `<Navbar>`.
 
-Voici le composant `Navbar.vue` :
+Voici le composant `Navbar.vue`&nbsp;:
 
 ```vue
 <template>
@@ -72,7 +72,7 @@ export default {
 
 ## Monter le Composant
 
-Commençons avec un test simple :
+Commençons avec un test simple&nbsp;:
 
 ```ts
 import { mount } from '@vue/test-utils';
@@ -85,7 +85,7 @@ test('émet un évènement signup quand le formulaire est soumit', async () => {
 });
 ```
 
-Exécuter ce test vous donnera un avertissement (`warning`) : `[Vue warn]: Failed to locate Teleport target with selector "#modal"`. Créons-le :
+Exécuter ce test vous donnera un avertissement (`warning`)&nbsp;: `[Vue warn]: Failed to locate Teleport target with selector "#modal"`. Créons-le&nbsp;:
 
 ```ts {5-15}
 import { mount } from '@vue/test-utils';
@@ -97,7 +97,7 @@ beforeEach(() => {
   const el = document.createElement('div');
   el.id = 'modal';
   document.body.appendChild(el);
-})
+});
 
 afterEach(() => {
   // nous nettoyons un peu
@@ -113,11 +113,11 @@ Nous utilisons Jest pour cet exemple, qui ne réinitialise pas le DOM à chaque 
 
 ## Interagir avec le Composant Téléporté
 
-La prochaine étape consiste à remplir le champ "nom d'utilisateur". Malheureusement, nous ne pouvons pas utiliser `wrapper.find('input')`. Pourquoi ? Un rapide `console.log(wrapper.html())` nous montre que :
+La prochaine étape consiste à remplir le champ "nom d'utilisateur". Malheureusement, nous ne pouvons pas utiliser `wrapper.find('input')`. Pourquoi&nbsp;? Un rapide `console.log(wrapper.html())` nous montre que&nbsp;:
 
 ```html
-<!--teleport commence ici-->
-<!--teleport termine ici-->
+<!--teleport starts here-->
+<!--teleport ends here-->
 ```
 
 Nous voyons certains commentaires utilisés par Vue pour gérer `<Teleport>` - mais pas de `<input>` ici. C'est parce que le composant `<Signup>` (et son HTML) ne sont plus affichés à l'intérieur de `<Navbar>` - il a été téléporté à l'extérieur.
@@ -142,7 +142,7 @@ test('teleport', async () => {
 
 `getComponent` retourne un `VueWrapper`. Maintenant, vous pouvez utiliser des méthodes telles que `get`, `find` et `trigger`.
 
-Finissons le test :
+Finissons le test&nbsp;:
 
 ```ts {4-8}
 test('teleport', async () => {
@@ -156,9 +156,9 @@ test('teleport', async () => {
 });
 ```
 
-Cela fonctionne !
+Cela fonctionne&nbsp;!
 
-Le test complet :
+Le test complet&nbsp;:
 
 ```ts
 import { mount } from '@vue/test-utils';

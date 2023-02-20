@@ -2,7 +2,7 @@
 
 En général, vous voudriez tester le DOM affiché après une transition, c'est pourquoi Vue Test Utils simule par défaut `<transition>` et `<transition-group>`.
 
-Voici un composant simple qui passe d'un contenu à un autre avec une transition de fondu :
+Voici un composant simple qui passe d'un contenu à un autre avec une transition de fondu&nbsp;:
 
 ```vue
 <template>
@@ -38,7 +38,7 @@ export default {
 </style>
 ```
 
-Comme Vue Test Utils substitue les transitions, vous pouvez tester le composant ci-dessus de la même manière que vous testez n'importe quel autre composant :
+Comme Vue Test Utils substitue les transitions, vous pouvez tester le composant ci-dessus de la même manière que vous testez n'importe quel autre composant&nbsp;:
 
 ```js
 import Component from './Component.vue';

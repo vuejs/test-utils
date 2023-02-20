@@ -8,7 +8,7 @@ Vous pouvez aussi regarder [la documentation `v-model` VueJS](https://vuejs.org/
 
 ## Un Exemple Simple
 
-Ci-dessous un composant simple `Editor` :
+Ci-dessous un composant simple `Editor`&nbsp;:
 
 ```js
 const Editor = {
@@ -16,6 +16,7 @@ const Editor = {
     label: String,
     modelValue: String,
   },
+  emits: ['update:modelValue'],
   template: `<div>
     <label>{{label}}</label>
     <input :value="modelValue" @input="$emit('update:modelValue', $event.target.value)">
@@ -23,7 +24,7 @@ const Editor = {
 };
 ```
 
-Ce composant se comportera comme un composant `input` :
+Ce composant se comportera comme un composant `input`&nbsp;:
 
 ```js
 const App = {
@@ -41,7 +42,7 @@ const App = {
 
 Maintenant que nous avons typé notre `input`, il modifiera la propriété `texte` dans notre composant.
 
-Pour tester ce comportement :
+Pour tester ce comportement&nbsp;:
 
 ```js
 test('modelValue est modifié', async () => {
@@ -61,7 +62,7 @@ test('modelValue est modifié', async () => {
 
 Dans certaines situations, nous pouvons avoir plusieurs `v-model` ciblant des propriétés spécifiques.
 
-Par exemple, dans un éditeur de transactions, nous pouvons avoir des propriétés `currency` et `modelValue`.
+Par exemple, dans un éditeur de transactions financières, nous pouvons avoir des propriétés `currency` et `modelValue`.
 
 ```js
 const MoneyEditor = {
@@ -70,10 +71,11 @@ const MoneyEditor = {
     <input :value="modelValue" type="number" @input="$emit('update:modelValue', $event.target.value)"/>
   </div>`,
   props: ['currency', 'modelValue'],
+  emits: ['update:currency', 'update:modelValue'],
 };
 ```
 
-Nous pouvons tester les deux comme ceci :
+Nous pouvons tester les deux comme ceci&nbsp;:
 
 ```js
 test('modelValue et currency sont modifiés', async () => {
@@ -83,7 +85,7 @@ test('modelValue et currency sont modifiés', async () => {
       'onUpdate:modelValue': (e) => wrapper.setProps({ modelValue: e }),
       currency: '€',
       'onUpdate:currency': (e) => wrapper.setProps({ currency: e }),
-    }
+    },
   });
 
   const [currencyInput, modelValueInput] = wrapper.findAll('input');

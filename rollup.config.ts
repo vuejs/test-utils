@@ -25,7 +25,10 @@ function createEntry(options) {
       'vue',
       isEsmBrowser
         ? '@vue/compiler-dom/dist/compiler-dom.esm-browser'
-        : '@vue/compiler-dom'
+        : '@vue/compiler-dom',
+      isEsmBrowser
+        ? '@vue/server-renderer/dist/compiler-dom.esm-browser'
+        : '@vue/server-renderer'
     ],
     plugins: [
       replace({
@@ -47,7 +50,8 @@ function createEntry(options) {
       format,
       globals: {
         vue: 'Vue',
-        '@vue/compiler-dom': 'VueCompilerDOM'
+        '@vue/compiler-dom': 'VueCompilerDOM',
+        '@vue/server-renderer': 'VueServerRenderer'
       }
     }
   }

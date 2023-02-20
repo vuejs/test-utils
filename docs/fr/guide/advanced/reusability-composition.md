@@ -2,7 +2,7 @@
 
 ## Tester des composables
 
-Lorsque vous travaillez avec l'API de composition et que vous créez des composables, vous voulez souvent n'en tester que le composable seul. Commençons par un exemple simple :
+Lorsque vous travaillez avec l'API de composition et que vous créez des composables, vous voulez parfois ne tester que le composable seul. Commençons par un exemple simple&nbsp;:
 
 ```typescript
 export function useCounter() {
@@ -16,7 +16,7 @@ export function useCounter() {
 };
 ```
 
-Dans ce cas, vous n'avez pas vraiment besoin de `@vue/test-utils`. Regardez par vous-même :
+Dans ce cas, vous n'avez pas vraiment besoin de `@vue/test-utils`. Regardez par vous-même&nbsp;:
 
 ```typescript
 test('incrémente le compteur', () => {
@@ -89,7 +89,7 @@ Vue offre un moyen de passer des `props` à tous les composants enfants avec `pr
 
 ### Tester `provide`
 
-Disons que vous vouliez tester le composant suivant :
+Disons que vous vouliez tester le composant suivant&nbsp;:
 ```vue
 <template>
   <div>
@@ -105,7 +105,7 @@ provide('ma-clef', 'données');
 Dans ce cas, vous pouvez soit rendre un composant enfant et tester une utilisation correcte de `provide`, soit créer un simple composant d'aide aux tests et le passer dans le `slot` par défaut.
 
 ```typescript
-test('fourni de la donnée correcte', () => {
+test('fournit de la donnée correcte', () => {
   const TestComponent = defineComponent({
     template: '<span id="provide-test">{{value}}</span>',
     setup () {
@@ -124,7 +124,7 @@ test('fourni de la donnée correcte', () => {
 });
 ```
 
-Si votre composant ne contient pas de `slot`, vous pouvez utiliser un composant de remplacement (`stub`) et remplacer un composant enfant par votre composant de test :
+Si votre composant ne contient pas de `slot`, vous pouvez utiliser un composant de substitution (`stub`) et remplacer un composant enfant par votre composant de test&nbsp;:
 
 ```vue
 <template>
@@ -136,14 +136,14 @@ Si votre composant ne contient pas de `slot`, vous pouvez utiliser un composant 
 <script setup>
 import SomeChild from './SomeChild.vue';
 
-provide('my-key', 'some-data');
+provide('ma-clef', 'données');
 </script>
 ```
 
-Le test sera :
+Le test sera&nbsp;:
 
 ```typescript
-test('fournir de la donnée correcte', () => {
+test('fournit de la donnée correcte', () => {
   const TestComponent = defineComponent({
     template: '<span id="provide-test">{{value}}</span>',
     setup () {
@@ -180,7 +180,7 @@ const value = inject('ma-clef');
 </script>
 ```
 
-Le test unitaire devrait ressembler à ça : 
+Le test unitaire devrait ressembler à ça&nbsp;: 
 
 ```typescript
 test('affiche de la donnée correcte', () => {
@@ -192,7 +192,7 @@ test('affiche de la donnée correcte', () => {
     },
   });
 
-  expect(wrapper.text()).toBe('some-data');
+  expect(wrapper.text()).toBe('données');
 });
 ```
 
