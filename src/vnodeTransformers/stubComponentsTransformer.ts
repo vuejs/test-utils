@@ -99,8 +99,10 @@ const resolveComponentStubByName = (
 
 export interface CreateStubComponentsTransformerConfig {
   rootComponents: {
-    legacy?: Component
+    // Component which has been passed to mount. For functional components it contains a wrapper
     component?: Component
+    // If component is functional then contains the original component otherwise empty
+    functional?: Component
   }
   stubs?: Record<string, Component | boolean>
   shallow?: boolean
@@ -168,7 +170,7 @@ export function createStubComponentsTransformer({
       // Don't stub mounted component on root level
       (rootComponents.component === type && !instance?.parent) ||
       // Don't stub component with compat wrapper
-      (rootComponents.legacy && rootComponents.legacy === type)
+      (rootComponents.functional && rootComponents.functional === type)
     ) {
       return type
     }
