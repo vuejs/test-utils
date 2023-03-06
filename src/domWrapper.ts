@@ -11,7 +11,10 @@ import { isRefSelector } from './utils'
 import { createWrapperError } from './errorWrapper'
 
 export class DOMWrapper<NodeType extends Node> extends BaseWrapper<NodeType> {
-  constructor(element: NodeType) {
+  constructor(element: NodeType | null | undefined) {
+    if (!element) {
+      return createWrapperError('DOMWrapper')
+    }
     super(element)
     // plugins hook
     config.plugins.DOMWrapper.extend(this)
