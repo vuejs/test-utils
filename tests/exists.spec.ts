@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import { h, defineComponent } from 'vue'
 
-import { mount } from '../src'
+import { DOMWrapper, mount } from '../src'
 
 describe('exists', () => {
   it('returns false when element does not exist', () => {
@@ -49,5 +49,10 @@ describe('exists', () => {
     const child = wrapper.findComponent(ChildComponent)
     await wrapper.setProps({ hide: true })
     expect(child.exists()).toBe(false)
+  })
+
+  it('returns false when wrapper is manually constructed against nullish element', () => {
+    const wrapper = new DOMWrapper(null)
+    expect(wrapper.exists()).toBe(false)
   })
 })

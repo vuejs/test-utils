@@ -7,7 +7,9 @@ export enum WrapperType {
   VueWrapper
 }
 
-type DOMWrapperFactory = <T extends Node>(element: T) => DOMWrapperType<T>
+type DOMWrapperFactory = <T extends Node>(
+  element: T | null | undefined
+) => DOMWrapperType<T>
 type VueWrapperFactory = <T extends ComponentPublicInstance>(
   app: App | null,
   vm: T,
