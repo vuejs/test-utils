@@ -4,6 +4,7 @@ import { mount, shallowMount, VueWrapper } from '../src'
 import ComponentWithChildren from './components/ComponentWithChildren.vue'
 import ScriptSetupWithChildren from './components/ScriptSetupWithChildren.vue'
 import DynamicComponentWithComputedProperty from './components/DynamicComponentWithComputedProperty.vue'
+import RecursiveComponent from './components/RecursiveComponent.vue'
 
 describe('shallowMount', () => {
   it('renders props for stubbed component in a snapshot', () => {
@@ -69,6 +70,21 @@ describe('shallowMount', () => {
         '  <component-without-name-stub></component-without-name-stub>\n' +
         '  <script-setup-stub></script-setup-stub>\n' +
         '  <with-props-stub></with-props-stub>\n' +
+        '</div>'
+    )
+  })
+
+  it('stub instance of same component', () => {
+    const wrapper = mount(RecursiveComponent, {
+      shallow: true,
+      props: {
+        first: true
+      }
+    })
+    expect(wrapper.html()).toEqual(
+      '<div>\n' +
+        '  <hello-stub></hello-stub>\n' +
+        '  <recursive-component-stub first="false"></recursive-component-stub>\n' +
         '</div>'
     )
   })

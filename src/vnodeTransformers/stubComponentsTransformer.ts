@@ -36,11 +36,6 @@ interface StubOptions {
   renderStubDefaultSlot?: boolean
 }
 
-const doNotStubComponents: WeakSet<ConcreteComponent> = new WeakSet()
-const shouldNotStub = (type: ConcreteComponent) => doNotStubComponents.has(type)
-export const addToDoNotStubComponents = (type: ConcreteComponent) =>
-  doNotStubComponents.add(type)
-
 const normalizeStubProps = (props: ComponentPropsOptions) => {
   // props are always normalized to object syntax
   const $props = props as unknown as ComponentObjectPropsOptions
@@ -102,13 +97,20 @@ const resolveComponentStubByName = (
   }
 }
 
-interface CreateStubComponentsTransformerConfig {
+export interface CreateStubComponentsTransformerConfig {
+  rootComponents: {
+    // Component which has been passed to mount. For functional components it contains a wrapper
+    component?: Component
+    // If component is functional then contains the original component otherwise empty
+    functional?: Component
+  }
   stubs?: Record<string, Component | boolean>
   shallow?: boolean
   renderStubDefaultSlot: boolean
 }
 
 export function createStubComponentsTransformer({
+  rootComponents,
   stubs = {},
   shallow = false,
   renderStubDefaultSlot = false
@@ -162,7 +164,14 @@ export function createStubComponentsTransformer({
       })
     }
 
-    if (shouldNotStub(type)) {
+    if (
+      // Don't stub VTU_ROOT component
+      !instance ||
+      // Don't stub mounted component on root level
+      (rootComponents.component === type && !instance?.parent) ||
+      // Don't stub component with compat wrapper
+      (rootComponents.functional && rootComponents.functional === type)
+    ) {
       return type
     }
 
@@ -218,7 +227,7 @@ export function createStubComponentsTransformer({
       // Set name when using shallow without stub
       const stubName = name || registeredName || componentName
 
-      const newStub =
+      return (
         config.plugins.createStubs?.({
           name: stubName,
           component: type
@@ -228,7 +237,7 @@ export function createStubComponentsTransformer({
           type,
           renderStubDefaultSlot
         })
-      return newStub
+      )
     }
 
     return type
