@@ -53,7 +53,7 @@ export interface MountingOptions<Props, Data = {}> {
    */
   props?: (RawProps & Props) | ({} extends Props ? null : never)
   /**
-   * @deprecated use `data` instead.
+   * @deprecated use `props` instead.
    */
   propsData?: Props
   /**
