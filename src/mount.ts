@@ -26,7 +26,7 @@ import { createInstance } from './createInstance'
 // NOTE this should come from `vue`
 type PublicProps = VNodeProps & AllowedComponentProps & ComponentCustomProps
 
-type ComponentMountingOptions<T> = T extends DefineComponent<
+export type ComponentMountingOptions<T> = T extends DefineComponent<
   infer PropsOrPropOptions,
   any,
   infer D,

@@ -25,3 +25,5 @@ export {
   MountingOptions,
   createWrapperError
 }
+
+export type { ComponentMountingOptions } from './mount'
