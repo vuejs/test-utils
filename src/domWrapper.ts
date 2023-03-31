@@ -93,6 +93,7 @@ export class DOMWrapper<NodeType extends Node> extends BaseWrapper<NodeType> {
     }
 
     element.checked = checked
+    this.trigger('input')
     return this.trigger('change')
   }
 
@@ -118,6 +119,8 @@ export class DOMWrapper<NodeType extends Node> extends BaseWrapper<NodeType> {
       } else {
         element.value = value
       }
+
+      this.trigger('input')
       return this.trigger('change')
     } else if (tagName === 'INPUT' || tagName === 'TEXTAREA') {
       element.value = value
@@ -146,7 +149,9 @@ export class DOMWrapper<NodeType extends Node> extends BaseWrapper<NodeType> {
       parentElement = parentElement.parentElement!
     }
 
-    return new DOMWrapper(parentElement).trigger('change')
+    const parentWrapper = new DOMWrapper(parentElement)
+    parentWrapper.trigger('input')
+    return parentWrapper.trigger('change')
   }
 }
 
