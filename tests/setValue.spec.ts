@@ -33,6 +33,11 @@ describe('setValue', () => {
   })
 
   describe('on select and option', () => {
+    const renderOptions = () => [
+      h('option', { value: 'A' }),
+      h('option', { value: 'B' })
+    ]
+
     it('sets element of select value', async () => {
       const wrapper = mount(ComponentWithInput)
       const select = wrapper.find<HTMLSelectElement>('select')
@@ -42,7 +47,7 @@ describe('setValue', () => {
       expect(wrapper.text()).toContain('selectB')
 
       expect(wrapper.emitted('change')).toHaveLength(1)
-      expect(wrapper.emitted('input')).toBeUndefined()
+      expect(wrapper.emitted('input')).toHaveLength(1)
     })
 
     it('as an option of a select as selected', async () => {
@@ -68,11 +73,7 @@ describe('setValue', () => {
 
       const Component = {
         setup() {
-          return () =>
-            h('select', { onChange: handle }, [
-              h('option', { value: 'A' }),
-              h('option', { value: 'B' })
-            ])
+          return () => h('select', { onChange: handle }, renderOptions())
         }
       }
 
@@ -98,7 +99,7 @@ describe('setValue', () => {
       expect(wrapper.vm.multiselectVal).toEqual(['selectA', 'selectC'])
 
       expect(wrapper.emitted('change')).toHaveLength(1)
-      expect(wrapper.emitted('input')).toBeUndefined()
+      expect(wrapper.emitted('input')).toHaveLength(1)
     })
 
     it('overrides elements of multiselect', async () => {
@@ -114,7 +115,37 @@ describe('setValue', () => {
       expect(wrapper.vm.multiselectVal).toEqual(['selectB'])
 
       expect(wrapper.emitted('change')).toHaveLength(2)
-      expect(wrapper.emitted('input')).toBeUndefined()
+      expect(wrapper.emitted('input')).toHaveLength(2)
+    })
+
+    it('does trigger input and change event on select', async () => {
+      const onInput = vi.fn()
+      const onChange = vi.fn()
+      const Comp = defineComponent({
+        setup() {
+          return () => h('select', { onInput, onChange }, renderOptions())
+        }
+      })
+
+      await mount(Comp).find('select').setValue('A')
+
+      expect(onInput).toHaveBeenCalledTimes(1)
+      expect(onChange).toHaveBeenCalledTimes(1)
+    })
+
+    it('does trigger input and change event on option select', async () => {
+      const onInput = vi.fn()
+      const onChange = vi.fn()
+      const Comp = defineComponent({
+        setup() {
+          return () => h('select', { onInput, onChange }, renderOptions())
+        }
+      })
+
+      await mount(Comp).findAll('option')[1].setValue()
+
+      expect(onInput).toHaveBeenCalledTimes(1)
+      expect(onChange).toHaveBeenCalledTimes(1)
     })
   })
 
@@ -201,6 +232,46 @@ describe('setValue', () => {
 
       const fn = radioFoo.setValue(false)
       await expect(fn).rejects.toThrowError(message)
+    })
+
+    it('does trigger input and change event on checkbox', async () => {
+      const onInput = vi.fn()
+      const onChange = vi.fn()
+      const Comp = defineComponent({
+        setup() {
+          return () =>
+            h('input', {
+              onInput,
+              onChange,
+              type: 'checkbox'
+            })
+        }
+      })
+
+      await mount(Comp).find('input').setValue()
+
+      expect(onInput).toHaveBeenCalledTimes(1)
+      expect(onChange).toHaveBeenCalledTimes(1)
+    })
+
+    it('does trigger input and change event on radio', async () => {
+      const onInput = vi.fn()
+      const onChange = vi.fn()
+      const Comp = defineComponent({
+        setup() {
+          return () =>
+            h('input', {
+              onInput,
+              onChange,
+              type: 'radio'
+            })
+        }
+      })
+
+      await mount(Comp).find('input').setValue()
+
+      expect(onInput).toHaveBeenCalledTimes(1)
+      expect(onChange).toHaveBeenCalledTimes(1)
     })
   })
 
