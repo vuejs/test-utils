@@ -111,24 +111,6 @@ export function createInstance(
   // Let's register it as a stub so user can find it
   registerStub({ source: originalComponent, stub: component })
 
-  const el = document.createElement('div')
-
-  if (options?.attachTo) {
-    let to: Element | null
-    if (typeof options.attachTo === 'string') {
-      to = document.querySelector(options.attachTo)
-      if (!to) {
-        throw new Error(
-          `Unable to find the element matching the selector ${options.attachTo} given as the \`attachTo\` option`
-        )
-      }
-    } else {
-      to = options.attachTo
-    }
-
-    to.appendChild(el)
-  }
-
   function slotToFunction(slot: Slot) {
     switch (typeof slot) {
       case 'function':
@@ -359,7 +341,6 @@ export function createInstance(
 
   return {
     app,
-    el,
     props,
     componentRef
   }

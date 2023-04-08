@@ -248,10 +248,7 @@ export function mount(
   inputComponent: any,
   options?: MountingOptions<any> & Record<string, any>
 ): VueWrapper<any> {
-  const { app, props, el, componentRef } = createInstance(
-    inputComponent,
-    options
-  )
+  const { app, props, componentRef } = createInstance(inputComponent, options)
 
   const setProps = (newProps: Record<string, unknown>) => {
     for (const [k, v] of Object.entries(newProps)) {
@@ -272,6 +269,23 @@ export function mount(
   }
 
   // mount the app!
+  const el = document.createElement('div')
+
+  if (options?.attachTo) {
+    let to: Element | null
+    if (typeof options.attachTo === 'string') {
+      to = document.querySelector(options.attachTo)
+      if (!to) {
+        throw new Error(
+          `Unable to find the element matching the selector ${options.attachTo} given as the \`attachTo\` option`
+        )
+      }
+    } else {
+      to = options.attachTo
+    }
+
+    to.appendChild(el)
+  }
   const vm = app.mount(el)
 
   if (errorOnMount) {

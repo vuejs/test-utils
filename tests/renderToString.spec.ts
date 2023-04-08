@@ -1,3 +1,8 @@
+/**
+ * Run SSR tests in node environment
+ * @vitest-environment node
+ */
+
 import { describe, it, expect } from 'vitest'
 import { defineComponent, onMounted, onServerPrefetch, ref } from 'vue'
 import { renderToString } from '../src'
