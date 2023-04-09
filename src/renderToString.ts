@@ -18,7 +18,7 @@ import {
   Prop
 } from 'vue'
 
-import { MountingOptions } from './types'
+import { RenderMountingOptions } from './types'
 import { createInstance } from './createInstance'
 
 // NOTE this should come from `vue`
@@ -31,7 +31,7 @@ type ComponentMountingOptions<T> = T extends DefineComponent<
   any,
   any
 >
-  ? MountingOptions<
+  ? RenderMountingOptions<
       Partial<ExtractDefaultPropTypes<PropsOrPropOptions>> &
         Omit<
           Readonly<ExtractPropTypes<PropsOrPropOptions>> & PublicProps,
@@ -40,7 +40,7 @@ type ComponentMountingOptions<T> = T extends DefineComponent<
       D
     > &
       Record<string, any>
-  : MountingOptions<any>
+  : RenderMountingOptions<any>
 
 // Class component (without vue-class-component) - no props
 export function renderToString<V extends {}>(
@@ -48,7 +48,7 @@ export function renderToString<V extends {}>(
     new (...args: any[]): V
     __vccOpts: any
   },
-  options?: MountingOptions<any> & Record<string, any>
+  options?: RenderMountingOptions<any> & Record<string, any>
 ): Promise<string>
 
 // Class component (without vue-class-component) - props
@@ -58,7 +58,7 @@ export function renderToString<V extends {}, P>(
     __vccOpts: any
     defaultProps?: Record<string, Prop<any>> | string[]
   },
-  options?: MountingOptions<P & PublicProps> & Record<string, any>
+  options?: RenderMountingOptions<P & PublicProps> & Record<string, any>
 ): Promise<string>
 
 // Class component - no props
@@ -67,7 +67,7 @@ export function renderToString<V extends {}>(
     new (...args: any[]): V
     registerHooks(keys: string[]): void
   },
-  options?: MountingOptions<any> & Record<string, any>
+  options?: RenderMountingOptions<any> & Record<string, any>
 ): Promise<string>
 
 // Class component - props
@@ -77,13 +77,13 @@ export function renderToString<V extends {}, P>(
     props(Props: P): any
     registerHooks(keys: string[]): void
   },
-  options?: MountingOptions<P & PublicProps> & Record<string, any>
+  options?: RenderMountingOptions<P & PublicProps> & Record<string, any>
 ): Promise<string>
 
 // Functional component with emits
 export function renderToString<Props extends {}, E extends EmitsOptions = {}>(
   originalComponent: FunctionalComponent<Props, E>,
-  options?: MountingOptions<Props & PublicProps> & Record<string, any>
+  options?: RenderMountingOptions<Props & PublicProps> & Record<string, any>
 ): Promise<string>
 
 // Component declared with defineComponent
@@ -115,7 +115,7 @@ export function renderToString<
     Props,
     Defaults
   >,
-  options?: MountingOptions<
+  options?: RenderMountingOptions<
     Partial<Defaults> & Omit<Props & PublicProps, keyof Defaults>,
     D
   > &
@@ -150,7 +150,7 @@ export function renderToString<
     Extends,
     EE
   >,
-  options?: MountingOptions<Props & PublicProps, D>
+  options?: RenderMountingOptions<Props & PublicProps, D>
 ): Promise<string>
 
 // Component declared with { props: [] }
@@ -180,7 +180,7 @@ export function renderToString<
     EE,
     Props
   >,
-  options?: MountingOptions<Props & PublicProps, D>
+  options?: RenderMountingOptions<Props & PublicProps, D>
 ): Promise<string>
 
 // Component declared with { props: { ... } }
@@ -208,10 +208,17 @@ export function renderToString<
     Extends,
     EE
   >,
-  options?: MountingOptions<ExtractPropTypes<PropsOptions> & PublicProps, D>
+  options?: RenderMountingOptions<
+    ExtractPropTypes<PropsOptions> & PublicProps,
+    D
+  >
 ): Promise<string>
 
 export function renderToString(component: any, options?: any): Promise<string> {
+  if (options?.attachTo) {
+    console.warn('attachTo option is not available for renderToString')
+  }
+
   const { app } = createInstance(component, options)
   return baseRenderToString(app)
 }

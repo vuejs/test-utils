@@ -41,7 +41,7 @@ type RawProps = VNodeProps & {
   [Symbol.iterator]?: never
 } & Record<string, any>
 
-export interface MountingOptions<Props, Data = {}> {
+interface BaseMountingOptions<Props, Data = {}> {
   /**
    * Overrides component's default data. Must be a function.
    * @see https://test-utils.vuejs.org/api/#data
@@ -73,17 +73,35 @@ export interface MountingOptions<Props, Data = {}> {
    */
   global?: GlobalMountOptions
   /**
-   * Specify where to mount the component.
-   * Can be a valid CSS selector, or an Element connected to the document.
-   * @see https://test-utils.vuejs.org/api/#attachto
-   */
-  attachTo?: HTMLElement | string
-  /**
    * Automatically stub out all the child components.
    * @default false
    * @see https://test-utils.vuejs.org/api/#slots
    */
   shallow?: boolean
+}
+
+/**
+ * Mounting options for `mount` and `shallowMount`
+ */
+export interface MountingOptions<Props, Data = {}>
+  extends BaseMountingOptions<Props, Data> {
+  /**
+   * Specify where to mount the component.
+   * Can be a valid CSS selector, or an Element connected to the document.
+   * @see https://test-utils.vuejs.org/api/#attachto
+   */
+  attachTo?: HTMLElement | string
+}
+
+/**
+ * Mounting options for `renderToString`
+ */
+export interface RenderMountingOptions<Props, Data = {}>
+  extends BaseMountingOptions<Props, Data> {
+  /**
+   * Attach to is not available in SSR mode
+   */
+  attachTo?: never
 }
 
 export type Stub = boolean | Component | Directive

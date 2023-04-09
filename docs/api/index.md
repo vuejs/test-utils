@@ -67,7 +67,7 @@ If you find yourself having to set common App configuration for many of your tes
 
 ### attachTo
 
-Specify the node to mount the component on.
+Specify the node to mount the component on. This is not available when using `renderToString`.
 
 **Signature:**
 
