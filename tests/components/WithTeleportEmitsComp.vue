@@ -1,6 +1,8 @@
 <template>
   <teleport to="#somewhere">
-    <emits-event msg="hi there" />
+    <emits-event />
+    <!-- avoid vue-tsc unknown prop bug for now -->
+    <!-- <emits-event msg="hi there" /> -->
   </teleport>
 </template>
 

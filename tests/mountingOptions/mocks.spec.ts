@@ -42,10 +42,10 @@ describe('mocks', () => {
       `,
       computed: {
         url(): string {
-          return `/posts/${this.$route.params.id}`
+          return `/posts/${this.$router.currentRoute.value.params.id}`
         },
         id(): string | string[] {
-          return this.$route.params.id
+          return this.$router.currentRoute.value.params.id
         }
       },
       methods: {

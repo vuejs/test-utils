@@ -5,7 +5,7 @@ import { mount } from '../../src'
 vi.mock('vue', () => mockVue)
 const { configureCompat, defineComponent, h } = mockVue
 // @ts-expect-error @vue/compat does not expose default export in types
-const Vue = mockVue.default
+const Vue = mockVue.default as typeof mockVue
 
 describe('@vue/compat build', () => {
   describe.each(['suppress-warning', false])(
@@ -221,6 +221,7 @@ describe('@vue/compat build', () => {
       GLOBAL_PROTOTYPE: 'suppress-warning'
     })
 
+    // @ts-expect-error
     Vue.prototype.$test = 1
 
     const Component = { template: 'hello ' }

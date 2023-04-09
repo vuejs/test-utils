@@ -27,6 +27,10 @@ import type {
 // NOTE this should come from `vue`
 type PublicProps = VNodeProps & AllowedComponentProps & ComponentCustomProps
 
+type PatchSlot<T> = T extends (...args: infer P) => any
+  ? (...args: P) => any
+  : T
+
 export function mount<
   T extends ((...args: any) => any) | (new (...args: any) => any)
 >(
@@ -34,7 +38,13 @@ export function mount<
   options?: Record<string, unknown> & {
     props?: Record<string, unknown> & ComponentProps<T>
     slots?: {
-      [K in keyof ComponentSlots<T>]: string | VNode[]
+      [K in keyof ComponentSlots<T>]:
+        | PatchSlot<ComponentSlots<T>[K]>
+        | string
+        | VNode
+        | VNode[]
+        | (new () => any)
+        | { template: string }
     }
     global?: GlobalMountOptions
   }
