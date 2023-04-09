@@ -38,7 +38,7 @@ export function mount<
     }
     global?: GlobalMountOptions
   }
-): VueWrapper<ComponentExposed<T>>
+): VueWrapper<ComponentExposed<T> & ComponentProps<T>>
 
 // Component declared with no props
 export function mount<

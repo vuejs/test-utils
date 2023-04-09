@@ -141,7 +141,7 @@ expectError((props: { a: 1 }) => {}, {
 })
 
 expectType<number>(
-  mount((props: { a: number }, ctx: { expose(exposed: { a: number }) }) => {}, {
+  mount((props: { a: number }, ctx) => {}, {
     props: {
       a: 22
     }
