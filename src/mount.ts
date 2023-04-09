@@ -27,10 +27,6 @@ import type {
 // NOTE this should come from `vue`
 type PublicProps = VNodeProps & AllowedComponentProps & ComponentCustomProps
 
-type WithVueWrapper<T> = T extends ComponentPublicInstance
-  ? VueWrapper<T>
-  : VueWrapper
-
 export function mount<
   T extends ((...args: any) => any) | (new (...args: any) => any)
 >(
@@ -42,7 +38,7 @@ export function mount<
     }
     global?: GlobalMountOptions
   }
-): WithVueWrapper<ComponentExposed<T>>
+): VueWrapper<ComponentExposed<T>>
 
 // Component declared with no props
 export function mount<
