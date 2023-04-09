@@ -3,7 +3,7 @@
  * @vitest-environment node
  */
 
-import { describe, it, expect } from 'vitest'
+import { describe, it, expect, vi } from 'vitest'
 import { defineComponent, onMounted, onServerPrefetch, ref } from 'vue'
 import { renderToString } from '../src'
 
@@ -60,5 +60,27 @@ describe('renderToString', () => {
     const contents = await renderToString(Component)
 
     expect(contents).toBe('<div>onServerPrefetch</div>')
+  })
+
+  it('returns print warning if `attachTo` option is used', async () => {
+    const spy = vi.spyOn(console, 'warn').mockReturnValue()
+
+    const Component = defineComponent({
+      template: '<div>foo</div>'
+    })
+
+    expect(
+      // @ts-expect-error `attachTo` property is not allowed
+      await renderToString(Component, {
+        attachTo: 'body'
+      })
+    ).toBe('<div>foo</div>')
+
+    expect(spy).toHaveBeenCalledTimes(1)
+    expect(spy).toHaveBeenCalledWith(
+      'attachTo option is not available for renderToString'
+    )
+
+    spy.mockRestore()
   })
 })
