@@ -68,7 +68,10 @@ function createVMProxy<T extends ComponentPublicInstance>(
   })
 }
 
-export class VueWrapper<T = any, C extends ((...args: any) => T) | (new (...args: any) => T) = any> extends BaseWrapper<Node> {
+export class VueWrapper<
+  T = any,
+  C extends ((...args: any) => T) | (new (...args: any) => T) = any
+> extends BaseWrapper<Node> {
   private readonly componentVM: T & ComponentPublicInstance
   private readonly rootVM: ComponentPublicInstance | undefined | null
   private readonly __app: App | null
@@ -95,7 +98,10 @@ export class VueWrapper<T = any, C extends ((...args: any) => T) | (new (...args
     // or for components with a setup that returns a render function (as they have an empty proxy)
     // in both cases, we return `vm` directly instead
     if (hasSetupState(vm)) {
-      this.componentVM = createVMProxy<T & ComponentPublicInstance>(vm, vm.$.setupState)
+      this.componentVM = createVMProxy<T & ComponentPublicInstance>(
+        vm,
+        vm.$.setupState
+      )
     } else {
       this.componentVM = vm
     }
