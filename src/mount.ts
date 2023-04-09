@@ -18,23 +18,31 @@ import { VueWrapper } from './vueWrapper'
 import { trackInstance } from './utils/autoUnmount'
 import { createVueWrapper } from './wrapperFactory'
 import { createInstance } from './createInstance'
-import type { ComponentProps, ComponentSlots, ComponentExposed } from 'vue-component-type-helpers'
+import type {
+  ComponentProps,
+  ComponentSlots,
+  ComponentExposed
+} from 'vue-component-type-helpers'
 
 // NOTE this should come from `vue`
 type PublicProps = VNodeProps & AllowedComponentProps & ComponentCustomProps
 
-type WithVueWrapper<T> = T extends ComponentPublicInstance ? VueWrapper<T> : VueWrapper
+type WithVueWrapper<T> = T extends ComponentPublicInstance
+  ? VueWrapper<T>
+  : VueWrapper
 
-export function mount<T extends ((...args: any) => any) | (new (...args: any) => any)>(
+export function mount<
+  T extends ((...args: any) => any) | (new (...args: any) => any)
+>(
   originalComponent: T,
   options?: Record<string, unknown> & {
-    props?: ComponentProps<T>;
+    props?: ComponentProps<T>
     slots?: {
-      [K in keyof ComponentSlots<T>]: string | VNode[];
-    };
-    global?: GlobalMountOptions;
+      [K in keyof ComponentSlots<T>]: string | VNode[]
+    }
+    global?: GlobalMountOptions
   }
-): WithVueWrapper<ComponentExposed<T>>;
+): WithVueWrapper<ComponentExposed<T>>
 
 // Component declared with no props
 export function mount<

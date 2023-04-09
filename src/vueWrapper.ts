@@ -1,9 +1,4 @@
-import {
-  nextTick,
-  App,
-  ComponentPublicInstance,
-  VNode
-} from 'vue'
+import { nextTick, App, ComponentPublicInstance, VNode } from 'vue'
 
 import { config } from './config'
 import domEvents from './constants/dom-events'
