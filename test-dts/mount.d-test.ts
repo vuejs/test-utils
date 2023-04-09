@@ -141,7 +141,7 @@ expectError((props: { a: 1 }) => {}, {
 })
 
 expectType<number>(
-  mount((props: { a: number }, ctx) => {}, {
+  mount((props: { a: number }, ctx: { expose(exposed: { a: number }) }) => {}, {
     props: {
       a: 22
     }
@@ -278,16 +278,16 @@ class WithPropCustomClassComponent extends CustomClassComponent<CustomClassCompo
 }
 
 expectError(
-  mount<WithPropCustomClassComponent, CustomClassComponentProps>(
+  mount(
     // @ts-expect-error should has props error
-    WithPropCustomClassComponent,
+    WithPropCustomClassComponent as typeof WithPropCustomClassComponent & (new () => { $props: CustomClassComponentProps }),
     {
       props: {}
     }
   )
 )
-mount<WithPropCustomClassComponent, CustomClassComponentProps>(
-  WithPropCustomClassComponent,
+mount(
+  WithPropCustomClassComponent as typeof WithPropCustomClassComponent & (new () => { $props: CustomClassComponentProps }),
   {
     props: { size: 'small' }
   }

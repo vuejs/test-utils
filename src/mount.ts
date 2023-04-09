@@ -32,7 +32,7 @@ export function mount<
 >(
   originalComponent: T,
   options?: Record<string, unknown> & {
-    props?: ComponentProps<T>
+    props?: Record<string, unknown> & ComponentProps<T>
     slots?: {
       [K in keyof ComponentSlots<T>]: string | VNode[]
     }
