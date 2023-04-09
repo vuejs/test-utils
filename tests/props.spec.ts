@@ -108,8 +108,9 @@ describe('props', () => {
     const wrapper = mount(component, {
       props: {
         modelValue: 1,
-        'onUpdate:modelValue': async (modelValue: number) =>
-          wrapper.setProps({ modelValue })
+        'onUpdate:modelValue': async (modelValue: number) => {
+          await wrapper.setProps({ modelValue })
+        }
       }
     })
 

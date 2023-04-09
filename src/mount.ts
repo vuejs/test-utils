@@ -1,5 +1,4 @@
 import {
-  FunctionalComponent,
   ComponentPublicInstance,
   ComponentOptionsWithObjectProps,
   ComponentOptionsWithArrayProps,
@@ -7,144 +6,35 @@ import {
   ExtractPropTypes,
   VNodeProps,
   ComponentOptionsMixin,
-  DefineComponent,
-  MethodOptions,
   AllowedComponentProps,
   ComponentCustomProps,
-  ExtractDefaultPropTypes,
   EmitsOptions,
   ComputedOptions,
   ComponentPropsOptions,
-  Prop
+  VNode
 } from 'vue'
-import { MountingOptions } from './types'
+import { GlobalMountOptions, MountingOptions } from './types'
 import { VueWrapper } from './vueWrapper'
 import { trackInstance } from './utils/autoUnmount'
 import { createVueWrapper } from './wrapperFactory'
 import { createInstance } from './createInstance'
+import type { ComponentProps, ComponentSlots, ComponentExposed } from 'vue-component-type-helpers'
 
 // NOTE this should come from `vue`
 type PublicProps = VNodeProps & AllowedComponentProps & ComponentCustomProps
 
-export type ComponentMountingOptions<T> = T extends DefineComponent<
-  infer PropsOrPropOptions,
-  any,
-  infer D,
-  any,
-  any
->
-  ? MountingOptions<
-      Partial<ExtractDefaultPropTypes<PropsOrPropOptions>> &
-        Omit<
-          Readonly<ExtractPropTypes<PropsOrPropOptions>> & PublicProps,
-          keyof ExtractDefaultPropTypes<PropsOrPropOptions>
-        >,
-      D
-    > &
-      Record<string, any>
-  : MountingOptions<any>
+type WithVueWrapper<T> = T extends ComponentPublicInstance ? VueWrapper<T> : VueWrapper
 
-// Class component (without vue-class-component) - no props
-export function mount<V extends {}>(
-  originalComponent: {
-    new (...args: any[]): V
-    __vccOpts: any
-  },
-  options?: MountingOptions<any> & Record<string, any>
-): VueWrapper<ComponentPublicInstance<V>>
-
-// Class component (without vue-class-component) - props
-export function mount<V extends {}, P>(
-  originalComponent: {
-    new (...args: any[]): V
-    __vccOpts: any
-    defaultProps?: Record<string, Prop<any>> | string[]
-  },
-  options?: MountingOptions<P & PublicProps> & Record<string, any>
-): VueWrapper<ComponentPublicInstance<V>>
-
-// Class component - no props
-export function mount<V extends {}>(
-  originalComponent: {
-    new (...args: any[]): V
-    registerHooks(keys: string[]): void
-  },
-  options?: MountingOptions<any> & Record<string, any>
-): VueWrapper<ComponentPublicInstance<V>>
-
-// Class component - props
-export function mount<V extends {}, P>(
-  originalComponent: {
-    new (...args: any[]): V
-    props(Props: P): any
-    registerHooks(keys: string[]): void
-  },
-  options?: MountingOptions<P & PublicProps> & Record<string, any>
-): VueWrapper<ComponentPublicInstance<V>>
-
-// Functional component with emits
-export function mount<Props extends {}, E extends EmitsOptions = {}>(
-  originalComponent: FunctionalComponent<Props, E>,
-  options?: MountingOptions<Props & PublicProps> & Record<string, any>
-): VueWrapper<ComponentPublicInstance<Props>>
-
-// Component declared with defineComponent
-export function mount<
-  PropsOrPropOptions = {},
-  RawBindings = {},
-  D = {},
-  C extends ComputedOptions = ComputedOptions,
-  M extends MethodOptions = MethodOptions,
-  Mixin extends ComponentOptionsMixin = ComponentOptionsMixin,
-  Extends extends ComponentOptionsMixin = ComponentOptionsMixin,
-  E extends EmitsOptions = Record<string, any>,
-  EE extends string = string,
-  PP = PublicProps,
-  Props = Readonly<ExtractPropTypes<PropsOrPropOptions>>,
-  Defaults extends {} = ExtractDefaultPropTypes<PropsOrPropOptions>
->(
-  component: DefineComponent<
-    PropsOrPropOptions,
-    RawBindings,
-    D,
-    C,
-    M,
-    Mixin,
-    Extends,
-    E,
-    EE,
-    PP,
-    Props,
-    Defaults
-  >,
-  options?: MountingOptions<
-    Partial<Defaults> & Omit<Props & PublicProps, keyof Defaults>,
-    D
-  > &
-    Record<string, any>
-): VueWrapper<
-  InstanceType<
-    DefineComponent<
-      PropsOrPropOptions,
-      RawBindings,
-      D,
-      C,
-      M,
-      Mixin,
-      Extends,
-      EmitsOptions,
-      EE,
-      PP,
-      Props,
-      Defaults
-    >
-  >
->
-// component declared by vue-tsc ScriptSetup
-export function mount<T extends DefineComponent<any, any, any, any, any>>(
-  component: T,
-  options?: ComponentMountingOptions<T>
-): VueWrapper<InstanceType<T>>
+export function mount<T extends ((...args: any) => any) | (new (...args: any) => any)>(
+  originalComponent: T,
+  options?: Record<string, unknown> & {
+    props?: ComponentProps<T>;
+    slots?: {
+      [K in keyof ComponentSlots<T>]: string | VNode[];
+    };
+    global?: GlobalMountOptions;
+  }
+): WithVueWrapper<ComponentExposed<T>>;
 
 // Component declared with no props
 export function mount<

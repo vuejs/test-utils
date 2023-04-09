@@ -1,7 +1,6 @@
 import {
   nextTick,
   App,
-  ComponentCustomProperties,
   ComponentPublicInstance,
   VNode
 } from 'vue'
@@ -75,12 +74,7 @@ function createVMProxy<T extends ComponentPublicInstance>(
 }
 
 export class VueWrapper<
-  T extends Omit<
-    ComponentPublicInstance,
-    '$emit' | keyof ComponentCustomProperties
-  > & {
-    $emit: (event: any, ...args: any[]) => void
-  } & ComponentCustomProperties = ComponentPublicInstance
+  T extends ComponentPublicInstance = ComponentPublicInstance
 > extends BaseWrapper<Node> {
   private readonly componentVM: T
   private readonly rootVM: ComponentPublicInstance | undefined | null
