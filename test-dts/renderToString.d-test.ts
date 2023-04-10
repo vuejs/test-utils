@@ -27,8 +27,8 @@ renderToString(AppWithDefine, {
 })
 
 expectError(
-  // @ts-expect-error wrong prop type should not compile
   renderToString(AppWithDefine, {
+    // @ts-expect-error wrong prop type should not compile
     props: { a: 2 }
   })
 )

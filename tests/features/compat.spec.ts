@@ -227,7 +227,7 @@ describe('@vue/compat build', () => {
     const Component = { template: 'hello ' }
     const wrapper = mount(Component)
 
-    // @ts-expect-error $test "magically" appears from "Vue.prototype" in compat build
+    // $test "magically" appears from "Vue.prototype" in compat build
     expect(wrapper.vm.$test).toBe(1)
   })
 })

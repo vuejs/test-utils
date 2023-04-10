@@ -56,8 +56,8 @@ mount(AppWithDefine, {
 })
 
 expectError(
-  // @ts-expect-error wrong prop type should not compile
   mount(AppWithDefine, {
+    // @ts-expect-error wrong prop type should not compile
     props: { a: 2 }
   })
 )
@@ -134,14 +134,14 @@ mount(AppWithoutProps, {
 // Functional tests
 
 // @ts-expect-error wrong props
-expectError((props: { a: 1 }) => {}, {
+expectError((props: { a: 1 }) => { }, {
   props: {
     a: '222'
   }
 })
 
 expectType<number>(
-  mount((props: { a: number }, ctx) => {}, {
+  mount((props: { a: number }, ctx: any) => { }, {
     props: {
       a: 22
     }
@@ -245,7 +245,7 @@ class CustomClassComponent<Props extends {} = {}> {
     return this.props
   }
   context: SetupContext
-  render(): VNodeChild {}
+  render(): VNodeChild { }
 }
 class NoPropCustomClassComponent extends CustomClassComponent {
   count = ref(0)
@@ -279,9 +279,9 @@ class WithPropCustomClassComponent extends CustomClassComponent<CustomClassCompo
 
 expectError(
   mount(
-    // @ts-expect-error should has props error
     WithPropCustomClassComponent as typeof WithPropCustomClassComponent & (new () => { $props: CustomClassComponentProps }),
     {
+      // @ts-expect-error should has props error
       props: {}
     }
   )
@@ -318,7 +318,6 @@ mount(Foo, {
 
 expectError(
   mount(
-    // @ts-expect-error
     defineComponent({
       props: {
         baz: String,
@@ -329,6 +328,7 @@ expectError(
       }
     }),
     {
+      // @ts-expect-error
       props: {
         baz: 'hello'
       }

@@ -15,11 +15,10 @@ const AppWithDefine = defineComponent({
 })
 
 // accept props
-let wrapper = shallowMount(AppWithDefine, {
-  props: { a: 'Hello', b: 2 }
-})
 // vm is properly typed
-expectType<string>(wrapper.vm.a)
+expectType<string>(shallowMount(AppWithDefine, {
+  props: { a: 'Hello', b: 2 }
+}).vm.a)
 
 // allow extra props, like using `h()`
 shallowMount(AppWithDefine, {
@@ -27,8 +26,8 @@ shallowMount(AppWithDefine, {
 })
 
 expectError(
-  // @ts-expect-error wrong prop type should not compile
   shallowMount(AppWithDefine, {
+    // @ts-expect-error wrong prop type should not compile
     props: { a: 2 }
   })
 )
@@ -69,11 +68,10 @@ const AppWithArrayProps = {
 }
 
 // accept props
-wrapper = shallowMount(AppWithArrayProps, {
-  props: { a: 'Hello' }
-})
 // vm is properly typed
-expectType<string>(wrapper.vm.a)
+expectType<string>(shallowMount(AppWithArrayProps, {
+  props: { a: 'Hello' }
+}).vm.a)
 
 // can receive extra props
 // as they are declared as `string[]`
@@ -86,7 +84,7 @@ const AppWithoutProps = {
 }
 
 // allow extra props, like using `h()`
-wrapper = shallowMount(AppWithoutProps, {
+shallowMount(AppWithoutProps, {
   props: { b: 'Hello' }
 })
 
