@@ -133,12 +133,14 @@ mount(AppWithoutProps, {
 
 // Functional tests
 
-// @ts-expect-error wrong props
-expectError((props: { a: 1 }) => { }, {
-  props: {
-    a: '222'
-  }
-})
+expectError(
+  mount((props: { a: 1 }) => { }, {
+    props: {
+      // @ts-expect-error wrong props
+      a: '222'
+    }
+  })
+)
 
 expectType<number>(
   mount((props: { a: number }, ctx: any) => { }, {
