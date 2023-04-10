@@ -69,10 +69,10 @@ function createVMProxy<T extends ComponentPublicInstance>(
 }
 
 export class VueWrapper<
-  T = any,
-  C extends ((...args: any) => T) | (new (...args: any) => T) = any
+  VM = unknown,
+  T extends VM & ComponentPublicInstance = VM & ComponentPublicInstance
 > extends BaseWrapper<Node> {
-  private readonly componentVM: T & ComponentPublicInstance
+  private readonly componentVM: T
   private readonly rootVM: ComponentPublicInstance | undefined | null
   private readonly __app: App | null
   private readonly __setProps:
@@ -82,7 +82,7 @@ export class VueWrapper<
 
   constructor(
     app: App | null,
-    vm: T & ComponentPublicInstance,
+    vm: T,
     setProps?: (props: Record<string, unknown>) => void
   ) {
     super(vm?.$el)
@@ -98,10 +98,7 @@ export class VueWrapper<
     // or for components with a setup that returns a render function (as they have an empty proxy)
     // in both cases, we return `vm` directly instead
     if (hasSetupState(vm)) {
-      this.componentVM = createVMProxy<T & ComponentPublicInstance>(
-        vm,
-        vm.$.setupState
-      )
+      this.componentVM = createVMProxy<T>(vm, vm.$.setupState)
     } else {
       this.componentVM = vm
     }
@@ -210,7 +207,7 @@ export class VueWrapper<
     return this.hasMultipleRoots ? this.parentElement : this.vm.$el
   }
 
-  get vm(): T & ComponentPublicInstance {
+  get vm(): T {
     return this.componentVM
   }
 
