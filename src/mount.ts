@@ -13,7 +13,7 @@ import {
   ComponentPropsOptions,
   VNode
 } from 'vue'
-import { GlobalMountOptions, MountingOptions } from './types'
+import { MountingOptions } from './types'
 import { VueWrapper } from './vueWrapper'
 import { trackInstance } from './utils/autoUnmount'
 import { createVueWrapper } from './wrapperFactory'
@@ -27,27 +27,30 @@ import type {
 // NOTE this should come from `vue`
 type PublicProps = VNodeProps & AllowedComponentProps & ComponentCustomProps
 
-type PatchSlot<T> = T extends (...args: infer P) => any
+type ShimSlotReturnType<T> = T extends (...args: infer P) => any
   ? (...args: P) => any
-  : T
+  : never
+
+export type ComponentMountingOptions<T> = Omit<
+  MountingOptions<ComponentProps<T>>,
+  'slots'
+> & {
+  slots?: {
+    [K in keyof ComponentSlots<T>]:
+      | ShimSlotReturnType<ComponentSlots<T>[K]>
+      | string
+      | VNode
+      | VNode[]
+      | (new () => any)
+      | { template: string }
+  }
+} & Record<string, unknown>
 
 export function mount<
   T extends ((...args: any) => any) | (new (...args: any) => any)
 >(
   originalComponent: T,
-  options?: Record<string, unknown> & {
-    props?: Record<string, unknown> & ComponentProps<T>
-    slots?: {
-      [K in keyof ComponentSlots<T>]:
-        | PatchSlot<ComponentSlots<T>[K]>
-        | string
-        | VNode
-        | VNode[]
-        | (new () => any)
-        | { template: string }
-    }
-    global?: GlobalMountOptions
-  }
+  options?: ComponentMountingOptions<T>
 ): VueWrapper<ComponentExposed<T> & ComponentProps<T>>
 
 // Component declared with no props
