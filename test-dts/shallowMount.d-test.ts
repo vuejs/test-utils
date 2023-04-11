@@ -16,9 +16,11 @@ const AppWithDefine = defineComponent({
 
 // accept props
 // vm is properly typed
-expectType<string>(shallowMount(AppWithDefine, {
-  props: { a: 'Hello', b: 2 }
-}).vm.a)
+expectType<string>(
+  shallowMount(AppWithDefine, {
+    props: { a: 'Hello', b: 2 }
+  }).vm.a
+)
 
 // allow extra props, like using `h()`
 shallowMount(AppWithDefine, {
@@ -69,9 +71,11 @@ const AppWithArrayProps = {
 
 // accept props
 // vm is properly typed
-expectType<string>(shallowMount(AppWithArrayProps, {
-  props: { a: 'Hello' }
-}).vm.a)
+expectType<string>(
+  shallowMount(AppWithArrayProps, {
+    props: { a: 'Hello' }
+  }).vm.a
+)
 
 // can receive extra props
 // as they are declared as `string[]`
