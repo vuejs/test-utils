@@ -16,8 +16,10 @@ type ShimSlotReturnType<T> = T extends (...args: infer P) => any
 
 type WithArray<T> = T | T[]
 
+type ComponentData<T> = T extends { data?(...args: any): infer D } ? D : {}
+
 export type ComponentMountingOptions<T> = Omit<
-  MountingOptions<ComponentProps<T>>,
+  MountingOptions<ComponentProps<T>, ComponentData<T>>,
   'slots'
 > & {
   slots?: {
@@ -45,7 +47,7 @@ export function mount<
 >(
   originalComponent: T,
   options?: ComponentMountingOptions<C>
-): VueWrapper<ComponentExposed<C> & ComponentProps<C>>
+): VueWrapper<ComponentExposed<C> & ComponentProps<C> & ComponentData<C>>
 
 // implementation
 export function mount(

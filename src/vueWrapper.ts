@@ -70,7 +70,7 @@ function createVMProxy<T extends ComponentPublicInstance>(
 
 export class VueWrapper<
   VM = unknown,
-  T extends VM & ComponentPublicInstance = VM & ComponentPublicInstance
+  T extends ComponentPublicInstance = VM & ComponentPublicInstance
 > extends BaseWrapper<Node> {
   private readonly componentVM: T
   private readonly rootVM: ComponentPublicInstance | undefined | null
