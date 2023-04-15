@@ -70,8 +70,8 @@ describe('renderToString', () => {
     })
 
     expect(
-      // @ts-expect-error `attachTo` property is not allowed
       await renderToString(Component, {
+        // @ts-expect-error `attachTo` property is not allowed
         attachTo: 'body'
       })
     ).toBe('<div>foo</div>')

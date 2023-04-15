@@ -190,13 +190,13 @@ describe('setData', () => {
 
   it('should keep Date object on setData', async () => {
     const wrapper = mount(
-      {
+      defineComponent({
         template: '<div/>',
         props: { modelValue: Date },
         data() {
           return { value: this.modelValue }
         }
-      },
+      }),
       {
         props: {
           modelValue: new Date('2022-08-10T12:15:54Z')

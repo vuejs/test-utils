@@ -113,20 +113,20 @@ describe('config', () => {
         components: { Child },
         template: '<child><div id="default-slot" /></child>'
       })
-      // @ts-expect-error
       let comp = mount(Component, {
         shallow: true,
         global: {
+          // @ts-expect-error
           renderStubDefaultSlot: 'truthy'
         }
       })
 
       expect(comp.find('#default-slot').exists()).toBe(true)
 
-      // @ts-expect-error
       let comp2 = mount(Component, {
         shallow: true,
         global: {
+          // @ts-expect-error
           renderStubDefaultSlot: 0
         }
       })
