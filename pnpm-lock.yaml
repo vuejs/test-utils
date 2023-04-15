@@ -114,8 +114,8 @@ devDependencies:
     specifier: 8.0.0-rc.1
     version: 8.0.0-rc.1(vue@3.2.47)
   vue-component-type-helpers:
-    specifier: 1.3.14-patch.1
-    version: 1.3.14-patch.1
+    specifier: 1.3.14-patch.2
+    version: 1.3.14-patch.2
   vue-router:
     specifier: 4.1.6
     version: 4.1.6(vue@3.2.47)
@@ -4054,8 +4054,8 @@ packages:
       vue: 3.2.47
     dev: true
 
-  /vue-component-type-helpers@1.3.14-patch.1:
-    resolution: {integrity: sha512-v+03MWlsDYdXse6psH8Ch13d0RDJN1htPcwfK631W7y4fUpcMezzPruCW9+4kH92QGFiXvmyUSiNB6TDwZoNZg==}
+  /vue-component-type-helpers@1.3.14-patch.2:
+    resolution: {integrity: sha512-yg1FTYtOSg+0qUUtN62ahpbshu/pa6YwRpvCcah9Rf/8GGULl0vl3L+e+OuBp3pEa61z/YRDSYe7wszHUvd/ow==}
     dev: true
 
   /vue-router@4.1.6(vue@3.2.47):
