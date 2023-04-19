@@ -129,13 +129,14 @@ const Async = defineComponent({
 must be tested as follow:
 
 ```js
-test('Async component', () => {
+test('Async component', async () => {
   const TestComponent = defineComponent({
     components: { Async },
     template: '<Suspense><Async/></Suspense>'
   })
 
   const wrapper = mount(TestComponent)
+  await flushPromises();
   // ...
 })
 ```
@@ -146,4 +147,4 @@ test('Async component', () => {
 - Use `await nextTick()` to ensure the DOM has updated before the test continues.
 - Functions that might update the DOM (like `trigger` and `setValue`) return `nextTick`, so you need to `await` them.
 - Use `flushPromises` from Vue Test Utils to resolve any unresolved promises from non-Vue dependencies (such as API requests).
-- Use `Suspense` to test components with an asynchronous `setup`.
+- Use `Suspense` to test components with an asynchronous `setup` in an asynchronous test function.
