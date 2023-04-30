@@ -1,6 +1,7 @@
 import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest'
 import { defineAsyncComponent, defineComponent, h, AppConfig } from 'vue'
-import { mount, flushPromises } from '../../src'
+import { mount, shallowMount, flushPromises } from '../../src'
+import Hello from '../components/Hello.vue'
 
 const config: Partial<AppConfig> = {
   errorHandler: (error: unknown) => {
@@ -107,5 +108,39 @@ describe('defineAsyncComponent', () => {
     await flushPromises()
     await vi.dynamicImportSettled()
     expect(wrapper.html()).toContain('Hello world')
+  })
+
+  it('finds Async Component by async definition when using shallow mount', async () => {
+    const AsyncHello = defineAsyncComponent(
+      () => import('../components/Hello.vue')
+    )
+
+    const Comp = defineComponent({
+      render() {
+        return h(AsyncHello)
+      }
+    })
+
+    const wrapper = shallowMount(Comp)
+    await flushPromises()
+    await vi.dynamicImportSettled()
+    expect(wrapper.findComponent(AsyncHello).exists()).toBe(true)
+  })
+
+  it('finds Async Component by definition when using shallow mount', async () => {
+    const AsyncHello = defineAsyncComponent(
+      () => import('../components/Hello.vue')
+    )
+
+    const Comp = defineComponent({
+      render() {
+        return h(AsyncHello)
+      }
+    })
+
+    const wrapper = shallowMount(Comp)
+    await flushPromises()
+    await vi.dynamicImportSettled()
+    expect(wrapper.findComponent(Hello).exists()).toBe(true)
   })
 })

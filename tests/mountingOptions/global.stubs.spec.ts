@@ -679,16 +679,16 @@ describe('mounting options: stubs', () => {
   })
 
   describe('stub async component', () => {
-    const AsyncComponent = defineAsyncComponent(async () => ({
-      name: 'AsyncComponent',
-      template: '<span>AsyncComponent</span>'
-    }))
-
     const AsyncComponentWithoutName = defineAsyncComponent(async () => ({
       template: '<span>AsyncComponent</span>'
     }))
 
     it('stubs async component with name', async () => {
+      const AsyncComponent = defineAsyncComponent(async () => ({
+        name: 'AsyncComponent',
+        template: '<span>AsyncComponent</span>'
+      }))
+
       const TestComponent = defineComponent({
         components: {
           MyComponent: AsyncComponent
@@ -716,6 +716,11 @@ describe('mounting options: stubs', () => {
     })
 
     it('stubs async component with name by alias', () => {
+      const AsyncComponent = defineAsyncComponent(async () => ({
+        name: 'AsyncComponent',
+        template: '<span>AsyncComponent</span>'
+      }))
+
       const TestComponent = defineComponent({
         components: {
           MyComponent: AsyncComponent
