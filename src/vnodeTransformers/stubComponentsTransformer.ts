@@ -11,8 +11,8 @@ import {
   ConcreteComponent,
   ComponentPropsOptions,
   ComponentObjectPropsOptions,
-  DefineComponent,
-  Component
+  Component,
+  ComponentOptions
 } from 'vue'
 import { hyphenate } from '../utils/vueShared'
 import { matchName } from '../utils/matchName'
@@ -28,6 +28,7 @@ import { registerStub } from '../stubs'
 export type CustomCreateStub = (params: {
   name: string
   component: ConcreteComponent
+  registerStub: (config: { source: Component; stub: Component }) => void
 }) => ConcreteComponent
 
 interface StubOptions {
@@ -54,7 +55,7 @@ export const createStub = ({
   name,
   type,
   renderStubDefaultSlot
-}: StubOptions): DefineComponent => {
+}: StubOptions) => {
   const anonName = 'anonymous-stub'
   const tag = name ? `${hyphenate(name)}-stub` : anonName
 
@@ -62,7 +63,7 @@ export const createStub = ({
     ? unwrapLegacyVueExtendComponent(type) || {}
     : {}
 
-  return defineComponent({
+  const stub = defineComponent({
     name: name || anonName,
     props: (componentOptions as ConcreteComponent).props || {},
     // fix #1550 - respect old-style v-model for shallow mounted components with @vue/compat
@@ -84,6 +85,18 @@ export const createStub = ({
       }
     }
   })
+
+  const { __asyncLoader: asyncLoader } = type as ComponentOptions
+  if (asyncLoader) {
+    asyncLoader().then(() => {
+      registerStub({
+        source: (type as ComponentOptions).__asyncResolved,
+        stub
+      })
+    })
+  }
+
+  return stub
 }
 
 const resolveComponentStubByName = (
@@ -230,7 +243,8 @@ export function createStubComponentsTransformer({
       return (
         config.plugins.createStubs?.({
           name: stubName,
-          component: type
+          component: type,
+          registerStub
         }) ??
         createStub({
           name: stubName,

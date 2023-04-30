@@ -8,7 +8,6 @@ import {
   vi
 } from 'vitest'
 import { ComponentPublicInstance, h } from 'vue'
-
 import { mount, config, VueWrapper } from '../../src'
 
 declare module '../../src/vueWrapper' {
@@ -145,11 +144,13 @@ describe('createStubs', () => {
     expect(customCreateStub).toHaveBeenCalledTimes(2)
     expect(customCreateStub).toHaveBeenCalledWith({
       name: 'child1',
-      component: Child1
+      component: Child1,
+      registerStub: expect.any(Function)
     })
     expect(customCreateStub).toHaveBeenCalledWith({
       name: 'child2',
-      component: Child2
+      component: Child2,
+      registerStub: expect.any(Function)
     })
   })
 
@@ -173,7 +174,8 @@ describe('createStubs', () => {
     expect(customCreateStub).toHaveBeenCalledTimes(1)
     expect(customCreateStub).toHaveBeenCalledWith({
       name: 'child2',
-      component: Child2
+      component: Child2,
+      registerStub: expect.any(Function)
     })
   })
 
@@ -212,7 +214,8 @@ describe('createStubs', () => {
     expect(customCreateStub).toHaveBeenCalledTimes(1)
     expect(customCreateStub).toHaveBeenCalledWith({
       name: 'child1',
-      component: Child1
+      component: Child1,
+      registerStub: expect.any(Function)
     })
   })
 })
