@@ -68,7 +68,7 @@ function getInstanceOptions(
 
 // implementation
 export function createInstance(
-  inputComponent: DefineComponent<{}, {}, any>,
+  inputComponent: DefineComponent<{}, {}, any, any, any, any>,
   options?: MountingOptions<any> & Record<string, any>
 ) {
   // normalize the incoming component
@@ -209,7 +209,7 @@ export function createInstance(
 
   // global mocks mixin
   if (global?.mocks) {
-    const mixin = defineComponent({
+    const mixin: ComponentOptions = {
       beforeCreate() {
         // we need to differentiate components that are or not not `script setup`
         // otherwise we run into a proxy set error
@@ -247,7 +247,7 @@ export function createInstance(
           }
         }
       }
-    })
+    }
 
     app.mixin(mixin)
   }
