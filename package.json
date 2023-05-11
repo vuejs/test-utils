@@ -70,9 +70,13 @@
     "@vue/server-renderer": "^3.0.1",
     "vue": "^3.0.1"
   },
-  "optionalDependencies": {
-    "@vue/compiler-dom": "^3.0.1",
-    "@vue/server-renderer": "^3.0.1"
+  "peerDependenciesMeta": {
+    "@vue/compiler-dom": {
+      "optional": true
+    },
+    "@vue/server-renderer": {
+      "optional": true
+    }
   },
   "author": {
     "name": "Lachlan Miller",
