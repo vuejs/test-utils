@@ -1526,7 +1526,9 @@ setData(data: Record<string, any>): Promise<void>
 
 `setData` does not allow setting new properties that are not defined in the component.
 
+::: warning
 Also, notice that `setData` does not modify composition API `setup()` data.
+:::
 
 `Component.vue`:
 
