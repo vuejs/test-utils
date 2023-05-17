@@ -22,7 +22,8 @@
     "dist/index.d.ts"
   ],
   "dependencies": {
-    "js-beautify": "1.14.6"
+    "js-beautify": "1.14.6",
+    "vue-component-type-helpers": "1.6.5"
   },
   "devDependencies": {
     "@rollup/plugin-commonjs": "25.0.0",
@@ -60,7 +61,6 @@
     "vitest": "0.31.0",
     "vue": "3.3.2",
     "vue-class-component": "8.0.0-rc.1",
-    "vue-component-type-helpers": "1.6.5",
     "vue-router": "4.2.0",
     "vue-tsc": "1.6.5",
     "vuex": "4.1.0"
