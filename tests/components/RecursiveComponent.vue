@@ -1,7 +1,15 @@
 <template>
   <div>
+    <h2>{{ name }}</h2>
     <Hello />
-    <RecursiveComponent v-if="first" />
+    <template
+      v-for="item in items"
+      :key="item"
+    >
+      <RecursiveComponent
+        :name="item"
+      />
+    </template>
   </div>
 </template>
 
@@ -9,6 +17,7 @@
 import Hello from './Hello.vue'
 
 defineProps<{
-  first?: boolean
+  name: string
+  items?: string[]
 }>()
 </script>
