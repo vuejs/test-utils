@@ -1,4 +1,4 @@
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
+import { describe, expect, it } from 'vitest'
 import {
   defineComponent,
   FunctionalComponent,
@@ -13,17 +13,6 @@ import EmitsEventScriptSetup from './components/EmitsEventScriptSetup.vue'
 import { mount } from '../src'
 
 describe('emitted', () => {
-  let consoleWarnSave = console.info
-
-  beforeEach(() => {
-    consoleWarnSave = console.warn
-    console.warn = vi.fn()
-  })
-
-  afterEach(() => {
-    console.warn = consoleWarnSave
-  })
-
   it('captures events emitted via this.$emit', async () => {
     const Component = defineComponent({
       render() {
@@ -269,7 +258,8 @@ describe('emitted', () => {
     const Comp = {
       setup(_: Record<string, any>, { emit }: { emit: SetupContext['emit'] }) {
         emit('foo')
-      }
+      },
+      template: '<div/>'
     }
     const wrapper = mount(Comp)
     expect(wrapper.emitted().foo).toBeTruthy()
