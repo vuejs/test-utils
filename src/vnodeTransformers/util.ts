@@ -41,12 +41,11 @@ export const createVNodeTransformer = ({
     }
 
     const cachedTransformation = transformationCache.get(originalType)
-    if (cachedTransformation) {
-      // https://github.com/vuejs/test-utils/issues/1829 & https://github.com/vuejs/test-utils/issues/1888
-      // Teleport/KeepAlive should return child nodes as a function
-      if (isTeleport(originalType) || isKeepAlive(originalType)) {
-        return [cachedTransformation, props, () => children, ...restVNodeArgs]
-      }
+    if (
+      cachedTransformation &&
+      !isTeleport(originalType) &&
+      !isKeepAlive(originalType)
+    ) {
       return [cachedTransformation, props, children, ...restVNodeArgs]
     }
 
