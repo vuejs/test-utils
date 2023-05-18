@@ -1,4 +1,9 @@
-import { isKeepAlive, isTeleport, VTUVNodeTypeTransformer } from './util'
+import {
+  isKeepAlive,
+  isRootComponent,
+  isTeleport,
+  VTUVNodeTypeTransformer
+} from './util'
 import {
   Transition,
   TransitionGroup,
@@ -177,14 +182,8 @@ export function createStubComponentsTransformer({
       })
     }
 
-    if (
-      // Don't stub VTU_ROOT component
-      !instance ||
-      // Don't stub mounted component on root level
-      (rootComponents.component === type && !instance?.parent) ||
-      // Don't stub component with compat wrapper
-      (rootComponents.functional && rootComponents.functional === type)
-    ) {
+    // Don't stub root components
+    if (isRootComponent(rootComponents, type, instance)) {
       return type
     }
 
