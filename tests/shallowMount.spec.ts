@@ -1,4 +1,4 @@
-import { describe, expect, it } from 'vitest'
+import { describe, expect, it, vi } from 'vitest'
 import { defineAsyncComponent, defineComponent } from 'vue'
 import { mount, shallowMount, VueWrapper } from '../src'
 import ComponentWithChildren from './components/ComponentWithChildren.vue'
@@ -225,5 +225,33 @@ describe('shallowMount', () => {
     const wrapper = shallowMount(DynamicComponentWithComputedProperty)
 
     expect(wrapper.find('computed-property-stub').exists()).toBe(false)
+  })
+
+  it('should set prop that is shared with Element', async () => {
+    const spyWarn = vi.spyOn(console, 'warn')
+
+    const TestComp = defineComponent({
+      props: {
+        // https://developer.mozilla.org/en-US/docs/Web/API/Element/prefix
+        prefix: String
+      },
+      template: '<div />'
+    })
+
+    const wrapper = mount(
+      defineComponent({
+        components: { TestComp },
+        template: '<TestComp prefix="foo" />'
+      }),
+      { shallow: true }
+    )
+    expect(wrapper.html()).toBe(
+      '<test-comp-stub prefix="foo"></test-comp-stub>'
+    )
+
+    expect(wrapper.findComponent(TestComp).props('prefix')).toBe('foo')
+
+    expect(spyWarn).not.toHaveBeenCalled()
+    spyWarn.mockRestore()
   })
 })
