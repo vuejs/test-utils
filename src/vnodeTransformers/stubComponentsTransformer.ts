@@ -37,17 +37,28 @@ interface StubOptions {
   renderStubDefaultSlot?: boolean
 }
 
+const mapStubPropValue = (value: unknown) => {
+  if (typeof value === 'symbol') {
+    return value?.toString()
+  } else if (typeof value === 'function') {
+    return '[Function]'
+  }
+
+  return value
+}
 const normalizeStubProps = (props: ComponentPropsOptions) => {
   // props are always normalized to object syntax
   const $props = props as unknown as ComponentObjectPropsOptions
   return Object.keys($props).reduce((acc, key) => {
-    if (typeof $props[key] === 'symbol') {
-      return { ...acc, [key]: $props[key]?.toString() }
+    let propName = key
+
+    // Rename `prefix` prop because it's shared with Element prop and will output a warning on render
+    // https://developer.mozilla.org/en-US/docs/Web/API/Element/prefix
+    if (propName === 'prefix') {
+      propName = '_prefix'
     }
-    if (typeof $props[key] === 'function') {
-      return { ...acc, [key]: '[Function]' }
-    }
-    return { ...acc, [key]: $props[key] }
+
+    return { ...acc, [propName]: mapStubPropValue($props[key]) }
   }, {})
 }
 

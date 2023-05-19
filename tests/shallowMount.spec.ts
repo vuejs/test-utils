@@ -246,7 +246,7 @@ describe('shallowMount', () => {
       { shallow: true }
     )
     expect(wrapper.html()).toBe(
-      '<test-comp-stub prefix="foo"></test-comp-stub>'
+      '<test-comp-stub _prefix="foo"></test-comp-stub>'
     )
 
     expect(wrapper.findComponent(TestComp).props('prefix')).toBe('foo')
