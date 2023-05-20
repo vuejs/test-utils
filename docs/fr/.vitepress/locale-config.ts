@@ -6,6 +6,10 @@ const frLocaleConfig: DefaultTheme.LocaleConfig & Omit<DefaultTheme.Config, "loc
   nav: [
     { text: 'Guide', link: '/fr/guide/' },
     { text: 'API', link: '/fr/api/' },
+    {
+      text: 'FAQ',
+      link: '/fr/guide/faq/'
+    },
     { text: 'Migrer depuis Vue 2', link: '/fr/migration/' },
     {
       text: 'Journal de modifications',
@@ -85,6 +89,10 @@ const frLocaleConfig: DefaultTheme.LocaleConfig & Omit<DefaultTheme.Config, "loc
           link: '/fr/guide/extending-vtu/community-learning'
         }
       ]
+    },
+    {
+      text: 'FAQ',
+      link: '/fr/guide/faq/'
     },
     {
       text: 'Migrer depuis Vue 2',
