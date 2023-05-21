@@ -74,19 +74,29 @@ describe('shallowMount', () => {
     )
   })
 
-  it('stub instance of same component', () => {
+  it('stub instance of same component', async () => {
     const wrapper = mount(RecursiveComponent, {
       shallow: true,
       props: {
-        first: true
+        name: '1',
+        items: ['2']
       }
     })
     expect(wrapper.html()).toEqual(
       '<div>\n' +
+        '  <h2>1</h2>\n' +
         '  <hello-stub></hello-stub>\n' +
-        '  <recursive-component-stub first="false"></recursive-component-stub>\n' +
+        '  <recursive-component-stub name="2"></recursive-component-stub>\n' +
         '</div>'
     )
+
+    expect(wrapper.find('h2').text()).toBe('1')
+
+    await wrapper.setProps({
+      name: '3'
+    })
+
+    expect(wrapper.find('h2').text()).toBe('3')
   })
 
   it('correctly renders slot content', () => {
