@@ -1,6 +1,6 @@
 import { isComponent } from '../utils'
 import { registerStub } from '../stubs'
-import { ConcreteComponent, transformVNodeArgs } from 'vue'
+import { Component, ConcreteComponent, transformVNodeArgs } from 'vue'
 
 type VNodeArgsTransformerFn = NonNullable<
   Parameters<typeof transformVNodeArgs>[0]
@@ -23,9 +23,30 @@ export type VTUVNodeTypeTransformer = (
 export const isTeleport = (type: any): boolean => type.__isTeleport
 export const isKeepAlive = (type: any): boolean => type.__isKeepAlive
 
+export interface RootComponents {
+  // Component which has been passed to mount. For functional components it contains a wrapper
+  component?: Component
+  // If component is functional then contains the original component otherwise empty
+  functional?: Component
+}
+export const isRootComponent = (
+  rootComponents: RootComponents,
+  type: VNodeTransformerInputComponentType,
+  instance: InstanceArgsType
+): boolean =>
+  !!(
+    !instance ||
+    // Don't stub mounted component on root level
+    (rootComponents.component === type && !instance?.parent) ||
+    // Don't stub component with compat wrapper
+    (rootComponents.functional && rootComponents.functional === type)
+  )
+
 export const createVNodeTransformer = ({
+  rootComponents,
   transformers
 }: {
+  rootComponents: RootComponents
   transformers: VTUVNodeTypeTransformer[]
 }): VNodeArgsTransformerFn => {
   const transformationCache: WeakMap<
@@ -40,16 +61,18 @@ export const createVNodeTransformer = ({
       return [originalType, props, children, ...restVNodeArgs]
     }
 
+    const componentType: VNodeTransformerInputComponentType = originalType
+
     const cachedTransformation = transformationCache.get(originalType)
     if (
       cachedTransformation &&
+      // Don't use cache for root component, as it could use stubbed recursive component
+      !isRootComponent(rootComponents, componentType, instance) &&
       !isTeleport(originalType) &&
       !isKeepAlive(originalType)
     ) {
       return [cachedTransformation, props, children, ...restVNodeArgs]
     }
-
-    const componentType: VNodeTransformerInputComponentType = originalType
 
     const transformedType = transformers.reduce(
       (type, transformer) => transformer(type, instance),

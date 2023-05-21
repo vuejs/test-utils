@@ -307,6 +307,7 @@ export function createInstance(
   // stub out Transition and Transition Group by default.
   transformVNodeArgs(
     createVNodeTransformer({
+      rootComponents,
       transformers: [
         createStubComponentsTransformer({
           rootComponents,

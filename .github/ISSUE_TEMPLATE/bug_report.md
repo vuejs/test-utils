@@ -15,7 +15,7 @@ assignees: ''
 
 **To Reproduce**
 <!-- A link to a minimal reproduction (with the minimum code to reproduce the issue). 
-It takes just a few minutes to build a repro online with https://stackblitz.com/fork/github/vitest-dev/vitest/tree/main/examples/vue?initialPath=__vitest__
+It takes just a few minutes to build a repro online with https://stackblitz.com/github/vuejs/create-vue-templates/tree/main/typescript-vitest?file=src%2Fcomponents%2F__tests__%2FHelloWorld.spec.ts
 -->
 
 **Expected behavior**
