@@ -135,8 +135,9 @@ export function createStubComponentsTransformer({
 }: CreateStubComponentsTransformerConfig): VTUVNodeTypeTransformer {
   return function componentsTransformer(type, instance) {
     // stub teleport by default via config.global.stubs
-    if (isTeleport(type) && 'teleport' in stubs) {
-      if (stubs.teleport === false) return type
+    if (isTeleport(type) && ('teleport' in stubs || 'Teleport' in stubs)) {
+      if ('teleport' in stubs && stubs['teleport'] === false) return type
+      if ('Teleport' in stubs && stubs['Teleport'] === false) return type
 
       return createStub({
         name: 'teleport',
@@ -160,9 +161,10 @@ export function createStubComponentsTransformer({
     // stub transition by default via config.global.stubs
     if (
       (type === Transition || (type as any) === BaseTransition) &&
-      'transition' in stubs
+      ('transition' in stubs || 'Transition' in stubs)
     ) {
-      if (stubs.transition === false) return type
+      if ('transition' in stubs && stubs['transition'] === false) return type
+      if ('Transition' in stubs && stubs['Transition'] === false) return type
 
       return createStub({
         name: 'transition',
@@ -172,8 +174,14 @@ export function createStubComponentsTransformer({
     }
 
     // stub transition-group by default via config.global.stubs
-    if ((type as any) === TransitionGroup && 'transition-group' in stubs) {
-      if (stubs['transition-group'] === false) return type
+    if (
+      (type as any) === TransitionGroup &&
+      ('transition-group' in stubs || 'TransitionGroup' in stubs)
+    ) {
+      if ('transition-group' in stubs && stubs['transition-group'] === false)
+        return type
+      if ('TransitionGroup' in stubs && stubs['TransitionGroup'] === false)
+        return type
 
       return createStub({
         name: 'transition-group',
