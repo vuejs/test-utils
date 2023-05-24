@@ -467,7 +467,7 @@ describe('mounting options: stubs', () => {
       )
     })
 
-    it('stub transition after overriding config.global.stubs with Transition:true PascalCase', () => {
+    it('stub transition after overriding config.global.stubs with Transition: true PascalCase', () => {
       const Comp = {
         template: `<transition><div id="content-global-stubs-transition" /></transition>`
       }
@@ -535,7 +535,7 @@ describe('mounting options: stubs', () => {
       config.global.stubs = {}
       const wrapper = mount(Comp)
 
-      // Vue removes <transition> at run-time and does it's magic, so <transition> should not
+      // Vue removes <transition-group> at run-time and does it's magic, so <transition-group> should not
       // appear in the html when it isn't stubbed.
       expect(wrapper.html()).toBe(
         '<div id="content-global-stubs-no-transition-group"></div>'
@@ -612,9 +612,9 @@ describe('mounting options: stubs', () => {
       )
     })
 
-    it('opts in to stubbing keep-alive with Teleport: true', () => {
+    it('opts in to stubbing teleport with Teleport: true', () => {
       const Comp = {
-        template: `<teleport to="body"><div id="content-global-stubs-transition" /></teleport>`
+        template: `<teleport to="body"><div id="content-global-stubs-teleport" /></teleport>`
       }
       const wrapper = mount(Comp, {
         global: {
