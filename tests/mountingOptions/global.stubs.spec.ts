@@ -452,6 +452,36 @@ describe('mounting options: stubs', () => {
       // appear in the html when it isn't stubbed.
       expect(wrapper.html()).toBe('<div id="content"></div>')
     })
+
+    it('does not stub transition after overriding config.global.stubs', () => {
+      const Comp = {
+        template: `<transition><div id="content-global-stubs-no-transition" /></transition>`
+      }
+      config.global.stubs = {}
+      const wrapper = mount(Comp)
+
+      // Vue removes <transition> at run-time and does it's magic, so <transition> should not
+      // appear in the html when it isn't stubbed.
+      expect(wrapper.html()).toBe(
+        '<div id="content-global-stubs-no-transition"></div>'
+      )
+    })
+
+    it('stub transition after overriding config.global.stubs with Transition: true PascalCase', () => {
+      const Comp = {
+        template: `<transition><div id="content-global-stubs-transition" /></transition>`
+      }
+      config.global.stubs = {
+        Transition: true
+      }
+      const wrapper = mount(Comp)
+
+      expect(wrapper.html()).toBe(
+        '<transition-stub appear="false" persisted="false" css="true">\n' +
+          '  <div id="content-global-stubs-transition"></div>\n' +
+          '</transition-stub>'
+      )
+    })
   })
 
   describe('transition-group', () => {
@@ -496,6 +526,36 @@ describe('mounting options: stubs', () => {
       // Vue removes <transition-group> at run-time and does it's magic, so <transition-group> should not
       // appear in the html when it isn't stubbed.
       expect(wrapper.html()).toBe('<div id="content"></div>')
+    })
+
+    it('does not stub transition-group after overriding config.global.stubs', () => {
+      const Comp = {
+        template: `<transition-group><div key="content" id="content-global-stubs-no-transition-group" /></transition-group>`
+      }
+      config.global.stubs = {}
+      const wrapper = mount(Comp)
+
+      // Vue removes <transition-group> at run-time and does it's magic, so <transition-group> should not
+      // appear in the html when it isn't stubbed.
+      expect(wrapper.html()).toBe(
+        '<div id="content-global-stubs-no-transition-group"></div>'
+      )
+    })
+
+    it('stub transition-group after overriding config.global.stubs with TransitionGroup: true in PascalCase', () => {
+      const Comp = {
+        template: `<transition-group><div key="content" id="content-global-stubs-transition-group" /></transition-group>`
+      }
+      config.global.stubs = {
+        TransitionGroup: true
+      }
+      const wrapper = mount(Comp)
+
+      expect(wrapper.html()).toBe(
+        '<transition-group-stub appear="false" persisted="false" css="true">\n' +
+          '  <div id="content-global-stubs-transition-group"></div>\n' +
+          '</transition-group-stub>'
+      )
     })
   })
 
@@ -549,6 +609,25 @@ describe('mounting options: stubs', () => {
 
       expect(wrapper.html()).toBe(
         '<!--teleport start-->\n' + '<!--teleport end-->'
+      )
+    })
+
+    it('opts in to stubbing teleport with Teleport: true', () => {
+      const Comp = {
+        template: `<teleport to="body"><div id="content-global-stubs-teleport" /></teleport>`
+      }
+      const wrapper = mount(Comp, {
+        global: {
+          stubs: {
+            Teleport: true
+          }
+        }
+      })
+
+      expect(wrapper.html()).toBe(
+        '<teleport-stub to="body">\n' +
+          '  <div id="content-global-stubs-teleport"></div>\n' +
+          '</teleport-stub>'
       )
     })
   })
