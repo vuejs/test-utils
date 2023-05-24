@@ -626,7 +626,7 @@ describe('mounting options: stubs', () => {
 
       expect(wrapper.html()).toBe(
         '<teleport-stub to="body">\n' +
-          '  <div id="content-global-stubs-transition"></div>\n' +
+          '  <div id="content-global-stubs-teleport"></div>\n' +
           '</teleport-stub>'
       )
     })
