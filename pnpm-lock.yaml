@@ -101,8 +101,8 @@ devDependencies:
     specifier: 5.0.4
     version: 5.0.4
   unplugin-vue-components:
-    specifier: 0.25.0
-    version: 0.25.0(rollup@3.23.0)(vue@3.3.4)
+    specifier: 0.25.1
+    version: 0.25.1(rollup@3.23.0)(vue@3.3.4)
   vite:
     specifier: 4.3.9
     version: 4.3.9(@types/node@18.16.16)
@@ -251,8 +251,8 @@ packages:
       '@jridgewell/trace-mapping': 0.3.17
     dev: true
 
-  /@antfu/utils@0.7.3:
-    resolution: {integrity: sha512-sAPXKvlJFVQB4cvmdGoUa9IAavzRrm7N2ctxdD1GuAEIOZu8BRrv2SUzquGXTpRDUa0sY7OkkVHqhi6ySMnMTg==}
+  /@antfu/utils@0.7.4:
+    resolution: {integrity: sha512-qe8Nmh9rYI/HIspLSTwtbMFPj6dISG6+dJnOguTlPNXtCvS2uezdxscVBb7/3DrmNbQK49TDqpkSQ1chbRGdpQ==}
     dev: true
 
   /@babel/code-frame@7.18.6:
@@ -1295,7 +1295,7 @@ packages:
       '@vue/compiler-sfc': 3.3.4
       '@vue/reactivity': 3.3.1
       '@vue/shared': 3.3.4
-      minimatch: 9.0.0
+      minimatch: 9.0.1
       muggle-string: 0.2.2
       vue-template-compiler: 2.7.14
     dev: true
@@ -3059,13 +3059,6 @@ packages:
     dependencies:
       brace-expansion: 2.0.1
 
-  /minimatch@9.0.0:
-    resolution: {integrity: sha512-0jJj8AvgKqWN05mrwuqi8QYKx1WmYSUoKSxu5Qhs9prezTz10sxAHGNZe9J9cqIJzta8DWsleh2KaVaLl6Ru2w==}
-    engines: {node: '>=16 || 14 >=14.17'}
-    dependencies:
-      brace-expansion: 2.0.1
-    dev: true
-
   /minimatch@9.0.1:
     resolution: {integrity: sha512-0jWhJpD/MdhPXwPuiRkCbfYfSKp2qnn2eOc279qI7f+osl/l+prKSrvhg157zSYvx/1nmgn2NqdT6k2Z7zSH9w==}
     engines: {node: '>=16 || 14 >=14.17'}
@@ -3742,8 +3735,8 @@ packages:
     engines: {node: '>= 4.0.0'}
     dev: true
 
-  /unplugin-vue-components@0.25.0(rollup@3.23.0)(vue@3.3.4):
-    resolution: {integrity: sha512-HxrQ4GMSS1RwVww2av3a42cABo/v5AmTRN9iARv6e/xwkrfTyHhLh84kFwXxKkXK61vxDHxaryn694mQmkiVBg==}
+  /unplugin-vue-components@0.25.1(rollup@3.23.0)(vue@3.3.4):
+    resolution: {integrity: sha512-kzS2ZHVMaGU2XEO2keYQcMjNZkanDSGDdY96uQT9EPe+wqSZwwgbFfKVJ5ti0+8rGAcKHColwKUvctBhq2LJ3A==}
     engines: {node: '>=14'}
     peerDependencies:
       '@babel/parser': ^7.15.8
@@ -3755,7 +3748,7 @@ packages:
       '@nuxt/kit':
         optional: true
     dependencies:
-      '@antfu/utils': 0.7.3
+      '@antfu/utils': 0.7.4
       '@rollup/pluginutils': 5.0.2(rollup@3.23.0)
       chokidar: 3.5.3
       debug: 4.3.4
@@ -3852,7 +3845,7 @@ packages:
     dependencies:
       esbuild: 0.14.48
       postcss: 8.4.23
-      resolve: 1.22.1
+      resolve: 1.22.2
       rollup: 2.77.3
     optionalDependencies:
       fsevents: 2.3.2
