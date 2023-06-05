@@ -55,7 +55,7 @@
     "rollup": "3.23.0",
     "tslib": "2.5.2",
     "typescript": "5.0.4",
-    "unplugin-vue-components": "0.25.0",
+    "unplugin-vue-components": "0.25.1",
     "vite": "4.3.9",
     "vitepress": "0.22.4",
     "vitest": "0.31.4",
