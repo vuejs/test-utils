@@ -67,13 +67,10 @@ export const createVNodeTransformer = ({
     if (
       cachedTransformation &&
       // Don't use cache for root component, as it could use stubbed recursive component
-      !isRootComponent(rootComponents, componentType, instance)
+      !isRootComponent(rootComponents, componentType, instance) &&
+      !isTeleport(originalType) &&
+      !isKeepAlive(originalType)
     ) {
-      // https://github.com/vuejs/test-utils/issues/1829 & https://github.com/vuejs/test-utils/issues/1888
-      // Teleport/KeepAlive should return child nodes as a function
-      if (isTeleport(originalType) || isKeepAlive(originalType)) {
-        return [cachedTransformation, props, () => children, ...restVNodeArgs]
-      }
       return [cachedTransformation, props, children, ...restVNodeArgs]
     }
 
