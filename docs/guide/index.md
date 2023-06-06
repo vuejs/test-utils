@@ -36,6 +36,13 @@ test('displays message', () => {
 })
 ```
 
+Vue Test Utils is commonly used with a test runner. Popular test runners include:
+
+- [Vitest](https://vitest.dev/) 
+- [Cypress](https://cypress.io/) 
+
+Vue Test Utils is a minimal and unopinionated library. For something more featureful, ergonomic and opinionated you may want to consider [Cypress Component Testing](https://docs.cypress.io/guides/component-testing/overview), which uses Vue Test Utils under the hood. It runs in a browser, so you can see your components rendered as the tests execute.
+
 ## What Next?
 
 To see Vue Test Utils in action, [take the Crash Course](../guide/essentials/a-crash-course.md), where we build a simple Todo app using a test-first approach.
