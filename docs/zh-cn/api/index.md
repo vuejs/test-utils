@@ -2,13 +2,13 @@
 sidebar: auto
 ---
 
-# API Reference
+# API 参考
 
 ## mount
 
-Creates a Wrapper that contains the mounted and rendered Vue component to test.
+创建一个挂载并渲染 Vue 组件的包装器用于测试。
 
-**Signature:**
+**类型签名：**
 
 ```ts
 interface MountingOptions<Props, Data = {}> {
@@ -26,7 +26,7 @@ function mount(Component, options?: MountingOptions): VueWrapper
 
 **详情：**
 
-`mount` is the main method exposed by Vue Test Utils. It creates a Vue 3 app that holds and renders the Component under testing. In return, it creates a wrapper to act and assert against the Component.
+`mount` 是 Vue Test Utils 暴露的主要函数。它负责创建一个 Vue3 应用，持有并渲染要测试的组件。 它创建的返回值值一个用于操作和断言组件的包装器。
 
 ```js
 import { mount } from '@vue/test-utils'
@@ -42,9 +42,9 @@ test('mounts a component', () => {
 })
 ```
 
-Notice that `mount` accepts a second parameter to define the component's state configuration.
+注意 `mount` 接受的第二个参数用来定义组件的状态配置项。
 
-**Exemple : mounting with component props and a Vue App plugin**
+**示例： 指定组件的 props 和 Vue App 插件进行挂载**
 
 ```js
 const wrapper = mount(Component, {
@@ -59,7 +59,7 @@ const wrapper = mount(Component, {
 
 #### options.global
 
-Among component state, you can configure the aformentioned Vue 3 app by the [`MountingOptions.global` config property.](#global) This would be useful for providing mocked values which your components expect to have available.
+在组件状态中，你可以通过 [`MountingOptions.global` config property.](#global) 配置上述的 Vue 3 应用。这非常实用于对于给组件提供期望可用的模拟值。
 
 ::: tip
 If you find yourself having to set common App configuration for many of your tests, then you can set configuration for your entire test suite using the exported [`config` object.](#config)

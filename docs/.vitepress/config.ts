@@ -1,5 +1,6 @@
 import { defineConfig } from 'vitepress';
 import { frLocaleConfig } from "../fr/.vitepress/locale-config";
+import { zhLocaleConfig } from "../zh-cn/.vitepress/locale-config";
 
 export default defineConfig({
   title: `Vue Test Utils`,
@@ -15,6 +16,12 @@ export default defineConfig({
       title: "Vue Test Utils",
       lang: "fr-FR",
       description: "La documentation officielle de Vue Test Utils",
+    },
+    "/zh-cn/": {
+      label: "中文",
+      title: "Vue Test Utils",
+      lang: "zh-cn",
+      description: "官方 Vue.js 3 测试套件",
     },
   },
   head: [['link', { rel: 'icon', href: `/logo.png` }]],
@@ -121,6 +128,7 @@ export default defineConfig({
         ]
       },
       "/fr/": frLocaleConfig,
+      "/zh-cn/": zhLocaleConfig,
     },
     repo: 'vuejs/test-utils',
     docsRepo: 'vuejs/test-utils',
