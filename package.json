@@ -42,7 +42,7 @@
     "@vue/compiler-dom": "3.3.4",
     "@vue/compiler-sfc": "3.3.4",
     "@vue/server-renderer": "3.3.4",
-    "c8": "7.14.0",
+    "c8": "8.0.0",
     "eslint": "8.42.0",
     "eslint-config-prettier": "8.8.0",
     "eslint-plugin-prettier": "4.2.1",
