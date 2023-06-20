@@ -7,6 +7,8 @@ sidebar: auto
 ## mount
 
 Creates a Wrapper that contains the mounted and rendered Vue component to test.
+Note that when mocking dates/timers with Vitest, this must be called after
+`vi.setSystemTime`.
 
 **Signature:**
 
