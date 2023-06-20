@@ -2,6 +2,15 @@
 
 [[toc]]
 
+## Mocking Dates and Timers with Vitest
+
+Vue's scheduler depends on the system time. Make sure to mount components
+*after* calling `vi.setSystemTime`, since Vue depends on its side effects.
+Mounting components before calling `vi.setSystemTime` may cause breaks in
+reactivity.
+
+See [vuejs/test-utils#2074](https://github.com/vuejs/test-utils/issues/2074).
+
 ## Vue warn: Failed setting prop
 
 ```
