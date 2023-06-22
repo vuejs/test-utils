@@ -1,3 +1,6 @@
 [[redirects]]
   from="/v2"
   to="/"
+
+[build]
+  command = "pnpm docs:build"
