@@ -65,14 +65,10 @@
     "vuex": "4.1.0"
   },
   "peerDependencies": {
-    "@vue/compiler-dom": "^3.0.1",
     "@vue/server-renderer": "^3.0.1",
     "vue": "^3.0.1"
   },
   "peerDependenciesMeta": {
-    "@vue/compiler-dom": {
-      "optional": true
-    },
     "@vue/server-renderer": {
       "optional": true
     }
