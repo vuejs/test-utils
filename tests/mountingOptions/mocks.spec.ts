@@ -95,7 +95,7 @@ describe('mocks', () => {
     const wrapper = mount(ScriptSetupWithGlobalFunction, {
       global: {
         mocks: {
-          $fetch: async (url) => ({ data: 'mocked' })
+          $fetch: async (url: string) => ({ data: 'mocked' })
         }
       }
     })
