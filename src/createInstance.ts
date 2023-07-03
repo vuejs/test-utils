@@ -228,6 +228,8 @@ export function createInstance(
               this.$.setupState[k] = v
               // eslint-disable-next-line no-empty
             } catch (e) {}
+            //@ts-ignore Setting an unknown global variable for the component instance
+            globalThis[k] = v
           }
           // also intercept the proxy calls to make the mocks available on the instance
           // (useful when a template access a global function like $t and the developer wants to mock it)

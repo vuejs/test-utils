@@ -2,6 +2,7 @@ import { describe, expect, it, vi } from 'vitest'
 import { mount, RouterLinkStub } from '../../src'
 import { defineComponent } from 'vue'
 import ScriptSetupWithI18n from '../components/ScriptSetupWithI18n.vue'
+import ScriptSetupWithGlobalFunction from '../components/ScriptSetupWithGlobalFunction.vue'
 import ComponentWithI18n from '../components/ComponentWithI18n.vue'
 
 describe('mocks', () => {
@@ -87,6 +88,19 @@ describe('mocks', () => {
       }
     })
     expect(wrapper.text()).toContain('hello')
+    expect(wrapper.text()).toContain('mocked')
+  })
+
+  it('mocks a global function used in a script setup', async () => {
+    const wrapper = mount(ScriptSetupWithGlobalFunction, {
+      global: {
+        mocks: {
+          $fetch: async (url) => ({ data: 'mocked' })
+        }
+      }
+    })
+    expect(wrapper.text()).toContain('hello')
+    await wrapper.find('button').trigger('click')
     expect(wrapper.text()).toContain('mocked')
   })
 
