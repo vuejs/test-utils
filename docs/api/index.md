@@ -505,6 +505,15 @@ export default {
   }
 }
 </script>
+
+// Or if you are using script setup
+
+<script setup>
+function onClick() {
+  $store.dispatch('click')
+}
+</script>
+
 ```
 
 `Component.spec.js`:
