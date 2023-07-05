@@ -23,7 +23,7 @@
   ],
   "dependencies": {
     "js-beautify": "1.14.6",
-    "vue-component-type-helpers": "1.8.3"
+    "vue-component-type-helpers": "1.8.4"
   },
   "devDependencies": {
     "@rollup/plugin-commonjs": "25.0.2",
@@ -32,9 +32,9 @@
     "@rollup/plugin-replace": "5.0.2",
     "@rollup/plugin-typescript": "11.1.2",
     "@types/js-beautify": "1.13.3",
-    "@types/node": "18.16.18",
-    "@typescript-eslint/eslint-plugin": "5.60.1",
-    "@typescript-eslint/parser": "5.60.1",
+    "@types/node": "18.16.19",
+    "@typescript-eslint/eslint-plugin": "5.61.0",
+    "@typescript-eslint/parser": "5.61.0",
     "@vitejs/plugin-vue": "4.2.3",
     "@vitejs/plugin-vue-jsx": "3.0.1",
     "@vitest/coverage-v8": "0.32.4",
@@ -42,7 +42,7 @@
     "@vue/compiler-dom": "3.3.4",
     "@vue/compiler-sfc": "3.3.4",
     "@vue/server-renderer": "3.3.4",
-    "eslint": "8.43.0",
+    "eslint": "8.44.0",
     "eslint-config-prettier": "8.8.0",
     "eslint-plugin-prettier": "4.2.1",
     "husky": "8.0.3",
@@ -51,9 +51,9 @@
     "lint-staged": "13.2.3",
     "prettier": "2.8.8",
     "reflect-metadata": "0.1.13",
-    "rollup": "3.25.3",
+    "rollup": "3.26.1",
     "tslib": "2.6.0",
-    "typescript": "5.1.5",
+    "typescript": "5.1.6",
     "unplugin-vue-components": "0.25.1",
     "vite": "4.3.9",
     "vitepress": "0.22.4",
@@ -61,7 +61,7 @@
     "vue": "3.3.4",
     "vue-class-component": "8.0.0-rc.1",
     "vue-router": "4.2.2",
-    "vue-tsc": "1.8.3",
+    "vue-tsc": "1.8.4",
     "vuex": "4.1.0"
   },
   "peerDependencies": {
@@ -110,7 +110,7 @@
     "url": "git+https://github.com/vuejs/test-utils.git"
   },
   "homepage": "https://github.com/vuejs/test-utils",
-  "packageManager": "pnpm@8.6.5",
+  "packageManager": "pnpm@8.6.6",
   "pnpm": {
     "peerDependencyRules": {
       "ignoreMissing": [
