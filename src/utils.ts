@@ -153,10 +153,13 @@ export function isRefSelector(
 export function convertStubsToRecord(stubs: Stubs) {
   if (Array.isArray(stubs)) {
     // ['Foo', 'Bar'] => { Foo: true, Bar: true }
-    return stubs.reduce((acc, current) => {
-      acc[current] = true
-      return acc
-    }, {} as Record<string, Stub>)
+    return stubs.reduce(
+      (acc, current) => {
+        acc[current] = true
+        return acc
+      },
+      {} as Record<string, Stub>
+    )
   }
 
   return stubs
