@@ -29,17 +29,8 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue'
-
-export default defineComponent({
-  name: 'ComponentWithSlots',
-  data() {
-    return {
-      aBoolean: true,
-      aString: 'string',
-      anObject: { foo: 'foo' }
-    }
-  }
-})
+<script lang="ts" setup>
+const aBoolean = true
+const aString = 'string'
+const anObject = { foo: 'foo' }
 </script>

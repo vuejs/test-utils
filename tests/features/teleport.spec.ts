@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
-import { defineComponent, h, Teleport } from 'vue'
+import { defineComponent, h, ref, Teleport } from 'vue'
 import { mount } from '../../src'
 import WithTeleportPropsComp from '../components/WithTeleportPropsComp.vue'
 import WithTeleportEmitsComp from '../components/WithTeleportEmitsComp.vue'
@@ -143,5 +143,43 @@ describe('teleport', () => {
     withProps.trigger('click')
 
     expect(withProps.emitted().greet[0]).toEqual(['Hey!'])
+  })
+
+  it('should reactively update content with teleport', async () => {
+    const wrapper = mount(
+      defineComponent({
+        template:
+          '<div>' +
+          '<button @click="add">Add</button>' +
+          '<Teleport to="body"><div id="count">{{ count }}</div></Teleport>' +
+          '</div>',
+        setup() {
+          const count = ref(1)
+          const add = () => (count.value += 1)
+          return { count, add }
+        }
+      }),
+      {
+        global: {
+          stubs: {
+            teleport: true
+          }
+        }
+      }
+    )
+
+    expect(wrapper.html()).toBe(
+      '<div><button>Add</button>\n' +
+        '  <teleport-stub to="body">\n' +
+        '    <div id="count">1</div>\n' +
+        '  </teleport-stub>\n' +
+        '</div>'
+    )
+
+    expect(wrapper.find('#count').text()).toBe('1')
+
+    await wrapper.find('button').trigger('click')
+
+    expect(wrapper.find('#count').text()).toBe('2')
   })
 })

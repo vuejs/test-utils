@@ -1,4 +1,9 @@
-import { describe, it, expect } from 'vitest'
+/**
+ * Run SSR tests in node environment
+ * @vitest-environment node
+ */
+
+import { describe, it, expect, vi } from 'vitest'
 import { defineComponent, onMounted, onServerPrefetch, ref } from 'vue'
 import { renderToString } from '../src'
 
@@ -55,5 +60,27 @@ describe('renderToString', () => {
     const contents = await renderToString(Component)
 
     expect(contents).toBe('<div>onServerPrefetch</div>')
+  })
+
+  it('returns print warning if `attachTo` option is used', async () => {
+    const spy = vi.spyOn(console, 'warn').mockReturnValue()
+
+    const Component = defineComponent({
+      template: '<div>foo</div>'
+    })
+
+    expect(
+      await renderToString(Component, {
+        // @ts-expect-error `attachTo` property is not allowed
+        attachTo: 'body'
+      })
+    ).toBe('<div>foo</div>')
+
+    expect(spy).toHaveBeenCalledTimes(1)
+    expect(spy).toHaveBeenCalledWith(
+      'attachTo option is not available for renderToString'
+    )
+
+    spy.mockRestore()
   })
 })

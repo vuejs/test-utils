@@ -68,7 +68,7 @@ function getInstanceOptions(
 
 // implementation
 export function createInstance(
-  inputComponent: DefineComponent<{}, {}, any>,
+  inputComponent: DefineComponent<{}, {}, any, any, any, any>,
   options?: MountingOptions<any> & Record<string, any>
 ) {
   // normalize the incoming component
@@ -110,24 +110,6 @@ export function createInstance(
   // We've just replaced our component with its copy
   // Let's register it as a stub so user can find it
   registerStub({ source: originalComponent, stub: component })
-
-  const el = document.createElement('div')
-
-  if (options?.attachTo) {
-    let to: Element | null
-    if (typeof options.attachTo === 'string') {
-      to = document.querySelector(options.attachTo)
-      if (!to) {
-        throw new Error(
-          `Unable to find the element matching the selector ${options.attachTo} given as the \`attachTo\` option`
-        )
-      }
-    } else {
-      to = options.attachTo
-    }
-
-    to.appendChild(el)
-  }
 
   function slotToFunction(slot: Slot) {
     switch (typeof slot) {
@@ -227,7 +209,7 @@ export function createInstance(
 
   // global mocks mixin
   if (global?.mocks) {
-    const mixin = defineComponent({
+    const mixin: ComponentOptions = {
       beforeCreate() {
         // we need to differentiate components that are or not not `script setup`
         // otherwise we run into a proxy set error
@@ -265,7 +247,7 @@ export function createInstance(
           }
         }
       }
-    })
+    }
 
     app.mixin(mixin)
   }
@@ -325,6 +307,7 @@ export function createInstance(
   // stub out Transition and Transition Group by default.
   transformVNodeArgs(
     createVNodeTransformer({
+      rootComponents,
       transformers: [
         createStubComponentsTransformer({
           rootComponents,
@@ -359,7 +342,6 @@ export function createInstance(
 
   return {
     app,
-    el,
     props,
     componentRef
   }

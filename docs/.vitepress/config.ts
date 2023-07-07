@@ -107,6 +107,10 @@ export default defineConfig({
             ]
           },
           {
+            text: 'FAQ',
+            link: '/guide/faq/'
+          },
+          {
             text: 'Migrating from Vue 2',
             link: '/migration/'
           },
@@ -213,6 +217,10 @@ export default defineConfig({
             link: '/guide/extending-vtu/community-learning'
           }
         ]
+      },
+      {
+        text: 'FAQ',
+        link: '/guide/faq/'
       },
       {
         text: 'Migrating from Vue 2',

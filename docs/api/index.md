@@ -7,6 +7,8 @@ sidebar: auto
 ## mount
 
 Creates a Wrapper that contains the mounted and rendered Vue component to test.
+Note that when mocking dates/timers with Vitest, this must be called after
+`vi.setSystemTime`.
 
 **Signature:**
 
@@ -67,7 +69,7 @@ If you find yourself having to set common App configuration for many of your tes
 
 ### attachTo
 
-Specify the node to mount the component on.
+Specify the node to mount the component on. This is not available when using `renderToString`.
 
 **Signature:**
 
@@ -1431,6 +1433,10 @@ isVisible(): boolean
 
 **Details:**
 
+::: warning
+`isVisible()` only works correctly if the wrapper is attached to the DOM using [`attachTo`](#attachto)
+:::
+
 ```js
 const Component = {
   template: `<div v-show="false"><span /></div>`
@@ -1526,7 +1532,9 @@ setData(data: Record<string, any>): Promise<void>
 
 `setData` does not allow setting new properties that are not defined in the component.
 
+::: warning
 Also, notice that `setData` does not modify composition API `setup()` data.
+:::
 
 `Component.vue`:
 

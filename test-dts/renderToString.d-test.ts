@@ -27,8 +27,8 @@ renderToString(AppWithDefine, {
 })
 
 expectError(
-  // @ts-expect-error wrong prop type should not compile
   renderToString(AppWithDefine, {
+    // @ts-expect-error wrong prop type should not compile
     props: { a: 2 }
   })
 )
@@ -105,3 +105,11 @@ class ClassComponent extends Vue {
   }
 }
 expectType<Promise<string>>(renderToString(ClassComponent))
+
+// No `attachTo` mounting option
+expectError(
+  renderToString(AppWithProps, {
+    // @ts-expect-error should not have attachTo mounting option
+    attachTo: 'body'
+  })
+)

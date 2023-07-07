@@ -1,4 +1,9 @@
-import { isKeepAlive, isTeleport, VTUVNodeTypeTransformer } from './util'
+import {
+  isKeepAlive,
+  isRootComponent,
+  isTeleport,
+  VTUVNodeTypeTransformer
+} from './util'
 import {
   Transition,
   TransitionGroup,
@@ -11,8 +16,8 @@ import {
   ConcreteComponent,
   ComponentPropsOptions,
   ComponentObjectPropsOptions,
-  DefineComponent,
-  Component
+  Component,
+  ComponentOptions
 } from 'vue'
 import { hyphenate } from '../utils/vueShared'
 import { matchName } from '../utils/matchName'
@@ -28,6 +33,7 @@ import { registerStub } from '../stubs'
 export type CustomCreateStub = (params: {
   name: string
   component: ConcreteComponent
+  registerStub: (config: { source: Component; stub: Component }) => void
 }) => ConcreteComponent
 
 interface StubOptions {
@@ -54,7 +60,7 @@ export const createStub = ({
   name,
   type,
   renderStubDefaultSlot
-}: StubOptions): DefineComponent => {
+}: StubOptions) => {
   const anonName = 'anonymous-stub'
   const tag = name ? `${hyphenate(name)}-stub` : anonName
 
@@ -62,7 +68,7 @@ export const createStub = ({
     ? unwrapLegacyVueExtendComponent(type) || {}
     : {}
 
-  return defineComponent({
+  const stub = defineComponent({
     name: name || anonName,
     props: (componentOptions as ConcreteComponent).props || {},
     // fix #1550 - respect old-style v-model for shallow mounted components with @vue/compat
@@ -84,6 +90,18 @@ export const createStub = ({
       }
     }
   })
+
+  const { __asyncLoader: asyncLoader } = type as ComponentOptions
+  if (asyncLoader) {
+    asyncLoader().then(() => {
+      registerStub({
+        source: (type as ComponentOptions).__asyncResolved,
+        stub
+      })
+    })
+  }
+
+  return stub
 }
 
 const resolveComponentStubByName = (
@@ -117,8 +135,9 @@ export function createStubComponentsTransformer({
 }: CreateStubComponentsTransformerConfig): VTUVNodeTypeTransformer {
   return function componentsTransformer(type, instance) {
     // stub teleport by default via config.global.stubs
-    if (isTeleport(type) && 'teleport' in stubs) {
-      if (stubs.teleport === false) return type
+    if (isTeleport(type) && ('teleport' in stubs || 'Teleport' in stubs)) {
+      if ('teleport' in stubs && stubs['teleport'] === false) return type
+      if ('Teleport' in stubs && stubs['Teleport'] === false) return type
 
       return createStub({
         name: 'teleport',
@@ -142,9 +161,10 @@ export function createStubComponentsTransformer({
     // stub transition by default via config.global.stubs
     if (
       (type === Transition || (type as any) === BaseTransition) &&
-      'transition' in stubs
+      ('transition' in stubs || 'Transition' in stubs)
     ) {
-      if (stubs.transition === false) return type
+      if ('transition' in stubs && stubs['transition'] === false) return type
+      if ('Transition' in stubs && stubs['Transition'] === false) return type
 
       return createStub({
         name: 'transition',
@@ -154,8 +174,14 @@ export function createStubComponentsTransformer({
     }
 
     // stub transition-group by default via config.global.stubs
-    if ((type as any) === TransitionGroup && 'transition-group' in stubs) {
-      if (stubs['transition-group'] === false) return type
+    if (
+      (type as any) === TransitionGroup &&
+      ('transition-group' in stubs || 'TransitionGroup' in stubs)
+    ) {
+      if ('transition-group' in stubs && stubs['transition-group'] === false)
+        return type
+      if ('TransitionGroup' in stubs && stubs['TransitionGroup'] === false)
+        return type
 
       return createStub({
         name: 'transition-group',
@@ -164,14 +190,8 @@ export function createStubComponentsTransformer({
       })
     }
 
-    if (
-      // Don't stub VTU_ROOT component
-      !instance ||
-      // Don't stub mounted component on root level
-      (rootComponents.component === type && !instance?.parent) ||
-      // Don't stub component with compat wrapper
-      (rootComponents.functional && rootComponents.functional === type)
-    ) {
+    // Don't stub root components
+    if (isRootComponent(rootComponents, type, instance)) {
       return type
     }
 
@@ -230,7 +250,8 @@ export function createStubComponentsTransformer({
       return (
         config.plugins.createStubs?.({
           name: stubName,
-          component: type
+          component: type,
+          registerStub
         }) ??
         createStub({
           name: stubName,
