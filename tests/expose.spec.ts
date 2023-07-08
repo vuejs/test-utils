@@ -68,13 +68,13 @@ describe('expose', () => {
 
   it('access vm with <script setup> and defineExpose()', async () => {
     const wrapper = mount(ScriptSetupExpose)
-    const vm = wrapper.vm as unknown as ({
+    const vm = wrapper.vm as unknown as {
       inc: () => void
-      resetCount: () => void,
-      count: number,
-      refNonExposed: string,
+      resetCount: () => void
+      count: number
+      refNonExposed: string
       refNonExposedGetter: () => string
-    });
+    }
 
     commonTests(vm)
 
