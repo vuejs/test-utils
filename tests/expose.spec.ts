@@ -46,7 +46,10 @@ describe('expose', () => {
     expect(vm.returnedState).toBe('returnedState')
 
     // non-exposed and non-returned state should not be accessible
-    expect(vm.stateNonExposedAndNonReturned).toBe(undefined)
+    expect(
+      (vm as unknown as { stateNonExposedAndNonReturned: undefined })
+        .stateNonExposedAndNonReturned
+    ).toBe(undefined)
   })
 
   it('access vm on simple components with custom `expose` and a setup returning a render function', async () => {
@@ -65,7 +68,13 @@ describe('expose', () => {
 
   it('access vm with <script setup> and defineExpose()', async () => {
     const wrapper = mount(ScriptSetupExpose)
-    const vm = wrapper.vm
+    const vm = wrapper.vm as unknown as ({
+      inc: () => void
+      resetCount: () => void,
+      count: number,
+      refNonExposed: string,
+      refNonExposedGetter: () => string
+    });
 
     commonTests(vm)
 
