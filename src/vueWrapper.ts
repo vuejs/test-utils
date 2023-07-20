@@ -26,7 +26,11 @@ function createVMProxy<T extends ComponentPublicInstance>(
 ): T {
   return new Proxy(vm, {
     get(vm, key, receiver) {
-      if (key in setupState) {
+      if (vm.$.exposed && vm.$.exposeProxy && key in vm.$.exposeProxy) {
+        // first if the key is exposed
+        return Reflect.get(vm.$.exposeProxy, key, receiver)
+      } else if (key in setupState) {
+        // second if the key is acccessible from the setupState
         return Reflect.get(setupState, key, receiver)
       } else {
         // vm.$.ctx is the internal context of the vm
