@@ -29,7 +29,7 @@ import { isElement } from './utils/isElement'
 import type { DOMWrapper } from './domWrapper'
 import { createDOMWrapper, createVueWrapper } from './wrapperFactory'
 import { stringifyNode } from './utils/stringifyNode'
-import beautify from 'js-beautify'
+import beautify, { HTMLBeautifyOptions } from 'js-beautify'
 
 export default abstract class BaseWrapper<ElementType extends Node>
   implements WrapperLike
@@ -226,8 +226,10 @@ export default abstract class BaseWrapper<ElementType extends Node>
         beautify.html(node, {
           unformatted: ['code', 'pre', 'em', 'strong', 'span'],
           indent_inner_html: true,
-          indent_size: 2
-        })
+          indent_size: 2,
+          inline_custom_elements: false
+          // TODO the cast can be removed when @types/js-beautify will be up-to-date
+        } as HTMLBeautifyOptions)
       )
       .join('\n')
   }
