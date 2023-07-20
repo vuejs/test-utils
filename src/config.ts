@@ -48,6 +48,7 @@ class Pluggable<Instance = DOMWrapper<Node>> {
       return handler(instance, options) // invoke the setup method passed to install
     }
     const bindProperty = ([property, value]: [string, any]) => {
+      // eslint-disable-next-line no-extra-semi
       ;(instance as any)[property] =
         typeof value === 'function' ? value.bind(instance) : value
     }

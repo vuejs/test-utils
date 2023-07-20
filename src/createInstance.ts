@@ -231,6 +231,7 @@ export function createInstance(
           }
           // also intercept the proxy calls to make the mocks available on the instance
           // (useful when a template access a global function like $t and the developer wants to mock it)
+          // eslint-disable-next-line no-extra-semi
           ;(this.$ as any).proxy = new Proxy((this.$ as any).proxy, {
             get(target, key) {
               if (key in global.mocks) {
@@ -243,6 +244,7 @@ export function createInstance(
           for (const [k, v] of Object.entries(
             global.mocks as { [key: string]: any }
           )) {
+            // eslint-disable-next-line no-extra-semi
             ;(this as any)[k] = v
           }
         }
