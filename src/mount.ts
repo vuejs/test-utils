@@ -47,7 +47,13 @@ export function mount<
 >(
   originalComponent: T,
   options?: ComponentMountingOptions<C>
-): VueWrapper<ComponentExposed<C> & ComponentProps<C> & ComponentData<C>>
+): VueWrapper<
+  ComponentProps<C> & ComponentData<C> & ComponentExposed<C>,
+  ComponentPublicInstance<
+    ComponentProps<C>,
+    ComponentData<C> & ComponentExposed<C>
+  >
+>
 
 // implementation
 export function mount(

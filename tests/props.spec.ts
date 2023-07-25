@@ -20,6 +20,7 @@ describe('props', () => {
 
   it('returns undefined if props does not exist', () => {
     const wrapper = mount(WithProps, { props: { msg: 'ABC' } })
+    // @ts-expect-error :: non-existent prop
     expect(wrapper.props('foo')).toEqual(undefined)
   })
 
