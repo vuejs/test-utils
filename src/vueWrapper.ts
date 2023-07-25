@@ -215,10 +215,14 @@ export class VueWrapper<
     return this.componentVM
   }
 
-  props(): { [key: string]: any }
-  props(selector: string): any
-  props(selector?: string): { [key: string]: any } | any {
-    const props = this.componentVM.$props as { [key: string]: any }
+  props(): T['$props']
+  props<Selector extends keyof T['$props']>(
+    selector: Selector
+  ): T['$props'][Selector]
+  props<Selector extends keyof T['$props']>(
+    selector?: Selector
+  ): T['$props'] | T['$props'][Selector] {
+    const props = this.componentVM.$props as T['$props']
     return selector ? props[selector] : props
   }
 
@@ -240,7 +244,7 @@ export class VueWrapper<
     return nextTick()
   }
 
-  setProps(props: Record<string, unknown>): Promise<void> {
+  setProps(props: T['$props']): Promise<void> {
     // if this VM's parent is not the root or if setProps does not exist, error out
     if (this.vm.$parent !== this.rootVM || !this.__setProps) {
       throw Error('You can only use setProps on your mounted component')

@@ -116,4 +116,29 @@ expectType<boolean>(domWrapper.classes('class'))
 
 // props
 expectType<{ [key: string]: any }>(wrapper.props())
-expectType<any>(wrapper.props('prop'))
+
+const ComponentWithProps = defineComponent({
+  props: {
+    foo: String,
+    bar: Number,
+  },
+})
+
+const propsWrapper = mount(ComponentWithProps);
+
+propsWrapper.setProps({foo: 'abc'})
+propsWrapper.setProps({foo: 'abc', bar: 123})
+// @ts-expect-error :: should require string
+propsWrapper.setProps({foo: 123})
+// @ts-expect-error :: unknown prop
+propsWrapper.setProps({badProp: true})
+
+expectType<string | undefined>(propsWrapper.props().foo)
+expectType<number | undefined>(propsWrapper.props().bar)
+// @ts-expect-error :: unknown prop
+propsWrapper.props().badProp;
+
+expectType<string | undefined>(propsWrapper.props('foo'))
+expectType<number | undefined>(propsWrapper.props('bar'))
+// @ts-expect-error :: unknown prop
+propsWrapper.props('badProp')
