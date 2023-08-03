@@ -26,8 +26,10 @@ export default defineConfig({
     environment: 'jsdom',
     setupFiles: [path.resolve(__dirname, './setup.js')],
     include: ['tests/**/*.spec.ts'],
-    deps: {
-      inline: ['vue', '@vue/compat']
+    server: {
+      deps: {
+        inline: ['vue', '@vue/compat']
+      }
     },
     sequence: {
       shuffle: true
