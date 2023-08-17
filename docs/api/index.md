@@ -46,7 +46,7 @@ test('mounts a component', () => {
 
 Notice that `mount` accepts a second parameter to define the component's state configuration.
 
-**Exemple : mounting with component props and a Vue App plugin**
+**Example : mounting with component props and a Vue App plugin**
 
 ```js
 const wrapper = mount(Component, {
@@ -1955,7 +1955,7 @@ type GlobalMountOptions = {
 
 Instead of configuring mounting options on a per test basis, you can configure them for your entire test suite. These will be used by default every time you `mount` a component. If desired, you can then override your defaults on a per test basis.
 
-**Exemple :**
+**Example :**
 
 An example might be globally mocking the `$t` variable from vue-i18n and a component:
 
