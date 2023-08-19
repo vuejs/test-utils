@@ -1688,14 +1688,14 @@ test('setValue on checkbox', async () => {
   expect(wrapper.find('div')).toBe(false)
 })
 
-test('setValue on input text', () => {
+test('setValue on input text', async () => {
   const wrapper = mount(Component)
 
   await wrapper.find('input[type="text"]').setValue('hello!')
   expect(wrapper.find('p').text()).toBe('Text: hello!')
 })
 
-test('setValue on multi select', () => {
+test('setValue on multi select', async () => {
   const wrapper = mount(Component)
 
   // For select without multiple
