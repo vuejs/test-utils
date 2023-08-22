@@ -218,7 +218,8 @@ describe('setData', () => {
   it('should retain prototype methods for constructed objects when calling setData', async () => {
     const expectedResult = 'success!'
     class TestClass {
-      getResult() {
+      constructor(readonly name: string) {}
+      getResult(): string {
         return expectedResult
       }
     }
@@ -227,22 +228,22 @@ describe('setData', () => {
       defineComponent({
         template: '<div/>',
         data() {
-          return { value: new TestClass() }
+          return { value: new TestClass('test1') }
         },
         methods: {
           getResult() {
-            return this.value.getResult()
+            return `${this.value.name}: ${this.value.getResult()}`
           }
         }
       })
     )
 
-    expect(wrapper.vm.getResult()).toStrictEqual(expectedResult)
+    expect(wrapper.vm.getResult()).toStrictEqual(`test1: ${expectedResult}`)
 
     await wrapper.setData({
-      value: new TestClass()
+      value: new TestClass('test2')
     })
 
-    expect(wrapper.vm.getResult()).toStrictEqual(expectedResult)
+    expect(wrapper.vm.getResult()).toStrictEqual(`test2: ${expectedResult}`)
   })
 })
