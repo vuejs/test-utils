@@ -214,4 +214,35 @@ describe('setData', () => {
     expect(wrapper.vm.value).toBeInstanceOf(Date)
     expect(wrapper.vm.value!.toISOString()).toBe('2022-08-11T12:15:54.000Z')
   })
+
+  it('should retain prototype methods for constructed objects when calling setData', async () => {
+    const expectedResult = 'success!'
+    class TestClass {
+      getResult() {
+        return expectedResult
+      }
+    }
+
+    const wrapper = mount(
+      defineComponent({
+        template: '<div/>',
+        data() {
+          return { value: new TestClass() }
+        },
+        methods: {
+          getResult() {
+            return this.value.getResult()
+          }
+        }
+      })
+    )
+
+    expect(wrapper.vm.getResult()).toStrictEqual(expectedResult)
+
+    await wrapper.setData({
+      value: new TestClass()
+    })
+
+    expect(wrapper.vm.getResult()).toStrictEqual(expectedResult)
+  })
 })
