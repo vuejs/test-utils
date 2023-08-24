@@ -1,4 +1,4 @@
-import { defineConfig, HeadConfig } from 'vitepress'
+import { defineConfig } from 'vitepress'
 
 // TODO:
 // export const META_IMAGE = 'https://test-utils.vuejs.org/social.png'
