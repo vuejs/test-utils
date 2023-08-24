@@ -6,10 +6,10 @@ titleTemplate: Vue Test Utils pour Vue.js 3
 
 hero:
   name: Vue Test Utils
-  text: Vue Test Utils pour Vue.js 3
+  text: Test Utils pour Vue.js 3
   tagline: La librairie officielle de tests unitaires pour Vue.js 3
   image:
-    src: /logo.png
+    src: /logo.svg
     alt: Vue Test Utils
   actions:
     - theme: brand
