@@ -31,7 +31,7 @@ export const slugify = (str: string): string =>
 
 export const sharedConfig = defineConfig({
   title: 'Vue Test Utils',
-  appearance: 'dark',
+  appearance: true,
 
   markdown: {
     theme: {
