@@ -309,7 +309,7 @@ This is table for those coming from VTU 1, comparing the two APIs.
 | attachToDocument | renamed `attachTo`. See [here](https://github.com/vuejs/vue-test-utils/pull/1492) |
 | scopedSlots      | removed. ScopedSlots are merged with `slots` in Vue 3                             |
 | context          | removed. Different from Vue 2, does not make sense anymore.                       |
-| localVue         | removed. No longer required - Vue 3 there is no global Vue instance to mutate.    |
+| localVue         | removed. No longer required - in Vue 3 there is no global Vue instance to mutate. |
 | listeners        | removed. No longer exists in Vue 3                                                |
 | parentComponent  | removed                                                                           |
 
@@ -317,7 +317,7 @@ This is table for those coming from VTU 1, comparing the two APIs.
 
 | method         | notes                                                                                       |
 |----------------|---------------------------------------------------------------------------------------------|
-| find           | only `querySelector` syntax is supported. Use `findComponent(Comp)`                         |
+| find           | only `querySelector` syntax is supported. Use `findComponent(Comp)` to find a Vue component |
 | setValue       | works for select, checkbox, radio button, input, textarea. Returns `nextTick`.              |
 | trigger        | returns `nextTick`. You can do `await wrapper.find('button').trigger('click')`              |
 | destroy        | renamed to `unmount` to match Vue 3 lifecycle hook name.                                    |
@@ -326,7 +326,7 @@ This is table for those coming from VTU 1, comparing the two APIs.
 | setSelected    | removed. Now part of `setValue`                                                             |
 | setChecked     | removed. Now part of `setValue`                                                             |
 | is             | removed                                                                                     |
-| isEmpty        | removed. use matchers such as [this](https://github.com/testing-library/jest-dom#tobeempty) |
+| isEmpty        | removed. Use matchers such as [this](https://github.com/testing-library/jest-dom#tobeempty) |
 | isVueInstance  | removed                                                                                     |
 | name           | removed                                                                                     |
 | setMethods     | removed                                                                                     |
