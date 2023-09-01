@@ -7,7 +7,7 @@ Ceci est la documentation pour Vue Test Utils v2, qui cible Vue 3.
 En résumé&nbsp;:
 
 - [Vue Test Utils 1](https://github.com/vuejs/vue-test-utils/) cible [Vue 2](https://github.com/vuejs/vue/).
-- [Vue Test Utils 2](https://github.com/vuejs/test-utils/) cible [Vue 3](https://github.com/vuejs/vue-next/).
+- [Vue Test Utils 2](https://github.com/vuejs/test-utils/) cible [Vue 3](https://github.com/vuejs/core/).
 
 ## Qu'est-ce que Vue Test Utils&nbsp;?
 
