@@ -1,7 +1,7 @@
 import { describe, expect, it, vi } from 'vitest'
 import { defineComponent, h, ref } from 'vue'
 
-import { mount } from '../src'
+import { flushPromises, mount } from '../src'
 import { keyCodesByKeyName, KeyName } from '../src/createDomEvent'
 
 describe('trigger', () => {
@@ -25,6 +25,30 @@ describe('trigger', () => {
 
       const wrapper = mount(Component)
       await wrapper.trigger('click')
+
+      expect(wrapper.text()).toBe('Count: 1')
+    })
+
+    it('work with click event on element', async () => {
+      const Component = defineComponent({
+        setup() {
+          return {
+            count: ref(0)
+          }
+        },
+
+        render() {
+          return h(
+            'div',
+            { onClick: () => this.count++ },
+            `Count: ${this.count}`
+          )
+        }
+      })
+
+      const wrapper = mount(Component)
+      wrapper.find('div').element.click()
+      await flushPromises()
 
       expect(wrapper.text()).toBe('Count: 1')
     })
@@ -113,6 +137,35 @@ describe('trigger', () => {
       expect(wrapper.classes()).not.toContain('active')
       await wrapper.trigger('click')
       expect(wrapper.classes()).toContain('active')
+    })
+  })
+
+  describe('on focus', () => {
+    it('focus element', async () => {
+      const Component = defineComponent({
+        setup() {
+          return {
+            count: ref(0)
+          }
+        },
+
+        render() {
+          return h(
+            'button',
+            { onFocus: () => this.count++ },
+            `Count: ${this.count}`
+          )
+        }
+      })
+
+      const wrapper = mount(Component, {
+        attachTo: document.body
+      })
+      const button = wrapper.find('button')
+      await button.trigger('focus')
+
+      expect(button.text()).toBe('Count: 1')
+      expect(document.activeElement).toBe(button.element)
     })
   })
 
