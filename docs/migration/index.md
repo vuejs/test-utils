@@ -290,3 +290,43 @@ If you use snapshot testing and comment nodes are leaking into your snapshots, n
   }
   ```
 - Via `@vue/test-utils` [`mountingOptions.global.config`](https://test-utils.vuejs.org/api/#global) either globally or on per-test basis.
+
+## Comparison with v1
+
+This is table for those coming from VTU 1, comparing the two APIs.
+
+### Mounting Options
+
+| option           | notes                                                                             |
+|------------------|-----------------------------------------------------------------------------------|
+| mocks            | nested in `global`                                                                |
+| propsData        | now called `props`                                                                |
+| provide          | nested in `global`                                                                |
+| mixins           | nested in `global`                                                                |
+| plugins          | nested in `global`                                                                |
+| component        | nested in `global`                                                                |
+| directives       | nested in `global`                                                                |
+| attachToDocument | renamed `attachTo`. See [here](https://github.com/vuejs/vue-test-utils/pull/1492) |
+| scopedSlots      | removed. ScopedSlots are merged with `slots` in Vue 3                             |
+| context          | removed. Different from Vue 2, does not make sense anymore.                       |
+| localVue         | removed. No longer required - in Vue 3 there is no global Vue instance to mutate. |
+| listeners        | removed. No longer exists in Vue 3                                                |
+| parentComponent  | removed                                                                           |
+
+### Wrapper API (mount)
+
+| method         | notes                                                                                       |
+|----------------|---------------------------------------------------------------------------------------------|
+| find           | only `querySelector` syntax is supported. Use `findComponent(Comp)` to find a Vue component |
+| setValue       | works for select, checkbox, radio button, input, textarea. Returns `nextTick`.              |
+| trigger        | returns `nextTick`. You can do `await wrapper.find('button').trigger('click')`              |
+| destroy        | renamed to `unmount` to match Vue 3 lifecycle hook name.                                    |
+| contains       | removed. Use `find`                                                                         |
+| emittedByOrder | removed. Use `emitted`                                                                      |
+| setSelected    | removed. Now part of `setValue`                                                             |
+| setChecked     | removed. Now part of `setValue`                                                             |
+| is             | removed                                                                                     |
+| isEmpty        | removed. Use matchers such as [this](https://github.com/testing-library/jest-dom#tobeempty) |
+| isVueInstance  | removed                                                                                     |
+| name           | removed                                                                                     |
+| setMethods     | removed                                                                                     |
