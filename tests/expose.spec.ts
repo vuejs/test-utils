@@ -21,7 +21,7 @@ describe('expose', () => {
     expect(vm.exposedState2Getter()).toBe('exposedState2')
 
     // exposed ref can be changed and will affect the original ref
-    // @ts-ignore upstream issue, see https://github.com/vuejs/vue-next/issues/4397#issuecomment-957613874
+    // @ts-ignore upstream issue, see https://github.com/vuejs/core/issues/4397#issuecomment-957613874
     expect(vm.exposedRef).toBe('exposedRef')
     vm.exposedRef = 'newExposedRef'
     expect(vm.exposedRef).toBe('newExposedRef')
