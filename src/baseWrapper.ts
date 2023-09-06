@@ -370,9 +370,24 @@ export default abstract class BaseWrapper<ElementType extends Node>
     }
 
     if (this.element && !this.isDisabled()) {
-      const element = this.element as unknown as Record<string, Function>
+      const element = this.element as unknown as ElementType &
+        Record<string, Function>
+      // Try to call `element.click()`, `element.focus()`, ... in favor of DOM event
       if (typeof element[eventString] === 'function') {
-        // Try to call `element.click()`, `element.focus()`, ... in favor of DOM event
+        element.addEventListener(
+          eventString,
+          (event) => {
+            // see https://github.com/vuejs/test-utils/issues/1854
+            // fakeTimers provoke an issue as Date.now() always return the same value
+            // and Vue relies on it to determine if the handler should be invoked
+            // see https://github.com/vuejs/core/blob/5ee40532a63e0b792e0c1eccf3cf68546a4e23e9/packages/runtime-dom/src/modules/events.ts#L100-L104
+            // we workaround this issue by manually setting _vts to Date.now() + 1
+            // thus making sure the event handler is invoked
+            event._vts = Date.now() + 1
+          },
+          { once: true }
+        )
+
         element[eventString]()
       } else {
         const event = createDOMEvent(eventString, options)
