@@ -56,6 +56,36 @@ const normalizeStubProps = (props: ComponentPropsOptions) => {
   }, {})
 }
 
+const clearAndUpper = (text: string) => text.replace(/-/, '').toUpperCase()
+const kebabToPascalCase = (tag: string) =>
+  tag.replace(/(^\w|-\w)/g, clearAndUpper)
+
+const DEFAULT_STUBS = {
+  teleport: isTeleport,
+  'keep-alive': isKeepAlive,
+  transition: (type: any) => type === Transition || type === BaseTransition,
+  'transition-group': (type: any) => type === TransitionGroup
+}
+
+const createDefaultStub = (
+  kebabTag: string,
+  predicate: (type: any) => boolean,
+  type: any,
+  stubs: Record<string, boolean | Component>
+) => {
+  const pascalTag = kebabToPascalCase(kebabTag)
+  if (predicate(type) && (pascalTag in stubs || kebabTag in stubs)) {
+    if (kebabTag in stubs && stubs[kebabTag] === false) return type
+    if (pascalTag in stubs && stubs[pascalTag] === false) return type
+
+    return createStub({
+      name: kebabTag,
+      type,
+      renderStubDefaultSlot: true
+    })
+  }
+}
+
 export const createStub = ({
   name,
   type,
@@ -134,60 +164,10 @@ export function createStubComponentsTransformer({
   renderStubDefaultSlot = false
 }: CreateStubComponentsTransformerConfig): VTUVNodeTypeTransformer {
   return function componentsTransformer(type, instance) {
-    // stub teleport by default via config.global.stubs
-    if (isTeleport(type) && ('teleport' in stubs || 'Teleport' in stubs)) {
-      if ('teleport' in stubs && stubs['teleport'] === false) return type
-      if ('Teleport' in stubs && stubs['Teleport'] === false) return type
-
-      return createStub({
-        name: 'teleport',
-        type,
-        renderStubDefaultSlot: true
-      })
-    }
-
-    // stub keep-alive/KeepAlive by default via config.global.stubs
-    if (isKeepAlive(type) && ('keep-alive' in stubs || 'KeepAlive' in stubs)) {
-      if ('keep-alive' in stubs && stubs['keep-alive'] === false) return type
-      if ('KeepAlive' in stubs && stubs['KeepAlive'] === false) return type
-
-      return createStub({
-        name: 'keep-alive',
-        type,
-        renderStubDefaultSlot: true
-      })
-    }
-
-    // stub transition by default via config.global.stubs
-    if (
-      (type === Transition || (type as any) === BaseTransition) &&
-      ('transition' in stubs || 'Transition' in stubs)
-    ) {
-      if ('transition' in stubs && stubs['transition'] === false) return type
-      if ('Transition' in stubs && stubs['Transition'] === false) return type
-
-      return createStub({
-        name: 'transition',
-        type,
-        renderStubDefaultSlot: true
-      })
-    }
-
-    // stub transition-group by default via config.global.stubs
-    if (
-      (type as any) === TransitionGroup &&
-      ('transition-group' in stubs || 'TransitionGroup' in stubs)
-    ) {
-      if ('transition-group' in stubs && stubs['transition-group'] === false)
-        return type
-      if ('TransitionGroup' in stubs && stubs['TransitionGroup'] === false)
-        return type
-
-      return createStub({
-        name: 'transition-group',
-        type,
-        renderStubDefaultSlot: true
-      })
+    for (const tag in DEFAULT_STUBS) {
+      const predicate = DEFAULT_STUBS[tag as keyof typeof DEFAULT_STUBS]
+      const defaultStub = createDefaultStub(tag, predicate, type, stubs)
+      if (defaultStub) return defaultStub
     }
 
     // Don't stub root components
