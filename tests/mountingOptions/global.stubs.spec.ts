@@ -482,6 +482,24 @@ describe('mounting options: stubs', () => {
           '</transition-stub>'
       )
     })
+
+    it('custom transition stub', () => {
+      const Comp = {
+        template: `<transition><div id="content-custom-stub" /></transition>`
+      }
+      config.global.stubs = {
+        transition: {
+          template: '<div class="custom-transition-stub"><slot /></div>'
+        }
+      }
+      const wrapper = mount(Comp)
+
+      expect(wrapper.html()).toBe(
+        '<div class="custom-transition-stub">\n' +
+          '  <div id="content-custom-stub"></div>\n' +
+          '</div>'
+      )
+    })
   })
 
   describe('transition-group', () => {
