@@ -78,11 +78,13 @@ const createDefaultStub = (
     if (kebabTag in stubs && stubs[kebabTag] === false) return type
     if (pascalTag in stubs && stubs[pascalTag] === false) return type
 
-    return createStub({
-      name: kebabTag,
-      type,
-      renderStubDefaultSlot: true
-    })
+    if (stubs[kebabTag] === true || stubs[pascalTag] === true) {
+      return createStub({
+        name: kebabTag,
+        type,
+        renderStubDefaultSlot: true
+      })
+    }
   }
 }
 
