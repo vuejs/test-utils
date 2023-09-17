@@ -376,7 +376,8 @@ export default abstract class BaseWrapper<ElementType extends Node>
       if (typeof element[eventString] === 'function') {
         element.addEventListener(
           eventString,
-          (event) => {
+          (nativeEvent) => {
+            const event = nativeEvent as Event & { _vts: number }
             // see https://github.com/vuejs/test-utils/issues/1854
             // fakeTimers provoke an issue as Date.now() always return the same value
             // and Vue relies on it to determine if the handler should be invoked
