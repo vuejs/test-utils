@@ -41,6 +41,7 @@ Vue Test Utils is commonly used with a test runner. Popular test runners include
 - [Vitest](https://vitest.dev/). Terminal based, has experimental browser UI.
 - [Cypress](https://cypress.io/). Browser based, supports Vite, webpack.
 - [Playwright](https://playwright.dev/docs/test-components) (experimental). Browser based, supports Vite.
+- [WebdriverIO](https://webdriver.io/docs/component-testing/vue). Browser based, supports Vite, Webpack, cross browser support.
 
 Vue Test Utils is a minimal and unopinionated library. For something more featureful, ergonomic and opinionated you may want to consider [Cypress Component Testing](https://docs.cypress.io/guides/component-testing/overview) which has a hot reload development environment, or [Testing Library](https://testing-library.com/docs/vue-testing-library/intro/) which emphasizes accessibility based selectors when making assertions. Both of these tools use Vue Test Utils under the hood and expose the same API.
 
