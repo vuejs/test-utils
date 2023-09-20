@@ -23,7 +23,7 @@
   ],
   "dependencies": {
     "js-beautify": "1.14.9",
-    "vue-component-type-helpers": "1.8.11"
+    "vue-component-type-helpers": "1.8.13"
   },
   "devDependencies": {
     "@rollup/plugin-commonjs": "25.0.4",
@@ -61,7 +61,7 @@
     "vue": "3.3.4",
     "vue-class-component": "8.0.0-rc.1",
     "vue-router": "4.2.4",
-    "vue-tsc": "1.8.11",
+    "vue-tsc": "1.8.13",
     "vuex": "4.1.0"
   },
   "peerDependencies": {
