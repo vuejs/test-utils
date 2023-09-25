@@ -1,8 +1,8 @@
-import { renderToString as baseRenderToString } from '@vue/server-renderer'
 import { DefineComponent } from 'vue'
 import { createInstance } from './createInstance'
 import { ComponentMountingOptions } from './mount'
 import { RenderMountingOptions } from './types'
+import { requireVueServerRenderer } from './utils/requireOptionalPeer'
 
 export function renderToString<
   T,
@@ -22,6 +22,8 @@ export function renderToString<
 ): Promise<string>
 
 export function renderToString(component: any, options?: any): Promise<string> {
+  const { renderToString: baseRenderToString } = requireVueServerRenderer()
+
   if (options?.attachTo) {
     console.warn('attachTo option is not available for renderToString')
   }
