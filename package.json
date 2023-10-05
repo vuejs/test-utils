@@ -51,7 +51,7 @@
     "lint-staged": "14.0.1",
     "prettier": "3.0.3",
     "reflect-metadata": "0.1.13",
-    "rollup": "3.29.4",
+    "rollup": "4.0.0",
     "tslib": "2.6.2",
     "typescript": "5.2.2",
     "unplugin-vue-components": "0.25.2",
