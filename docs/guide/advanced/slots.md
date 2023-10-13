@@ -122,10 +122,10 @@ import Header from './Header.vue'
 test('layout full page layout', () => {
   const wrapper = mount(Layout, {
     slots: {
-      header: Header
+      header: Header,
       main: h('div', 'Main Content'),
       sidebar: { template: '<div>Sidebar</div>' },
-      footer: '<div>Footer</div>',
+      footer: '<div>Footer</div>'
     }
   })
 
