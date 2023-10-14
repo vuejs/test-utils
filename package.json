@@ -48,7 +48,7 @@
     "husky": "8.0.3",
     "jsdom": "22.1.0",
     "jsdom-global": "3.0.2",
-    "lint-staged": "14.0.1",
+    "lint-staged": "15.0.0",
     "prettier": "3.0.3",
     "reflect-metadata": "0.1.13",
     "rollup": "4.0.2",
