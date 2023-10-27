@@ -6,10 +6,10 @@ settings:
 
 dependencies:
   js-beautify:
-    specifier: 1.14.9
+    specifier: ^1.14.9
     version: 1.14.9
   vue-component-type-helpers:
-    specifier: 1.8.21
+    specifier: ^1.8.21
     version: 1.8.21
 
 devDependencies:
