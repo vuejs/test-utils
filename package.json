@@ -22,8 +22,8 @@
     "dist/index.d.ts"
   ],
   "dependencies": {
-    "js-beautify": "1.14.9",
-    "vue-component-type-helpers": "1.8.21"
+    "js-beautify": "^1.14.9",
+    "vue-component-type-helpers": "^1.8.21"
   },
   "devDependencies": {
     "@rollup/plugin-commonjs": "25.0.7",
@@ -56,7 +56,7 @@
     "typescript": "5.2.2",
     "unplugin-vue-components": "0.25.2",
     "vite": "4.5.0",
-    "vitepress": "^1.0.0-beta.7",
+    "vitepress": "1.0.0-rc.24",
     "vitest": "0.34.6",
     "vue": "3.3.7",
     "vue-class-component": "8.0.0-rc.1",
