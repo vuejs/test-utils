@@ -261,7 +261,7 @@ export default abstract class BaseWrapper<ElementType extends Node>
   }
 
   text() {
-    return textContent(this.element)
+    return this.getRootNodes().map(textContent).join('')
   }
 
   exists() {
