@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { defineComponent, h } from 'vue'
+import { defineComponent, h, Suspense } from 'vue'
 
 import { mount } from '../src'
 
@@ -92,5 +92,25 @@ describe('text', () => {
   it('returns correct text for root slot with nested component', () => {
     const wrapper = mount(() => h(ReturnSlot, {}, () => h(MultiRootText)))
     expect(wrapper.text()).toBe('foobarbaz')
+  })
+
+  it('returns correct text for suspense component has multiple elements in a slot', () => {
+    const wrapper = mount({
+      render: () =>
+        h(
+          Suspense,
+          {},
+          {
+            default: () =>
+              h(
+                defineComponent({
+                  template: `<!-- some comments --><div>Text content</div>`
+                })
+              )
+          }
+        )
+    })
+
+    expect(wrapper.text()).toBe('Text content')
   })
 })
