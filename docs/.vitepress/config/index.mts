@@ -1,6 +1,6 @@
-import { enConfig } from './en'
-import { frConfig } from './fr'
-import { sharedConfig } from './shared'
+import { enConfig } from './en.mts'
+import { frConfig } from './fr.mts'
+import { sharedConfig } from './shared.mts'
 import { defineConfig } from 'vitepress'
 
 export default defineConfig({
