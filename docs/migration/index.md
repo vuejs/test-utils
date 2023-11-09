@@ -247,6 +247,35 @@ wrapper.findAll('[data-test="token"]').at(0);
 wrapper.findAll('[data-test="token"]')[0];
 ```
 
+### `createWrapper()` removed
+
+`createWrapper()` is now an internal function only and cannot be imported anymore. If you need access to a wrapper for a DOM element which isn't a Vue component, you can use `new DOMWrapper()` constructor.
+
+**Before:**
+
+```js
+import { createWrapper } from "@vue/test-utils";
+
+describe('App', () => {
+  it('renders', () => {
+    const body = createWrapper(document.body);
+    expect(body.exists()).toBe(true);
+  })
+
+```
+
+**After:**
+
+```js
+import { DOMWrapper } from "@vue/test-utils";
+
+describe('App', () => {
+  it('renders', () => {
+    const body = new DOMWrapper(document.body);
+    expect(body.exists()).toBe(true);
+  })
+```
+
 ## Test runners upgrade notes
 
 > Vue Test Utils is framework agnostic - you can use it with whichever test runner you like.
