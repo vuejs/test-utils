@@ -1,6 +1,7 @@
 import {
   ComponentInternalInstance,
   VNode,
+  VNodeChild,
   VNodeArrayChildren,
   VNodeNormalizedChildren,
   VNodeTypes
@@ -92,16 +93,8 @@ export function matches(
  * to only keep VNode and VNodeArrayChildren values
  * @param value
  */
-function nodesAsObject<Node>(
-  value:
-    | string
-    | number
-    | boolean
-    | VNodeArrayChildren
-    | VNode
-    | null
-    | undefined
-    | void
+function nodesAsObject(
+  value: VNodeChild | VNodeArrayChildren
 ): value is VNodeArrayChildren | VNode {
   return !!value && typeof value === 'object'
 }
