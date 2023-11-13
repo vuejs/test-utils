@@ -38,7 +38,7 @@ const AppWithProps = {
   props: {
     a: {
       type: String,
-      required: true
+      required: true as true
     }
   },
   template: ''
@@ -65,7 +65,7 @@ expectError(
 )
 
 const AppWithArrayProps = {
-  props: ['a'],
+  props: ['a'] as ['a'],
   template: ''
 }
 
