@@ -66,11 +66,11 @@ const AppWithProps = {
   props: {
     a: {
       type: String,
-      required: true as true
+      required: true
     }
   },
   template: ''
-}
+} as const
 
 // accept props - vm is properly typed
 expectType<string>(
@@ -91,7 +91,7 @@ expectError(
 )
 
 const AppWithArrayProps = {
-  props: ['a'] as ['a'],
+  props: ['a'],
   template: ''
 }
 
@@ -137,7 +137,7 @@ expectError(
   mount((props: { a: 1 }) => {}, {
     props: {
       // @ts-expect-error wrong props
-      a: '222' 
+      a: '222'
     }
   })
 )

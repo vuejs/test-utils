@@ -38,11 +38,11 @@ const AppWithProps = {
   props: {
     a: {
       type: String,
-      required: true as true
+      required: true
     }
   },
   template: ''
-}
+} as const
 
 // accept props
 // vm is properly typed
@@ -65,7 +65,7 @@ expectError(
 )
 
 const AppWithArrayProps = {
-  props: ['a'] as ['a'],
+  props: ['a'],
   template: ''
 }
 
