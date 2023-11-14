@@ -54,9 +54,7 @@ export function mount<
     ComponentProps<C>,
     ComponentData<C> & ComponentExposed<C> & Omit<P, keyof ComponentProps<C>>
   >
-> & {
-  LOOL: Exclude<P, ComponentProps<C>>
-}
+>
 
 // implementation
 export function mount(
