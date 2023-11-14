@@ -244,7 +244,7 @@ export class VueWrapper<
     return nextTick()
   }
 
-  setProps(props: T['$props']): Promise<void> {
+  setProps(props: Partial<T['$props']>): Promise<void> {
     // if this VM's parent is not the root or if setProps does not exist, error out
     if (this.vm.$parent !== this.rootVM || !this.__setProps) {
       throw Error('You can only use setProps on your mounted component')
