@@ -17,7 +17,7 @@ import {
   ComponentPropsOptions,
   ComponentObjectPropsOptions,
   Component,
-  ComponentOptions
+  AsyncComponentOptions
 } from 'vue'
 import { hyphenate } from '../utils/vueShared'
 import { matchName } from '../utils/matchName'
@@ -123,11 +123,14 @@ export const createStub = ({
     }
   })
 
-  const { __asyncLoader: asyncLoader } = type as ComponentOptions
+  const { __asyncLoader: asyncLoader } = type as {
+    __asyncLoader?: AsyncComponentOptions['loader']
+  }
   if (asyncLoader) {
     asyncLoader().then(() => {
       registerStub({
-        source: (type as ComponentOptions).__asyncResolved,
+        source: (type as { __asyncResolved: ConcreteComponent | undefined })
+          .__asyncResolved!,
         stub
       })
     })
