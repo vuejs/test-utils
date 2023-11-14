@@ -18,10 +18,10 @@ type WithArray<T> = T | T[]
 
 type ComponentData<T> = T extends { data?(...args: any): infer D } ? D : {}
 
-export type ComponentMountingOptions<T> = Omit<
-  MountingOptions<ComponentProps<T>, ComponentData<T>>,
-  'slots'
-> & {
+export type ComponentMountingOptions<
+  T,
+  P extends ComponentProps<T> = ComponentProps<T>
+> = Omit<MountingOptions<P, ComponentData<T>>, 'slots'> & {
   slots?: {
     [K in keyof ComponentSlots<T>]: WithArray<
       | ShimSlotReturnType<ComponentSlots<T>[K]>
@@ -43,17 +43,20 @@ export function mount<
           ? { [key in PropNames extends string ? PropNames : string]?: any }
           : Props
       >
-    : DefineComponent
+    : DefineComponent,
+  P extends ComponentProps<C> = ComponentProps<C>
 >(
   originalComponent: T,
-  options?: ComponentMountingOptions<C>
+  options?: ComponentMountingOptions<C, P>
 ): VueWrapper<
   ComponentProps<C> & ComponentData<C> & ComponentExposed<C>,
   ComponentPublicInstance<
     ComponentProps<C>,
-    ComponentData<C> & ComponentExposed<C>
+    ComponentData<C> & ComponentExposed<C> & Omit<P, keyof ComponentProps<C>>
   >
->
+> & {
+  LOOL: Exclude<P, ComponentProps<C>>
+}
 
 // implementation
 export function mount(

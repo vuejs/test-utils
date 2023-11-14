@@ -66,7 +66,7 @@ const AppWithProps = {
   props: {
     a: {
       type: String,
-      required: true
+      required: true as true
     }
   },
   template: ''
@@ -91,7 +91,7 @@ expectError(
 )
 
 const AppWithArrayProps = {
-  props: ['a'],
+  props: ['a'] as ['a'],
   template: ''
 }
 
@@ -134,16 +134,16 @@ mount(AppWithoutProps, {
 // Functional tests
 
 expectError(
-  mount((props: { a: 1 }) => { }, {
+  mount((props: { a: 1 }) => {}, {
     props: {
       // @ts-expect-error wrong props
-      a: '222'
+      a: '222' 
     }
   })
 )
 
 expectType<number>(
-  mount((props: { a: number }, ctx: any) => { }, {
+  mount((props: { a: number }, ctx: any) => {}, {
     props: {
       a: 22
     }
@@ -247,7 +247,7 @@ class CustomClassComponent<Props extends {} = {}> {
     return this.props
   }
   context: SetupContext
-  render(): VNodeChild { }
+  render(): VNodeChild {}
 }
 class NoPropCustomClassComponent extends CustomClassComponent {
   count = ref(0)
@@ -281,7 +281,8 @@ class WithPropCustomClassComponent extends CustomClassComponent<CustomClassCompo
 
 expectError(
   mount(
-    WithPropCustomClassComponent as typeof WithPropCustomClassComponent & (new () => { $props: CustomClassComponentProps }),
+    WithPropCustomClassComponent as typeof WithPropCustomClassComponent &
+      (new () => { $props: CustomClassComponentProps }),
     {
       // @ts-expect-error should has props error
       props: {}
@@ -289,7 +290,8 @@ expectError(
   )
 )
 mount(
-  WithPropCustomClassComponent as typeof WithPropCustomClassComponent & (new () => { $props: CustomClassComponentProps }),
+  WithPropCustomClassComponent as typeof WithPropCustomClassComponent &
+    (new () => { $props: CustomClassComponentProps }),
   {
     props: { size: 'small' }
   }
