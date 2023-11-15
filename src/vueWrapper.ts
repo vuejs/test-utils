@@ -1,4 +1,10 @@
-import { nextTick, App, ComponentPublicInstance, VNode } from 'vue'
+import {
+  nextTick,
+  App,
+  ComponentPublicInstance,
+  VNode,
+  ExtractComponentEmits
+} from 'vue'
 
 import { config } from './config'
 import domEvents from './constants/dom-events'
@@ -72,9 +78,24 @@ function createVMProxy<T extends ComponentPublicInstance>(
   })
 }
 
+type ResolveComponentEmitKeys<T> = keyof ResolveEmitRecord<T>
+
+type ResolveEmitRecord<T> = ExtractComponentEmits<T> extends infer E
+  ? [E] extends [Array<infer EE extends string>]
+    ? Record<EE, any[]>
+    : {
+        [K in keyof E]: (E[K] extends (...args: infer Args) => any
+          ? Args extends { length: 0 }
+            ? void
+            : Args extends { length: 1 }
+            ? Args[0]
+            : Args
+          : void)[]
+      }
+  : never
+
 export class VueWrapper<
-  VM = unknown,
-  T extends ComponentPublicInstance = VM & ComponentPublicInstance
+  T extends ComponentPublicInstance = ComponentPublicInstance
 > extends BaseWrapper<Node> {
   private readonly componentVM: T
   private readonly rootVM: ComponentPublicInstance | undefined | null
@@ -226,11 +247,11 @@ export class VueWrapper<
     return selector ? props[selector] : props
   }
 
-  emitted<T = unknown>(): Record<string, T[]>
-  emitted<T = unknown[]>(eventName: string): undefined | T[]
-  emitted<T = unknown>(
-    eventName?: string
-  ): undefined | T[] | Record<string, T[]> {
+  emitted(): ResolveEmitRecord<T>
+  emitted<E extends ResolveComponentEmitKeys<T>>(
+    eventName: E
+  ): undefined | ResolveEmitRecord<T>[E]
+  emitted(eventName?: string) {
     return emitted(this.vm, eventName)
   }
 
@@ -239,7 +260,7 @@ export class VueWrapper<
     return domWrapper.isVisible()
   }
 
-  setData(data: Record<string, unknown>): Promise<void> {
+  setData(data: Partial<T['$data']>): Promise<void> {
     mergeDeep(this.componentVM.$data, data)
     return nextTick()
   }
@@ -253,7 +274,14 @@ export class VueWrapper<
     return nextTick()
   }
 
-  setValue(value: unknown, prop?: string): Promise<void> {
+  setValue<
+    V extends T['$props'] extends { modelValue?: infer MV } ? MV : never
+  >(value: V): Promise<void>
+  setValue<P extends keyof T['$props']>(
+    value: T['$props'][P],
+    prop: P
+  ): Promise<void>
+  setValue(value: unknown, prop?: unknown): Promise<void> {
     const propEvent = prop || 'modelValue'
     this.vm.$emit(`update:${propEvent}`, value)
     return this.vm.$nextTick()
