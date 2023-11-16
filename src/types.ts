@@ -166,4 +166,4 @@ export type VueNode<T extends Node = Node> = T & {
 
 export type VueElement = VueNode<Element>
 
-export type DefinedComponent = new (...args: any[]) => any
+export type DefinedComponent = Component

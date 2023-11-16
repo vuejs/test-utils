@@ -3,6 +3,9 @@ import { defineComponent } from 'vue'
 import { mount } from '../src'
 
 const AppWithDefine = defineComponent({
+  emits: {
+    increment: (arg: { count: number }) => true
+  },
   template: ''
 })
 
@@ -65,10 +68,10 @@ expectType<Element | undefined>(byClassArray[0].element)
 
 // event name without specific type
 let incrementEventWithoutType = wrapper.emitted('increment')
-expectType<unknown[][] | undefined>(incrementEventWithoutType)
+expectType<{ count: number }[] | undefined>(incrementEventWithoutType)
 
 // event name
-let incrementEvent = wrapper.emitted<{ count: number }>('increment')
+let incrementEvent = wrapper.emitted('increment')
 expectType<{ count: number }[] | undefined>(incrementEvent)
 expectType<{ count: number }>(incrementEvent![0])
 

@@ -3,7 +3,8 @@ import {
   App,
   ComponentPublicInstance,
   VNode,
-  ExtractComponentEmits
+  ExtractComponentEmits,
+  ComponentCustomProperties
 } from 'vue'
 
 import { config } from './config'
@@ -94,8 +95,23 @@ type ResolveEmitRecord<T> = ExtractComponentEmits<T> extends infer E
       }
   : never
 
+declare const aaa: keyof Omit<
+  ComponentPublicInstance,
+  keyof ComponentCustomProperties
+>
+
+// type BetterKeys = keyof Omit<
+//   ComponentPublicInstance,
+//   keyof ComponentCustomProperties
+// >
+// export type ComponentInstance = {
+//   [K in keyof ComponentPublicInstance]?: any
+// } & Record<PropertyKey, any>
+
 export class VueWrapper<
-  T extends ComponentPublicInstance = ComponentPublicInstance
+  T extends Omit<ComponentPublicInstance, '$emit'> & {
+    $emit: any
+  } = ComponentPublicInstance
 > extends BaseWrapper<Node> {
   private readonly componentVM: T
   private readonly rootVM: ComponentPublicInstance | undefined | null

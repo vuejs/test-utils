@@ -35,6 +35,14 @@ export type ComponentMountingOptions<T, P> = Omit<
   }
 } & Record<string, unknown>
 
+// export function mount<T extends { new (): { $props: any } }>(
+//   originalComponent: T,
+//   options?: ComponentMountingOptions<T, ComponentProps<T>>
+// ): //VueWrapper<ComponentInstance<T>>
+// {
+//   props: ComponentProps<T>
+// }
+
 // defineComponent
 export function mount<
   T extends DefineComponent<
@@ -54,7 +62,6 @@ export function mount<
   originalComponent: T,
   options?: ComponentMountingOptions<T, ComponentProps<T>>
 ): VueWrapper<ComponentInstance<T>>
-
 // implementation
 export function mount(
   inputComponent: any,

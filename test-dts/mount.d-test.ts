@@ -85,7 +85,7 @@ mount(AppWithProps, {
 
 expectError(
   mount(AppWithProps, {
-    // @ts-expect-error wrong prop type should not compile
+  // @ts-expect-error wrong prop type should not compile
     props: { a: 2 }
   })
 )
