@@ -2,7 +2,6 @@ import {
   ComponentPublicInstance,
   DefineComponent,
   VNode,
-  ComponentProps,
   ComponentInstance
 } from 'vue'
 import type { ComponentSlots } from 'vue-component-type-helpers'
@@ -11,6 +10,7 @@ import { MountingOptions } from './types'
 import { trackInstance } from './utils/autoUnmount'
 import { VueWrapper } from './vueWrapper'
 import { createVueWrapper } from './wrapperFactory'
+import { ComponentPropsWithDefaultOptional } from 'vue'
 
 type ShimSlotReturnType<T> = T extends (...args: infer P) => any
   ? (...args: P) => any
@@ -35,14 +35,6 @@ export type ComponentMountingOptions<T, P> = Omit<
   }
 } & Record<string, unknown>
 
-// export function mount<T extends { new (): { $props: any } }>(
-//   originalComponent: T,
-//   options?: ComponentMountingOptions<T, ComponentProps<T>>
-// ): //VueWrapper<ComponentInstance<T>>
-// {
-//   props: ComponentProps<T>
-// }
-
 // defineComponent
 export function mount<
   T extends DefineComponent<
@@ -60,7 +52,7 @@ export function mount<
   PropsOrOptions
 >(
   originalComponent: T,
-  options?: ComponentMountingOptions<T, ComponentProps<T>>
+  options?: ComponentMountingOptions<T, ComponentPropsWithDefaultOptional<T>>
 ): VueWrapper<ComponentInstance<T>>
 // implementation
 export function mount(

@@ -168,7 +168,6 @@ mount(ShimComponent, {
   }
 })
 
-// TODO it should work
 mount(ShimComponent, {
   data() {
     return {
