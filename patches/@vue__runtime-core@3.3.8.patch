@@ -1,5 +1,5 @@
 diff --git a/dist/runtime-core.d.ts b/dist/runtime-core.d.ts
-index 5d4c1fb2c6859f7982ea7bb55f65a5c613d91038..93ad7c6ac81064255901ac6319a31a6853ac491e 100644
+index 5d4c1fb2c6859f7982ea7bb55f65a5c613d91038..e26f82d85eb272844bcffd67cd05dd8e8666db95 100644
 --- a/dist/runtime-core.d.ts
 +++ b/dist/runtime-core.d.ts
 @@ -1,7 +1,7 @@
@@ -64,6 +64,15 @@ index 5d4c1fb2c6859f7982ea7bb55f65a5c613d91038..93ad7c6ac81064255901ac6319a31a68
  export type Prop<T, D = T> = PropOptions<T, D> | PropType<T>;
  type DefaultFactory<T> = (props: Data) => T | null | undefined;
  interface PropOptions<T = any, D = T> {
+@@ -467,7 +483,7 @@ export type ExtractPublicPropTypes<O> = {
+ } & {
+     [K in keyof Pick<O, PublicOptionalKeys<O>>]?: InferPropType<O[K]>;
+ };
+-export type ExtractDefaultPropTypes<O> = O extends object ? {
++export type ExtractDefaultPropTypes<O> = [O] extends [object] ? {
+     [K in keyof Pick<O, DefaultKeys<O>>]: InferPropType<O[K]>;
+ } : {};
+ 
 @@ -514,6 +530,15 @@ export type DirectiveArguments = Array<[Directive | undefined] | [Directive | un
   */
  export declare function withDirectives<T extends VNode>(vnode: T, directives: DirectiveArguments): T;
@@ -124,6 +133,15 @@ index 5d4c1fb2c6859f7982ea7bb55f65a5c613d91038..93ad7c6ac81064255901ac6319a31a68
      __isTeleport: boolean;
      process(n1: TeleportVNode | null, n2: TeleportVNode, container: RendererElement, anchor: RendererNode | null, parentComponent: ComponentInternalInstance | null, parentSuspense: SuspenseBoundary | null, isSVG: boolean, slotScopeIds: string[] | null, optimized: boolean, internals: RendererInternals): void;
      remove(vnode: VNode, parentComponent: ComponentInternalInstance | null, parentSuspense: SuspenseBoundary | null, optimized: boolean, { um: unmount, o: { remove: hostRemove } }: RendererInternals, doRemove: boolean): void;
+@@ -822,7 +848,7 @@ declare const TeleportImpl: {
+ };
+ declare const enum TeleportMoveTypes {
+     TARGET_CHANGE = 0,
+-    TOGGLE = 1,
++    TOGGLE = 1,// enable / disable
+     REORDER = 2
+ }
+ declare function moveTeleport(vnode: VNode, container: RendererElement, parentAnchor: RendererNode | null, { o: { insert }, m: move }: RendererInternals, moveType?: TeleportMoveTypes): void;
 @@ -883,7 +909,7 @@ export type VNodeProps = {
      onVnodeBeforeUnmount?: VNodeMountHook | VNodeMountHook[];
      onVnodeUnmounted?: VNodeMountHook | VNodeMountHook[];
@@ -225,7 +243,7 @@ index 5d4c1fb2c6859f7982ea7bb55f65a5c613d91038..93ad7c6ac81064255901ac6319a31a68
  
  export declare const ssrContextKey: unique symbol;
  export declare const useSSRContext: <T = Record<string, any>>() => T | undefined;
-@@ -1437,6 +1476,62 @@ interface DevtoolsHook {
+@@ -1437,6 +1476,70 @@ interface DevtoolsHook {
  export declare let devtools: DevtoolsHook;
  export declare function setDevtoolsHook(hook: DevtoolsHook, target: any): void;
  
@@ -268,7 +286,13 @@ index 5d4c1fb2c6859f7982ea7bb55f65a5c613d91038..93ad7c6ac81064255901ac6319a31a68
 +type ResolveMixin<T> = [T] extends [
 +    Readonly<ComponentOptionsBase<any, any, any, any, any, infer M, infer E, any, any, any, any, any, any>>
 +] ? IntersectionMixin<M> & IntersectionMixin<E> : {};
-+export type ComponentPropsWithDefaultOptional<T> = ExtractDefaultPropTypes<ExtractComponentProp<T>> extends infer Defaults ? Partial<Defaults> & Omit<ComponentProps<T>, keyof Defaults> : {};
++export type ComponentPropsWithDefaultOptional<T> = ((T extends {
++    props: infer P;
++} ? [P] extends [Array<infer PA>] ? [PA] extends [string] ? {
++    [key in PA]?: any;
++} : never : P : T) extends infer Props ? ExtractDefaultPropTypes<T> extends infer Defaults ? Partial<Defaults> & Omit<ExtractPropTypes<Props>, keyof Defaults> : {} : {}) & (T extends {
++    props: any;
++} ? ResolveMixinProps<Omit<T, 'props'>> : ResolveMixinProps<T>);
 +type ResolveMixinProps<T> = UnwrapMixinsType<ResolveMixin<T>, 'P'>;
 +export type ComponentProps<T, excludeEmits extends boolean = false> = (excludeEmits extends false ? ExtractComponentEmits<T> extends infer E ? E extends EmitsOptions ? EmitsToProps<E> : unknown : unknown : {}) & (T extends {
 +    $props: infer P;
@@ -276,19 +300,21 @@ index 5d4c1fb2c6859f7982ea7bb55f65a5c613d91038..93ad7c6ac81064255901ac6319a31a68
 +    [key in V]?: any;
 +}> : {} : P extends ComponentPropsOptions ? ExtractPropTypes<P> : P : {}) & (T extends {
 +    props: any;
-+} ? ResolveMixinProps<Omit<T, 'props'>> : {}));
++} ? ResolveMixinProps<Omit<T, 'props'>> : ResolveMixinProps<T>));
 +export type ComponentSlots<T> = ExtractComponentSlots<T> extends infer S ? {
 +    [K in keyof S]: S[K] extends Slot<infer V> ? (arg: V) => VNode : never;
 +} : {};
 +export type ComponentEmits<T> = ExtractComponentEmits<T> extends infer E ? {} extends E ? () => void : EmitFn<E> : () => void;
 +export type ComponentInstance<T> = T extends {
 +    new (): ComponentPublicInstance;
-+} ? InstanceType<T> : T extends FunctionalComponent<infer Props, infer Emits> ? ComponentPublicInstance<Props, {}, {}, {}, {}, Emits> : T extends ComponentPublicInstanceConstructor ? InstanceType<T> : T extends Component<infer Props, infer RawBindings, infer D, infer C, infer M> ? ComponentPublicInstance<unknown extends Props ? {} : Props, unknown extends RawBindings ? {} : RawBindings, unknown extends D ? {} : D, C, M> : never;
++} ? InstanceType<T> : T extends FunctionalComponent<infer Props, infer Emits> ? ComponentPublicInstance<Props, {}, {}, {}, {}, Emits> : T extends ComponentPublicInstanceConstructor ? InstanceType<T> : T extends ComponentDefineOptions<infer Props, infer RawBindings, infer D, infer C, infer M, infer Mixin, infer Extends, infer E, infer EE, infer I, infer II, infer S, infer Options> ? InstanceType<ReturnType<typeof defineComponent<Options extends {
++    props: infer P;
++} ? P extends Array<infer PA> ? PA : P : Props, RawBindings, D, C, M, Mixin, Extends, E, EE, I, II, S, Options>>> : T extends Component<infer Props, infer RawBindings, infer D, infer C, infer M> ? ComponentPublicInstance<unknown extends Props ? {} : Props, unknown extends RawBindings ? {} : RawBindings, unknown extends D ? {} : D, C, M> : never;
 +
  type HMRComponent = ComponentOptions | ClassComponent;
  export interface HMRRuntime {
      createRecord: typeof createRecord;
-@@ -1568,12 +1663,12 @@ interface LegacyPublicProperties {
+@@ -1568,12 +1671,12 @@ interface LegacyPublicProperties {
   */
  export type CompatVue = Pick<App, 'version' | 'component' | 'directive'> & {
      configureCompat: typeof configureCompat;
@@ -303,7 +329,7 @@ index 5d4c1fb2c6859f7982ea7bb55f65a5c613d91038..93ad7c6ac81064255901ac6319a31a68
      component(name: string): Component | undefined;
      component(name: string, component: Component): CompatVue;
      directive(name: string): Directive | undefined;
-@@ -1582,7 +1677,7 @@ export type CompatVue = Pick<App, 'version' | 'component' | 'directive'> & {
+@@ -1582,7 +1685,7 @@ export type CompatVue = Pick<App, 'version' | 'component' | 'directive'> & {
      /**
       * @deprecated Vue 3 no longer supports extending constructors.
       */

@@ -2,7 +2,14 @@ import {
   ComponentPublicInstance,
   DefineComponent,
   VNode,
-  ComponentInstance
+  ComponentInstance,
+  ComputedOptions,
+  MethodOptions,
+  ComponentOptionsMixin,
+  EmitsOptions,
+  ComponentInjectOptions,
+  SlotsType,
+  ComponentDefineOptions
 } from 'vue'
 import type { ComponentSlots } from 'vue-component-type-helpers'
 import { createInstance } from './createInstance'
@@ -35,6 +42,71 @@ export type ComponentMountingOptions<T, P> = Omit<
   }
 } & Record<string, unknown>
 
+// export function mount<
+//   Props = never,
+//   RawBindings = {},
+//   D = {},
+//   C extends ComputedOptions = {},
+//   M extends MethodOptions = {},
+//   Mixin extends ComponentOptionsMixin = ComponentOptionsMixin,
+//   Extends extends ComponentOptionsMixin = ComponentOptionsMixin,
+//   E extends EmitsOptions = {},
+//   EE extends string = string,
+//   I extends ComponentInjectOptions = {},
+//   II extends string = string,
+//   S extends SlotsType = {},
+//   Options = {}
+// >(
+//   originalComponent: ComponentDefineOptions<
+//     Props,
+//     RawBindings,
+//     D,
+//     C,
+//     M,
+//     Mixin,
+//     Extends,
+//     E,
+//     EE,
+//     I,
+//     II,
+//     S,
+//     Options
+//   >,
+//   options?: ComponentMountingOptions<
+//     ComponentDefineOptions<
+//       Props,
+//       RawBindings,
+//       D,
+//       C,
+//       M,
+//       Mixin,
+//       Extends,
+//       E,
+//       EE,
+//       I,
+//       II,
+//       S,
+//       Options
+//     >,
+//     ComponentPropsWithDefaultOptional<
+//       ComponentDefineOptions<
+//         Props,
+//         RawBindings,
+//         D,
+//         C,
+//         M,
+//         Mixin,
+//         Extends,
+//         E,
+//         EE,
+//         I,
+//         II,
+//         S,
+//         Options
+//       >
+//     >
+//   >
+// ): { props: Props }
 // defineComponent
 export function mount<
   T extends DefineComponent<
@@ -49,7 +121,7 @@ export function mount<
     any,
     any
   >,
-  PropsOrOptions
+  PropsOrOptions extends object
 >(
   originalComponent: T,
   options?: ComponentMountingOptions<T, ComponentPropsWithDefaultOptional<T>>

@@ -32,7 +32,7 @@ import { registerStub } from '../stubs'
 
 export type CustomCreateStub = (params: {
   name: string
-  component: ConcreteComponent
+  component: Component
   registerStub: (config: { source: Component; stub: Component }) => void
 }) => ConcreteComponent
 
