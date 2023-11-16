@@ -349,6 +349,7 @@ describe('trigger', () => {
 
   it('dispatches event', async () => {
     const Comp = defineComponent({
+      emits: ['enter'],
       template: `
         <input
           @keyup.enter="$emit('enter')"

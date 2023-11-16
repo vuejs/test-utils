@@ -88,8 +88,8 @@ type ResolveEmitRecord<T> = ExtractComponentEmits<T> extends infer E
           ? Args extends { length: 0 }
             ? void
             : Args extends { length: 1 }
-              ? Args[0]
-              : Args
+            ? Args[0]
+            : Args
           : void)[]
       }
   : never
@@ -247,10 +247,15 @@ export class VueWrapper<
     return selector ? props[selector] : props
   }
 
-  emitted(): ResolveEmitRecord<T>
+  emitted(): ResolveEmitRecord<VM> extends infer E
+    ? {} extends E
+      ? Record<string, any[]>
+      : E
+    : never
   emitted<E extends ResolveComponentEmitKeys<VM>>(
     eventName: E
   ): undefined | ResolveEmitRecord<VM>[E]
+  emitted(eventName: string): undefined | any[]
   emitted(eventName?: string) {
     return emitted(this.vm, eventName)
   }
