@@ -3,8 +3,7 @@ import {
   App,
   ComponentPublicInstance,
   VNode,
-  ExtractComponentEmits,
-  ComponentCustomProperties
+  ExtractComponentEmits
 } from 'vue'
 
 import { config } from './config'
@@ -95,23 +94,9 @@ type ResolveEmitRecord<T> = ExtractComponentEmits<T> extends infer E
       }
   : never
 
-declare const aaa: keyof Omit<
-  ComponentPublicInstance,
-  keyof ComponentCustomProperties
->
-
-// type BetterKeys = keyof Omit<
-//   ComponentPublicInstance,
-//   keyof ComponentCustomProperties
-// >
-// export type ComponentInstance = {
-//   [K in keyof ComponentPublicInstance]?: any
-// } & Record<PropertyKey, any>
-
 export class VueWrapper<
-  T extends Omit<ComponentPublicInstance, '$emit'> & {
-    $emit: any
-  } = ComponentPublicInstance
+  VM = unknown,
+  T extends ComponentPublicInstance = ComponentPublicInstance & VM
 > extends BaseWrapper<Node> {
   private readonly componentVM: T
   private readonly rootVM: ComponentPublicInstance | undefined | null
@@ -251,7 +236,6 @@ export class VueWrapper<
   get vm(): T {
     return this.componentVM
   }
-
   props(): T['$props']
   props<Selector extends keyof T['$props']>(
     selector: Selector
@@ -264,9 +248,9 @@ export class VueWrapper<
   }
 
   emitted(): ResolveEmitRecord<T>
-  emitted<E extends ResolveComponentEmitKeys<T>>(
+  emitted<E extends ResolveComponentEmitKeys<VM>>(
     eventName: E
-  ): undefined | ResolveEmitRecord<T>[E]
+  ): undefined | ResolveEmitRecord<VM>[E]
   emitted(eventName?: string) {
     return emitted(this.vm, eventName)
   }
