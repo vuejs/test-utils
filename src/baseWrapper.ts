@@ -1,7 +1,8 @@
 import { textContent } from './utils'
 import type { TriggerOptions } from './createDomEvent'
 import {
-  ComponentDefineOptions,
+  DefineComponentOptions,
+  DefineComponentFromOptions,
   ComponentInjectOptions,
   ComponentInstance,
   ComponentInternalInstance,
@@ -131,7 +132,7 @@ export default abstract class BaseWrapper<ElementType extends Node>
     S extends SlotsType = {},
     Options = {}
   >(
-    selector: ComponentDefineOptions<
+    selector: DefineComponentOptions<
       Props,
       RawBindings,
       D,
@@ -149,7 +150,7 @@ export default abstract class BaseWrapper<ElementType extends Node>
   ): VueWrapper<
     Props extends DefinedComponent
       ? ComponentInstance<Props>
-      : CreateComponentPublicInstance<
+      : DefineComponentFromOptions<
           Props,
           RawBindings,
           D,
@@ -158,10 +159,9 @@ export default abstract class BaseWrapper<ElementType extends Node>
           Mixin,
           Extends,
           E,
-          Props,
-          {},
-          true,
+          EE,
           I,
+          II,
           S,
           Options
         >

@@ -65,9 +65,9 @@ expectError(
 )
 
 const AppWithArrayProps = {
-  props: ['a'],
+  props: ['a'] as ['a'],
   template: ''
-} as const
+}
 
 // accept props
 // vm is properly typed

@@ -1,5 +1,5 @@
 diff --git a/dist/runtime-core.d.ts b/dist/runtime-core.d.ts
-index 5d4c1fb2c6859f7982ea7bb55f65a5c613d91038..e26f82d85eb272844bcffd67cd05dd8e8666db95 100644
+index 5d4c1fb2c6859f7982ea7bb55f65a5c613d91038..a4377187d514a0663c3a35c073e794b4cfd98d76 100644
 --- a/dist/runtime-core.d.ts
 +++ b/dist/runtime-core.d.ts
 @@ -1,7 +1,7 @@
@@ -11,7 +11,16 @@ index 5d4c1fb2c6859f7982ea7bb55f65a5c613d91038..e26f82d85eb272844bcffd67cd05dd8e
  
  export declare const computed: typeof computed$1;
  
-@@ -101,17 +101,32 @@ type ExtractMixin<T> = {
+@@ -62,7 +62,7 @@ type EmitsToProps<T extends EmitsOptions> = T extends string[] ? {
+ } : T extends ObjectEmitsOptions ? {
+     [K in string & `on${Capitalize<string & keyof T>}`]?: K extends `on${infer C}` ? T[Uncapitalize<C>] extends null ? (...args: any[]) => any : (...args: T[Uncapitalize<C>] extends (...args: infer P) => any ? P : never) => any : never;
+ } : {};
+-type EmitFn<Options = ObjectEmitsOptions, Event extends keyof Options = keyof Options> = Options extends Array<infer V> ? (event: V, ...args: any[]) => void : {} extends Options ? (event: string, ...args: any[]) => void : UnionToIntersection<{
++type EmitFn<Options = ObjectEmitsOptions, Event extends keyof Options = keyof Options> = Options extends Array<infer V> ? (event: V, ...args: any[]) => void : {} extends Options ? (event: any, ...args: any[]) => any | ((event: string, ...args: any[]) => void) : UnionToIntersection<{
+     [key in Event]: Options[key] extends (...args: infer Args) => any ? (event: key, ...args: Args) => void : (event: key, ...args: any[]) => void;
+ }[Event]>;
+ 
+@@ -101,20 +101,39 @@ type ExtractMixin<T> = {
  type IntersectionMixin<T> = IsDefaultMixinComponent<T> extends true ? OptionTypesType : UnionToIntersection<ExtractMixin<T>>;
  type UnwrapMixinsType<T, Type extends OptionTypesKeys> = T extends OptionTypesType ? T[Type] : never;
  type EnsureNonVoid<T> = T extends void ? {} : T;
@@ -39,6 +48,10 @@ index 5d4c1fb2c6859f7982ea7bb55f65a5c613d91038..e26f82d85eb272844bcffd67cd05dd8e
  };
 -export type CreateComponentPublicInstance<P = {}, B = {}, D = {}, C extends ComputedOptions = {}, M extends MethodOptions = {}, Mixin extends ComponentOptionsMixin = ComponentOptionsMixin, Extends extends ComponentOptionsMixin = ComponentOptionsMixin, E extends EmitsOptions = {}, PublicProps = P, Defaults = {}, MakeDefaultsOptional extends boolean = false, I extends ComponentInjectOptions = {}, S extends SlotsType = {}, PublicMixin = IntersectionMixin<Mixin> & IntersectionMixin<Extends>, PublicP = UnwrapMixinsType<PublicMixin, 'P'> & EnsureNonVoid<P>, PublicB = UnwrapMixinsType<PublicMixin, 'B'> & EnsureNonVoid<B>, PublicD = UnwrapMixinsType<PublicMixin, 'D'> & EnsureNonVoid<D>, PublicC extends ComputedOptions = UnwrapMixinsType<PublicMixin, 'C'> & EnsureNonVoid<C>, PublicM extends MethodOptions = UnwrapMixinsType<PublicMixin, 'M'> & EnsureNonVoid<M>, PublicDefaults = UnwrapMixinsType<PublicMixin, 'Defaults'> & EnsureNonVoid<Defaults>> = ComponentPublicInstance<PublicP, PublicB, PublicD, PublicC, PublicM, E, PublicProps, PublicDefaults, MakeDefaultsOptional, ComponentOptionsBase<P, B, D, C, M, Mixin, Extends, E, string, Defaults, {}, string, S>, I, S>;
 +export type CreateComponentPublicInstance<P = {}, B = {}, D = {}, C extends ComputedOptions = {}, M extends MethodOptions = {}, Mixin extends ComponentOptionsMixin = ComponentOptionsMixin, Extends extends ComponentOptionsMixin = ComponentOptionsMixin, E extends EmitsOptions = {}, PublicProps = P, Defaults = {}, MakeDefaultsOptional extends boolean = false, I extends ComponentInjectOptions = {}, S extends SlotsType = {}, Options = ComponentOptionsBase<P, B, D, C, M, Mixin, Extends, E, string, Defaults, {}, string, S>, PublicMixin = IntersectionMixin<Mixin> & IntersectionMixin<Extends>, PublicP = UnwrapMixinsType<PublicMixin, 'P'> & EnsureNonVoid<P>, PublicB = UnwrapMixinsType<PublicMixin, 'B'> & EnsureNonVoid<B>, PublicD = UnwrapMixinsType<PublicMixin, 'D'> & EnsureNonVoid<D>, PublicC extends ComputedOptions = UnwrapMixinsType<PublicMixin, 'C'> & EnsureNonVoid<C>, PublicM extends MethodOptions = UnwrapMixinsType<PublicMixin, 'M'> & EnsureNonVoid<M>, PublicDefaults = UnwrapMixinsType<PublicMixin, 'Defaults'> & EnsureNonVoid<Defaults>> = ComponentPublicInstance<PublicP, PublicB, PublicD, PublicC, PublicM, E, PublicProps, PublicDefaults, MakeDefaultsOptional, Options, I, S>;
++/**
++ * Resolves props
++ */
++type ComponentPropsWithDefault<P, Defaults, PublicProps, MakeDefaultsOptional extends boolean = false> = MakeDefaultsOptional extends true ? Partial<Defaults> & Omit<Prettify<P> & PublicProps, keyof Defaults> : Prettify<P> & PublicProps;
  export type ComponentPublicInstance<P = {}, // props type extracted from props option
  B = {}, // raw bindings returned from setup()
  D = {}, // return from data()
@@ -46,8 +59,12 @@ index 5d4c1fb2c6859f7982ea7bb55f65a5c613d91038..e26f82d85eb272844bcffd67cd05dd8e
 +C extends ComputedOptions = {}, M extends MethodOptions = {}, E extends EmitsOptions = {}, PublicProps = P, Defaults = {}, MakeDefaultsOptional extends boolean = false, Options = any, I extends ComponentInjectOptions = {}, S extends SlotsType = {}> = {
      $: ComponentInternalInstance;
      $data: D;
-     $props: MakeDefaultsOptional extends true ? Partial<Defaults> & Omit<Prettify<P> & PublicProps, keyof Defaults> : Prettify<P> & PublicProps;
-@@ -126,7 +141,7 @@ C extends ComputedOptions = {}, M extends MethodOptions = {}, E extends EmitsOpt
+-    $props: MakeDefaultsOptional extends true ? Partial<Defaults> & Omit<Prettify<P> & PublicProps, keyof Defaults> : Prettify<P> & PublicProps;
++    $props: ComponentPropsWithDefault<P, Defaults, PublicProps, MakeDefaultsOptional>;
+     $attrs: Data;
+     $refs: Data;
+     $slots: UnwrapSlotsType<S>;
+@@ -126,7 +145,7 @@ C extends ComputedOptions = {}, M extends MethodOptions = {}, E extends EmitsOpt
      $forceUpdate: () => void;
      $nextTick: typeof nextTick;
      $watch<T extends string | ((...args: any) => any)>(source: T, cb: T extends (...args: any) => infer R ? (...args: [R, R]) => any : (...args: any) => any, options?: WatchOptions): WatchStopHandle;
@@ -56,7 +73,7 @@ index 5d4c1fb2c6859f7982ea7bb55f65a5c613d91038..e26f82d85eb272844bcffd67cd05dd8e
  
  declare const enum LifecycleHooks {
      BEFORE_CREATE = "bc",
-@@ -383,6 +398,7 @@ export type ComponentPropsOptions<P = Data> = ComponentObjectPropsOptions<P> | s
+@@ -383,6 +402,7 @@ export type ComponentPropsOptions<P = Data> = ComponentObjectPropsOptions<P> | s
  export type ComponentObjectPropsOptions<P = Data> = {
      [K in keyof P]: Prop<P[K]> | null;
  };
@@ -64,7 +81,7 @@ index 5d4c1fb2c6859f7982ea7bb55f65a5c613d91038..e26f82d85eb272844bcffd67cd05dd8e
  export type Prop<T, D = T> = PropOptions<T, D> | PropType<T>;
  type DefaultFactory<T> = (props: Data) => T | null | undefined;
  interface PropOptions<T = any, D = T> {
-@@ -467,7 +483,7 @@ export type ExtractPublicPropTypes<O> = {
+@@ -467,7 +487,7 @@ export type ExtractPublicPropTypes<O> = {
  } & {
      [K in keyof Pick<O, PublicOptionalKeys<O>>]?: InferPropType<O[K]>;
  };
@@ -73,7 +90,7 @@ index 5d4c1fb2c6859f7982ea7bb55f65a5c613d91038..e26f82d85eb272844bcffd67cd05dd8e
      [K in keyof Pick<O, DefaultKeys<O>>]: InferPropType<O[K]>;
  } : {};
  
-@@ -514,6 +530,15 @@ export type DirectiveArguments = Array<[Directive | undefined] | [Directive | un
+@@ -514,6 +534,15 @@ export type DirectiveArguments = Array<[Directive | undefined] | [Directive | un
   */
  export declare function withDirectives<T extends VNode>(vnode: T, directives: DirectiveArguments): T;
  
@@ -89,7 +106,7 @@ index 5d4c1fb2c6859f7982ea7bb55f65a5c613d91038..e26f82d85eb272844bcffd67cd05dd8e
  export declare const enum DeprecationTypes {
      GLOBAL_MOUNT = "GLOBAL_MOUNT",
      GLOBAL_MOUNT_CONTAINER = "GLOBAL_MOUNT_CONTAINER",
-@@ -610,19 +635,19 @@ export interface RuntimeCompilerOptions {
+@@ -610,19 +639,19 @@ export interface RuntimeCompilerOptions {
      comments?: boolean;
      delimiters?: [string, string];
  }
@@ -116,7 +133,7 @@ index 5d4c1fb2c6859f7982ea7bb55f65a5c613d91038..e26f82d85eb272844bcffd67cd05dd8e
  export type ComputedOptions = Record<string, ComputedGetter<any> | WritableComputedOptions<any>>;
  export interface MethodOptions {
      [key: string]: Function;
-@@ -652,7 +677,7 @@ type InjectToObject<T extends ComponentInjectOptions> = T extends string[] ? {
+@@ -652,7 +681,7 @@ type InjectToObject<T extends ComponentInjectOptions> = T extends string[] ? {
  } : never;
  interface LegacyOptions<Props, D, C extends ComputedOptions, M extends MethodOptions, Mixin extends ComponentOptionsMixin, Extends extends ComponentOptionsMixin, I extends ComponentInjectOptions, II extends string> {
      compatConfig?: CompatConfig;
@@ -125,7 +142,7 @@ index 5d4c1fb2c6859f7982ea7bb55f65a5c613d91038..e26f82d85eb272844bcffd67cd05dd8e
      data?: (this: CreateComponentPublicInstance<Props, {}, {}, {}, MethodOptions, Mixin, Extends>, vm: CreateComponentPublicInstance<Props, {}, {}, {}, MethodOptions, Mixin, Extends>) => D;
      computed?: C;
      methods?: M;
-@@ -814,6 +839,7 @@ export interface TeleportProps {
+@@ -814,6 +843,7 @@ export interface TeleportProps {
      disabled?: boolean;
  }
  declare const TeleportImpl: {
@@ -133,16 +150,7 @@ index 5d4c1fb2c6859f7982ea7bb55f65a5c613d91038..e26f82d85eb272844bcffd67cd05dd8e
      __isTeleport: boolean;
      process(n1: TeleportVNode | null, n2: TeleportVNode, container: RendererElement, anchor: RendererNode | null, parentComponent: ComponentInternalInstance | null, parentSuspense: SuspenseBoundary | null, isSVG: boolean, slotScopeIds: string[] | null, optimized: boolean, internals: RendererInternals): void;
      remove(vnode: VNode, parentComponent: ComponentInternalInstance | null, parentSuspense: SuspenseBoundary | null, optimized: boolean, { um: unmount, o: { remove: hostRemove } }: RendererInternals, doRemove: boolean): void;
-@@ -822,7 +848,7 @@ declare const TeleportImpl: {
- };
- declare const enum TeleportMoveTypes {
-     TARGET_CHANGE = 0,
--    TOGGLE = 1,
-+    TOGGLE = 1,// enable / disable
-     REORDER = 2
- }
- declare function moveTeleport(vnode: VNode, container: RendererElement, parentAnchor: RendererNode | null, { o: { insert }, m: move }: RendererInternals, moveType?: TeleportMoveTypes): void;
-@@ -883,7 +909,7 @@ export type VNodeProps = {
+@@ -883,7 +913,7 @@ export type VNodeProps = {
      onVnodeBeforeUnmount?: VNodeMountHook | VNodeMountHook[];
      onVnodeUnmounted?: VNodeMountHook | VNodeMountHook[];
  };
@@ -151,7 +159,7 @@ index 5d4c1fb2c6859f7982ea7bb55f65a5c613d91038..e26f82d85eb272844bcffd67cd05dd8e
  export type VNodeArrayChildren = Array<VNodeArrayChildren | VNodeChildAtom>;
  export type VNodeChild = VNodeChildAtom | VNodeArrayChildren;
  export type VNodeNormalizedChildren = string | VNodeArrayChildren | RawSlots | null;
-@@ -1037,7 +1063,7 @@ interface ClassComponent {
+@@ -1037,7 +1067,7 @@ interface ClassComponent {
   * values, e.g. checking if its a function or not. This is mostly for internal
   * implementation code.
   */
@@ -160,7 +168,7 @@ index 5d4c1fb2c6859f7982ea7bb55f65a5c613d91038..e26f82d85eb272844bcffd67cd05dd8e
  /**
   * A type used in public APIs where a component type is expected.
   * The constructor type is an artificial type returned by defineComponent().
-@@ -1123,9 +1149,21 @@ export declare function watch<T extends Readonly<MultiWatchSources>, Immediate e
+@@ -1123,9 +1153,24 @@ export declare function watch<T extends Readonly<MultiWatchSources>, Immediate e
  export declare function watch<T, Immediate extends Readonly<boolean> = false>(source: WatchSource<T>, cb: WatchCallback<T, Immediate extends true ? T | undefined : T>, options?: WatchOptions<Immediate>): WatchStopHandle;
  export declare function watch<T extends object, Immediate extends Readonly<boolean> = false>(source: T, cb: WatchCallback<T, Immediate extends true ? T | undefined : T>, options?: WatchOptions<Immediate>): WatchStopHandle;
  
@@ -177,15 +185,18 @@ index 5d4c1fb2c6859f7982ea7bb55f65a5c613d91038..e26f82d85eb272844bcffd67cd05dd8e
 +} & Omit<Options, 'props'> & {
 +    [RawOptionsSymbol]: Options;
 +} & PP;
-+export type ComponentDefineOptions<Props = never, RawBindings = {}, D = {}, C extends ComputedOptions = {}, M extends MethodOptions = {}, Mixin extends ComponentOptionsMixin = ComponentOptionsMixin, Extends extends ComponentOptionsMixin = ComponentOptionsMixin, E extends EmitsOptions = {}, EE extends string = string, I extends ComponentInjectOptions = {}, II extends string = string, S extends SlotsType = {}, Options = {}> = (Options & {
++export type DefineComponentOptions<Props = never, RawBindings = {}, D = {}, C extends ComputedOptions = {}, M extends MethodOptions = {}, Mixin extends ComponentOptionsMixin = ComponentOptionsMixin, Extends extends ComponentOptionsMixin = ComponentOptionsMixin, E extends EmitsOptions = {}, EE extends string = string, I extends ComponentInjectOptions = {}, II extends string = string, S extends SlotsType = {}, Options = {}> = (Options & {
 +    props?: [Props] extends [never] ? string[] : [Props] extends [string] ? Array<Props> : Props;
 +} & ([Props] extends [string] ? ComponentOptionsWithArrayProps<Props, RawBindings, D, C, M, Mixin, Extends, E, EE, I, II, S> : [Props] extends [undefined] ? {
 +    props?: undefined;
 +} & ComponentOptionsWithoutProps<{}, RawBindings, D, C, M, Mixin, Extends, E, EE, I, II, S> : Props extends ComponentObjectPropsOptions ? ComponentOptionsWithObjectProps<Props, RawBindings, D, C, M, Mixin, Extends, E, EE, I, II, S> : ComponentOptions<Readonly<Record<string, any> & EmitsToProps<E>>, RawBindings, D, C, M, Mixin, Extends, E, I, S>)) | (((props: Props, ctx: SetupContext<E, S>) => RenderFunction | Promise<RenderFunction>) & Options);
++export type DefineComponentFromOptions<Props = never, RawBindings = {}, D = {}, C extends ComputedOptions = {}, M extends MethodOptions = {}, Mixin extends ComponentOptionsMixin = ComponentOptionsMixin, Extends extends ComponentOptionsMixin = ComponentOptionsMixin, E extends EmitsOptions = {}, EE extends string = string, I extends ComponentInjectOptions = {}, II extends string = string, S extends SlotsType = {}, Options = {}> = DefineComponent<[
++    Props
++] extends [string] ? Props[] : undefined extends Props ? {} : Props extends never[] ? string[] : Props, RawBindings, D, C, M, Mixin, Extends, E, EE, PublicProps$1, ResolveProps<Props, E>, ExtractDefaultPropTypes<Props>, I, II, S, Options>;
  export declare function defineComponent<Props extends Record<string, any>, E extends EmitsOptions = {}, EE extends string = string, S extends SlotsType = {}>(setup: (props: Props, ctx: SetupContext<E, S>) => RenderFunction | Promise<RenderFunction>, options?: Pick<ComponentOptions, 'name' | 'inheritAttrs'> & {
      props?: (keyof Props)[];
      emits?: E | EE[];
-@@ -1136,11 +1174,11 @@ export declare function defineComponent<Props extends Record<string, any>, E ext
+@@ -1136,11 +1181,9 @@ export declare function defineComponent<Props extends Record<string, any>, E ext
      emits?: E | EE[];
      slots?: S;
  }): (props: Props & EmitsToProps<E>) => any;
@@ -195,14 +206,12 @@ index 5d4c1fb2c6859f7982ea7bb55f65a5c613d91038..e26f82d85eb272844bcffd67cd05dd8e
 -}>>(options: ComponentOptionsWithArrayProps<PropNames, RawBindings, D, C, M, Mixin, Extends, E, EE, I, II, S>): DefineComponent<Props, RawBindings, D, C, M, Mixin, Extends, E, EE, PublicProps, ResolveProps<Props, E>, ExtractDefaultPropTypes<Props>, S>;
 -export declare function defineComponent<PropsOptions extends Readonly<ComponentPropsOptions>, RawBindings, D, C extends ComputedOptions = {}, M extends MethodOptions = {}, Mixin extends ComponentOptionsMixin = ComponentOptionsMixin, Extends extends ComponentOptionsMixin = ComponentOptionsMixin, E extends EmitsOptions = {}, EE extends string = string, S extends SlotsType = {}, I extends ComponentInjectOptions = {}, II extends string = string>(options: ComponentOptionsWithObjectProps<PropsOptions, RawBindings, D, C, M, Mixin, Extends, E, EE, I, II, S>): DefineComponent<PropsOptions, RawBindings, D, C, M, Mixin, Extends, E, EE, PublicProps, ResolveProps<PropsOptions, E>, ExtractDefaultPropTypes<PropsOptions>, S>;
 +export declare function defineComponent<Props = {}, RawBindings = {}, D = {}, C extends ComputedOptions = {}, M extends MethodOptions = {}, Mixin extends ComponentOptionsMixin = ComponentOptionsMixin, Extends extends ComponentOptionsMixin = ComponentOptionsMixin, E extends EmitsOptions = {}, EE extends string = string, I extends ComponentInjectOptions = {}, II extends string = string, S extends SlotsType = {}, Options = {}>(options: Options & ComponentOptionsWithoutProps<Props, RawBindings, D, C, M, Mixin, Extends, E, EE, I, II, S>): DefineComponent<Props, RawBindings, D, C, M, Mixin, Extends, E, EE, PublicProps$1, ResolveProps<Props, E>, ExtractDefaultPropTypes<Props>, I, II, S, Options>;
-+export declare function defineComponent<Props = undefined, RawBindings = {}, D = {}, C extends ComputedOptions = {}, M extends MethodOptions = {}, Mixin extends ComponentOptionsMixin = ComponentOptionsMixin, Extends extends ComponentOptionsMixin = ComponentOptionsMixin, E extends EmitsOptions = {}, EE extends string = string, I extends ComponentInjectOptions = {}, II extends string = string, S extends SlotsType = {}, Options = {}>(options: ComponentDefineOptions<Props, RawBindings, D, C, M, Mixin, Extends, E, EE, I, II, S, Options>): DefineComponent<[
-+    Props
-+] extends [string] ? Props[] : undefined extends Props ? {} : Props extends never[] ? string[] : Props, RawBindings, D, C, M, Mixin, Extends, E, EE, PublicProps$1, ResolveProps<Props, E>, ExtractDefaultPropTypes<Props>, I, II, S, Options>;
++export declare function defineComponent<Props = undefined, RawBindings = {}, D = {}, C extends ComputedOptions = {}, M extends MethodOptions = {}, Mixin extends ComponentOptionsMixin = ComponentOptionsMixin, Extends extends ComponentOptionsMixin = ComponentOptionsMixin, E extends EmitsOptions = {}, EE extends string = string, I extends ComponentInjectOptions = {}, II extends string = string, S extends SlotsType = {}, Options = {}, DefineOptions = {}>(options: DefineComponentOptions<Props, RawBindings, D, C, M, Mixin, Extends, E, EE, I, II, S, Options>): DefineComponentFromOptions<Props, RawBindings, D, C, M, Mixin, Extends, E, EE, I, II, S, Options>;
 +export declare function defineComponent<Props = {}, RawBindings = {}, D = {}, C extends ComputedOptions = {}, M extends MethodOptions = {}, Mixin extends ComponentOptionsMixin = ComponentOptionsMixin, Extends extends ComponentOptionsMixin = ComponentOptionsMixin, E extends EmitsOptions = {}, EE extends string = string, I extends ComponentInjectOptions = {}, II extends string = string, S extends SlotsType = {}, Options = {}>(options: Options & ComponentOptionsWithObjectProps<Props, RawBindings, D, C, M, Mixin, Extends, E, EE, I, II, S>): DefineComponent<Props, RawBindings, D, C, M, Mixin, Extends, E, EE, PublicProps$1, ResolveProps<Props, E>, ExtractDefaultPropTypes<Props>, I, II, S, Options>;
  
  type AsyncComponentResolveResult<T = Component> = T | {
      default: T;
-@@ -1196,7 +1234,7 @@ export declare function defineProps<PropNames extends string = string>(props: Pr
+@@ -1196,7 +1239,7 @@ export declare function defineProps<PropNames extends string = string>(props: Pr
      [key in PropNames]?: any;
  }>>;
  export declare function defineProps<PP extends ComponentObjectPropsOptions = ComponentObjectPropsOptions>(props: PP): Prettify<Readonly<ExtractPropTypes<PP>>>;
@@ -211,7 +220,7 @@ index 5d4c1fb2c6859f7982ea7bb55f65a5c613d91038..e26f82d85eb272844bcffd67cd05dd8e
  type DefineProps<T, BKeys extends keyof T> = Readonly<T> & {
      readonly [K in BKeys]-?: boolean;
  };
-@@ -1319,8 +1357,8 @@ type InferDefaults<T> = {
+@@ -1319,8 +1362,8 @@ type InferDefaults<T> = {
  };
  type NativeType = null | number | string | boolean | symbol | Function;
  type InferDefault<P, T> = ((props: P) => T & {}) | (T extends NativeType ? T : never);
@@ -222,7 +231,7 @@ index 5d4c1fb2c6859f7982ea7bb55f65a5c613d91038..e26f82d85eb272844bcffd67cd05dd8e
  } & {
      readonly [K in BKeys]-?: K extends keyof Defaults ? Defaults[K] extends undefined ? boolean | undefined : boolean : boolean;
  };
-@@ -1374,7 +1412,6 @@ export declare function h(type: typeof Teleport, props: RawProps & TeleportProps
+@@ -1374,7 +1417,6 @@ export declare function h(type: typeof Teleport, props: RawProps & TeleportProps
  export declare function h(type: typeof Suspense, children?: RawChildren): VNode;
  export declare function h(type: typeof Suspense, props?: (RawProps & SuspenseProps) | null, children?: RawChildren | RawSlots): VNode;
  export declare function h<P, E extends EmitsOptions = {}, S extends Record<string, any> = {}>(type: FunctionalComponent<P, E, S>, props?: (RawProps & P) | ({} extends P ? null : never), children?: RawChildren | RawSlots): VNode;
@@ -230,7 +239,7 @@ index 5d4c1fb2c6859f7982ea7bb55f65a5c613d91038..e26f82d85eb272844bcffd67cd05dd8e
  export declare function h<P>(type: ConcreteComponent | string, children?: RawChildren): VNode;
  export declare function h<P>(type: ConcreteComponent<P> | string, props?: (RawProps & P) | ({} extends P ? null : never), children?: RawChildren): VNode;
  export declare function h<P>(type: Component<P>, props?: (RawProps & P) | null, children?: RawChildren | RawSlots): VNode;
-@@ -1383,8 +1420,10 @@ export declare function h(type: Constructor, children?: RawChildren): VNode;
+@@ -1383,8 +1425,10 @@ export declare function h(type: Constructor, children?: RawChildren): VNode;
  export declare function h<P>(type: Constructor<P>, props?: (RawProps & P) | ({} extends P ? null : never), children?: RawChildren | RawSlots): VNode;
  export declare function h(type: DefineComponent, children?: RawChildren): VNode;
  export declare function h<P>(type: DefineComponent<P>, props?: (RawProps & P) | ({} extends P ? null : never), children?: RawChildren | RawSlots): VNode;
@@ -243,10 +252,13 @@ index 5d4c1fb2c6859f7982ea7bb55f65a5c613d91038..e26f82d85eb272844bcffd67cd05dd8e
  
  export declare const ssrContextKey: unique symbol;
  export declare const useSSRContext: <T = Record<string, any>>() => T | undefined;
-@@ -1437,6 +1476,70 @@ interface DevtoolsHook {
+@@ -1437,6 +1481,128 @@ interface DevtoolsHook {
  export declare let devtools: DevtoolsHook;
  export declare function setDevtoolsHook(hook: DevtoolsHook, target: any): void;
  
++/**
++ * Extracts the component original options
++ */
 +export type ExtractComponentOptions<T> = T extends {
 +    [RawOptionsSymbol]: infer Options;
 +} ? Options : T extends ComponentOptionsBase<any, any, any, any, any, any, any, any, any, any, any, any, any> ? T : T extends {
@@ -261,6 +273,9 @@ index 5d4c1fb2c6859f7982ea7bb55f65a5c613d91038..e26f82d85eb272844bcffd67cd05dd8e
 +        $props: infer P;
 +    };
 +} ? P : {};
++/**
++ * Extracts the component slots as the component was created
++ */
 +export type ExtractComponentSlots<T> = T extends ComponentOptionsBase<any, any, any, any, any, any, any, any, any, any, any, any, infer S> ? S : T extends {
 +    slots: infer S;
 +} ? S : T extends {
@@ -272,6 +287,9 @@ index 5d4c1fb2c6859f7982ea7bb55f65a5c613d91038..e26f82d85eb272844bcffd67cd05dd8e
 +        $slots: infer S extends Slots;
 +    };
 +} ? S : {};
++/**
++ * Extracts the component emits as the component was created
++ */
 +export type ExtractComponentEmits<T> = T extends ComponentOptionsBase<any, any, any, any, any, any, any, infer E> ? E : T extends {
 +    emits: infer E;
 +} ? E : T extends {
@@ -286,35 +304,84 @@ index 5d4c1fb2c6859f7982ea7bb55f65a5c613d91038..e26f82d85eb272844bcffd67cd05dd8e
 +type ResolveMixin<T> = [T] extends [
 +    Readonly<ComponentOptionsBase<any, any, any, any, any, infer M, infer E, any, any, any, any, any, any>>
 +] ? IntersectionMixin<M> & IntersectionMixin<E> : {};
-+export type ComponentPropsWithDefaultOptional<T> = ((T extends {
++export type ObjectToComponentProps<T> = T extends Record<string, any> ? {
++    [K in keyof T]: {
++        type: PropType<T[K]>;
++        required: T[K] extends undefined ? false : true;
++    };
++} : {};
++/**
++ * Extracts Original props from options
++ */
++export type ResolvePropsFromOptions<T> = T extends {
 +    props: infer P;
-+} ? [P] extends [Array<infer PA>] ? [PA] extends [string] ? {
-+    [key in PA]?: any;
-+} : never : P : T) extends infer Props ? ExtractDefaultPropTypes<T> extends infer Defaults ? Partial<Defaults> & Omit<ExtractPropTypes<Props>, keyof Defaults> : {} : {}) & (T extends {
++} ? [P] extends [Array<infer PA>] ? [PA] extends [string] ? ObjectToComponentProps<Record<PA, any>> : never : P : T extends (props: infer P) => any ? ObjectToComponentProps<P> : T extends {
++    new (): {
++        $props: infer P;
++    };
++} ? ObjectToComponentProps<P> : T;
++/**
++ * Get the Component props making the default optional
++ * Used mainly on the render component
++ */
++export type ComponentPropsWithDefaultOptional<T> = (ResolvePropsFromOptions<T> extends infer Props ? ExtractDefaultPropTypes<Props> extends infer Defaults ? Partial<Defaults> & Omit<ExtractPropTypes<Props>, keyof Defaults> : {} : {}) & (T extends {
 +    props: any;
-+} ? ResolveMixinProps<Omit<T, 'props'>> : ResolveMixinProps<T>);
++} ? ResolveMixinProps<Omit<T, 'props'>> : T extends ((...args: any) => any) | (abstract new (...args: any) => any) ? {} : ResolveMixinProps<T>);
 +type ResolveMixinProps<T> = UnwrapMixinsType<ResolveMixin<T>, 'P'>;
-+export type ComponentProps<T, excludeEmits extends boolean = false> = (excludeEmits extends false ? ExtractComponentEmits<T> extends infer E ? E extends EmitsOptions ? EmitsToProps<E> : unknown : unknown : {}) & (T extends {
++/**
++ * Returns the emits as props
++ */
++export type ComponentEmitsProps<T> = ExtractComponentEmits<T> extends infer E ? E extends EmitsOptions ? EmitsToProps<E> : unknown : unknown;
++/**
++ * Returns runtime props definition for a component
++ *
++ *  @see Include emits {@linkcode ComponentEmitsProps}
++ *  @see Get the render props {@linkcode ComponentPropsWithDefaultOptional}
++ *
++ * @example
++ * ```ts
++ * import { Comp } from './Comp.vue'
++ *
++ * function useProps(): ComponentProps<typeof Comp> {
++ *  // ...
++ * }
++ * ```
++ */
++export type ComponentProps<T> = T extends {
 +    $props: infer P;
 +} ? P : (ExtractComponentProp<T> extends infer P ? P extends Readonly<Array<infer V>> ? [V] extends [string] ? Readonly<{
 +    [key in V]?: any;
 +}> : {} : P extends ComponentPropsOptions ? ExtractPropTypes<P> : P : {}) & (T extends {
 +    props: any;
-+} ? ResolveMixinProps<Omit<T, 'props'>> : ResolveMixinProps<T>));
++} ? ResolveMixinProps<Omit<T, 'props'>> : ResolveMixinProps<T>);
++/**
++ * Returns runtime type for `slots`
++ */
 +export type ComponentSlots<T> = ExtractComponentSlots<T> extends infer S ? {
 +    [K in keyof S]: S[K] extends Slot<infer V> ? (arg: V) => VNode : never;
 +} : {};
 +export type ComponentEmits<T> = ExtractComponentEmits<T> extends infer E ? {} extends E ? () => void : EmitFn<E> : () => void;
++/**
++ * Retrieves the component public instance
++ *
++ * @example
++ * ```ts
++ * const Comp = defineComponent({ props: { a: String }, emits: ['test'] })
++ *
++ * const instance = ref<ComponentInstance<typeof Comp>>()
++ * instance.$props.a // string | undefined
++ * ```
++ */
 +export type ComponentInstance<T> = T extends {
 +    new (): ComponentPublicInstance;
-+} ? InstanceType<T> : T extends FunctionalComponent<infer Props, infer Emits> ? ComponentPublicInstance<Props, {}, {}, {}, {}, Emits> : T extends ComponentPublicInstanceConstructor ? InstanceType<T> : T extends ComponentDefineOptions<infer Props, infer RawBindings, infer D, infer C, infer M, infer Mixin, infer Extends, infer E, infer EE, infer I, infer II, infer S, infer Options> ? InstanceType<ReturnType<typeof defineComponent<Options extends {
++} ? InstanceType<T> : T extends FunctionalComponent<infer Props, infer Emits> ? ComponentPublicInstance<Props, {}, {}, {}, {}, Emits> : T extends ComponentPublicInstanceConstructor ? InstanceType<T> : T extends DefineComponentOptions<infer Props, infer RawBindings, infer D, infer C, infer M, infer Mixin, infer Extends, infer E, infer EE, infer I, infer II, infer S, infer Options> ? InstanceType<ReturnType<typeof defineComponent<Options extends {
 +    props: infer P;
 +} ? P extends Array<infer PA> ? PA : P : Props, RawBindings, D, C, M, Mixin, Extends, E, EE, I, II, S, Options>>> : T extends Component<infer Props, infer RawBindings, infer D, infer C, infer M> ? ComponentPublicInstance<unknown extends Props ? {} : Props, unknown extends RawBindings ? {} : RawBindings, unknown extends D ? {} : D, C, M> : never;
 +
  type HMRComponent = ComponentOptions | ClassComponent;
  export interface HMRRuntime {
      createRecord: typeof createRecord;
-@@ -1568,12 +1671,12 @@ interface LegacyPublicProperties {
+@@ -1568,12 +1734,12 @@ interface LegacyPublicProperties {
   */
  export type CompatVue = Pick<App, 'version' | 'component' | 'directive'> & {
      configureCompat: typeof configureCompat;
@@ -329,7 +396,7 @@ index 5d4c1fb2c6859f7982ea7bb55f65a5c613d91038..e26f82d85eb272844bcffd67cd05dd8e
      component(name: string): Component | undefined;
      component(name: string, component: Component): CompatVue;
      directive(name: string): Directive | undefined;
-@@ -1582,7 +1685,7 @@ export type CompatVue = Pick<App, 'version' | 'component' | 'directive'> & {
+@@ -1582,7 +1748,7 @@ export type CompatVue = Pick<App, 'version' | 'component' | 'directive'> & {
      /**
       * @deprecated Vue 3 no longer supports extending constructors.
       */

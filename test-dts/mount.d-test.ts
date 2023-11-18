@@ -85,15 +85,15 @@ mount(AppWithProps, {
 
 expectError(
   mount(AppWithProps, {
-  // @ts-expect-error wrong prop type should not compile
+    // @ts-expect-error wrong prop type should not compile
     props: { a: 2 }
   })
 )
 
 const AppWithArrayProps = {
-  props: ['a'],
+  props: ['a'] as ['a'],
   template: ''
-} as const
+}
 
 // accept props - vm is properly typed
 expectType<string>(

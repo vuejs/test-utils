@@ -146,20 +146,48 @@ expectType<number | undefined>(propsWrapper.props('bar'))
 // @ts-expect-error :: unknown prop
 propsWrapper.props('badProp')
 
-const requiredPropsWrapper = mount(
-  defineComponent({
-    props: {
-      foo: { type: String, required: true },
-      bar: { type: Number, required: true }
-    }
-  }),
-  {
-    props: {
-      foo: 'abc',
-      bar: 123
-    }
+// const cc = defineComponent({
+//   props: {
+//     foo: { type: String, required: true },
+//     bar: { type: Number, required: true }
+//   }
+// })
+// mount(
+//   defineComponent({
+//     props: {
+//       foo: { type: String, required: true },
+//       bar: { type: Number, required: true }
+//     }
+//   }),
+//   {
+//     props: {
+//       foo: 'aaa',
+//       bar: 123
+//     }
+//   }
+// )
+
+// mount({
+//   props: {
+//     a: String
+//   },
+//   setup(props) {
+//     props
+//   }
+// })
+
+const c = defineComponent({
+  props: {
+    foo: { type: String, required: true },
+    bar: { type: Number, required: true }
   }
-)
+})
+const requiredPropsWrapper = mount(c, {
+  props: {
+    foo: 'abc',
+    bar: 123
+  }
+})
 
 requiredPropsWrapper.setProps({
   foo: 'abc'
