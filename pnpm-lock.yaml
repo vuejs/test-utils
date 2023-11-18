@@ -104,8 +104,8 @@ devDependencies:
     specifier: 5.0.0
     version: 5.0.0(@types/node@20.9.0)
   vitepress:
-    specifier: 1.0.0-rc.27
-    version: 1.0.0-rc.27(@types/node@20.9.0)(search-insights@2.7.0)(typescript@5.2.2)
+    specifier: 1.0.0-rc.28
+    version: 1.0.0-rc.28(@types/node@20.9.0)(search-insights@2.7.0)(typescript@5.2.2)
   vitest:
     specifier: 0.34.6
     version: 0.34.6(jsdom@22.1.0)
@@ -3182,6 +3182,11 @@ packages:
       ufo: 1.1.2
     dev: true
 
+  /mrmime@1.0.1:
+    resolution: {integrity: sha512-hzzEagAgDyoU1Q6yg5uI+AorQgdvMCur3FcKf7NhMKWsaYg+RnbTyHRa/9IlLF9rf455MOCtcqqrQQ83pPP7Uw==}
+    engines: {node: '>=10'}
+    dev: true
+
   /ms@2.1.2:
     resolution: {integrity: sha512-sGkPx+VjMtmA6MX27oA4FBFELFCZZ4S4XqeGOXCv68tT+jb3vk/RyaKWP0PTKyWtmLSM0b+adUTEvbs1PEaH2w==}
     dev: true
@@ -3959,8 +3964,8 @@ packages:
       fsevents: 2.3.3
     dev: true
 
-  /vitepress@1.0.0-rc.27(@types/node@20.9.0)(search-insights@2.7.0)(typescript@5.2.2):
-    resolution: {integrity: sha512-1qs1a5qPQxNOJN451HmNtKewxSIOk52qv1EdWtsO6V6kvrNxF2FFR3Inhj0W56Jcs8AKIdzKDKHNYIJhcyz3AA==}
+  /vitepress@1.0.0-rc.28(@types/node@20.9.0)(search-insights@2.7.0)(typescript@5.2.2):
+    resolution: {integrity: sha512-cB0DNhX1jgmyZxPSrH5E+YpgpSlLuDL4ec9UjeqTe/Si1+MEvIJRgifB0RjGfojKa+gkSo97nLO6WN+iFgtgXQ==}
     hasBin: true
     peerDependencies:
       markdown-it-mathjax3: ^4.3.2
@@ -3981,6 +3986,7 @@ packages:
       focus-trap: 7.5.4
       mark.js: 8.11.1
       minisearch: 6.2.0
+      mrmime: 1.0.1
       shiki: 0.14.5
       vite: 5.0.0(@types/node@20.9.0)
       vue: 3.3.8(typescript@5.2.2)
