@@ -104,8 +104,8 @@ devDependencies:
     specifier: 5.0.0
     version: 5.0.0(@types/node@20.9.0)
   vitepress:
-    specifier: 1.0.0-rc.28
-    version: 1.0.0-rc.28(@types/node@20.9.0)(search-insights@2.7.0)(typescript@5.2.2)
+    specifier: 1.0.0-rc.29
+    version: 1.0.0-rc.29(@types/node@20.9.0)(search-insights@2.7.0)(typescript@5.2.2)
   vitest:
     specifier: 0.34.6
     version: 0.34.6(jsdom@22.1.0)
@@ -3964,8 +3964,8 @@ packages:
       fsevents: 2.3.3
     dev: true
 
-  /vitepress@1.0.0-rc.28(@types/node@20.9.0)(search-insights@2.7.0)(typescript@5.2.2):
-    resolution: {integrity: sha512-cB0DNhX1jgmyZxPSrH5E+YpgpSlLuDL4ec9UjeqTe/Si1+MEvIJRgifB0RjGfojKa+gkSo97nLO6WN+iFgtgXQ==}
+  /vitepress@1.0.0-rc.29(@types/node@20.9.0)(search-insights@2.7.0)(typescript@5.2.2):
+    resolution: {integrity: sha512-6sKmyEvH16SgMqkHzRwwadt9Uju13AOIqouzOVEg3Rk6X9mds6jLsq2GxnAJvg0s6bl/0Qs/cw+f8SNki82ltw==}
     hasBin: true
     peerDependencies:
       markdown-it-mathjax3: ^4.3.2
