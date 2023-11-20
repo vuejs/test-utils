@@ -88,8 +88,8 @@ type ResolveEmitRecord<T> = ExtractComponentEmits<T> extends infer E
           ? Args extends { length: 0 }
             ? void
             : Args extends { length: 1 }
-            ? Args[0]
-            : Args
+              ? Args[0]
+              : Args
           : void)[]
       }
   : never
