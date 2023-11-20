@@ -17,7 +17,8 @@ import {
   ComponentPropsOptions,
   ComponentObjectPropsOptions,
   Component,
-  AsyncComponentOptions
+  AsyncComponentOptions,
+  VNode
 } from 'vue'
 import { hyphenate } from '../utils/vueShared'
 import { matchName } from '../utils/matchName'
@@ -34,7 +35,7 @@ export type CustomCreateStub = (params: {
   name: string
   component: Component
   registerStub: (config: { source: Component; stub: Component }) => void
-}) => ConcreteComponent
+}) => ConcreteComponent | VNode
 
 interface StubOptions {
   name: string
