@@ -1,5 +1,5 @@
 diff --git a/dist/runtime-core.d.ts b/dist/runtime-core.d.ts
-index 5d4c1fb2c6859f7982ea7bb55f65a5c613d91038..a4377187d514a0663c3a35c073e794b4cfd98d76 100644
+index 5d4c1fb2c6859f7982ea7bb55f65a5c613d91038..539385c2754e1b5882ac6c3bc272372f2b43018c 100644
 --- a/dist/runtime-core.d.ts
 +++ b/dist/runtime-core.d.ts
 @@ -1,7 +1,7 @@
@@ -252,7 +252,7 @@ index 5d4c1fb2c6859f7982ea7bb55f65a5c613d91038..a4377187d514a0663c3a35c073e794b4
  
  export declare const ssrContextKey: unique symbol;
  export declare const useSSRContext: <T = Record<string, any>>() => T | undefined;
-@@ -1437,6 +1481,128 @@ interface DevtoolsHook {
+@@ -1437,6 +1481,138 @@ interface DevtoolsHook {
  export declare let devtools: DevtoolsHook;
  export declare function setDevtoolsHook(hook: DevtoolsHook, target: any): void;
  
@@ -280,9 +280,9 @@ index 5d4c1fb2c6859f7982ea7bb55f65a5c613d91038..a4377187d514a0663c3a35c073e794b4
 +    slots: infer S;
 +} ? S : T extends {
 +    slots: infer S extends Slots;
-+} ? S : T extends (props: any, opts: {
-+    slots: infer S;
-+}) => any ? S : T extends {
++} ? S : T extends (props: any, opts: infer Ctx extends {
++    slots: any;
++}) => any ? Ctx['slots'] : T extends (props: any, opts: SetupContext<unknown, infer S>) => any ? S : T extends {
 +    new (): {
 +        $slots: infer S extends Slots;
 +    };
@@ -315,7 +315,7 @@ index 5d4c1fb2c6859f7982ea7bb55f65a5c613d91038..a4377187d514a0663c3a35c073e794b4
 + */
 +export type ResolvePropsFromOptions<T> = T extends {
 +    props: infer P;
-+} ? [P] extends [Array<infer PA>] ? [PA] extends [string] ? ObjectToComponentProps<Record<PA, any>> : never : P : T extends (props: infer P) => any ? ObjectToComponentProps<P> : T extends {
++} ? [P] extends [Array<infer PA>] ? [PA] extends [string] ? ObjectToComponentProps<Record<PA, any>> : never : P : T extends (props: infer P, ctx?: any) => any ? ObjectToComponentProps<P> : T extends {
 +    new (): {
 +        $props: infer P;
 +    };
@@ -327,7 +327,9 @@ index 5d4c1fb2c6859f7982ea7bb55f65a5c613d91038..a4377187d514a0663c3a35c073e794b4
 +export type ComponentPropsWithDefaultOptional<T> = (ResolvePropsFromOptions<T> extends infer Props ? ExtractDefaultPropTypes<Props> extends infer Defaults ? Partial<Defaults> & Omit<ExtractPropTypes<Props>, keyof Defaults> : {} : {}) & (T extends {
 +    props: any;
 +} ? ResolveMixinProps<Omit<T, 'props'>> : T extends ((...args: any) => any) | (abstract new (...args: any) => any) ? {} : ResolveMixinProps<T>);
++type FixMixinResolve<T> = [T] extends [never] ? {} : T;
 +type ResolveMixinProps<T> = UnwrapMixinsType<ResolveMixin<T>, 'P'>;
++type ResolveMixinData<T> = FixMixinResolve<UnwrapMixinsType<ResolveMixin<T>, 'D'>>;
 +/**
 + * Returns the emits as props
 + */
@@ -351,16 +353,24 @@ index 5d4c1fb2c6859f7982ea7bb55f65a5c613d91038..a4377187d514a0663c3a35c073e794b4
 +    $props: infer P;
 +} ? P : (ExtractComponentProp<T> extends infer P ? P extends Readonly<Array<infer V>> ? [V] extends [string] ? Readonly<{
 +    [key in V]?: any;
-+}> : {} : P extends ComponentPropsOptions ? ExtractPropTypes<P> : P : {}) & (T extends {
-+    props: any;
-+} ? ResolveMixinProps<Omit<T, 'props'>> : ResolveMixinProps<T>);
++}> : {} : P extends ComponentPropsOptions ? ExtractPropTypes<P> : P : {}) & ResolveMixinProps<T>;
++export type RetrieveSlotArgument<T extends any[] = any[]> = (...args: T) => any;
 +/**
 + * Returns runtime type for `slots`
 + */
-+export type ComponentSlots<T> = ExtractComponentSlots<T> extends infer S ? {
-+    [K in keyof S]: S[K] extends Slot<infer V> ? (arg: V) => VNode : never;
-+} : {};
++export type ComponentSlots<T> = ExtractComponentSlots<T> extends infer S ? S extends SlotsType<infer SS> ? Record<string, any> extends SS ? {
++    [K in keyof S & string]: S[K] extends RetrieveSlotArgument<infer A> ? (...arg: A) => VNode[] : (arg: S[K]) => VNode[];
++} : UnwrapSlotsType<S> : S extends Record<string, any> ? {
++    [K in keyof S & string]: S[K] extends RetrieveSlotArgument<infer A> ? (...arg: A) => VNode[] : (arg: S[K]) => VNode[];
++} : {} : {};
 +export type ComponentEmits<T> = ExtractComponentEmits<T> extends infer E ? {} extends E ? () => void : EmitFn<E> : () => void;
++export type ComponentData<T> = (T extends {
++    data: () => infer D;
++} ? D : T extends {
++    setup(...args: any[]): infer S;
++} ? S extends Record<string, any> ? S : {} : T extends new () => {
++    data: () => infer D;
++} ? D : {}) & ResolveMixinData<T>;
 +/**
 + * Retrieves the component public instance
 + *
@@ -381,7 +391,7 @@ index 5d4c1fb2c6859f7982ea7bb55f65a5c613d91038..a4377187d514a0663c3a35c073e794b4
  type HMRComponent = ComponentOptions | ClassComponent;
  export interface HMRRuntime {
      createRecord: typeof createRecord;
-@@ -1568,12 +1734,12 @@ interface LegacyPublicProperties {
+@@ -1568,12 +1744,12 @@ interface LegacyPublicProperties {
   */
  export type CompatVue = Pick<App, 'version' | 'component' | 'directive'> & {
      configureCompat: typeof configureCompat;
@@ -396,7 +406,7 @@ index 5d4c1fb2c6859f7982ea7bb55f65a5c613d91038..a4377187d514a0663c3a35c073e794b4
      component(name: string): Component | undefined;
      component(name: string, component: Component): CompatVue;
      directive(name: string): Directive | undefined;
-@@ -1582,7 +1748,7 @@ export type CompatVue = Pick<App, 'version' | 'component' | 'directive'> & {
+@@ -1582,7 +1758,7 @@ export type CompatVue = Pick<App, 'version' | 'component' | 'directive'> & {
      /**
       * @deprecated Vue 3 no longer supports extending constructors.
       */

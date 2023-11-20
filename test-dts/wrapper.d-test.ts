@@ -1,5 +1,5 @@
 import { expectType } from './index'
-import { defineComponent } from 'vue'
+import { SlotsType, defineComponent } from 'vue'
 import { mount } from '../src'
 
 const AppWithDefine = defineComponent({
@@ -146,36 +146,6 @@ expectType<number | undefined>(propsWrapper.props('bar'))
 // @ts-expect-error :: unknown prop
 propsWrapper.props('badProp')
 
-// const cc = defineComponent({
-//   props: {
-//     foo: { type: String, required: true },
-//     bar: { type: Number, required: true }
-//   }
-// })
-// mount(
-//   defineComponent({
-//     props: {
-//       foo: { type: String, required: true },
-//       bar: { type: Number, required: true }
-//     }
-//   }),
-//   {
-//     props: {
-//       foo: 'aaa',
-//       bar: 123
-//     }
-//   }
-// )
-
-// mount({
-//   props: {
-//     a: String
-//   },
-//   setup(props) {
-//     props
-//   }
-// })
-
 const c = defineComponent({
   props: {
     foo: { type: String, required: true },
@@ -197,3 +167,52 @@ requiredPropsWrapper.setProps({
   // @ts-expect-error wrong type
   foo: 1
 })
+
+// slots
+mount(
+  defineComponent({
+    slots: {} as SlotsType<{
+      default: (test: { foo: string }) => void
+    }>
+  }),
+  {
+    slots: {
+      default: 'test'
+    }
+  }
+)
+
+// slot type
+
+mount(
+  defineComponent({
+    slots: {} as SlotsType<{
+      default: (test: { foo: string }) => void
+    }>
+  }),
+  {
+    slots: {
+      // @ts-expect-error wrong type
+      nonExistent: 'test',
+
+      default: (test) => {
+        expectType<{ foo: string }>(test)
+        // @ts-expect-error not any
+        expectType<{ bar: any }>(test)
+      }
+    }
+  }
+)
+
+// required slots
+mount(
+  defineComponent({
+    slots: {} as SlotsType<{
+      default: (test: { foo: string }) => void
+    }>
+  }),
+  {
+    // @ts-expect-error missing required slot
+    slots: {}
+  }
+)

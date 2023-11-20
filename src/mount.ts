@@ -3,21 +3,14 @@ import {
   DefineComponent,
   VNode,
   ComponentInstance,
-  EmitsOptions,
-  ComponentObjectPropsOptions,
-  ExtractPropTypes
+  ComponentSlots
 } from 'vue'
-import type { ComponentSlots } from 'vue-component-type-helpers'
 import { createInstance } from './createInstance'
 import { MountingOptions } from './types'
 import { trackInstance } from './utils/autoUnmount'
 import { VueWrapper } from './vueWrapper'
 import { createVueWrapper } from './wrapperFactory'
 import { ComponentPropsWithDefaultOptional } from 'vue'
-
-type ShimSlotReturnType<T> = T extends (...args: infer P) => any
-  ? (...args: P) => any
-  : never
 
 type WithArray<T> = T | T[]
 
@@ -29,7 +22,7 @@ export type ComponentMountingOptions<T, P> = Omit<
 > & {
   slots?: {
     [K in keyof ComponentSlots<T>]: WithArray<
-      | ShimSlotReturnType<ComponentSlots<T>[K]>
+      | ComponentSlots<T>[K]
       | string
       | VNode
       | (new () => any)
@@ -38,182 +31,12 @@ export type ComponentMountingOptions<T, P> = Omit<
   }
 } & Record<string, unknown>
 
-// export function mount<
-//   Props = never,
-//   RawBindings = {},
-//   D = {},
-//   C extends ComputedOptions = {},
-//   M extends MethodOptions = {},
-//   Mixin extends ComponentOptionsMixin = ComponentOptionsMixin,
-//   Extends extends ComponentOptionsMixin = ComponentOptionsMixin,
-//   E extends EmitsOptions = {},
-//   EE extends string = string,
-//   I extends ComponentInjectOptions = {},
-//   II extends string = string,
-//   S extends SlotsType = {},
-//   Options = {}
-// >(
-//   originalComponent: ComponentDefineOptions<
-//     Props,
-//     RawBindings,
-//     D,
-//     C,
-//     M,
-//     Mixin,
-//     Extends,
-//     E,
-//     EE,
-//     I,
-//     II,
-//     S,
-//     Options
-//   >,
-//   options?: ComponentMountingOptions<
-//     ComponentDefineOptions<
-//       Props,
-//       RawBindings,
-//       D,
-//       C,
-//       M,
-//       Mixin,
-//       Extends,
-//       E,
-//       EE,
-//       I,
-//       II,
-//       S,
-//       Options
-//     >,
-//     ComponentPropsWithDefaultOptional<
-//       ComponentDefineOptions<
-//         Props,
-//         RawBindings,
-//         D,
-//         C,
-//         M,
-//         Mixin,
-//         Extends,
-//         E,
-//         EE,
-//         I,
-//         II,
-//         S,
-//         Options
-//       >
-//     >
-//   >
-// ): { props: Props }
-// defineComponent
-
-// TODO import from vue
-export type ResolveProps<Props, E extends EmitsOptions> = Readonly<
-  ([Props] extends [string]
-    ? { [key in Props]?: any }
-    : [Props] extends [ComponentObjectPropsOptions]
-      ? ExtractPropTypes<Props>
-      : Props extends never[]
-        ? {}
-        : Props) &
-    ({} extends E ? {} : {})
->
-
-// export function mount<Component>(
-//   component: Component &
-//     DefineComponent<
-//       any,
-//       any,
-//       any,
-//       any,
-//       any,
-//       any,
-//       any,
-//       any,
-//       any,
-//       any,
-//       any,
-//       any,
-//       any
-//     >,
-//   options?: ComponentMountingOptions<
-//     Component,
-//     ComponentPropsWithDefaultOptional<Component>
-//   >
-// ): VueWrapper<ComponentInstance<Component>> & {
-//   LOL: Component
-//   LOOL: ComponentPropsWithDefaultOptional<Component>
-// }
-
 export function mount<
   T extends DefineComponent<any, any, any, any, any, any, any, any, any, any>
 >(
   originalComponent: T,
   options?: ComponentMountingOptions<T, ComponentPropsWithDefaultOptional<T>>
 ): VueWrapper<ComponentInstance<T>>
-
-// export function mount<
-//   Props = {},
-//   RawBindings = {},
-//   D = {},
-//   C extends ComputedOptions = {},
-//   M extends MethodOptions = {},
-//   Mixin extends ComponentOptionsMixin = ComponentOptionsMixin,
-//   Extends extends ComponentOptionsMixin = ComponentOptionsMixin,
-//   E extends EmitsOptions = {},
-//   EE extends string = string,
-//   I extends ComponentInjectOptions = {},
-//   II extends string = string,
-//   S extends SlotsType = {},
-//   Options = {},
-//   Component extends DefineComponentOptions<
-//     Props,
-//     RawBindings,
-//     D,
-//     C,
-//     M,
-//     Mixin,
-//     Extends,
-//     E,
-//     EE,
-//     I,
-//     II,
-//     S,
-//     Options
-//   > = DefineComponentOptions<
-//     Props,
-//     RawBindings,
-//     D,
-//     C,
-//     M,
-//     Mixin,
-//     Extends,
-//     E,
-//     EE,
-//     I,
-//     II,
-//     S,
-//     Options
-//   >
-// >(
-//   componentOptions: DefineComponentOptions<
-//     Props,
-//     RawBindings,
-//     D,
-//     C,
-//     M,
-//     Mixin,
-//     Extends,
-//     E,
-//     EE,
-//     I,
-//     II,
-//     S,
-//     Options
-//   >,
-//   options?: ComponentMountingOptions<
-//     Component,
-//     ComponentPropsWithDefaultOptional<Component>
-//   >
-// ): VueWrapper<ComponentInstance<Props>>
 
 // implementation
 export function mount(
