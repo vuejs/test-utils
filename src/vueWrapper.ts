@@ -94,6 +94,10 @@ type ResolveEmitRecord<T> = ExtractComponentEmits<T> extends infer E
       }
   : never
 
+type DeepPartial<T> = {
+  [P in keyof T]?: DeepPartial<T[P]>
+}
+
 export class VueWrapper<
   VM = unknown,
   T extends ComponentPublicInstance = ComponentPublicInstance & VM
@@ -265,7 +269,7 @@ export class VueWrapper<
     return domWrapper.isVisible()
   }
 
-  setData(data: Partial<T['$data']>): Promise<void> {
+  setData(data: DeepPartial<T['$data']>): Promise<void> {
     mergeDeep(this.componentVM.$data, data)
     return nextTick()
   }
