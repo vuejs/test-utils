@@ -142,7 +142,6 @@ describe('setProps', () => {
     })
     const FooResult = wrapper.findComponent({ name: 'Foo' })
 
-    // @ts-expect-error not valid prop
     expect(() => FooResult.setProps({ baz: 'bin' })).toThrowError(
       'You can only use setProps on your mounted component'
     )

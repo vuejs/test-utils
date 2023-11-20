@@ -26,6 +26,7 @@ import {
   FindComponentSelector,
   NameSelector,
   RefSelector,
+  UnknownRenderedVue,
   VueNode
 } from './types'
 import WrapperLike from './interfaces/wrapperLike'
@@ -185,15 +186,15 @@ export default abstract class BaseWrapper<ElementType extends Node>
     selector: string
   ): DOMWrapper<Element>
 
+  // searching by name or ref always results in VueWrapper
+  findComponent<T extends never>(
+    selector: NameSelector | RefSelector
+  ): VueWrapper<UnknownRenderedVue>
   // searching for component created via defineComponent results in VueWrapper of proper type
   findComponent<T extends DefinedComponent>(
     selector: T | Exclude<FindComponentSelector, FunctionalComponent>
   ): VueWrapper<ComponentInstance<T>>
 
-  // searching by name or ref always results in VueWrapper
-  findComponent<T extends never>(
-    selector: NameSelector | RefSelector
-  ): VueWrapper
   findComponent<T extends ComponentPublicInstance>(
     selector: T | FindComponentSelector
   ): VueWrapper<T>
@@ -340,6 +341,10 @@ export default abstract class BaseWrapper<ElementType extends Node>
   }
 
   getComponent<T extends never>(selector: string): Omit<WrapperLike, 'exists'>
+  // searching by name or ref always results in VueWrapper
+  getComponent<T extends never>(
+    selector: NameSelector | RefSelector
+  ): Omit<VueWrapper<UnknownRenderedVue>, 'exists'>
   getComponent<T extends DefinedComponent>(
     selector: T | Exclude<FindComponentSelector, FunctionalComponent>
   ): Omit<VueWrapper<ComponentInstance<T>>, 'exists'>
@@ -347,10 +352,6 @@ export default abstract class BaseWrapper<ElementType extends Node>
   getComponent<T extends FunctionalComponent>(
     selector: T | string
   ): Omit<DOMWrapper<Element>, 'exists'>
-  // searching by name or ref always results in VueWrapper
-  getComponent<T extends never>(
-    selector: NameSelector | RefSelector
-  ): Omit<VueWrapper, 'exists'>
   getComponent<T extends ComponentPublicInstance>(
     selector: T | FindComponentSelector
   ): Omit<VueWrapper<T>, 'exists'>

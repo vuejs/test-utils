@@ -167,3 +167,8 @@ export type VueNode<T extends Node = Node> = T & {
 export type VueElement = VueNode<Element>
 
 export type DefinedComponent = Component
+
+export type UnknownRenderedVue = {
+  $props: Record<string, any>
+  $data: Record<string, any>
+}
