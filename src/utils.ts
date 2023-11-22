@@ -128,9 +128,7 @@ export function isObjectComponent(
 export function textContent(element: Node): string {
   // we check if the element is a comment first
   // to return an empty string in that case, instead of the comment content
-  return element.nodeType !== Node.COMMENT_NODE
-    ? element.textContent?.trim() ?? ''
-    : ''
+  return element.nodeType !== Node.COMMENT_NODE ? element.textContent ?? '' : ''
 }
 
 export function hasOwnProperty<O extends {}, P extends PropertyKey>(

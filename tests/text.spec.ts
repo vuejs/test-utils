@@ -113,4 +113,12 @@ describe('text', () => {
 
     expect(wrapper.text()).toBe('Text content')
   })
+
+  it('does not trim content when separated in multiple independent elements', () => {
+    const wrapper = mount({
+      template: `<span>Trimmed </span><span>Example</span>`
+    })
+
+    expect(wrapper.text()).toBe('Trimmed Example')
+  })
 })
