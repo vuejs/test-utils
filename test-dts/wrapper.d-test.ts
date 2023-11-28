@@ -120,25 +120,49 @@ expectType<{ [key: string]: any }>(wrapper.props())
 const ComponentWithProps = defineComponent({
   props: {
     foo: String,
-    bar: Number,
-  },
+    bar: Number
+  }
 })
 
-const propsWrapper = mount(ComponentWithProps);
+const propsWrapper = mount(ComponentWithProps)
 
-propsWrapper.setProps({foo: 'abc'})
-propsWrapper.setProps({foo: 'abc', bar: 123})
+propsWrapper.setProps({ foo: 'abc' })
+propsWrapper.setProps({ foo: 'abc', bar: 123 })
 // @ts-expect-error :: should require string
-propsWrapper.setProps({foo: 123})
+propsWrapper.setProps({ foo: 123 })
 // @ts-expect-error :: unknown prop
-propsWrapper.setProps({badProp: true})
+propsWrapper.setProps({ badProp: true })
 
 expectType<string | undefined>(propsWrapper.props().foo)
 expectType<number | undefined>(propsWrapper.props().bar)
 // @ts-expect-error :: unknown prop
-propsWrapper.props().badProp;
+propsWrapper.props().badProp
 
 expectType<string | undefined>(propsWrapper.props('foo'))
 expectType<number | undefined>(propsWrapper.props('bar'))
 // @ts-expect-error :: unknown prop
 propsWrapper.props('badProp')
+
+const requiredPropsWrapper = mount(
+  defineComponent({
+    props: {
+      foo: { type: String, required: true },
+      bar: { type: Number, required: true }
+    }
+  }),
+  {
+    props: {
+      foo: 'abc',
+      bar: 123
+    }
+  }
+)
+
+requiredPropsWrapper.setProps({
+  foo: 'abc'
+})
+
+requiredPropsWrapper.setProps({
+  // @ts-expect-error wrong type
+  foo: 1
+})

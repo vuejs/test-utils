@@ -38,12 +38,12 @@ export function mount<
   C = T extends ((...args: any) => any) | (new (...args: any) => any)
     ? T
     : T extends { props?: infer Props }
-    ? DefineComponent<
-        Props extends Readonly<(infer PropNames)[]> | (infer PropNames)[]
-          ? { [key in PropNames extends string ? PropNames : string]?: any }
-          : Props
-      >
-    : DefineComponent,
+      ? DefineComponent<
+          Props extends Readonly<(infer PropNames)[]> | (infer PropNames)[]
+            ? { [key in PropNames extends string ? PropNames : string]?: any }
+            : Props
+        >
+      : DefineComponent,
   P extends ComponentProps<C> = ComponentProps<C>
 >(
   originalComponent: T,
@@ -54,9 +54,7 @@ export function mount<
     ComponentProps<C>,
     ComponentData<C> & ComponentExposed<C> & Omit<P, keyof ComponentProps<C>>
   >
-> & {
-  LOOL: Exclude<P, ComponentProps<C>>
-}
+>
 
 // implementation
 export function mount(
