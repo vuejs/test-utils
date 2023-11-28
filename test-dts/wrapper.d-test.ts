@@ -1,8 +1,11 @@
 import { expectType } from './index'
-import { defineComponent } from 'vue'
+import { SlotsType, defineComponent } from 'vue'
 import { mount } from '../src'
 
 const AppWithDefine = defineComponent({
+  emits: {
+    increment: (arg: { count: number }) => true
+  },
   template: ''
 })
 
@@ -65,10 +68,10 @@ expectType<Element | undefined>(byClassArray[0].element)
 
 // event name without specific type
 let incrementEventWithoutType = wrapper.emitted('increment')
-expectType<unknown[][] | undefined>(incrementEventWithoutType)
+expectType<{ count: number }[] | undefined>(incrementEventWithoutType)
 
 // event name
-let incrementEvent = wrapper.emitted<{ count: number }>('increment')
+let incrementEvent = wrapper.emitted('increment')
 expectType<{ count: number }[] | undefined>(incrementEvent)
 expectType<{ count: number }>(incrementEvent![0])
 
@@ -143,20 +146,18 @@ expectType<number | undefined>(propsWrapper.props('bar'))
 // @ts-expect-error :: unknown prop
 propsWrapper.props('badProp')
 
-const requiredPropsWrapper = mount(
-  defineComponent({
-    props: {
-      foo: { type: String, required: true },
-      bar: { type: Number, required: true }
-    }
-  }),
-  {
-    props: {
-      foo: 'abc',
-      bar: 123
-    }
+const c = defineComponent({
+  props: {
+    foo: { type: String, required: true },
+    bar: { type: Number, required: true }
   }
-)
+})
+const requiredPropsWrapper = mount(c, {
+  props: {
+    foo: 'abc',
+    bar: 123
+  }
+})
 
 requiredPropsWrapper.setProps({
   foo: 'abc'
@@ -166,3 +167,52 @@ requiredPropsWrapper.setProps({
   // @ts-expect-error wrong type
   foo: 1
 })
+
+// slots
+mount(
+  defineComponent({
+    slots: {} as SlotsType<{
+      default: (test: { foo: string }) => void
+    }>
+  }),
+  {
+    slots: {
+      default: 'test'
+    }
+  }
+)
+
+// slot type
+
+mount(
+  defineComponent({
+    slots: {} as SlotsType<{
+      default: (test: { foo: string }) => void
+    }>
+  }),
+  {
+    slots: {
+      // @ts-expect-error wrong type
+      nonExistent: 'test',
+
+      default: (test) => {
+        expectType<{ foo: string }>(test)
+        // @ts-expect-error not any
+        expectType<{ bar: any }>(test)
+      }
+    }
+  }
+)
+
+// required slots
+mount(
+  defineComponent({
+    slots: {} as SlotsType<{
+      default: (test: { foo: string }) => void
+    }>
+  }),
+  {
+    // @ts-expect-error missing required slot
+    slots: {}
+  }
+)

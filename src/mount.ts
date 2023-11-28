@@ -1,30 +1,28 @@
-import { ComponentPublicInstance, DefineComponent, VNode } from 'vue'
-import type {
-  ComponentExposed,
-  ComponentProps,
+import {
+  ComponentPublicInstance,
+  DefineComponent,
+  VNode,
+  ComponentInstance,
   ComponentSlots
-} from 'vue-component-type-helpers'
+} from 'vue'
 import { createInstance } from './createInstance'
 import { MountingOptions } from './types'
 import { trackInstance } from './utils/autoUnmount'
 import { VueWrapper } from './vueWrapper'
 import { createVueWrapper } from './wrapperFactory'
-
-type ShimSlotReturnType<T> = T extends (...args: infer P) => any
-  ? (...args: P) => any
-  : never
+import { ComponentPropsWithDefaultOptional } from 'vue'
 
 type WithArray<T> = T | T[]
 
 type ComponentData<T> = T extends { data?(...args: any): infer D } ? D : {}
 
-export type ComponentMountingOptions<
-  T,
-  P extends ComponentProps<T> = ComponentProps<T>
-> = Omit<MountingOptions<P, ComponentData<T>>, 'slots'> & {
+export type ComponentMountingOptions<T, P> = Omit<
+  MountingOptions<P, ComponentData<T>>,
+  'slots'
+> & {
   slots?: {
     [K in keyof ComponentSlots<T>]: WithArray<
-      | ShimSlotReturnType<ComponentSlots<T>[K]>
+      | ComponentSlots<T>[K]
       | string
       | VNode
       | (new () => any)
@@ -34,27 +32,11 @@ export type ComponentMountingOptions<
 } & Record<string, unknown>
 
 export function mount<
-  T,
-  C = T extends ((...args: any) => any) | (new (...args: any) => any)
-    ? T
-    : T extends { props?: infer Props }
-      ? DefineComponent<
-          Props extends Readonly<(infer PropNames)[]> | (infer PropNames)[]
-            ? { [key in PropNames extends string ? PropNames : string]?: any }
-            : Props
-        >
-      : DefineComponent,
-  P extends ComponentProps<C> = ComponentProps<C>
+  T extends DefineComponent<any, any, any, any, any, any, any, any, any, any>
 >(
   originalComponent: T,
-  options?: ComponentMountingOptions<C, P>
-): VueWrapper<
-  ComponentProps<C> & ComponentData<C> & ComponentExposed<C>,
-  ComponentPublicInstance<
-    ComponentProps<C>,
-    ComponentData<C> & ComponentExposed<C> & Omit<P, keyof ComponentProps<C>>
-  >
->
+  options?: ComponentMountingOptions<T, ComponentPropsWithDefaultOptional<T>>
+): VueWrapper<ComponentInstance<T>>
 
 // implementation
 export function mount(

@@ -1,13 +1,20 @@
 import { textContent } from './utils'
 import type { TriggerOptions } from './createDomEvent'
 import {
+  DefineComponentOptions,
+  DefineComponentFromOptions,
+  ComponentInjectOptions,
+  ComponentInstance,
   ComponentInternalInstance,
   ComponentOptions,
+  ComponentOptionsMixin,
   ComponentPublicInstance,
   ComputedOptions,
   CreateComponentPublicInstance,
+  EmitsOptions,
   FunctionalComponent,
   MethodOptions,
+  SlotsType,
   nextTick
 } from 'vue'
 import { createDOMEvent } from './createDomEvent'
@@ -19,6 +26,7 @@ import {
   FindComponentSelector,
   NameSelector,
   RefSelector,
+  UnknownRenderedVue,
   VueNode
 } from './types'
 import WrapperLike from './interfaces/wrapperLike'
@@ -108,16 +116,57 @@ export default abstract class BaseWrapper<ElementType extends Node>
 
   // searching by string without specifying component results in WrapperLike object
   findComponent<T extends never>(selector: string): WrapperLike
+
   // Find Component Options aka plain object
   findComponent<
-    Props,
-    RawBindings = any,
-    D = any,
-    C extends ComputedOptions = ComputedOptions,
-    M extends MethodOptions = MethodOptions
+    Props = {},
+    RawBindings = {},
+    D = {},
+    C extends ComputedOptions = {},
+    M extends MethodOptions = {},
+    Mixin extends ComponentOptionsMixin = ComponentOptionsMixin,
+    Extends extends ComponentOptionsMixin = ComponentOptionsMixin,
+    E extends EmitsOptions = {},
+    EE extends string = string,
+    I extends ComponentInjectOptions = {},
+    II extends string = string,
+    S extends SlotsType = {},
+    Options = {}
   >(
-    selector: ComponentOptions<Props, RawBindings, D, C, M>
-  ): VueWrapper<CreateComponentPublicInstance<Props, RawBindings, D, C, M>>
+    selector: DefineComponentOptions<
+      Props,
+      RawBindings,
+      D,
+      C,
+      M,
+      Mixin,
+      Extends,
+      E,
+      EE,
+      I,
+      II,
+      S,
+      Options
+    >
+  ): VueWrapper<
+    Props extends DefinedComponent
+      ? ComponentInstance<Props>
+      : DefineComponentFromOptions<
+          Props,
+          RawBindings,
+          D,
+          C,
+          M,
+          Mixin,
+          Extends,
+          E,
+          EE,
+          I,
+          II,
+          S,
+          Options
+        >
+  >
   findComponent<T extends ComponentOptions>(
     selector: string
   ): VueWrapper<
@@ -129,21 +178,23 @@ export default abstract class BaseWrapper<ElementType extends Node>
       infer M
     >
       ? CreateComponentPublicInstance<Props, RawBindings, D, C, M>
-      : VueWrapper<CreateComponentPublicInstance>
+      : CreateComponentPublicInstance
   >
-  // searching for component created via defineComponent results in VueWrapper of proper type
-  findComponent<T extends DefinedComponent>(
-    selector: T | Exclude<FindComponentSelector, FunctionalComponent>
-  ): VueWrapper<InstanceType<T>>
   // searching for functional component results in DOMWrapper
   findComponent<T extends FunctionalComponent>(selector: T): DOMWrapper<Node>
   findComponent<T extends FunctionalComponent>(
     selector: string
   ): DOMWrapper<Element>
+
   // searching by name or ref always results in VueWrapper
   findComponent<T extends never>(
     selector: NameSelector | RefSelector
-  ): VueWrapper
+  ): VueWrapper<UnknownRenderedVue>
+  // searching for component created via defineComponent results in VueWrapper of proper type
+  findComponent<T extends DefinedComponent>(
+    selector: T | Exclude<FindComponentSelector, FunctionalComponent>
+  ): VueWrapper<ComponentInstance<T>>
+
   findComponent<T extends ComponentPublicInstance>(
     selector: T | FindComponentSelector
   ): VueWrapper<T>
@@ -185,7 +236,7 @@ export default abstract class BaseWrapper<ElementType extends Node>
   findAllComponents<T extends never>(selector: string): WrapperLike[]
   findAllComponents<T extends DefinedComponent>(
     selector: T | Exclude<FindAllComponentsSelector, FunctionalComponent>
-  ): VueWrapper<InstanceType<T>>[]
+  ): VueWrapper<ComponentInstance<T>>[]
   findAllComponents<T extends FunctionalComponent>(
     selector: T
   ): DOMWrapper<Node>[]
@@ -290,17 +341,17 @@ export default abstract class BaseWrapper<ElementType extends Node>
   }
 
   getComponent<T extends never>(selector: string): Omit<WrapperLike, 'exists'>
+  // searching by name or ref always results in VueWrapper
+  getComponent<T extends never>(
+    selector: NameSelector | RefSelector
+  ): Omit<VueWrapper<UnknownRenderedVue>, 'exists'>
   getComponent<T extends DefinedComponent>(
     selector: T | Exclude<FindComponentSelector, FunctionalComponent>
-  ): Omit<VueWrapper<InstanceType<T>>, 'exists'>
+  ): Omit<VueWrapper<ComponentInstance<T>>, 'exists'>
   // searching for functional component results in DOMWrapper
   getComponent<T extends FunctionalComponent>(
     selector: T | string
   ): Omit<DOMWrapper<Element>, 'exists'>
-  // searching by name or ref always results in VueWrapper
-  getComponent<T extends never>(
-    selector: NameSelector | RefSelector
-  ): Omit<VueWrapper, 'exists'>
   getComponent<T extends ComponentPublicInstance>(
     selector: T | FindComponentSelector
   ): Omit<VueWrapper<T>, 'exists'>

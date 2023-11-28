@@ -17,7 +17,8 @@ import {
   ComponentPropsOptions,
   ComponentObjectPropsOptions,
   Component,
-  ComponentOptions
+  AsyncComponentOptions,
+  VNode
 } from 'vue'
 import { hyphenate } from '../utils/vueShared'
 import { matchName } from '../utils/matchName'
@@ -32,9 +33,9 @@ import { registerStub } from '../stubs'
 
 export type CustomCreateStub = (params: {
   name: string
-  component: ConcreteComponent
+  component: Component
   registerStub: (config: { source: Component; stub: Component }) => void
-}) => ConcreteComponent
+}) => ConcreteComponent | VNode
 
 interface StubOptions {
   name: string
@@ -123,11 +124,14 @@ export const createStub = ({
     }
   })
 
-  const { __asyncLoader: asyncLoader } = type as ComponentOptions
+  const { __asyncLoader: asyncLoader } = type as {
+    __asyncLoader?: AsyncComponentOptions['loader']
+  }
   if (asyncLoader) {
     asyncLoader().then(() => {
       registerStub({
-        source: (type as ComponentOptions).__asyncResolved,
+        source: (type as { __asyncResolved: ConcreteComponent | undefined })
+          .__asyncResolved!,
         stub
       })
     })

@@ -4,6 +4,11 @@ settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
 
+patchedDependencies:
+  '@vue/runtime-core@3.3.8':
+    hash: vlyf6crnsg7mzuzbrcghr6xpce
+    path: patches/@vue__runtime-core@3.3.8.patch
+
 dependencies:
   js-beautify:
     specifier: ^1.14.9
@@ -1659,17 +1664,18 @@ packages:
       '@vue/shared': 3.3.8
     dev: true
 
-  /@vue/runtime-core@3.3.8:
+  /@vue/runtime-core@3.3.8(patch_hash=vlyf6crnsg7mzuzbrcghr6xpce):
     resolution: {integrity: sha512-qurzOlb6q26KWQ/8IShHkMDOuJkQnQcTIp1sdP4I9MbCf9FJeGVRXJFr2mF+6bXh/3Zjr9TDgURXrsCr9bfjUw==}
     dependencies:
       '@vue/reactivity': 3.3.8
       '@vue/shared': 3.3.8
     dev: true
+    patched: true
 
   /@vue/runtime-dom@3.3.8:
     resolution: {integrity: sha512-Noy5yM5UIf9UeFoowBVgghyGGPIDPy1Qlqt0yVsUdAVbqI8eeMSsTqBtauaEoT2UFXUk5S64aWVNJN4MJ2vRdA==}
     dependencies:
-      '@vue/runtime-core': 3.3.8
+      '@vue/runtime-core': 3.3.8(patch_hash=vlyf6crnsg7mzuzbrcghr6xpce)
       '@vue/shared': 3.3.8
       csstype: 3.1.2
     dev: true

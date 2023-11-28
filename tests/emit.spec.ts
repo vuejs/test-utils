@@ -158,6 +158,7 @@ describe('emitted', () => {
 
     // Parent should emit custom event 'hello' but not 'hi'
     expect(wrapper.emitted().hello[0]).toEqual(['foo', 'bar'])
+    // @ts-expect-error `hi` is not a valid event
     expect(wrapper.emitted().hi).toEqual(undefined)
     // Child should emit custom event 'hi'
     expect(childWrapper.emitted().hi[0]).toEqual(['foo', 'bar'])
@@ -165,6 +166,7 @@ describe('emitted', () => {
     // Additional events should accumulate in the same format
     wrapper.find('button').trigger('click')
     expect(wrapper.emitted().hello[1]).toEqual(['foo', 'bar'])
+    // @ts-expect-error `hi` is not a valid event
     expect(wrapper.emitted().hi).toEqual(undefined)
     expect(childWrapper.emitted().hi[1]).toEqual(['foo', 'bar'])
   })
@@ -340,6 +342,7 @@ describe('emitted', () => {
     const wrapper = mount(EmitsEventSFC)
     await wrapper.trigger('click')
 
+    // @ts-expect-error `click` is not defined
     expect(wrapper.emitted().click).toHaveLength(1)
     expect(wrapper.emitted().bar).toHaveLength(2)
     expect(wrapper.emitted().bar[0]).toEqual(['mounted'])
@@ -350,6 +353,7 @@ describe('emitted', () => {
     const wrapper = mount(EmitsEventScriptSetup)
     await wrapper.trigger('click')
 
+    // @ts-expect-error `click` is not a valid event
     expect(wrapper.emitted().click).toHaveLength(1)
     expect(wrapper.emitted().bar).toHaveLength(2)
     expect(wrapper.emitted().bar[0]).toEqual(['mounted'])

@@ -91,9 +91,9 @@ expectError(
 )
 
 const AppWithArrayProps = {
-  props: ['a'],
+  props: ['a'] as ['a'],
   template: ''
-} as const
+}
 
 // accept props - vm is properly typed
 expectType<string>(
@@ -168,7 +168,6 @@ mount(ShimComponent, {
   }
 })
 
-// TODO it should work
 mount(ShimComponent, {
   data() {
     return {

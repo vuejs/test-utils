@@ -189,20 +189,18 @@ describe('setData', () => {
   })
 
   it('should keep Date object on setData', async () => {
-    const wrapper = mount(
-      defineComponent({
-        template: '<div/>',
-        props: { modelValue: Date },
-        data() {
-          return { value: this.modelValue }
-        }
-      }),
-      {
-        props: {
-          modelValue: new Date('2022-08-10T12:15:54Z')
-        }
+    const comp = defineComponent({
+      template: '<div/>',
+      props: { modelValue: Date },
+      data() {
+        return { value: this.modelValue }
       }
-    )
+    })
+    const wrapper = mount(comp, {
+      props: {
+        modelValue: new Date('2022-08-10T12:15:54Z')
+      }
+    })
 
     expect(wrapper.vm.value).toBeInstanceOf(Date)
     expect(wrapper.vm.value!.toISOString()).toBe('2022-08-10T12:15:54.000Z')

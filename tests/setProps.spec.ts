@@ -23,7 +23,7 @@ describe('setProps', () => {
 
   it('updates a function prop', async () => {
     const Foo = {
-      props: ['obj'],
+      props: ['obj'] as ['obj'],
       template: `
         <div>
           <div v-if="obj.foo()">foo</div>
@@ -37,15 +37,15 @@ describe('setProps', () => {
         }
       }
     })
-    expect(wrapper.html()).toContain('foo')
 
+    expect(wrapper.html()).toContain('foo')
     await wrapper.setProps({ obj: { foo: () => false } })
     expect(wrapper.html()).not.toContain('foo')
   })
 
   it('sets component props, and updates DOM when props were not initially passed', async () => {
     const Foo = {
-      props: ['foo'],
+      props: ['foo'] as ['foo'],
       template: `
         <div>{{ foo }}</div>`
     }
@@ -126,11 +126,11 @@ describe('setProps', () => {
   it('allows using only on mounted component', async () => {
     const Foo = {
       name: 'Foo',
-      props: ['foo'],
+      props: ['foo'] as ['foo'],
       template: '<div>{{ foo }}</div>'
     }
     const Baz = {
-      props: ['baz'],
+      props: ['baz'] as ['baz'],
       template: '<div><Foo :foo="baz"/></div>',
       components: { Foo }
     }
@@ -141,6 +141,7 @@ describe('setProps', () => {
       }
     })
     const FooResult = wrapper.findComponent({ name: 'Foo' })
+
     expect(() => FooResult.setProps({ baz: 'bin' })).toThrowError(
       'You can only use setProps on your mounted component'
     )

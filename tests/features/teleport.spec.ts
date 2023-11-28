@@ -142,6 +142,8 @@ describe('teleport', () => {
     const withProps = wrapper.getComponent(EmitsEvent)
     withProps.trigger('click')
 
+    withProps.vm.$emit('greet')
+
     expect(withProps.emitted().greet[0]).toEqual(['Hey!'])
   })
 

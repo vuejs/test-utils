@@ -1,5 +1,5 @@
 import { expectType } from './index'
-import { defineComponent } from 'vue'
+import { ComponentInstance, defineComponent } from 'vue'
 import { DOMWrapper, mount, VueWrapper } from '../src'
 import WrapperLike from '../src/interfaces/wrapperLike'
 
@@ -31,11 +31,13 @@ const wrapper = mount(AppWithDefine)
 
 // find by type - component definition
 const componentByType = wrapper.findComponent(ComponentToFind)
-expectType<VueWrapper<InstanceType<typeof ComponentToFind>>>(componentByType)
+expectType<VueWrapper<ComponentInstance<typeof ComponentToFind>>>(
+  componentByType
+)
 
 // find by type - component definition with emits
 const componentWithEmitsByType = wrapper.findComponent(ComponentWithEmits)
-expectType<VueWrapper<InstanceType<typeof ComponentWithEmits>>>(
+expectType<VueWrapper<ComponentInstance<typeof ComponentWithEmits>>>(
   componentWithEmitsByType
 )
 
@@ -50,7 +52,7 @@ expectType<WrapperLike>(componentByString)
 // findi by string with specifying component
 const componentByStringWithParam =
   wrapper.findComponent<typeof ComponentToFind>('.foo')
-expectType<VueWrapper<InstanceType<typeof ComponentToFind>>>(
+expectType<VueWrapper<ComponentInstance<typeof ComponentToFind>>>(
   componentByStringWithParam
 )
 
@@ -66,7 +68,7 @@ expectType<VueWrapper>(componentByRef)
 const componentByRefWithType = wrapper.findComponent<typeof ComponentToFind>({
   ref: 'foo'
 })
-expectType<VueWrapper<InstanceType<typeof ComponentToFind>>>(
+expectType<VueWrapper<ComponentInstance<typeof ComponentToFind>>>(
   componentByRefWithType
 )
 
@@ -78,6 +80,12 @@ expectType<VueWrapper>(componentByName)
 const componentByNameWithType = wrapper.findComponent<typeof ComponentToFind>({
   name: 'foo'
 })
-expectType<VueWrapper<InstanceType<typeof ComponentToFind>>>(
+
+
+declare const aaa : ComponentInstance<typeof ComponentToFind>
+aaa.$props
+componentByNameWithType.vm.$props
+
+expectType<VueWrapper<ComponentInstance<typeof ComponentToFind>>>(
   componentByNameWithType
 )
