@@ -1,6 +1,6 @@
 {
   "name": "@vue/test-utils",
-  "version": "2.4.2",
+  "version": "2.4.3",
   "license": "MIT",
   "main": "dist/vue-test-utils.cjs.js",
   "unpkg": "dist/vue-test-utils.browser.js",
