@@ -246,4 +246,33 @@ describe('setData', () => {
 
     expect(wrapper.vm.getResult()).toStrictEqual(`test2: ${expectedResult}`)
   })
+
+  it('should be possible to replace a primitive value with another', async () => {
+    const wrapper = mount(
+      defineComponent({
+        template: '<div />',
+        data() {
+          return {
+            firstArray: [],
+            secondArray: []
+          }
+        }
+      })
+    )
+
+    await wrapper.setData({
+      firstArray: [],
+      secondArray: []
+    })
+
+    expect(wrapper.vm.$data).toStrictEqual({
+      firstArray: [],
+      secondArray: []
+    })
+
+    expect(Object.keys(wrapper.vm.$data)).toStrictEqual([
+      'firstArray',
+      'secondArray'
+    ])
+  })
 })

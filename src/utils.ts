@@ -72,6 +72,25 @@ export function mergeGlobalProperties(
 export const isObject = (obj: unknown): obj is Record<string, any> =>
   !!obj && typeof obj === 'object'
 
+function isClass(obj: unknown) {
+  if (!(obj instanceof Object)) return
+
+  const isCtorClass =
+    obj.constructor && obj.constructor.toString().substring(0, 5) === 'class'
+
+  if (!('prototype' in obj)) {
+    return isCtorClass
+  }
+
+  const prototype = obj.prototype as any
+  const isPrototypeCtorClass =
+    prototype.constructor &&
+    prototype.constructor.toString &&
+    prototype.constructor.toString().substring(0, 5) === 'class'
+
+  return isCtorClass || isPrototypeCtorClass
+}
+
 // https://stackoverflow.com/a/48218209
 export const mergeDeep = (
   target: Record<string, unknown>,
@@ -80,8 +99,13 @@ export const mergeDeep = (
   if (!isObject(target) || !isObject(source)) {
     return source
   }
+
   Object.keys(source)
-    .concat(Object.getOwnPropertyNames(Object.getPrototypeOf(source) ?? {}))
+    .concat(
+      isClass(source)
+        ? Object.getOwnPropertyNames(Object.getPrototypeOf(source) ?? {})
+        : Object.getOwnPropertyNames(source)
+    )
     .forEach((key) => {
       const targetValue = target[key]
       const sourceValue = source[key]
