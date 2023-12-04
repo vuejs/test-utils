@@ -81,6 +81,8 @@ attachTo?: HTMLElement | string
 
 Can be a valid CSS selector, or an [`Element`](https://developer.mozilla.org/en-US/docs/Web/API/Element) connected to the document.
 
+Note that the component is appended to the node, it doesn't replace the whole content of the node. If you mount the component on the same node in multiple tests - make sure to unmount it after each test by calling `wrapper.unmount()`, this will remove the rendered elements from the node.
+
 `Component.vue`:
 
 ```vue
