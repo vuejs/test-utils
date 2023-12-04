@@ -246,4 +246,29 @@ describe('setData', () => {
 
     expect(wrapper.vm.getResult()).toStrictEqual(`test2: ${expectedResult}`)
   })
+
+  // https://github.com/vuejs/test-utils/issues/2257
+  it('should ignore prototype methods when using setData on objects', async () => {
+    const wrapper = mount(
+      defineComponent({
+        template: '<div />',
+        data() {
+          return {
+            firstArray: [],
+            secondArray: []
+          }
+        }
+      })
+    )
+
+    await wrapper.setData({
+      firstArray: [1, 2],
+      secondArray: [3, 4]
+    })
+
+    expect(wrapper.vm.$data).toStrictEqual({
+      firstArray: [1, 2],
+      secondArray: [3, 4]
+    })
+  })
 })
