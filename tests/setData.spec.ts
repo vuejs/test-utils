@@ -247,7 +247,8 @@ describe('setData', () => {
     expect(wrapper.vm.getResult()).toStrictEqual(`test2: ${expectedResult}`)
   })
 
-  it('should be possible to replace a primitive value with another', async () => {
+  // https://github.com/vuejs/test-utils/issues/2257
+  it('should ignore prototype methods when using setData on objects', async () => {
     const wrapper = mount(
       defineComponent({
         template: '<div />',
@@ -261,18 +262,13 @@ describe('setData', () => {
     )
 
     await wrapper.setData({
-      firstArray: [],
-      secondArray: []
+      firstArray: [1, 2],
+      secondArray: [3, 4]
     })
 
     expect(wrapper.vm.$data).toStrictEqual({
-      firstArray: [],
-      secondArray: []
+      firstArray: [1, 2],
+      secondArray: [3, 4]
     })
-
-    expect(Object.keys(wrapper.vm.$data)).toStrictEqual([
-      'firstArray',
-      'secondArray'
-    ])
   })
 })
