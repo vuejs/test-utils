@@ -42,10 +42,10 @@ devDependencies:
     version: 6.13.2(eslint@8.55.0)(typescript@5.3.2)
   '@vitejs/plugin-vue':
     specifier: 4.5.1
-    version: 4.5.1(vite@5.0.5)(vue@3.3.10)
+    version: 4.5.1(vite@5.0.6)(vue@3.3.10)
   '@vitejs/plugin-vue-jsx':
     specifier: 3.1.0
-    version: 3.1.0(vite@5.0.5)(vue@3.3.10)
+    version: 3.1.0(vite@5.0.6)(vue@3.3.10)
   '@vitest/coverage-v8':
     specifier: 1.0.1
     version: 1.0.1(vitest@1.0.1)
@@ -101,8 +101,8 @@ devDependencies:
     specifier: 0.26.0
     version: 0.26.0(rollup@4.6.1)(vue@3.3.10)
   vite:
-    specifier: 5.0.5
-    version: 5.0.5(@types/node@20.10.3)
+    specifier: 5.0.6
+    version: 5.0.6(@types/node@20.10.3)
   vitepress:
     specifier: 1.0.0-rc.31
     version: 1.0.0-rc.31(@types/node@20.10.3)(search-insights@2.7.0)(typescript@5.3.2)
@@ -1441,7 +1441,7 @@ packages:
     resolution: {integrity: sha512-zuVdFrMJiuCDQUMCzQaD6KL28MjnqqN8XnAqiEq9PNm/hCPTSGfrXCOfwj1ow4LFb/tNymJPwsNbVePc1xFqrQ==}
     dev: true
 
-  /@vitejs/plugin-vue-jsx@3.1.0(vite@5.0.5)(vue@3.3.10):
+  /@vitejs/plugin-vue-jsx@3.1.0(vite@5.0.6)(vue@3.3.10):
     resolution: {integrity: sha512-w9M6F3LSEU5kszVb9An2/MmXNxocAnUb3WhRr8bHlimhDrXNt6n6D2nJQR3UXpGlZHh/EsgouOHCsM8V3Ln+WA==}
     engines: {node: ^14.18.0 || >=16.0.0}
     peerDependencies:
@@ -1451,20 +1451,20 @@ packages:
       '@babel/core': 7.23.3
       '@babel/plugin-transform-typescript': 7.23.4(@babel/core@7.23.3)
       '@vue/babel-plugin-jsx': 1.1.5(@babel/core@7.23.3)
-      vite: 5.0.5(@types/node@20.10.3)
+      vite: 5.0.6(@types/node@20.10.3)
       vue: 3.3.10(typescript@5.3.2)
     transitivePeerDependencies:
       - supports-color
     dev: true
 
-  /@vitejs/plugin-vue@4.5.1(vite@5.0.5)(vue@3.3.10):
+  /@vitejs/plugin-vue@4.5.1(vite@5.0.6)(vue@3.3.10):
     resolution: {integrity: sha512-DaUzYFr+2UGDG7VSSdShKa9sIWYBa1LL8KC0MNOf2H5LjcTPjob0x8LbkqXWmAtbANJCkpiQTj66UVcQkN2s3g==}
     engines: {node: ^14.18.0 || >=16.0.0}
     peerDependencies:
       vite: ^4.0.0 || ^5.0.0
       vue: ^3.2.25
     dependencies:
-      vite: 5.0.5(@types/node@20.10.3)
+      vite: 5.0.6(@types/node@20.10.3)
       vue: 3.3.10(typescript@5.3.2)
     dev: true
 
@@ -4229,7 +4229,7 @@ packages:
       debug: 4.3.4
       pathe: 1.1.1
       picocolors: 1.0.0
-      vite: 5.0.5(@types/node@20.10.3)
+      vite: 5.0.6(@types/node@20.10.3)
     transitivePeerDependencies:
       - '@types/node'
       - less
@@ -4241,8 +4241,8 @@ packages:
       - terser
     dev: true
 
-  /vite@5.0.5(@types/node@20.10.3):
-    resolution: {integrity: sha512-OekeWqR9Ls56f3zd4CaxzbbS11gqYkEiBtnWFFgYR2WV8oPJRRKq0mpskYy/XaoCL3L7VINDhqqOMNDiYdGvGg==}
+  /vite@5.0.6(@types/node@20.10.3):
+    resolution: {integrity: sha512-MD3joyAEBtV7QZPl2JVVUai6zHms3YOmLR+BpMzLlX2Yzjfcc4gTgNi09d/Rua3F4EtC8zdwPU8eQYyib4vVMQ==}
     engines: {node: ^18.0.0 || >=20.0.0}
     hasBin: true
     peerDependencies:
@@ -4292,7 +4292,7 @@ packages:
       '@docsearch/css': 3.5.2
       '@docsearch/js': 3.5.2(search-insights@2.7.0)
       '@types/markdown-it': 13.0.7
-      '@vitejs/plugin-vue': 4.5.1(vite@5.0.5)(vue@3.3.10)
+      '@vitejs/plugin-vue': 4.5.1(vite@5.0.6)(vue@3.3.10)
       '@vue/devtools-api': 6.5.1
       '@vueuse/core': 10.6.1(vue@3.3.10)
       '@vueuse/integrations': 10.6.1(focus-trap@7.5.4)(vue@3.3.10)
@@ -4302,7 +4302,7 @@ packages:
       mrmime: 1.0.1
       shikiji: 0.7.4
       shikiji-transformers: 0.7.4
-      vite: 5.0.5(@types/node@20.10.3)
+      vite: 5.0.6(@types/node@20.10.3)
       vue: 3.3.10(typescript@5.3.2)
     transitivePeerDependencies:
       - '@algolia/client-search'
@@ -4377,7 +4377,7 @@ packages:
       strip-literal: 1.3.0
       tinybench: 2.5.1
       tinypool: 0.8.1
-      vite: 5.0.5(@types/node@20.10.3)
+      vite: 5.0.6(@types/node@20.10.3)
       vite-node: 1.0.1(@types/node@20.10.3)
       why-is-node-running: 2.2.2
     transitivePeerDependencies:
