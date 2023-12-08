@@ -51,7 +51,7 @@
     "jsdom-global": "3.0.2",
     "lint-staged": "15.2.0",
     "prettier": "3.1.0",
-    "reflect-metadata": "0.1.13",
+    "reflect-metadata": "0.1.14",
     "rollup": "4.6.1",
     "tslib": "2.6.2",
     "typescript": "5.3.3",
