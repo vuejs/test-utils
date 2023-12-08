@@ -86,8 +86,8 @@ devDependencies:
     specifier: 3.1.0
     version: 3.1.0
   reflect-metadata:
-    specifier: 0.1.13
-    version: 0.1.13
+    specifier: 0.1.14
+    version: 0.1.14
   rollup:
     specifier: 4.6.1
     version: 4.6.1
@@ -3675,8 +3675,8 @@ packages:
       picomatch: 2.3.1
     dev: true
 
-  /reflect-metadata@0.1.13:
-    resolution: {integrity: sha512-Ts1Y/anZELhSsjMcU605fU9RE4Oi3p5ORujwbIKXfWa+0Zxs510Qrmrce5/Jowq3cHSZSJqBjypxmHarc+vEWg==}
+  /reflect-metadata@0.1.14:
+    resolution: {integrity: sha512-ZhYeb6nRaXCfhnndflDK8qI6ZQ/YcWZCISRAWICW9XYqMUwjZM9Z0DveWX/ABN01oxSHwVxKQmxeYZSsm0jh5A==}
     dev: true
 
   /requires-port@1.0.0:
