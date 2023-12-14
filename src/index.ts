@@ -10,7 +10,6 @@ import { config } from './config'
 import { flushPromises } from './utils/flushPromises'
 import { enableAutoUnmount, disableAutoUnmount } from './utils/autoUnmount'
 
-// is __SSR__ avaialble? If so, preferable to use that?
 const isNode = typeof window === 'undefined'
 const renderToString = ( isNode ?  _renderToString  : null)
 export {
