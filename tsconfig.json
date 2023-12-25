@@ -10,6 +10,7 @@
     ],
     "strict": true,
     "jsx": "preserve",
+    "jsxImportSource": "vue",
     "moduleResolution": "node",
     "esModuleInterop": true,
     "experimentalDecorators": true,
