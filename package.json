@@ -57,7 +57,7 @@
     "typescript": "5.3.3",
     "unplugin-vue-components": "0.26.0",
     "vite": "5.0.11",
-    "vitepress": "1.0.0-rc.36",
+    "vitepress": "1.0.0-rc.37",
     "vitest": "1.1.3",
     "vue": "3.4.8",
     "vue-class-component": "8.0.0-rc.1",
