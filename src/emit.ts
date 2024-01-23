@@ -4,6 +4,7 @@ import {
   ComponentPublicInstance,
   ComponentInternalInstance
 } from 'vue'
+import { getGlobalThis } from './utils'
 
 type Events<T = unknown> = Record<number, Record<string, T[]>>
 
@@ -28,8 +29,24 @@ export function emitted<T = unknown>(
 }
 
 export const attachEmitListener = () => {
-  // use devtools to capture this "emit"
-  setDevtoolsHook(createDevTools(), {})
+  const target = getGlobalThis()
+  // override emit to capture events when devtools is defined
+  if (target.__VUE_DEVTOOLS_GLOBAL_HOOK__) {
+    const _emit = target.__VUE_DEVTOOLS_GLOBAL_HOOK__.emit
+    target.__VUE_DEVTOOLS_GLOBAL_HOOK__.emit = (
+      eventType: any,
+      ...payload: any[]
+    ) => {
+      _emit.call(target.__VUE_DEVTOOLS_GLOBAL_HOOK__, eventType, ...payload)
+      if (eventType === DevtoolsHooks.COMPONENT_EMIT) {
+        const [_, componentVM, event, eventArgs] = payload
+        recordEvent(componentVM, event, eventArgs)
+      }
+    }
+  } else {
+    // use devtools to capture this "emit"
+    setDevtoolsHook(createDevTools(), {})
+  }
 }
 
 // devtools hook only catches Vue component custom events
