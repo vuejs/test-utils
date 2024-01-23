@@ -38,10 +38,7 @@ export const attachEmitListener = () => {
       ...payload: any[]
     ) => {
       _emit.call(target.__VUE_DEVTOOLS_GLOBAL_HOOK__, eventType, ...payload)
-      if (eventType === DevtoolsHooks.COMPONENT_EMIT) {
-        const [_, componentVM, event, eventArgs] = payload
-        recordEvent(componentVM, event, eventArgs)
-      }
+      captureDevtoolsVueComponentEmitEvent(eventType, payload)
     }
   } else {
     // use devtools to capture this "emit"
@@ -49,14 +46,21 @@ export const attachEmitListener = () => {
   }
 }
 
+function captureDevtoolsVueComponentEmitEvent(
+  eventType: string,
+  payload: any[]
+) {
+  if (eventType === DevtoolsHooks.COMPONENT_EMIT) {
+    const [_, componentVM, event, eventArgs] = payload
+    recordEvent(componentVM, event, eventArgs)
+  }
+}
+
 // devtools hook only catches Vue component custom events
 function createDevTools(): any {
   return {
     emit(eventType, ...payload) {
-      if (eventType !== DevtoolsHooks.COMPONENT_EMIT) return
-
-      const [_, componentVM, event, eventArgs] = payload
-      recordEvent(componentVM, event, eventArgs)
+      captureDevtoolsVueComponentEmitEvent(eventType, payload)
     }
   } as Partial<typeof devtools>
 }
