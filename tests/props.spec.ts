@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { mount, shallowMount } from '../src'
+import { mount, shallowMount, VueWrapper } from '../src'
 import WithProps from './components/WithProps.vue'
 import PropWithSymbol from './components/PropWithSymbol.vue'
 import Hello from './components/Hello.vue'
@@ -207,6 +207,31 @@ describe('props', () => {
     expect(wrapper.find('.selectedField').text()).toBe('Cities')
   })
 
+  it('returns props of stubbed root component', async () => {
+    const ChildComponent = defineComponent({
+      props: {
+        value: {
+          type: Number,
+          required: true
+        }
+      },
+      template: '<div>{{ value }}</div>'
+    })
+
+    const TestComponent = defineComponent({
+      components: { ChildComponent },
+      template: '<ChildComponent :value="2"/>'
+    })
+
+    const wrapper = shallowMount(TestComponent)
+    expect(
+      wrapper.findComponent({ name: 'ChildComponent' }).props()
+    ).toStrictEqual({ value: 2 })
+    expect(
+      (wrapper.findComponent('child-component-stub') as VueWrapper).props()
+    ).toStrictEqual({ value: 2 })
+  })
+
   it('returns reactive props on a stubbed component shallow case', async () => {
     const Foo = {
       name: 'Foo',
@@ -242,6 +267,7 @@ describe('props', () => {
       foo: 'new value'
     })
   })
+
   it('https://github.com/vuejs/test-utils/issues/440', async () => {
     const Foo = defineComponent({
       name: 'Foo',

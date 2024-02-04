@@ -175,7 +175,12 @@ export default abstract class BaseWrapper<ElementType extends Node>
       matches(currentComponent.vnode, selector) &&
       this.element.contains(currentComponent.vnode.el as Node)
     ) {
-      return createVueWrapper(null, currentComponent.proxy!)
+      return createVueWrapper(
+        null,
+        currentComponent.subTree.component
+          ? currentComponent.subTree.component.proxy!
+          : currentComponent.proxy!
+      )
     }
 
     const [result] = this.findAllComponents(selector)
