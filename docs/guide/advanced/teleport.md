@@ -187,6 +187,22 @@ test('teleport', async () => {
 })
 ```
 
+You have a possibility to stub teleport without creating any external HTML 
+
+```ts
+import { mount } from '@vue/test-utils'
+import Navbar from './Navbar.vue'
+
+test('teleport', async () => {
+  const wrapper = mount(Navbar, {
+    stubs: {
+      teleport: true
+    }
+  })
+})
+
+```
+
 ## Conclusion
 
 - Create a teleport target with `document.createElement`.
