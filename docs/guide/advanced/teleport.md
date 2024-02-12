@@ -187,7 +187,7 @@ test('teleport', async () => {
 })
 ```
 
-You have a possibility to stub teleport without creating any external HTML 
+You can stub teleport by using `teleport: true`:
 
 ```ts
 import { mount } from '@vue/test-utils'
@@ -200,7 +200,6 @@ test('teleport', async () => {
     }
   })
 })
-
 ```
 
 ## Conclusion

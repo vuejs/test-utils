@@ -188,6 +188,20 @@ test('teleport', async () => {
 });
 ```
 
+Vous pouvez remplacer teleport par un stub en utilisant `teleport: true`:
+```ts
+import { mount } from '@vue/test-utils'
+import Navbar from './Navbar.vue'
+
+test('teleport', async () => {
+  const wrapper = mount(Navbar, {
+    stubs: {
+      teleport: true
+    }
+  })
+})
+```
+
 ## Conclusion
 
 - Créez une cible de téléportation avec `document.createElement`.
