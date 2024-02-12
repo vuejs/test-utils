@@ -195,8 +195,10 @@ import Navbar from './Navbar.vue'
 
 test('teleport', async () => {
   const wrapper = mount(Navbar, {
-    stubs: {
-      teleport: true
+    global: {
+      stubs: {
+        teleport: true
+      }
     }
   })
 })
