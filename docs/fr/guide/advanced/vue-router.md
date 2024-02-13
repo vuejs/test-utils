@@ -187,7 +187,7 @@ console.warn node_modules/@vue/runtime-core/dist/runtime-core.cjs.js:39
 
 Les composants `<router-link>` et `<router-view>` ne sont pas trouvés. Nous devons installer Vue Router&nbsp;! Comme Vue Router est un plugin, nous l'installons en utilisant l'option de `mount`&nbsp;: `global.plugins`&nbsp;:
 
-```js {10,11,12}
+```js {12,13,14}
 import { mount } from '@vue/test-utils';
 import { createRouter, createWebHistory } from 'vue-router';
 import { routes } from "@/router"; // Cet import devrait pointer vers votre fichier de configuration des routes.
@@ -218,7 +218,7 @@ Le `warning` n'est pas très explicite. En fait, cela est lié au fait que **Vue
 
 Vue Router fournit une fonction `isReady` qui nous informe lorsque le routeur est prêt. Nous pouvons alors l'`await` pour nous assurer que la navigation initiale a eu lieu.
 
-```js {11,12}
+```js {13,14}
 import { mount } from '@vue/test-utils';
 import { createRouter, createWebHistory } from 'vue-router';
 import { routes } from "@/router";
@@ -247,7 +247,7 @@ Le test passe enfin&nbsp;! Cela a été assez laborieux, mais désormais nous no
 
 Maintenant, allons sur `/posts` et assurons-nous que le routage fonctionne comme prévu&nbsp;:
 
-```js {19,20}
+```js {21,22}
 import { mount } from '@vue/test-utils';
 import { createRouter, createWebHistory } from 'vue-router';
 import { routes } from "@/router";
@@ -288,7 +288,7 @@ Une fois de plus, en raison de la nature asynchrone de Vue Router 4, nous devons
 
 Cependant, il n'y a pas de `hook` `hasNavigated` sur lequel nous pouvons `await`. Une alternative est d'utiliser la fonction `flushPromises` exportée de Vue Test Utils&nbsp;:
 
-```js {1,20}
+```js {1,22}
 import { mount, flushPromises } from '@vue/test-utils';
 import { createRouter, createWebHistory } from 'vue-router';
 import { routes } from "@/router";
@@ -317,7 +317,7 @@ test('routing', async () => {
 
 Cela passe. Super&nbsp;! Cependant, c'est très laborieux - et cela concerne une petite application triviale. C'est pour cette raison que l'utilisation d'un routeur simulé est une approche courante lors des tests de composants Vue avec Vue Test Utils. Si vous préférez continuer à utiliser un routeur réel, gardez à l'esprit que chaque test doit utiliser son propre instance du routeur de cette manière&nbsp;:
 
-```js {1,20}
+```js {1,22}
 import { mount, flushPromises } from '@vue/test-utils';
 import { createRouter, createWebHistory } from 'vue-router';
 import { routes } from "@/router";
