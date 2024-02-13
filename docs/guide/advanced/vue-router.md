@@ -187,7 +187,7 @@ console.warn node_modules/@vue/runtime-core/dist/runtime-core.cjs.js:39
 
 The `<router-link>` and `<router-view>` component are not found. We need to install Vue Router! Since Vue Router is a plugin, we install it using the `global.plugins` mounting option:
 
-```js {10,11,12}
+```js {12,13,14}
 import { mount } from '@vue/test-utils'
 import { createRouter, createWebHistory } from 'vue-router'
 import { routes } from "@/router" // This import should point to your routes file declared above
@@ -218,7 +218,7 @@ Although it's not entirely clear from the warning, it's related to the fact that
 
 Vue Router provides an `isReady` function that tell us when router is ready. We can then `await` it to ensure the initial navigation has happened.
 
-```js {11,12}
+```js {13,14}
 import { mount } from '@vue/test-utils'
 import { createRouter, createWebHistory } from 'vue-router'
 import { routes } from "@/router"
@@ -247,7 +247,7 @@ The test is now passing! It was quite a bit of work, but now we make sure the ap
 
 Now let's navigate to `/posts` and make sure the routing is working as expected:
 
-```js {19,20}
+```js {21,22}
 import { mount } from '@vue/test-utils'
 import { createRouter, createWebHistory } from 'vue-router'
 import { routes } from "@/router"
@@ -288,7 +288,7 @@ Again, due to Vue Router 4's new asynchronous nature, we need to `await` the rou
 
 In this case, however, there is no _hasNavigated_ hook we can await on. One alternative is to use the `flushPromises` function exported from Vue Test Utils:
 
-```js {1,20}
+```js {1,22}
 import { mount, flushPromises } from '@vue/test-utils'
 import { createRouter, createWebHistory } from 'vue-router'
 import { routes } from "@/router"
@@ -317,7 +317,7 @@ test('routing', async () => {
 
 It _finally_ passes. Great! This is all very manual, however - and this is for a tiny, trivial app. This is the reason using a mocked router is a common approach when testing Vue components using Vue Test Utils. In case you prefer to keep using a real router, keep in mind that each test should use it's own instance of the router like so:
 
-```js {1,20}
+```js {1,19}
 import { mount, flushPromises } from '@vue/test-utils'
 import { createRouter, createWebHistory } from 'vue-router'
 import { routes } from "@/router"
