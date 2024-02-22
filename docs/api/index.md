@@ -1436,7 +1436,7 @@ isVisible(): boolean
 **Details:**
 
 ::: warning
-`isVisible()` only works correctly if the wrapper is attached to the DOM using [`attachTo`](#attachto)
+`isVisible()` only works correctly if the wrapper is attached to the DOM using [`attachTo`](#attachTo)
 :::
 
 ```js
