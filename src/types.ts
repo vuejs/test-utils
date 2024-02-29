@@ -7,7 +7,8 @@ import {
   VNode,
   VNodeProps,
   FunctionalComponent,
-  ComponentInternalInstance
+  ComponentInternalInstance,
+  Ref
 } from 'vue'
 
 export interface RefSelector {
@@ -167,3 +168,12 @@ export type VueNode<T extends Node = Node> = T & {
 export type VueElement = VueNode<Element>
 
 export type DefinedComponent = new (...args: any[]) => any
+
+/**
+ * T is a DeepRef if:
+ * - It's a Ref itself
+ * - It's an array containing a ref at any level
+ * - It's an object containing a ref at any level
+ */
+export type DeepRef<T> =
+  T extends Ref<T> ? T : T extends object ? DeepRef<T> : Ref<T>
