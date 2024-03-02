@@ -9,8 +9,8 @@ dependencies:
     specifier: ^1.14.9
     version: 1.14.9
   vue-component-type-helpers:
-    specifier: ^1.8.21
-    version: 1.8.21
+    specifier: ^2.0.0
+    version: 2.0.1
 
 devDependencies:
   '@rollup/plugin-commonjs':
@@ -3996,8 +3996,8 @@ packages:
       vue: 3.4.21(typescript@5.3.3)
     dev: true
 
-  /vue-component-type-helpers@1.8.21:
-    resolution: {integrity: sha512-XL37QbmiqqbKrAFHPxqryMXpNgO0KMKd5bIo7LO9QABPMNEysd8xmYRIjwZhh0t2abveXjAJ//ZcAzwdxp/S3Q==}
+  /vue-component-type-helpers@2.0.1:
+    resolution: {integrity: sha512-TSOLgONQc8YzdLzTvPwcBdPnGAIIY3T8jWUQA9gt/LhmYKpJV/2ErD3nKzG4WZ255XYc4malvZDAvfKDCPI0Jg==}
     dev: false
 
   /vue-demi@0.14.6(vue@3.4.21):
