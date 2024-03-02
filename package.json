@@ -24,7 +24,7 @@
   ],
   "dependencies": {
     "js-beautify": "^1.14.9",
-    "vue-component-type-helpers": "^1.8.21"
+    "vue-component-type-helpers": "^2.0.0"
   },
   "devDependencies": {
     "@rollup/plugin-commonjs": "25.0.7",
