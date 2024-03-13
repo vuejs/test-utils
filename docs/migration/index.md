@@ -324,6 +324,12 @@ If you use snapshot testing and comment nodes are leaking into your snapshots, n
 
 This is table for those coming from VTU 1, comparing the two APIs.
 
+### Base API
+
+| export            | notes                                                                            |
+|-------------------|----------------------------------------------------------------------------------|
+| enableAutoDestroy | replaced by `enableAutoUnmount`                                                  |
+
 ### Mounting Options
 
 | option           | notes                                                                             |
