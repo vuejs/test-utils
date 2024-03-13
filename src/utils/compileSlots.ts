@@ -1,7 +1,9 @@
-import { compile } from '@vue/compiler-dom'
 import * as vue from 'vue'
+import { requireVueCompilerDom } from './requireOptionalPeer'
 
 export function processSlot(source = '', Vue = vue) {
+  const { compile } = requireVueCompilerDom()
+
   let template = source.trim()
   const hasWrappingTemplate = template && template.startsWith('<template')
 
