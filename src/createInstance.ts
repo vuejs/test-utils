@@ -4,7 +4,6 @@ import {
   defineComponent,
   reactive,
   shallowReactive,
-  isRef,
   ref,
   AppConfig,
   ComponentOptions,
@@ -17,6 +16,7 @@ import { MountingOptions, Slot } from './types'
 import {
   getComponentsFromStubs,
   getDirectivesFromStubs,
+  isDeepRef,
   isFunctionalComponent,
   isObject,
   isObjectComponent,
@@ -174,7 +174,7 @@ export function createInstance(
     ...options?.props,
     ref: MOUNT_COMPONENT_REF
   }).forEach(([k, v]) => {
-    if (isRef(v)) {
+    if (isDeepRef(v)) {
       refs[k] = v
     } else {
       props[k] = v
