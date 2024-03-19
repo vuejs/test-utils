@@ -4,6 +4,7 @@ import { mount } from '../src'
 import DefinePropsAndDefineEmits from './components/DefinePropsAndDefineEmits.vue'
 import WithDeepRef from './components/WithDeepRef.vue'
 import HelloFromVitestPlayground from './components/HelloFromVitestPlayground.vue'
+import Hello from './components/Hello.vue'
 
 describe('mount: general tests', () => {
   it('correctly handles component, throwing on mount', () => {
@@ -28,7 +29,7 @@ describe('mount: general tests', () => {
   })
 
   it('should not warn on readonly hasOwnProperty when mounting a component', () => {
-    const spy = vi.spyOn(console, 'warn').mockImplementation(() => {})
+    const spy = vi.spyOn(console, 'warn').mockImplementation(() => { })
 
     mount(HelloFromVitestPlayground, { props: { count: 2 } })
 
@@ -69,5 +70,18 @@ describe('mount: general tests', () => {
     expect(wrapper.get('#oneLayerCountObjectArrayValue').text()).toBe('6')
     expect(wrapper.get('#oneLayerCountArrayObjectValue').text()).toBe('7')
     expect(wrapper.get('#oneLayerCountObjectMatrixValue').text()).toBe('8')
+  })
+  it('circular reference in prop does not cause a stack overflow', () => {
+    type ParentItem = { children: any[] }
+    type Item = { id: number; parent: ParentItem | null }
+
+    const item: Item = { id: 1, parent: null }
+    const parentItem: ParentItem = { children: [item] }
+    item.parent = parentItem
+
+    const wrapper = mount(Hello, {
+      props: { msg: 'Hello world', item: item }
+    })
+    expect(wrapper.text()).toContain('Hello world')
   })
 })
