@@ -67,4 +67,16 @@ describe('isDeepRef', () => {
 
     expect(isDeepRef(item)).toBe(true)
   })
+  it('should return false for an object with a dynamic circular reference', () => {
+    const testObject = {}
+    Object.defineProperty(testObject, 'circularReference', {
+      get: function () {
+        delete this.circularReference
+        this.circularReference = testObject
+        return this.circularReference
+      }
+    })
+    expect(() => isDeepRef(testObject)).not.toThrow()
+    expect(isDeepRef(testObject)).toBe(false)
+  })
 })
