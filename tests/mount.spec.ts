@@ -29,7 +29,7 @@ describe('mount: general tests', () => {
   })
 
   it('should not warn on readonly hasOwnProperty when mounting a component', () => {
-    const spy = vi.spyOn(console, 'warn').mockImplementation(() => { })
+    const spy = vi.spyOn(console, 'warn').mockImplementation(() => {})
 
     mount(HelloFromVitestPlayground, { props: { count: 2 } })
 
@@ -71,13 +71,20 @@ describe('mount: general tests', () => {
     expect(wrapper.get('#oneLayerCountArrayObjectValue').text()).toBe('7')
     expect(wrapper.get('#oneLayerCountObjectMatrixValue').text()).toBe('8')
   })
-  it('circular reference in prop does not cause a stack overflow', () => {
-    type ParentItem = { children: any[] }
-    type Item = { id: number; parent: ParentItem | null }
-
-    const item: Item = { id: 1, parent: null }
-    const parentItem: ParentItem = { children: [item] }
+  it('circular references in non-ref props do not cause a stack overflow', () => {
+    const item = { id: 1, parent: null as any }
+    const parentItem = { children: [item] }
     item.parent = parentItem
+
+    const wrapper = mount(Hello, {
+      props: { msg: 'Hello world', item: item }
+    })
+    expect(wrapper.text()).toContain('Hello world')
+  })
+  it('circular references in ref props do not cause a stack overflow', () => {
+    const item = { id: 1, parent: ref<any>(null) }
+    const parentItem = { children: [ref(item)] }
+    item.parent.value = parentItem
 
     const wrapper = mount(Hello, {
       props: { msg: 'Hello world', item: item }

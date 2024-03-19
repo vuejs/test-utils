@@ -16,7 +16,6 @@ import { MountingOptions, Slot } from './types'
 import {
   getComponentsFromStubs,
   getDirectivesFromStubs,
-  isDeepRef,
   isFunctionalComponent,
   isObject,
   isObjectComponent,
@@ -36,6 +35,7 @@ import {
   CreateStubComponentsTransformerConfig
 } from './vnodeTransformers/stubComponentsTransformer'
 import { createStubDirectivesTransformer } from './vnodeTransformers/stubDirectivesTransformer'
+import { isDeepRef } from './utils/isDeepRef'
 
 const MOUNT_OPTIONS: ReadonlyArray<keyof MountingOptions<any>> = [
   'attachTo',
