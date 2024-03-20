@@ -4,8 +4,7 @@ import TranslationStatus from 'vitepress-translation-helper/ui/TranslationStatus
 import status from '../translation-status.json'
 
 const i18nLabels = {
-  // TODO: to be translated
-  fr: 'The translation is synced to the docs on ${date} of which the commit hash is <code>${hash}</code>.',
+  fr: 'La traduction est synchronisée avec les docs du ${date} dont le hash du commit est <code>${hash}</code>.',
 }
 
 
