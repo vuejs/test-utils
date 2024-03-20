@@ -107,7 +107,7 @@ devDependencies:
     specifier: 1.0.0-rc.45
     version: 1.0.0-rc.45(@types/node@20.11.30)(search-insights@2.7.0)(typescript@5.4.2)
   vitepress-translation-helper:
-    specifier: ^0.1.3
+    specifier: 0.1.3
     version: 0.1.3(vitepress@1.0.0-rc.45)(vue@3.4.21)
   vitest:
     specifier: 1.4.0
