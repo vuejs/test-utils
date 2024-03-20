@@ -4,6 +4,7 @@ import { mount } from '../src'
 import DefinePropsAndDefineEmits from './components/DefinePropsAndDefineEmits.vue'
 import WithDeepRef from './components/WithDeepRef.vue'
 import HelloFromVitestPlayground from './components/HelloFromVitestPlayground.vue'
+import Hello from './components/Hello.vue'
 
 describe('mount: general tests', () => {
   it('correctly handles component, throwing on mount', () => {
@@ -69,5 +70,25 @@ describe('mount: general tests', () => {
     expect(wrapper.get('#oneLayerCountObjectArrayValue').text()).toBe('6')
     expect(wrapper.get('#oneLayerCountArrayObjectValue').text()).toBe('7')
     expect(wrapper.get('#oneLayerCountObjectMatrixValue').text()).toBe('8')
+  })
+  it('circular references in non-ref props do not cause a stack overflow', () => {
+    const item = { id: 1, parent: null as any }
+    const parentItem = { children: [item] }
+    item.parent = parentItem
+
+    const wrapper = mount(Hello, {
+      props: { msg: 'Hello world', item: item }
+    })
+    expect(wrapper.text()).toContain('Hello world')
+  })
+  it('circular references in ref props do not cause a stack overflow', () => {
+    const item = { id: 1, parent: ref<any>(null) }
+    const parentItem = { children: [ref(item)] }
+    item.parent.value = parentItem
+
+    const wrapper = mount(Hello, {
+      props: { msg: 'Hello world', item: item }
+    })
+    expect(wrapper.text()).toContain('Hello world')
   })
 })
