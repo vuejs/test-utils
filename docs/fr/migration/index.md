@@ -288,3 +288,49 @@ Si vous utilisez les tests `snapshot` et que les commentaires restent dans vos `
     };
     ```
  - Avec `@vue/test-utils` [`mountingOptions.global.config`](https://test-utils.vuejs.org/fr/api/#global) soit de façon globale ou pour chaque test individuellement.
+
+## Comparaison avec la v1
+
+Cette table est destinée à ceux qui viennent de VTU v1, afin de comparer les deux APIs.
+
+### API de base
+
+| export            | notes                                                                            |
+|-------------------|----------------------------------------------------------------------------------|
+| enableAutoDestroy | remplacé par `enableAutoUnmount`                                                 |
+
+### Options de `mount`
+
+| option           | notes                                                                                 |
+|------------------|---------------------------------------------------------------------------------------|
+| mocks            | imbriqué dans `global`                                                                |
+| propsData        | maintenant appelé `props`                                                             |
+| provide          | imbriqué dans `global`                                                                |
+| mixins           | imbriqué dans `global`                                                                |
+| plugins          | imbriqué dans `global`                                                                |
+| component        | imbriqué dans `global`                                                                |
+| directives       | imbriqué dans `global`                                                                |
+| attachToDocument | renommé `attachTo`. Voir [ici](https://github.com/vuejs/vue-test-utils/pull/1492)     |
+| scopedSlots      | supprimé. Les `scopedSlots` sont fusionnés avec `slots` en Vue 3                      |
+| context          | supprimé. Différent de Vue 2, n'a plus de sens.                                       |
+| localVue         | supprimé. Plus nécessaire - en Vue 3, il n'y a pas d'instance globale de Vue à muter. |
+| listeners        | supprimé. N'existe plus en Vue 3                                                      |
+| parentComponent  | supprimé                                                                              |
+
+### API de `Wrapper` (mount)
+
+| méthode         | notes                                                                                                       |
+|----------------|--------------------------------------------------------------------------------------------------------------|
+| find           | seule la syntaxe `querySelector` est supportée. Utilisez `findComponent(Comp)` pour trouver un composant Vue |
+| setValue       | fonctionne pour select, checkbox, radio button, input, textarea. Renvoie `nextTick`.                         |
+| trigger        | renvoie `nextTick`. Vous pouvez faire `await wrapper.find('button').trigger('click')`                        |
+| destroy        | renommé en `unmount` pour correspondre au nom de la fonction du cycle de vie de Vue 3.                       |
+| contains       | supprimé. Utilisez `find`                                                                                    |
+| emittedByOrder | supprimé. Utilisez `emitted`                                                                                 |
+| setSelected    | supprimé. Fait maintenant partie de `setValue`                                                               |
+| setChecked     | supprimé. Fait maintenant partie de `setValue`                                                               |
+| is             | supprimé                                                                                                     |
+| isEmpty        | supprimé. Utilisez des matchers tels que [celui-ci](https://github.com/testing-library/jest-dom#tobeempty)   |
+| isVueInstance  | supprimé                                                                                                     |
+| name           | supprimé                                                                                                     |
+| setMethods     | supprimé                                                                                                     |
