@@ -107,8 +107,8 @@ devDependencies:
     specifier: 1.0.0
     version: 1.0.0(@types/node@20.11.30)(search-insights@2.7.0)(typescript@5.4.3)
   vitepress-translation-helper:
-    specifier: 0.2.0
-    version: 0.2.0(vitepress@1.0.0)(vue@3.4.21)
+    specifier: 0.2.1
+    version: 0.2.1(vitepress@1.0.0)(vue@3.4.21)
   vitest:
     specifier: 1.4.0
     version: 1.4.0(@types/node@20.11.30)(jsdom@24.0.0)
@@ -3932,11 +3932,11 @@ packages:
       fsevents: 2.3.3
     dev: true
 
-  /vitepress-translation-helper@0.2.0(vitepress@1.0.0)(vue@3.4.21):
-    resolution: {integrity: sha512-ELSjaye7J5Dm305D6ETFgEb9i3reIaHm98ckYOdpbUtbcABcSBqZCbzX2ogsEujac7tHTpg/R/JkWHWaYOE5Lg==}
+  /vitepress-translation-helper@0.2.1(vitepress@1.0.0)(vue@3.4.21):
+    resolution: {integrity: sha512-zYjakGIdVDonT1P85OkeQcdE6e8vdmKiVclHB7DGcTzFUwb2D0w+hcC31AGneB5wa5IiqEoipycSTYNKM0YKJg==}
     hasBin: true
     peerDependencies:
-      vitepress: 1.0.0-rc.36
+      vitepress: ^1.0.0
       vue: ^3.4.8
     dependencies:
       minimist: 1.2.8
