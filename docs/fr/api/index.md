@@ -12,7 +12,7 @@ Crée un `Wrapper` qui contient le composant Vue monté et rendu pour le test.
 
 ```ts
 interface MountingOptions<Props, Data = {}> {
-  attachTo?: HTMLElement | string
+  attachTo?: Element | string
   attrs?: Record<string, unknown>
   data?: () => {} extends Data ? any : Data extends object ? Partial<Data> : any
   props?: (RawProps & Props) | ({} extends Props ? null : never)
@@ -72,7 +72,7 @@ Spécifie le nœud où monter le composant.
 **Signature&nbsp;:**
 
 ```ts
-attachTo?: HTMLElement | string
+attachTo?: Element | string
 ```
 
 **Utilisation&nbsp;:**
@@ -1870,7 +1870,7 @@ Crée un `Wrapper` qui contient le composant Vue monté et rendu pour le tester 
 
 ```ts
 interface MountingOptions<Props, Data = {}> {
-  attachTo?: HTMLElement | string
+  attachTo?: Element | string
   attrs?: Record<string, unknown>
   data?: () => {} extends Data ? any : Data extends object ? Partial<Data> : any
   props?: (RawProps & Props) | ({} extends Props ? null : never)
