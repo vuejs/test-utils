@@ -26,6 +26,25 @@ describe('options.attachTo', () => {
     wrapper.unmount()
     expect(document.getElementById('attach-to')).toBeNull()
   })
+  it('attaches to a provided SVGElement', () => {
+    const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg')
+    svg.id = 'root'
+    document.body.appendChild(svg)
+    expect(document.getElementById('root')).not.toBeNull()
+    expect(document.getElementById('attach-to')).toBeNull()
+    const wrapper = mount(TestComponent, {
+      attachTo: svg
+    })
+
+    const root = document.getElementById('root')
+    const rendered = document.getElementById('attach-to')!
+    expect(wrapper.vm.$el.parentNode).not.toBeNull()
+    expect(root).not.toBeNull()
+    expect(rendered).not.toBeNull()
+    expect(rendered.outerHTML).toBe(outerHTML)
+    wrapper.unmount()
+    expect(document.getElementById('attach-to')).toBeNull()
+  })
   it('attaches to a provided CSS selector string', () => {
     const div = document.createElement('div')
     div.id = 'root'

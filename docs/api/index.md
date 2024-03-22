@@ -14,7 +14,7 @@ Note that when mocking dates/timers with Vitest, this must be called after
 
 ```ts
 interface MountingOptions<Props, Data = {}> {
-  attachTo?: HTMLElement | string
+  attachTo?: Element | string
   attrs?: Record<string, unknown>
   data?: () => {} extends Data ? any : Data extends object ? Partial<Data> : any
   props?: (RawProps & Props) | ({} extends Props ? null : never)
@@ -74,7 +74,7 @@ Specify the node to mount the component on. This is not available when using `re
 **Signature:**
 
 ```ts
-attachTo?: HTMLElement | string
+attachTo?: Element | string
 ```
 
 **Details:**
@@ -1882,7 +1882,7 @@ Creates a Wrapper that contains the mounted and rendered Vue component to test w
 
 ```ts
 interface MountingOptions<Props, Data = {}> {
-  attachTo?: HTMLElement | string
+  attachTo?: Element | string
   attrs?: Record<string, unknown>
   data?: () => {} extends Data ? any : Data extends object ? Partial<Data> : any
   props?: (RawProps & Props) | ({} extends Props ? null : never)
