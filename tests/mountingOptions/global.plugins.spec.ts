@@ -73,21 +73,21 @@ describe('mounting options: plugins', () => {
       const wrapper = mount(Option, {
         global: { plugins: [Plugin] }
       })
-      expect(wrapper.vm.foo).toBeDefined()
+      expect((wrapper.vm as any).foo).toBeDefined()
     })
 
     it('provides access to a global property from an Options API component with a setup() function', () => {
       const wrapper = mount(OptionsSetup, {
         global: { plugins: [Plugin] }
       })
-      expect(wrapper.vm.foo).toBeDefined()
+      expect((wrapper.vm as any).foo).toBeDefined()
     })
 
     it('provides access to a global property from an Options API component with a setup() function that does not return', () => {
       const wrapper = mount(OptionsSetupWithoutReturn, {
         global: { plugins: [Plugin] }
       })
-      expect(wrapper.vm.foo).toBeDefined()
+      expect((wrapper.vm as any).foo).toBeDefined()
     })
   })
 })
