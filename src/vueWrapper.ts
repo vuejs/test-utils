@@ -32,6 +32,13 @@ function createVMProxy<T extends ComponentPublicInstance>(
       } else if (key in setupState) {
         // second if the key is acccessible from the setupState
         return Reflect.get(setupState, key, receiver)
+      } else if (key in vm.$.appContext.config.globalProperties) {
+        // third if the key is a global property
+        return Reflect.get(
+          vm.$.appContext.config.globalProperties,
+          key,
+          receiver
+        )
       } else {
         // vm.$.ctx is the internal context of the vm
         // with all variables, methods and props

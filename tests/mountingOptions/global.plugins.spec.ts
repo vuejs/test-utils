@@ -2,6 +2,10 @@ import { describe, expect, test, it, vi } from 'vitest'
 import { h, App } from 'vue'
 
 import { mount } from '../../src'
+import ScriptSetup from '../components/ScriptSetup.vue'
+import Option from '../components/OptionComponent.vue'
+import OptionsSetup from '../components/OptionSetupComponent.vue'
+import OptionsSetupWithoutReturn from '../components/OptionSetupWithoutReturnComponent.vue'
 
 describe('mounting options: plugins', () => {
   it('installs a plugin via `plugins`', () => {
@@ -50,6 +54,41 @@ describe('mounting options: plugins', () => {
     })
 
     expect(installed).toHaveBeenCalledWith(options, testString)
+  })
+
+  describe('provides access to a global property', () => {
+    class Plugin {
+      static install(app: App) {
+        app.config.globalProperties.foo = 'bar'
+      }
+    }
+    it('provides access to a global property from a Composition API component', () => {
+      const wrapper = mount(ScriptSetup, {
+        global: { plugins: [Plugin] }
+      })
+      expect((wrapper.vm as any).foo).toBeDefined()
+    })
+
+    it('provides access to a global property from an Options API component', () => {
+      const wrapper = mount(Option, {
+        global: { plugins: [Plugin] }
+      })
+      expect((wrapper.vm as any).foo).toBeDefined()
+    })
+
+    it('provides access to a global property from an Options API component with a setup() function', () => {
+      const wrapper = mount(OptionsSetup, {
+        global: { plugins: [Plugin] }
+      })
+      expect((wrapper.vm as any).foo).toBeDefined()
+    })
+
+    it('provides access to a global property from an Options API component with a setup() function that does not return', () => {
+      const wrapper = mount(OptionsSetupWithoutReturn, {
+        global: { plugins: [Plugin] }
+      })
+      expect((wrapper.vm as any).foo).toBeDefined()
+    })
   })
 })
 
