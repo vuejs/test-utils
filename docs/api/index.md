@@ -1436,7 +1436,7 @@ isVisible(): boolean
 **Details:**
 
 ::: warning
-`isVisible()` only works correctly if the wrapper is attached to the DOM using [`attachTo`](#attachto)
+`isVisible()` only works correctly if the wrapper is attached to the DOM using [`attachTo`](#attachTo)
 :::
 
 ```js
@@ -1445,9 +1445,11 @@ const Component = {
 }
 
 test('isVisible', () => {
-  const wrapper = mount(Component)
+  const wrapper = mount(Component, {
+    attachTo: document.body
+  });
 
-  expect(wrapper.find('span').isVisible()).toBe(false)
+  expect(wrapper.find('span').isVisible()).toBe(false);
 })
 ```
 

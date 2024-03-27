@@ -1429,13 +1429,19 @@ isVisible(): boolean
 
 **Utilisation&nbsp;:**
 
+::: warning
+`isVisible()` ne fonctionne correctement que si le wrapper est attaché au DOM en utilisant [`attachTo`](#attachTo)
+:::
+
 ```js
 const Component = {
   template: `<div v-show="false"><span /></div>`,
 };
 
 test('isVisible', () => {
-  const wrapper = mount(Component);
+  const wrapper = mount(Component, {
+    attachTo: document.body
+  });
 
   expect(wrapper.find('span').isVisible()).toBe(false);
 });
