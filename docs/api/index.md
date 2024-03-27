@@ -1445,9 +1445,11 @@ const Component = {
 }
 
 test('isVisible', () => {
-  const wrapper = mount(Component)
+  const wrapper = mount(Component, {
+    attachTo: document.body
+  });
 
-  expect(wrapper.find('span').isVisible()).toBe(false)
+  expect(wrapper.find('span').isVisible()).toBe(false);
 })
 ```
 
