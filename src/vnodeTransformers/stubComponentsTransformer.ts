@@ -117,8 +117,13 @@ export const createStub = ({
         // Also having function text as attribute is useless and annoying so
         // we replace it with "[Function]""
         const stubProps = normalizeStubProps(props)
-
-        return h(tag, stubProps, renderStubDefaultSlot ? slots : undefined)
+        // if renderStubDefaultSlot is true, we render the default slot
+        if (renderStubDefaultSlot && slots.default) {
+          // we explicitly call the default slot with an empty object
+          // so scope slots destructuring works
+          return h(tag, stubProps, slots.default({}))
+        }
+        return h(tag, stubProps)
       }
     }
   })

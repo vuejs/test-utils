@@ -72,6 +72,7 @@ describe('global.components', () => {
     spy.mockRestore()
     expect(wrapper.text()).toBe('Global')
   })
+
   it('render children with shallow and renderStubDefaultSlot', () => {
     const Child = defineComponent({
       template: '<div><p>child</p><slot /></div>'
@@ -93,6 +94,35 @@ describe('global.components', () => {
       '<div>\n' +
         '  <child-stub>\n' +
         '    <div>hello</div>\n' +
+        '  </child-stub>\n' +
+        '</div>'
+    )
+  })
+
+  // https://github.com/vuejs/test-utils/issues/2395
+  it('render children with shallow and renderStubDefaultSlot with v-slot', () => {
+    const Child = defineComponent({
+      template: '<div><p>child</p><slot /></div>'
+    })
+    const Component = defineComponent({
+      template:
+        '<div><Child v-slot="{ count }"><div>hello{{ count }}there</div></Child></div>',
+      components: {
+        Child
+      }
+    })
+    const wrapper = mount(Component, {
+      shallow: true,
+      global: {
+        renderStubDefaultSlot: true
+      }
+    })
+
+    // count is undefined, but doesn't throw an error
+    expect(wrapper.html()).toEqual(
+      '<div>\n' +
+        '  <child-stub>\n' +
+        '    <div>hellothere</div>\n' +
         '  </child-stub>\n' +
         '</div>'
     )
