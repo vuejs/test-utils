@@ -27,7 +27,7 @@ const Editor = {
 This component will just behave as an input component:
 
 ```js
-const App {
+const App = {
   components: {
     Editor
   },
