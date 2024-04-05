@@ -829,7 +829,7 @@ test('shallow', () => {
   const wrapper = mount(Component, { shallow: true })
 
   expect(wrapper.html()).toEqual(
-    `<a-component-stub></a-component-stub><another-component></another-component>`
+    `<a-component-stub></a-component-stub><another-component-stub></another-component-stub>`
   )
 }
 ```
