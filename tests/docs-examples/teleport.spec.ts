@@ -12,7 +12,7 @@ beforeEach(() => {
 
 afterEach(() => {
   // clean up
-  document.body.outerHTML = ''
+  document.body.innerHTML = ''
 })
 
 test('teleport', async () => {
