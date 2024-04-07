@@ -101,7 +101,7 @@ beforeEach(() => {
 
 afterEach(() => {
   // nous nettoyons un peu
-  document.body.outerHTML = '';
+  document.body.innerHTML = '';
 });
 
 test('teleport', async () => {
@@ -174,7 +174,7 @@ beforeEach(() => {
 
 afterEach(() => {
   // nous nettoyons un peu
-  document.body.outerHTML = '';
+  document.body.innerHTML = '';
 });
 
 test('teleport', async () => {
