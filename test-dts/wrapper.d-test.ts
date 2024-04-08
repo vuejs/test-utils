@@ -14,6 +14,9 @@ const domWrapper = wrapper.find('#other')
 let inputMaybe = wrapper.find('input')
 expectType<HTMLInputElement | undefined>(inputMaybe.element)
 
+let buttonComp = mount(defineComponent({ template: '<button>Click me</button>' }))
+expectType<HTMLButtonElement>(buttonComp.element)
+
 // SVG element selector
 let lineMaybe = wrapper.find('line')
 expectType<SVGLineElement | undefined>(lineMaybe.element)
