@@ -14,6 +14,16 @@ const domWrapper = wrapper.find('#other')
 let inputMaybe = wrapper.find('input')
 expectType<HTMLInputElement | undefined>(inputMaybe.element)
 
+let buttonComp = mount(
+  defineComponent({ template: '<button>Click me</button>' })
+)
+expectType<HTMLButtonElement>(buttonComp.element)
+
+let multiRootComp = mount(defineComponent({ template: '<span /><span />' }))
+// this will be a wrapper div element like so: <div data-v-app="">
+expectType<HTMLDivElement>(multiRootComp.element)
+expectType<HTMLSpanElement>(multiRootComp.element.firstElementChild)
+
 // SVG element selector
 let lineMaybe = wrapper.find('line')
 expectType<SVGLineElement | undefined>(lineMaybe.element)

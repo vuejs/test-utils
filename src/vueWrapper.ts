@@ -213,7 +213,7 @@ export class VueWrapper<
     }
   }
 
-  get element(): Element {
+  get element(): T['$el'] {
     // if the component has multiple root elements, we use the parent's element
     return this.hasMultipleRoots ? this.parentElement : this.vm.$el
   }
