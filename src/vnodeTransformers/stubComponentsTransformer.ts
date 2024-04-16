@@ -47,10 +47,10 @@ const normalizeStubProps = (props: ComponentPropsOptions) => {
   const $props = props as unknown as ComponentObjectPropsOptions
   return Object.keys($props).reduce((acc, key) => {
     if (typeof $props[key] === 'symbol') {
-      return { ...acc, [key]: $props[key]?.toString() }
+      return { ...acc, [key]: [$props[key]?.toString()] }
     }
     if (typeof $props[key] === 'function') {
-      return { ...acc, [key]: '[Function]' }
+      return { ...acc, [key]: ['[Function]'] }
     }
     return { ...acc, [key]: $props[key] }
   }, {})
