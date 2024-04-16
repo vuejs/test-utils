@@ -1,4 +1,4 @@
-import { describe, expect, it } from 'vitest'
+import { describe, expect, it, vi } from 'vitest'
 import { mount, shallowMount, VueWrapper } from '../src'
 import WithProps from './components/WithProps.vue'
 import PropWithSymbol from './components/PropWithSymbol.vue'
@@ -316,6 +316,20 @@ describe('props', () => {
     })
 
     expect(wrapper.html()).toBe('<comp-stub fn="[Function]"></comp-stub>')
+  })
+
+  // https://github.com/vuejs/test-utils/issues/2411
+  it('should not warn on stringify props in stubs', () => {
+    const spy = vi.spyOn(console, 'warn').mockReturnValue()
+    const Comp = defineComponent({
+      name: 'Comp',
+      template: `<transition @enter="() => {}"></transition>`
+    })
+
+    const wrapper = mount(Comp)
+
+    expect(wrapper.html()).toContain('<transition-stub')
+    expect(spy).not.toHaveBeenCalled()
   })
 
   describe('edge case with symbol props and stubs', () => {
