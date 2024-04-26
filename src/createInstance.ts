@@ -266,6 +266,14 @@ export function createInstance(
     }
   }
 
+  // provide any values passed via provides mounting option
+  if (global.provide) {
+    for (const key of Reflect.ownKeys(global.provide)) {
+      // @ts-ignore: https://github.com/microsoft/TypeScript/issues/1863
+      app.provide(key, global.provide[key])
+    }
+  }
+
   // use and plugins from mounting options
   if (global.plugins) {
     for (const plugin of global.plugins) {
@@ -294,14 +302,6 @@ export function createInstance(
   if (global.directives) {
     for (const key of Object.keys(global.directives))
       app.directive(key, global.directives[key])
-  }
-
-  // provide any values passed via provides mounting option
-  if (global.provide) {
-    for (const key of Reflect.ownKeys(global.provide)) {
-      // @ts-ignore: https://github.com/microsoft/TypeScript/issues/1863
-      app.provide(key, global.provide[key])
-    }
   }
 
   // stubs
