@@ -1278,9 +1278,9 @@ get(selector: string): Omit<DOMWrapper<Element>, 'exists'>
 
 **Details:**
 
-It is similar to `find`, but `get` throws instead of returning a ErrorWrapper.
+It is similar to `find`, but `get` throws an error if an element is not found while [`find`](#find) will return an ErrorWrapper.
 
-As a rule of thumb, always use get except when you are asserting something doesn't exist. In that case use [`find`](#find).
+As a rule of thumb, always use `get` except when you are asserting something doesn't exist. In that case use [`find`](#find).
 
 `Component.vue`:
 
