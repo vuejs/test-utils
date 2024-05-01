@@ -74,9 +74,9 @@ export function mount(
   // Workaround for https://github.com/vuejs/core/issues/7020
   const originalErrorHandler = app.config.errorHandler
 
-  let errorOnMount = null
+  let errorsOnMount: unknown[] = []
   app.config.errorHandler = (err, instance, info) => {
-    errorOnMount = err
+    errorsOnMount.push(err)
 
     return originalErrorHandler?.(err, instance, info)
   }
@@ -100,9 +100,9 @@ export function mount(
     to.appendChild(el)
   }
   const vm = app.mount(el)
-
-  if (errorOnMount) {
-    throw errorOnMount
+  if (errorsOnMount.length) {
+    // If an error is thrown, throw the first error.
+    throw errorsOnMount[0]
   }
   app.config.errorHandler = originalErrorHandler
 
