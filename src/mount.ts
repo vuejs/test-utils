@@ -101,7 +101,7 @@ export function mount(
   }
   const vm = app.mount(el)
   if (errorsOnMount.length) {
-    // If an error is thrown, throw the first error.
+    // If several errors are thrown during mount, then throw the first one
     throw errorsOnMount[0]
   }
   app.config.errorHandler = originalErrorHandler
