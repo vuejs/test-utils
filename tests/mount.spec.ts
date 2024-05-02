@@ -27,7 +27,8 @@ describe('mount: general tests', () => {
 
     expect(wrapper.html()).toBe('<div>hello</div>')
   })
-  it('if an error is thrown during mounting, the first error is thrown.', () => {
+
+  it('should throw the first error encountered when mounting the component', () => {
     const ThrowingComponent = defineComponent({
       setup() {
         throw new Error('Boom!')
@@ -37,6 +38,7 @@ describe('mount: general tests', () => {
 
     expect(() => mount(ThrowingComponent)).toThrowError('Boom!')
   })
+
   it('should not warn on readonly hasOwnProperty when mounting a component', () => {
     const spy = vi.spyOn(console, 'warn').mockImplementation(() => {})
 
