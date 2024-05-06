@@ -55,3 +55,14 @@ test('works with transitions', async () => {
   expect(wrapper.get('p').text()).toEqual('hello')
 })
 ```
+
+## Partial support
+
+The Vue Test Utils built-in transition stub is simple and doesn't cover all of of Vue's [Transition features](https://vuejs.org/guide/built-ins/transition). For instance [javascript hooks](https://vuejs.org/guide/built-ins/transition#javascript-hooks) are not supported. This limitation could potentially lead to Vue warnings.
+
+::: tip
+Potential solutions:
+- You can turn off the auto stubbing by setting [global stubs transition](../../api/#global-stubs) to false
+- You can create your own transition stub that can handle these hooks if necessary.
+- You can spy the warning in the test to silence it.
+:::
