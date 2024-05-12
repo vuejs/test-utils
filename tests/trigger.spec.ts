@@ -176,6 +176,7 @@ describe('trigger', () => {
       await wrapper.trigger('keydown.enter')
       expect(keydownHandler).toHaveBeenCalledTimes(3)
       expect(keydownHandler.mock.calls[2][0].key).toBe('enter')
+
     })
 
     it('overwrites key if passed as a modifier', async () => {
@@ -223,6 +224,21 @@ describe('trigger', () => {
 
       expect(keydownHandler).toHaveBeenCalledTimes(1)
       expect(keydownHandler.mock.calls[0][0].keyCode).toBe(65)
+    })
+
+    it('causes keydown handler to fire with the appropriate code when wrapper.trigger("keydown", { code: "Space" }) is fired', async () => {
+      const keydownHandler = vi.fn()
+      const Component = {
+        template: '<input @keydown="keydownHandler" />',
+        methods: { keydownHandler }
+      }
+      const wrapper = mount(Component, {})
+      await wrapper.trigger('keydown', { code: 'Space', key: ' ', keyCode: 32 })
+
+      expect(keydownHandler).toHaveBeenCalledTimes(1)
+      expect(keydownHandler.mock.calls[0][0].key).toBe(' ')
+      expect(keydownHandler.mock.calls[0][0].code).toBe('Space')
+      expect(keydownHandler.mock.calls[0][0].keyCode).toBe(32)
     })
 
     it('causes keydown handler to fire converting keyName in an appropriate keyCode when wrapper.trigger("keydown.${keyName}") is fired', async () => {
