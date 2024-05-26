@@ -44,6 +44,11 @@ const Password = {
       type: Number
     }
   },
+  data() {
+    return {
+      password: ''
+    }
+  },
   computed: {
     error() {
       if (this.password.length < this.minLength) {
@@ -86,7 +91,6 @@ Sometimes you may need to write a test for a side effect of a prop changing. Thi
 </template>
 
 <script>
-
 export default {
   props: {
     show: {
