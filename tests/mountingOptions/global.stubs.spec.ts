@@ -6,6 +6,7 @@ import ComponentWithoutName from '../components/ComponentWithoutName.vue'
 import ComponentWithSlots from '../components/ComponentWithSlots.vue'
 import ScriptSetupWithChildren from '../components/ScriptSetupWithChildren.vue'
 import AutoImportScriptSetup from '../components/AutoImportScriptSetup.vue'
+import HelloJsx from '../components/HelloJsx'
 
 describe('mounting options: stubs', () => {
   let configStubsSave = config.global.stubs
@@ -99,6 +100,36 @@ describe('mounting options: stubs', () => {
     expect(wrapper.html()).toEqual(
       '<div>\n' + '  <foo-stub></foo-stub>\n' + '</div>'
     )
+  })
+
+  it('stubs a Hello SFC component from render function', () => {
+    const Comp = {
+      render: () => h(Hello)
+    }
+    const wrapper = mount(Comp, {
+      global: {
+        stubs: {
+          Hello: true
+        }
+      }
+    })
+
+    expect(wrapper.html()).toEqual('<hello-stub></hello-stub>')
+  })
+
+  it('stubs a JSX component with name', () => {
+    const Comp = {
+      render: () => h(HelloJsx)
+    }
+    const wrapper = mount(Comp, {
+      global: {
+        stubs: {
+          HelloJsx: true
+        }
+      }
+    })
+
+    expect(wrapper.html()).toEqual('<hello-jsx-stub></hello-jsx-stub>')
   })
 
   it('passes all attributes to stubbed components', () => {
