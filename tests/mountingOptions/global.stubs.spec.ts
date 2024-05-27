@@ -7,6 +7,7 @@ import ComponentWithSlots from '../components/ComponentWithSlots.vue'
 import ScriptSetupWithChildren from '../components/ScriptSetupWithChildren.vue'
 import AutoImportScriptSetup from '../components/AutoImportScriptSetup.vue'
 import HelloJsx from '../components/HelloJsx'
+import ComponentWithoutNameJsx from '../components/ComponentWithoutNameJsx'
 
 describe('mounting options: stubs', () => {
   let configStubsSave = config.global.stubs
@@ -99,6 +100,25 @@ describe('mounting options: stubs', () => {
 
     expect(wrapper.html()).toEqual(
       '<div>\n' + '  <foo-stub></foo-stub>\n' + '</div>'
+    )
+  })
+
+  it('stubs a JSX component without a name', () => {
+    const Comp = {
+      render: () => h(() => [h(ComponentWithoutNameJsx)])
+    }
+    const wrapper = mount(Comp, {
+      global: {
+        stubs: {
+          ComponentWithoutNameJsx: true
+        }
+      }
+    })
+
+    expect(wrapper.html()).toEqual(
+      '<div>\n' +
+        '  <component-without-name-jsx-stub></component-without-name-jsx-stub>\n' +
+        '</div>'
     )
   })
 
