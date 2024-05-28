@@ -1028,6 +1028,11 @@ find<T extends Node = Node>(selector: string | RefSelector): DOMWrapper<T>;
 
 You can use the same syntax `querySelector` implements. `find` is basically an alias for `querySelector`. In addition you can search for element refs.
 
+It is similar to `get`, but `find` returns an ErrorWrapper if an element is not found while [`get`](#get) will throw an error.
+
+As a rule of thumb, always use `find` when you are asserting something doesn't exist. If you are asserting something does exist, use [`get`](#get).
+
+
 `Component.vue`:
 
 ```vue
@@ -1174,7 +1179,7 @@ test('findComponent', () => {
 ```
 
 :::warning
-If `ref` in component points to HTML element, `findComponent` will return empty wrapper. This is intended behaviour
+If `ref` in component points to HTML element, `findComponent` will return empty wrapper. This is intended behaviour.
 :::
 
 :::warning Usage with CSS selectors
@@ -1319,7 +1324,7 @@ getComponent<T extends ComponentPublicInstance>(selector: any): Omit<VueWrapper<
 
 **Details:**
 
-It is similar to `findComponent`, but `getComponent` throws instead of returning a ErrorWrapper.
+It is similar to `findComponent`, but `getComponent` throws an error if a Vue Component instance is not found while [`findComponent`](#findComponent) will return an ErrorWrapper.
 
 **Supported syntax:**
 
