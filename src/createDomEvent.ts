@@ -110,7 +110,7 @@ function getEventProperties(eventParams: EventParams) {
     cancelable: meta.cancelable,
     // Any derived options should go here
     keyCode,
-    code: keyCode,
+    code: options.code || keyCode,
     // if we have a `key`, use it, otherwise dont set anything (allows user to pass custom key)
     ...(keyModifiers[0] ? { key: keyModifiers[0] } : {})
   }
