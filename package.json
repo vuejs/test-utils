@@ -82,7 +82,7 @@
     "lint:fix": "pnpm run lint --fix",
     "docs:dev": "vitepress dev docs",
     "docs:build": "vitepress build docs",
-    "docs:translation:compare": "v-translation compare --status-file=docs/.vitepress/translation-status.json --path={docs/index.md,docs/guide,docs/installation,docs/migration}",
+    "docs:translation:compare": "v-translation compare --status-file=docs/.vitepress/translation-status.json --path={docs/index.md,docs/api/index.md,docs/guide,docs/installation,docs/migration}",
     "docs:translation:update": "v-translation update --status-file=docs/.vitepress/translation-status.json",
     "docs:translation:status": "v-translation status --status-file=docs/.vitepress/translation-status.json",
     "vue-tsc": "vue-tsc --noEmit -p tsconfig.volar.json",
