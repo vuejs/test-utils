@@ -176,7 +176,6 @@ describe('trigger', () => {
       await wrapper.trigger('keydown.enter')
       expect(keydownHandler).toHaveBeenCalledTimes(3)
       expect(keydownHandler.mock.calls[2][0].key).toBe('enter')
-
     })
 
     it('overwrites key if passed as a modifier', async () => {
