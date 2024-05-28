@@ -1024,6 +1024,10 @@ find<T extends Node = Node>(selector: string | RefSelector): DOMWrapper<T>;
 
 Vous pouvez utiliser la même syntaxe qu'implémente `querySelector`. `find` est en quelque sorte un alias pour `querySelector`. En plus, vous pouvez rechercher des références d'éléments.
 
+Il est similaire à `get`, mais `find` retourne un `ErrorWrapper` si un élément n'est pas trouvé tandis que [`get`](#get) lancera une erreur.
+
+En règle générale, utilisez toujours `find` lorsque vous souhaitez vérifier que quelque chose n'existe pas. Si vous savez que quelque chose existe, utilisez [`get`](#get).
+
 `Component.vue`:
 
 ```vue
@@ -1273,9 +1277,10 @@ get(selector: string): Omit<DOMWrapper<Element>, 'exists'>
 
 **Utilisation&nbsp;:**
 
-Similaire à `find`, mais `get` retourne une exception au lieu de renvoyer un `ErrorWrapper`.
+It is similar to `find`, but `get` throws an error if an element is not found while [`find`](#find) will return an ErrorWrapper.
+Similaire à `find`, mais `get` renvoie une erreur si un élément n'est pas trouvé tandis que [`find`](#find) renverra un `ErrorWrapper`.
 
-En règle générale, utilisez toujours `get` sauf lorsque vous vérifiez que quelque chose n'existe pas. Dans ce cas, utilisez `find`.
+En règle générale, utilisez toujours `get` sauf lorsque vous voulez vérifier qu'un élément n'existe pas. Dans ce cas, utilisez [`find`](#find).
 
 `Component.vue`:
 
@@ -1314,7 +1319,7 @@ getComponent<T extends ComponentPublicInstance>(selector: any): Omit<VueWrapper<
 
 **Utilisation&nbsp;:**
 
-Similaire à `findComponent`, mais `getComponent` retourne une exception au lieu de renvoyer un `ErrorWrapper`.
+Similaire à `findComponent`, mais `getComponent` renvoie une erreur si une instance de composant Vue n'est pas trouvée tandis que [`findComponent`](#findComponent) renverra un `ErrorWrapper`.
 
 **Syntaxes supportées&nbsp;:**
 
