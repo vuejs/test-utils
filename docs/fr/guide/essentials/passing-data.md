@@ -17,10 +17,10 @@ const Password = {
   `,
   data() {
     return {
-      password: '',
-    };
-  },
-};
+      password: ''
+    }
+  }
+}
 ```
 
 Le premier critère que nous allons mettre en place est une longueur minimale.
@@ -41,17 +41,22 @@ const Password = {
   `,
   props: {
     minLength: {
-      type: Number,
-    },
+      type: Number
+    }
+  },
+  data() {
+    return {
+      password: ''
+    }
   },
   computed: {
     error() {
       if (this.password.length < this.minLength) {
-        return `Le mot de passe doit contenir au moins ${this.minLength} caractères.`;
+        return `Le mot de passe doit contenir au moins ${this.minLength} caractères.`
       }
-    },
-  },
-};
+    }
+  }
+}
 ```
 
 Pour tester cela, nous devons définir `minLength`, ainsi qu'un `password` inférieur à ce nombre minimal. Nous pouvons le faire en utilisant les options de `mount()`&nbsp;: `data` et `props`. Enfin, nous allons vérifier que le message d'erreur correct est affiché&nbsp;:
@@ -60,16 +65,18 @@ Pour tester cela, nous devons définir `minLength`, ainsi qu'un `password` infé
 test('affiche une erreur si le mot de passe est trop court', () => {
   const wrapper = mount(Password, {
     props: {
-      minLength: 10,
+      minLength: 10
     },
     data() {
       return {
-        password: 'court',
-      };
-    },
-  });
+        password: 'court'
+      }
+    }
+  })
 
-  expect(wrapper.html()).toContain('Le mot de passe doit contenir au moins 10 caractères.');
+  expect(wrapper.html()).toContain(
+    'Le mot de passe doit contenir au moins 10 caractères.'
+  )
 })
 ```
 
@@ -85,37 +92,36 @@ Parfois, vous pouvez avoir besoin d'écrire un test pour un effet collatéral lo
 </template>
 
 <script>
-
 export default {
   props: {
     show: {
       type: Boolean,
-      default: true,
-    },
+      default: true
+    }
   },
   data() {
     return {
-      greeting: 'Salut',
-    };
-  },
-};
+      greeting: 'Salut'
+    }
+  }
+}
 </script>
 ```
 
 Pour tester cela de bout en bout, nous voulons peut-être vérifier que `greeting` est affiché par défaut. Nous sommes aussi en mesure de mettre à jour la propriété `show` à l'aide de `setProps()`, ce qui entraîne la disparition de `greeting`&nbsp;:
 
 ```js
-import { mount } from '@vue/test-utils';
-import Show from './Show.vue';
+import { mount } from '@vue/test-utils'
+import Show from './Show.vue'
 
 test('affiche une salutation quand show est à true', async () => {
-  const wrapper = mount(Show);
-  expect(wrapper.html()).toContain('Salut');
+  const wrapper = mount(Show)
+  expect(wrapper.html()).toContain('Salut')
 
-  await wrapper.setProps({ show: false });
+  await wrapper.setProps({ show: false })
 
-  expect(wrapper.html()).not.toContain('Salut');
-});
+  expect(wrapper.html()).not.toContain('Salut')
+})
 ```
 
 Nous utilisons également `await` lors de l'appel à `setProps()`, pour nous assurer que le DOM a été mis à jour avant l'exécution des vérifications.
