@@ -127,12 +127,7 @@ describe('setData', () => {
 
   // https://github.com/vuejs/test-utils/issues/538
   it('updates data set via data mounting option using setData', async () => {
-    const Comp = defineComponent<
-      {},
-      {},
-      { field: number | null },
-      { isFieldNull: any }
-    >({
+    const Comp = defineComponent({
       template: `
         <div>{{ isFieldNull ? 'It is null' : 'It is not null' }}</div>
       `,
