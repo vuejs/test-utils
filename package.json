@@ -30,7 +30,7 @@
     "@rollup/plugin-commonjs": "25.0.8",
     "@rollup/plugin-json": "6.1.0",
     "@rollup/plugin-node-resolve": "15.2.3",
-    "@rollup/plugin-replace": "5.0.6",
+    "@rollup/plugin-replace": "5.0.7",
     "@rollup/plugin-typescript": "11.1.6",
     "@types/js-beautify": "1.14.3",
     "@types/node": "20.14.2",
@@ -106,7 +106,7 @@
     "url": "git+https://github.com/vuejs/test-utils.git"
   },
   "homepage": "https://github.com/vuejs/test-utils",
-  "packageManager": "pnpm@9.1.4",
+  "packageManager": "pnpm@9.2.0",
   "pnpm": {
     "peerDependencyRules": {
       "ignoreMissing": [
