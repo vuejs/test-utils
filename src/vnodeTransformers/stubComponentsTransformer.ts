@@ -46,13 +46,14 @@ const normalizeStubProps = (props: ComponentPropsOptions) => {
   // props are always normalized to object syntax
   const $props = props as unknown as ComponentObjectPropsOptions
   return Object.keys($props).reduce((acc, key) => {
-    if (typeof $props[key] === 'symbol') {
-      return { ...acc, [key]: [$props[key]?.toString()] }
+    const value: unknown = $props[key]
+    if (typeof value === 'symbol') {
+      return { ...acc, [key]: [value?.toString()] }
     }
-    if (typeof $props[key] === 'function') {
+    if (typeof value === 'function') {
       return { ...acc, [key]: ['[Function]'] }
     }
-    return { ...acc, [key]: $props[key] }
+    return { ...acc, [key]: value }
   }, {})
 }
 
