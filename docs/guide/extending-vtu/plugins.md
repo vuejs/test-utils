@@ -171,7 +171,7 @@ To use your custom wrapper plugin with [TypeScript](https://www.typescriptlang.o
 import { DOMWrapper } from '@vue/test-utils';
 
 declare module '@vue/test-utils' {
-  export class VueWrapper {
+  export interface VueWrapper {
     findByTestId(testId: string): DOMWrapper[];
   }
 }
