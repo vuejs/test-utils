@@ -100,8 +100,8 @@ importers:
         specifier: 5.5.3
         version: 5.5.3
       unplugin-vue-components:
-        specifier: 0.27.2
-        version: 0.27.2(@babel/parser@7.24.7)(rollup@4.18.1)(vue@3.4.31(typescript@5.5.3))
+        specifier: 0.27.3
+        version: 0.27.3(@babel/parser@7.24.7)(rollup@4.18.1)(vue@3.4.31(typescript@5.5.3))
       vite:
         specifier: 5.3.3
         version: 5.3.3(@types/node@20.14.10)
@@ -2237,8 +2237,8 @@ packages:
     resolution: {integrity: sha512-CJ1QgKmNg3CwvAv/kOFmtnEN05f0D/cn9QntgNOQlQF9dgvVTHj3t+8JPdjqawCHk7V/KA+fbUqzZ9XWhcqPUg==}
     engines: {node: '>= 4.0.0'}
 
-  unplugin-vue-components@0.27.2:
-    resolution: {integrity: sha512-YifnsmslMRNt+JRQiCG4ZX1+xUQuubUZm76K7Qtg8dmchZJkHIDxZSyfZb5/jqrLWMTm/TUjGJ3ZDlzO6SFnSQ==}
+  unplugin-vue-components@0.27.3:
+    resolution: {integrity: sha512-5wg7lbdg5ZcrAQNzyYK+6gcg/DG8K6rO+f5YeuvqGHs/PhpapBvpA4O/0ex/pFthE5WgRk43iWuRZEMLVsdz4Q==}
     engines: {node: '>=14'}
     peerDependencies:
       '@babel/parser': ^7.15.8
@@ -2250,8 +2250,8 @@ packages:
       '@nuxt/kit':
         optional: true
 
-  unplugin@1.10.1:
-    resolution: {integrity: sha512-d6Mhq8RJeGA8UfKCu54Um4lFA0eSaRa3XxdAJg8tIdxbu1ubW0hBCZUL7yI2uGyYCRndvbK8FLHzqy2XKfeMsg==}
+  unplugin@1.11.0:
+    resolution: {integrity: sha512-3r7VWZ/webh0SGgJScpWl2/MRCZK5d3ZYFcNaeci/GQ7Teop7zf0Nl2pUuz7G21BwPd9pcUPOC5KmJ2L3WgC5g==}
     engines: {node: '>=14.0.0'}
 
   update-browserslist-db@1.0.16:
@@ -4612,7 +4612,7 @@ snapshots:
 
   universalify@0.2.0: {}
 
-  unplugin-vue-components@0.27.2(@babel/parser@7.24.7)(rollup@4.18.1)(vue@3.4.31(typescript@5.5.3)):
+  unplugin-vue-components@0.27.3(@babel/parser@7.24.7)(rollup@4.18.1)(vue@3.4.31(typescript@5.5.3)):
     dependencies:
       '@antfu/utils': 0.7.10
       '@rollup/pluginutils': 5.1.0(rollup@4.18.1)
@@ -4623,7 +4623,7 @@ snapshots:
       magic-string: 0.30.10
       minimatch: 9.0.5
       mlly: 1.7.1
-      unplugin: 1.10.1
+      unplugin: 1.11.0
       vue: 3.4.31(typescript@5.5.3)
     optionalDependencies:
       '@babel/parser': 7.24.7
@@ -4631,7 +4631,7 @@ snapshots:
       - rollup
       - supports-color
 
-  unplugin@1.10.1:
+  unplugin@1.11.0:
     dependencies:
       acorn: 8.11.3
       chokidar: 3.6.0
