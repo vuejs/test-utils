@@ -11,9 +11,9 @@ import domEvents, {
 } from './constants/dom-events'
 
 interface TriggerOptions {
-  code?: String
-  key?: String
-  keyCode?: Number
+  code?: string
+  key?: string
+  keyCode?: number
   [custom: string]: any
 }
 
@@ -156,7 +156,7 @@ function createDOMEvent(
   const eventPrototype = Object.getPrototypeOf(event)
 
   // attach custom options to the event, like `relatedTarget` and so on.
-  options &&
+  if (options) {
     Object.keys(options).forEach((key) => {
       const propertyDescriptor = Object.getOwnPropertyDescriptor(
         eventPrototype,
@@ -169,6 +169,7 @@ function createDOMEvent(
         event[key] = options[key]
       }
     })
+  }
   return event
 }
 
