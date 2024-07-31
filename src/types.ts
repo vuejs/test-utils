@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-empty-object-type */
 import {
   Component,
   ComponentOptions,
@@ -27,6 +28,7 @@ export type FindAllComponentsSelector =
   | string
 export type FindComponentSelector = RefSelector | FindAllComponentsSelector
 
+// eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
 export type Slot = VNode | string | { render: Function } | Function | Component
 
 type SlotDictionary = {

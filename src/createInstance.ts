@@ -68,6 +68,7 @@ function getInstanceOptions(
 
 // implementation
 export function createInstance(
+  // eslint-disable-next-line @typescript-eslint/no-empty-object-type
   inputComponent: DefineComponent<{}, {}, any, any, any, any>,
   options?: MountingOptions<any> & Record<string, any>
 ) {
@@ -129,8 +130,10 @@ export function createInstance(
     options?.slots &&
     Object.entries(options.slots).reduce(
       (
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
         acc: { [key: string]: Function },
         [name, slot]: [string, Slot]
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
       ): { [key: string]: Function } => {
         if (Array.isArray(slot)) {
           const normalized = slot.map(slotToFunction)

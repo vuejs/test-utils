@@ -7,7 +7,9 @@ function isCompatEnabled(key: string): boolean {
 }
 
 export function isLegacyExtendedComponent(component: unknown): component is {
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
   (): Function
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
   super: Function
   options: ComponentOptions
 } {

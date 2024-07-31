@@ -16,6 +16,7 @@ type ShimSlotReturnType<T> = T extends (...args: infer P) => any
 
 type WithArray<T> = T | T[]
 
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type
 type ComponentData<T> = T extends { data?(...args: any): infer D } ? D : {}
 
 export type ComponentMountingOptions<

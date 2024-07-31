@@ -157,14 +157,14 @@ export function textContent(element: Node): string {
     : ''
 }
 
-export function hasOwnProperty<O extends {}, P extends PropertyKey>(
+export function hasOwnProperty<O extends object, P extends PropertyKey>(
   obj: O,
   prop: P
 ): obj is O & Record<P, unknown> {
   return obj.hasOwnProperty(prop)
 }
 
-export function isNotNullOrUndefined<T extends {}>(
+export function isNotNullOrUndefined<T extends object>(
   obj: T | null | undefined
 ): obj is T {
   return Boolean(obj)
