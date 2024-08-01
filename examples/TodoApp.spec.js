@@ -4,6 +4,7 @@
  * yarn build. Then you can run this with `yarn test examples`
  */
 import { mount } from '../dist/vue-test-utils.cjs.js'
+import { test, expect } from 'vitest'
 
 import TodoApp from './TodoApp.vue'
 

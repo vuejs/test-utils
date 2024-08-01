@@ -12,7 +12,7 @@ const enum DevtoolsHooks {
   COMPONENT_EMIT = 'component:emit'
 }
 
-let events: Events = {}
+const events: Events = {}
 
 export function emitted<T = unknown>(
   vm: ComponentPublicInstance,

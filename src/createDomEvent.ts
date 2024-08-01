@@ -61,9 +61,10 @@ function generateModifiers(modifiers: KeyName[], isOnClick: boolean) {
 }
 
 function getEventProperties(eventParams: EventParams) {
-  let { modifiers, options = {}, eventType } = eventParams
+  const { modifiers, options = {} } = eventParams
+  let { eventType } = eventParams
 
-  let isOnClick = eventType === 'click'
+  const isOnClick = eventType === 'click'
 
   const { keyModifiers, systemModifiers } = generateModifiers(
     modifiers,

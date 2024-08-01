@@ -113,7 +113,7 @@ describe('config', () => {
         components: { Child },
         template: '<child><div id="default-slot" /></child>'
       })
-      let comp = mount(Component, {
+      const comp = mount(Component, {
         shallow: true,
         global: {
           // @ts-expect-error
@@ -123,7 +123,7 @@ describe('config', () => {
 
       expect(comp.find('#default-slot').exists()).toBe(true)
 
-      let comp2 = mount(Component, {
+      const comp2 = mount(Component, {
         shallow: true,
         global: {
           // @ts-expect-error

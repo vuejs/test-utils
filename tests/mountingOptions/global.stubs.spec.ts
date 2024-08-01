@@ -8,7 +8,7 @@ import ScriptSetupWithChildren from '../components/ScriptSetupWithChildren.vue'
 import AutoImportScriptSetup from '../components/AutoImportScriptSetup.vue'
 
 describe('mounting options: stubs', () => {
-  let configStubsSave = config.global.stubs
+  const configStubsSave = config.global.stubs
   beforeEach(() => {
     config.global.stubs = configStubsSave
   })

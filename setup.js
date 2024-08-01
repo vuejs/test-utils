@@ -1,3 +1,4 @@
+/* global __USE_BUILD__, console */
 import { vi } from 'vitest'
 
 const originalConsole = console.info

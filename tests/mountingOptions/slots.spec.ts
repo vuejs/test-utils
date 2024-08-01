@@ -10,7 +10,7 @@ describe('slots', () => {
   describe('normal slots', () => {
     it('supports providing a plain string text in slot', () => {
       const defaultString = 'Rendered in Default'
-      let namedString = 'Rendered in Named'
+      const namedString = 'Rendered in Named'
       const wrapper = mount(ComponentWithSlots, {
         slots: {
           default: defaultString,
