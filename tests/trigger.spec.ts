@@ -205,7 +205,7 @@ describe('trigger', () => {
 
       expect(keydownHandler).toHaveBeenCalledTimes(1)
 
-      let event = keydownHandler.mock.calls[0][0]
+      const event = keydownHandler.mock.calls[0][0]
       expect(event.key).toBe('left')
       expect(event.shiftKey).toBe(true)
       expect(event.ctrlKey).toBe(true)
@@ -241,7 +241,7 @@ describe('trigger', () => {
     })
 
     it('causes keydown handler to fire converting keyName in an appropriate keyCode when wrapper.trigger("keydown.${keyName}") is fired', async () => {
-      let keydownHandler = vi.fn()
+      const keydownHandler = vi.fn()
 
       const Component = {
         template: '<input @keydown="keydownHandler" />',
@@ -273,7 +273,7 @@ describe('trigger', () => {
         'input'
       ]
 
-      for (let element of validElementsToBeDisabled) {
+      for (const element of validElementsToBeDisabled) {
         const clickHandler = vi.fn()
         const Component = {
           template: `<${element} disabled @click="clickHandler" />`,
@@ -289,7 +289,7 @@ describe('trigger', () => {
     it('is fired when trigger is called on a element set as disabled but who is invalid to be disabled', async () => {
       const invalidElementsToBeDisabled = ['div', 'span', 'a']
 
-      for (let element of invalidElementsToBeDisabled) {
+      for (const element of invalidElementsToBeDisabled) {
         const clickHandler = vi.fn()
         const Component = {
           template: `<${element} disabled @click="clickHandler" />`,
@@ -312,7 +312,7 @@ describe('trigger', () => {
       'once',
       'passive'
     ]
-    for (let modifier of eventModifiers) {
+    for (const modifier of eventModifiers) {
       it(`handles .${modifier}`, async () => {
         const keydownHandler = vi.fn()
         const Component = {

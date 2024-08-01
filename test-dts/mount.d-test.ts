@@ -219,6 +219,7 @@ expectError(mount(ClassComponent, {}).vm.changeMessage())
 mount(ClassComponent, {}).vm.changeMessage('')
 
 // region custom class component implement
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type
 class CustomClassComponent<Props extends {} = {}> {
   static defaultProps?: Record<string, Prop<any>> | string[]
   private static __vccValue?: ComponentOptions

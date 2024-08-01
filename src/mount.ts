@@ -75,7 +75,7 @@ export function mount(
   // Workaround for https://github.com/vuejs/core/issues/7020
   const originalErrorHandler = app.config.errorHandler
 
-  let errorsOnMount: unknown[] = []
+  const errorsOnMount: unknown[] = []
   app.config.errorHandler = (err, instance, info) => {
     errorsOnMount.push(err)
 

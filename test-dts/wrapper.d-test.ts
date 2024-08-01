@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-expressions */
 import { expectType } from './index'
 import { defineComponent } from 'vue'
 import { mount } from '../src'
@@ -14,12 +15,12 @@ const domWrapper = wrapper.find('#other')
 let inputMaybe = wrapper.find('input')
 expectType<HTMLInputElement | undefined>(inputMaybe.element)
 
-let buttonComp = mount(
+const buttonComp = mount(
   defineComponent({ template: '<button>Click me</button>' })
 )
 expectType<HTMLButtonElement>(buttonComp.element)
 
-let multiRootComp = mount(defineComponent({ template: '<span /><span />' }))
+const multiRootComp = mount(defineComponent({ template: '<span /><span />' }))
 // this will be a wrapper div element like so: <div data-v-app="">
 expectType<HTMLDivElement>(multiRootComp.element)
 expectType<HTMLSpanElement>(multiRootComp.element.firstElementChild)
@@ -74,16 +75,16 @@ expectType<Element | undefined>(byClassArray[0].element)
 // emitted
 
 // event name without specific type
-let incrementEventWithoutType = wrapper.emitted('increment')
+const incrementEventWithoutType = wrapper.emitted('increment')
 expectType<unknown[][] | undefined>(incrementEventWithoutType)
 
 // event name
-let incrementEvent = wrapper.emitted<{ count: number }>('increment')
+const incrementEvent = wrapper.emitted<{ count: number }>('increment')
 expectType<{ count: number }[] | undefined>(incrementEvent)
 expectType<{ count: number }>(incrementEvent![0])
 
 // without event name
-let allEvents = wrapper.emitted()
+const allEvents = wrapper.emitted()
 expectType<Record<string, unknown[]>>(allEvents)
 
 // get

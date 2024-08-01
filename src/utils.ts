@@ -161,6 +161,7 @@ export function hasOwnProperty<O extends object, P extends PropertyKey>(
   obj: O,
   prop: P
 ): obj is O & Record<P, unknown> {
+  // eslint-disable-next-line no-prototype-builtins
   return obj.hasOwnProperty(prop)
 }
 

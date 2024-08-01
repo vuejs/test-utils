@@ -212,7 +212,7 @@ export default abstract class BaseWrapper<ElementType extends Node>
       return []
     }
 
-    let results = find(currentComponent.subTree, selector)
+    const results = find(currentComponent.subTree, selector)
 
     return results.map((c) =>
       c.proxy

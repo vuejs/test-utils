@@ -197,7 +197,7 @@ export class VueWrapper<
       return
     }
     const [element] = elementRoots
-    for (let eventName of Object.keys(domEvents)) {
+    for (const eventName of Object.keys(domEvents)) {
       // if a component includes events in 'emits' with the same name as native
       // events, the native events with that name should be ignored
       // @see https://github.com/vuejs/rfcs/blob/master/active-rfcs/0030-emits-option.md#fallthrough-control
