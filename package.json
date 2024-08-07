@@ -55,7 +55,7 @@
     "typescript": "5.5.4",
     "typescript-eslint": "8.0.1",
     "unplugin-vue-components": "0.27.3",
-    "vite": "5.3.5",
+    "vite": "5.4.0",
     "vitepress": "1.3.2",
     "vitepress-translation-helper": "0.2.1",
     "vitest": "2.0.5",
