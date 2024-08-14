@@ -3,7 +3,7 @@ import { VueWrapper } from './vueWrapper'
 import BaseWrapper from './baseWrapper'
 import { mount, shallowMount } from './mount'
 import { renderToString } from './renderToString'
-import { MountingOptions } from './types'
+import { MountingOptions, Stubs } from './types'
 import { RouterLinkStub } from './components/RouterLinkStub'
 import { createWrapperError } from './errorWrapper'
 import { config } from './config'
@@ -23,6 +23,7 @@ export {
   config,
   flushPromises,
   MountingOptions,
+  Stubs,
   createWrapperError
 }
 
