@@ -1683,10 +1683,10 @@ test('setValue sur une checkbox', async () => {
   const wrapper = mount(Component);
 
   await wrapper.find('input[type="checkbox"]').setValue(true);
-  expect(wrapper.find('div')).toBe(true);
+  expect(wrapper.find('div').exists()).toBe(true);
 
   await wrapper.find('input[type="checkbox"]').setValue(false);
-  expect(wrapper.find('div')).toBe(false);
+  expect(wrapper.find('div').exists()).toBe(false);
 });
 
 test('setValue sur un champ texte', async () => {
