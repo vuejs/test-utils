@@ -278,7 +278,7 @@ describe('App', () => {
 
 ### No more `ref` selector in `findAllComponents`
 
-The `ref` syntax is not supported anymore in `findAllComponents`. You can set a `data-testid` instead and update the selector:
+The `ref` syntax is not supported anymore in `findAllComponents`. You could set a `data-test` attribute instead and update the selector:
 
 `Component.vue`:
 
