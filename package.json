@@ -65,6 +65,15 @@
     "vue-tsc": "2.1.6",
     "vuex": "4.1.0"
   },
+  "peerDependencies": {
+    "@vue/server-renderer": "3.x",
+    "vue": "3.x"
+  },
+  "peerDependenciesMeta": {
+    "@vue/server-renderer": {
+      "optional": true
+    }
+  },
   "author": {
     "name": "Lachlan Miller",
     "email": "lachlan.miller.1990@outlook.com"
