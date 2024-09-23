@@ -16,8 +16,8 @@ importers:
         version: 2.0.1
     devDependencies:
       '@rollup/plugin-commonjs':
-        specifier: 26.0.1
-        version: 26.0.1(rollup@4.21.3)
+        specifier: 27.0.0
+        version: 27.0.0(rollup@4.21.3)
       '@rollup/plugin-json':
         specifier: 6.1.0
         version: 6.1.0(rollup@4.21.3)
@@ -639,8 +639,8 @@ packages:
     resolution: {integrity: sha512-Zwq5OCzuwJC2jwqmpEQt7Ds1DTi6BWSwoGkbb1n9pO3hzb35BoJELx7c0T23iDkBGkh2e7tvOtjF3tr3OaQHDQ==}
     engines: {node: ^12.20.0 || ^14.18.0 || >=16.0.0}
 
-  '@rollup/plugin-commonjs@26.0.1':
-    resolution: {integrity: sha512-UnsKoZK6/aGIH6AdkptXhNvhaqftcjq3zZdT+LY5Ftms6JR06nADcDsYp5hTU9E2lbJUEOhdlY5J4DNTneM+jQ==}
+  '@rollup/plugin-commonjs@27.0.0':
+    resolution: {integrity: sha512-zSq7xlCb5aLRAS+rE6mE+++fEWvWQ8RQ+A4HkBT8bUW/cdYnrFJKRlgdb76XSekgU1n4Rssi/mrOG4GL8D9AwQ==}
     engines: {node: '>=16.0.0 || 14 >= 14.17'}
     peerDependencies:
       rollup: ^2.68.0||^3.0.0||^4.0.0
@@ -1828,10 +1828,6 @@ packages:
 
   minimatch@9.0.1:
     resolution: {integrity: sha512-0jWhJpD/MdhPXwPuiRkCbfYfSKp2qnn2eOc279qI7f+osl/l+prKSrvhg157zSYvx/1nmgn2NqdT6k2Z7zSH9w==}
-    engines: {node: '>=16 || 14 >=14.17'}
-
-  minimatch@9.0.4:
-    resolution: {integrity: sha512-KqWh+VchfxcMNRAJjj2tnsSJdNbHsVgnkBhTNrW7AjVo6OvLtxw8zfT9oLw1JSohlFzJ8jCoTgaoXvJ+kHt6fw==}
     engines: {node: '>=16 || 14 >=14.17'}
 
   minimatch@9.0.5:
@@ -3041,14 +3037,14 @@ snapshots:
 
   '@pkgr/core@0.1.0': {}
 
-  '@rollup/plugin-commonjs@26.0.1(rollup@4.21.3)':
+  '@rollup/plugin-commonjs@27.0.0(rollup@4.21.3)':
     dependencies:
       '@rollup/pluginutils': 5.1.0(rollup@4.21.3)
       commondir: 1.0.1
       estree-walker: 2.0.2
       glob: 10.4.1
       is-reference: 1.2.1
-      magic-string: 0.30.10
+      magic-string: 0.30.11
     optionalDependencies:
       rollup: 4.21.3
 
@@ -3967,7 +3963,7 @@ snapshots:
     dependencies:
       foreground-child: 3.1.1
       jackspeak: 3.4.0
-      minimatch: 9.0.4
+      minimatch: 9.0.5
       minipass: 7.1.2
       path-scurry: 1.11.1
 
@@ -4292,10 +4288,6 @@ snapshots:
       brace-expansion: 2.0.1
 
   minimatch@9.0.1:
-    dependencies:
-      brace-expansion: 2.0.1
-
-  minimatch@9.0.4:
     dependencies:
       brace-expansion: 2.0.1
 
