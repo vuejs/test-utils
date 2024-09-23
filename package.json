@@ -31,7 +31,7 @@
     "@rollup/plugin-json": "6.1.0",
     "@rollup/plugin-node-resolve": "15.2.3",
     "@rollup/plugin-replace": "5.0.7",
-    "@rollup/plugin-typescript": "11.1.6",
+    "@rollup/plugin-typescript": "12.1.0",
     "@types/js-beautify": "1.14.3",
     "@types/node": "20.16.5",
     "@vitejs/plugin-vue": "5.1.4",
