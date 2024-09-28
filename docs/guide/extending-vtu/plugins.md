@@ -103,7 +103,7 @@ wrapper.findByTestId('name-input') // returns a VueWrapper or DOMWrapper
 Implementation of the plugin:
 
 ```js
-import { config } from '@vue/test-utils'
+import { config, DOMWrapper} from '@vue/test-utils'
 
 const DataTestIdPlugin = (wrapper) => {
   function findByTestId(selector) {
