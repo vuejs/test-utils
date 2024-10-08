@@ -59,7 +59,7 @@ Next, we call `mount` and pass the component as the first argument - this is som
 
 Finally, we use another global function common to many tests runner - Jest included - `expect`. The idea is we are asserting, or _expecting_, the actual output to match what we think it should be. In this case, we are finding an element with the selector `data-test="todo"` - in the DOM, this will look like `<div data-test="todo">...</div>`. We then call the `text` method to get the content, which we expect to be `'Learn Vue.js 3'`.
 
-> Using `data-test` selectors is not required, but it can make your tests less brittle. classes and ids tend to change or move around as an application grows - by using `data-test`, it's clear to other developers which elements are used in tests, and should not be changed.
+> Using `data-test` selectors is not required, but it can make your tests less brittle. Classes and ids tend to change or move around as an application grows - by using `data-test`, it's clear to other developers which elements are used in tests, and should not be changed.
 
 ## Making the test pass
 
