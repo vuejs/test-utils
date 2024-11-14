@@ -276,6 +276,28 @@ describe('App', () => {
   })
 ```
 
+### No more `ref` selector in `findAllComponents`
+
+The `ref` syntax is not supported anymore in `findAllComponents`. You could set a `data-test` attribute instead and update the selector:
+
+`Component.vue`:
+
+```diff
+<template>
+-  <FooComponent v-for="number in [1, 2, 3]" :key="number" ref="number">
++  <FooComponent v-for="number in [1, 2, 3]" :key="number" data-test="number">
+    {{ number }}
+  </FooComponent>
+</template>
+```
+
+`Component.spec.js`:
+
+```diff
+- wrapper.findAllComponents({ ref: 'number' })
++ wrapper.findAllComponents('[data-test="number"]')
+```
+
 ## Test runners upgrade notes
 
 > Vue Test Utils is framework agnostic - you can use it with whichever test runner you like.
