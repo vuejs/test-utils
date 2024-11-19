@@ -27,9 +27,9 @@ Get started by running `pnpm install`. You can run the tests with `pnpm test`. T
 
 ## Contributing Docs
 
-All the documentation files can be found in `packages/docs`. It contains the English markdown files while translation(s) are stored in their corresponding `<lang>` sub-folder(s):
+All the documentation files can be found in `docs`. It contains the English markdown files while translation(s) are stored in their corresponding `<lang>` sub-folder(s):
 
-- [`fr`](https://github.com/vuejs/test-utils/tree/main/packages/docs/fr): French translation.
+- [`fr`](https://github.com/vuejs/test-utils/tree/main/docs/fr): French translation.
 
 Besides that, the `.vitepress` sub-folder contains the config and theme, including the i18n information.
 
