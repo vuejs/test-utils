@@ -35,3 +35,4 @@ jobs:
     - run: pnpm run test:build
     - run: pnpm run tsd
     - run: pnpm run vue-tsc
+    - run: pnpm run tsc:docs

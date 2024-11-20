@@ -84,6 +84,7 @@
     "test:watch": "vitest --watch",
     "test:build": "vitest --mode test-build",
     "tsd": "tsc -p test-dts/tsconfig.tsd.json",
+    "tsc:docs": "vue-tsc -p docs/.vitepress/tsconfig.vitepress.json",
     "build": "rollup -c rollup.config.ts --bundleConfigAsCjs",
     "prepare": "rollup -c rollup.config.ts --bundleConfigAsCjs",
     "lint": "eslint .",
