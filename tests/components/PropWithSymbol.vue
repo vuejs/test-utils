@@ -1,5 +1,5 @@
 <template>
-  <div>Symbol: {{ $props.sym }}</div>
+  <div>Symbol: {{ sym }}</div>
 </template>
 
 <script lang="ts" setup>
@@ -7,7 +7,5 @@ interface Props {
   sym?: Symbol
 }
 
-withDefaults(defineProps<Props>(), {
-  sym: () => Symbol()
-})
+const { sym = Symbol() } = defineProps<Props>()
 </script>
