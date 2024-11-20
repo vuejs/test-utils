@@ -1,10 +1,10 @@
-import type { DefaultTheme, LocalSpecificConfig } from 'vitepress'
+import type { DefaultTheme, LocaleSpecificConfig } from 'vitepress'
 
 export const META_URL = ''
 export const META_TITLE = 'Vue Test Utils'
 export const META_DESCRIPTION = 'La librairie officielle de tests unitaires pour Vue.js 3'
 
-export const frConfig: LocalSpecificConfig<DefaultTheme.config> = {
+export const frConfig: LocaleSpecificConfig<DefaultTheme.Config> = {
   description: META_DESCRIPTION,
   head: [
     ['meta', { property: 'og:url', content: META_URL }],
@@ -43,7 +43,6 @@ export const frConfig: LocalSpecificConfig<DefaultTheme.config> = {
         },
         {
           text: 'Les Bases',
-          collapsable: false,
           items: [
             { text: 'Pour commencer', link: '/fr/guide/' },
             { text: 'Cours rapide', link: '/fr/guide/essentials/a-crash-course' },
@@ -68,7 +67,6 @@ export const frConfig: LocalSpecificConfig<DefaultTheme.config> = {
         },
         {
           text: 'Vue Test Utils en détail',
-          collapsable: false,
           items: [
             { text: 'Slots', link: '/fr/guide/advanced/slots' },
             {
@@ -101,7 +99,6 @@ export const frConfig: LocalSpecificConfig<DefaultTheme.config> = {
         },
         {
           text: 'Extensions de Vue Test Utils',
-          collapsable: false,
           items: [
             { text: 'Plugins', link: '/fr/guide/extending-vtu/plugins' },
             {
