@@ -91,7 +91,7 @@ export interface MountingOptions<Props, Data = {}>
   /**
    * Specify where to mount the component.
    * Can be a valid CSS selector, or an Element connected to the document.
-   * @see https://test-utils.vuejs.org/api/#attachto
+   * @see https://test-utils.vuejs.org/api/#attachTo
    */
   attachTo?: Element | string
 }

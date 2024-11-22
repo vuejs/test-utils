@@ -137,7 +137,7 @@ test('provides correct data', () => {
 })
 ```
 
-If your component does not contain a slot you can use a [`stub`](./stubs-shallow-mount.md#stubbing-a-single-child-component)
+If your component does not contain a slot you can use a [`stub`](./stubs-shallow-mount.md#Stubbing-a-single-child-component)
 and replace a child component with your test helper:
 
 ```vue

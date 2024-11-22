@@ -226,7 +226,7 @@ Ensuite, nous faisons une simple vérification&nbsp;: est-ce que le formulaire a
 
 #### Soumission de formulaire native
 
-Le déclenchement d'un événement `submit` sur un élément `<form>` imite le comportement du navigateur lors de la soumission d'un formulaire. Si nous voulions déclencher la soumission de formulaire de manière plus naturelle, nous pourrions déclencher un événement `click` sur le bouton de soumission à la place. Comme les éléments de formulaire non connectés à un `document` ne peuvent pas être soumis, selon la spécification HTML, nous devons utiliser [`attachTo`](../../api/#attachto) pour connecter l'élément du `wrapper`.
+Le déclenchement d'un événement `submit` sur un élément `<form>` imite le comportement du navigateur lors de la soumission d'un formulaire. Si nous voulions déclencher la soumission de formulaire de manière plus naturelle, nous pourrions déclencher un événement `click` sur le bouton de soumission à la place. Comme les éléments de formulaire non connectés à un `document` ne peuvent pas être soumis, selon la spécification HTML, nous devons utiliser [`attachTo`](../../api/#attachTo) pour connecter l'élément du `wrapper`.
 
 #### Plusieurs modificateurs sur un même évènement
 
