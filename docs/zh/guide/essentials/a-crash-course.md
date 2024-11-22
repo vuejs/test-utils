@@ -1,16 +1,15 @@
-# A Crash Course
+# 快速上手
 
-Let's jump right into it! Let's learn Vue Test Utils (VTU) by building a simple Todo app and writing tests as we go. This
-guide will cover how to:
+让我们直接开始吧！通过构建一个简单的待办事项应用程序并逐步编写测试，来学习 Vue Test Utils (VTU)。本指南将涵盖以下内容：
 
-- Mount components
-- Find elements
-- Fill out forms
-- Trigger events
+- 挂载组件
+- 查找元素
+- 填写表单
+- 触发事件
 
-## Getting Started
+## 开始
 
-We will start off with a simple `TodoApp` component with a single todo:
+我们将从一个简单的 `TodoApp` 组件开始，该组件包含一个待办事项：
 
 ```vue
 <template>
@@ -36,9 +35,9 @@ export default {
 </script>
 ```
 
-## The first test - a todo is rendered
+## 第一个测试 - 渲染待办事项
 
-The first test we will write verifies a todo is rendered. Let's see the test first, then discuss each part:
+我们将编写的第一个测试验证待办事项是否被渲染。先看测试代码，然后讨论每个部分：
 
 ```js
 import { mount } from '@vue/test-utils'
@@ -53,17 +52,17 @@ test('renders a todo', () => {
 })
 ```
 
-We start off by importing `mount` - this is the main way to render a component in VTU. You declare a test by using the `test` function with a short description of the test. The `test` and `expect` functions are globally available in most test runners (this example uses [Jest](https://jestjs.io/en/)). If `test` and `expect` look confusing, the Jest documentation has a [more simple example](https://jestjs.io/docs/en/getting-started) of how to use them and how they work.
+我们首先导入 `mount` —— 这是在 VTU 中渲染组件的主要方式。使用 `test` 函数声明一个测试，并给出简短的描述。`test` 和 `expect` 函数在大多数测试运行器中是全局可用的（此示例使用 [Jest](https://jestjs.io/)）。如果 `test` 和 `expect` 看起来令人困惑，Jest 文档中有一个 [更简单的示例](https://jestjs.io/docs/getting-started)，可以帮助您理解它们的用法和工作原理。
 
-Next, we call `mount` and pass the component as the first argument - this is something almost every test you write will do. By convention, we assign the result to a variable called `wrapper`, since `mount` provides a simple "wrapper" around the app with some convenient methods for testing.
+接下来，我们调用 `mount` 并将组件作为第一个参数传入 —— 这是几乎每个测试都会执行的操作。根据约定，我们将结果赋值给一个名为 `wrapper` 的变量，因为 `mount` 提供了一个简单的“包装器”，它为测试提供了一些方便的方法。
 
-Finally, we use another global function common to many tests runner - Jest included - `expect`. The idea is we are asserting, or _expecting_, the actual output to match what we think it should be. In this case, we are finding an element with the selector `data-test="todo"` - in the DOM, this will look like `<div data-test="todo">...</div>`. We then call the `text` method to get the content, which we expect to be `'Learn Vue.js 3'`.
+最后，我们使用另一个在许多测试运行器中常见的全局函数 - `expect`。我们的想法是，我们正在断言或*期望*实际输出与我们认为的应该匹配。在这个例子中，我们使用选择器 `data-test="todo"` 查找元素 —— 在 DOM 中，这将看起来像 `<div data-test="todo">...</div>`。然后我们调用 `text` 方法获取内容，并期望它是 `'Learn Vue.js 3'`。
 
-> Using `data-test` selectors is not required, but it can make your tests less brittle. Classes and ids tend to change or move around as an application grows - by using `data-test`, it's clear to other developers which elements are used in tests, and should not be changed.
+> 使用 `data-test` 选择器并不是必需的，但它可以使您的测试更加稳定。随着应用程序的增长，类和 ID 往往会变化或移动 —— 通过使用 `data-test`，其他开发人员可以清楚地知道哪些元素在测试中被使用，并且不应更改。
 
-## Making the test pass
+## 使测试通过
 
-If we run this test now, it fails with the following error message: `Unable to get [data-test="todo"]`. That's because we aren't rendering any todo item, so the `get()` call is failing to return a wrapper (remember, VTU wraps all components, and DOM elements, in a "wrapper" with some convenient methods). Let's update `<template>` in `TodoApp.vue` to render the `todos` array:
+如果我们现在运行这个测试，它会失败，并显示以下错误信息：`Unable to get [data-test="todo"]`。这是因为我们没有渲染任何待办事项，因此 `get()` 调用未能返回一个包装器（记住，VTU 将所有组件和 DOM 元素包装在一个带有一些方便方法的“包装器(wrapper)”中）。让我们更新 `TodoApp.vue` 中的 `<template>` 来渲染 todos 数组：
 
 ```vue
 <template>
@@ -75,11 +74,11 @@ If we run this test now, it fails with the following error message: `Unable to g
 </template>
 ```
 
-With this change, the test is passing. Congratulations! You wrote your first component test.
+通过这个更改，测试通过了。恭喜你！你编写了第一个组件测试。
 
-## Adding a new todo
+## 添加新的待办事项
 
-The next feature we will be adding is for the user to be able to create a new todo. To do so, we need a form with an input for the user to type some text. When the user submits the form, we expect the new todo to be rendered. Let's take a look at the test:
+我们将添加的下一个功能是允许用户创建新的待办事项。为此，我们需要一个包含输入框的表单，用户可以在其中输入文本。当用户提交表单时，我们期望新的待办事项被渲染。测试如下：
 
 ```js
 import { mount } from '@vue/test-utils'
@@ -96,13 +95,13 @@ test('creates a todo', () => {
 })
 ```
 
-As usual, we start of by using `mount` to render the element. We are also asserting that only 1 todo is rendered - this makes it clear that we are adding an additional todo, as the final line of the test suggests.
+和往常一样，我们首先使用 `mount` 渲染元素。我们还断言只有 1 个待办事项被渲染 —— 这使得我们清楚地知道我们正在添加一个额外的待办事项，正如测试的最后一行所暗示的那样。
 
-To update the `<input>`, we use `setValue` - this allows us to set the input's value.
+要更新 `<input>`，我们使用 `setValue` —— 这允许我们设置输入的值。
 
-After updating the `<input>`, we use the `trigger` method to simulate the user submitting the form. Finally, we assert the number of todo items has increased from 1 to 2.
+在更新 `<input>` 之后，我们使用 `trigger` 方法来模拟用户提交表单。最后，我们断言待办事项的数量从 1 增加到 2。
 
-If we run this test, it will obviously fail. Let's update `TodoApp.vue` to have the `<form>` and `<input>` elements and make the test pass:
+如果我们运行这个测试，它显然会失败。让我们更新 `TodoApp.vue` 以包含 `<form>` 和 `<input>` 元素，并使测试通过：
 
 ```vue
 <template>
@@ -147,9 +146,9 @@ export default {
 </script>
 ```
 
-We are using `v-model` to bind to the `<input>` and `@submit` to listen for the form submission. When the form is submitted, `createTodo` is called and inserts a new todo into the `todos` array.
+我们使用 `v-model` 绑定到 `<input>`，并使用 `@submit` 监听表单提交。当表单被提交时，`createTodo` 被调用，将新的待办事项插入到 `todos` 数组中。
 
-While this looks good, running the test shows an error:
+虽然这看起来不错，但运行测试会显示一个错误：
 
 ```
 expect(received).toHaveLength(expected)
@@ -159,7 +158,7 @@ expect(received).toHaveLength(expected)
     Received array:  [{"element": <div data-test="todo">Learn Vue.js 3</div>}]
 ```
 
-The number of todos has not increased. The problem is that Jest executes tests in a synchronous manner, ending the test as soon as the final function is called. Vue, however, updates the DOM asynchronously. We need to mark the test `async`, and call `await` on any methods that might cause the DOM to change. `trigger` is one such methods, and so is `setValue` - we can simply prepend `await` and the test should work as expected:
+待办事项的数量没有增加。问题在于 Jest 以同步方式执行测试，在最后一个函数调用后立即结束测试。然而，Vue 会异步更新 DOM。我们需要将测试标记为 `async`，并在任何可能导致 DOM 变化的方法上调用 `await`。`trigger` 和 `setValue` 都是这样的函数，我们只需在前面添加 `await`，测试就应该按预期工作：
 
 ```js
 import { mount } from '@vue/test-utils'
@@ -175,11 +174,11 @@ test('creates a todo', async () => {
 })
 ```
 
-Now the test is finally passing!
+现在测试终于通过了！
 
-## Completing a todo
+## 完成待办事项
 
-Now that we can create todos, let's give the user the ability to mark a todo item as completed/uncompleted with a checkbox. As previously, let's start with the failing test:
+现在我们可以创建待办事项，让我们给用户增加一个功能，允许他们通过复选框标记待办事项为完成/未完成。像之前一样，让我们从失败的测试开始：
 
 ```js
 import { mount } from '@vue/test-utils'
@@ -194,11 +193,11 @@ test('completes a todo', async () => {
 })
 ```
 
-This test is similar to the previous two; we find an element and interact with it in same way (we use `setValue` again, since we are interacting with a `<input>`).
+这个测试与之前的两个测试类似；我们找到一个元素并以相同的方式与之交互（我们再次使用 `setValue`，因为我们在与 `<input>` 交互）。
 
-Lastly, we make an assertion. We will be applying a `completed` class to completed todos - we can then use this to add some styling to visually indicate the status of a todo.
+最后，我们进行断言。我们将为已完成的待办事项应用一个 `completed` 类 —— 我们可以使用这个类来添加一些样式，以直观地指示待办事项的状态。
 
-We can get this test to pass by updating the `<template>` to include the `<input type="checkbox">` and a class binding on the todo element:
+我们可以通过更新 `<template>` 来使这个测试通过，以包含 `<input type="checkbox">` 和对待办事项元素的类绑定：
 
 ```vue
 <template>
@@ -224,11 +223,11 @@ We can get this test to pass by updating the `<template>` to include the `<input
 </template>
 ```
 
-Congratulations! You wrote your first component tests.
+恭喜你！你编写了第一个组件测试。
 
-## Arrange, Act, Assert
+## 安排、执行、断言
 
-You may have noticed some new lines between the code in each of the tests. Let's look at the second test again, in detail:
+您可能注意到每个测试中的代码之间有一些新行。让我们再次详细查看第二个测试：
 
 ```js
 import { mount } from '@vue/test-utils'
@@ -244,20 +243,20 @@ test('creates a todo', async () => {
 })
 ```
 
-The test is split into three distinct stages, separated by new lines. The three stages represent the three phases of a test: **arrange**, **act** and **assert**.
+测试分为三个不同的阶段，用新行分隔。这三个阶段代表了测试的三个阶段：**安排(Arrange)**、**执行(Act)** 和 **断言(Assert)**。
 
-In the _arrange_ phase, we are setting up the scenario for the test. A more complex example may require creating a Vuex store, or populating a database.
+在 _安排(Arrange)_ 阶段，我们为测试设置场景。更复杂的示例可能需要创建 Vuex 存储或填充数据库。
 
-In the _act_ phase, we act out the scenario, simulating how a user would interact with the component or application.
+在 _执行(Act)_ 阶段，我们模拟用户如何与组件或应用程序交互。
 
-In the _assert_ phase, we make assertions about how we expect the current state of the component to be.
+在 _断言(Assert)_ 阶段，我们对组件的当前状态进行断言。
 
-Almost all test will follow these three phases. You don't need to separate them with new lines like this guide does, but it is good to keep these three phases in mind as you write your tests.
+几乎所有测试都将遵循这三个阶段。您不需要像本指南那样用新行将它们分开，但在编写测试时，牢记这三个阶段是很好的。
 
-## Conclusion
+## 结论
 
-- Use `mount()` to render a component.
-- Use `get()` and `findAll()` to query the DOM.
-- `trigger()` and `setValue()` are helpers to simulate user input.
-- Updating the DOM is an async operation, so make sure to use `async` and `await`.
-- Testing usually consists of 3 phases; arrange, act and assert.
+- 使用 `mount()` 渲染组件。
+- 使用 `get()` 和 `findAll()` 查询 DOM。
+- `trigger()` 和 `setValue()` 是模拟用户输入的助手。
+- 更新 DOM 是一个异步操作，因此请确保使用 `async` 和 `await`。
+- 测试通常由三个阶段组成：安排、执行和断言。

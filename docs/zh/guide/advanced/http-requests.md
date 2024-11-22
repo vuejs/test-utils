@@ -1,14 +1,14 @@
-# Making HTTP requests
+# 发起 HTTP 请求
 
-Modern test runners already provide lots of great features when it comes to test HTTP requests. Thus, Vue Test Utils doesn't feature any unique tool to do so.
+现代测试运行器在测试 HTTP 请求方面已经提供了许多优秀的功能。因此，Vue Test Utils 并没有提供任何独特的工具来处理这一点。
 
-However, it is an important feature to test, and there are a few gotchas we want to highlight.
+然而，测试 HTTP 请求是一个重要的功能，我们希望强调一些注意事项。
 
-In this section, we explore some patterns to perform, mock, and assert HTTP requests.
+在本节中，我们将探讨一些模式，以执行、模拟和断言 HTTP 请求。
 
-## A list of blog posts
+## 博客文章列表
 
-Let's start with a basic use case. The following `PostList` component renders a list of blog posts fetched from an external API. To get these posts, the component features a `button` element that triggers the request:
+让我们从一个基本的用例开始。以下的 `PostList` 组件渲染了从外部 API 获取的博客文章列表。为了获取这些文章，组件包含一个触发请求的 `button` 元素：
 
 ```vue
 <template>
@@ -38,13 +38,13 @@ export default {
 </script>
 ```
 
-There are several things we need to do to test this component properly.
+为了正确测试这个组件，我们需要做几件事。
 
-Our first goal is to test this component **without actually reaching the API**. This would create a fragile and potentially slow test.
+我们的第一个目标是测试这个组件 **而不实际访问 API**。这样会导致测试变得不稳定且可能执行缓慢。
 
-Secondly, we need to assert that the component made the right call with the appropriate parameters. We won't be getting results from that API, but we still need to ensure we requested the right resources.
+其次，我们需要断言组件是否以正确的参数进行了正确的调用。虽然我们不会从 API 获取结果，但仍需确保请求了正确的资源。
 
-Also, we need to make sure that the DOM has updated accordingly and displays the data. We do so by using the `flushPromises()` function from `@vue/test-utils`.
+此外，我们还需要确保 DOM 已相应更新并显示数据。我们可以使用 `@vue/test-utils` 中的 `flushPromises()` 函数来实现。
 
 ```js
 import { mount, flushPromises } from '@vue/test-utils'
@@ -56,8 +56,7 @@ const mockPostList = [
   { id: 2, title: 'title2' }
 ]
 
-// Following lines tell Jest to mock any call to `axios.get`
-// and to return `mockPostList` instead
+// 以下行代码告诉 Jest 模拟任何对 `axios.get` 的调用并返回 `mockPostList`
 jest.spyOn(axios, 'get').mockResolvedValue(mockPostList)
 
 test('loads posts on button click', async () => {
@@ -65,15 +64,14 @@ test('loads posts on button click', async () => {
 
   await wrapper.get('button').trigger('click')
 
-  // Let's assert that we've called axios.get the right amount of times and
-  // with the right parameters.
+  // 断言我们已正确调用 axios.get 的次数和参数。
   expect(axios.get).toHaveBeenCalledTimes(1)
   expect(axios.get).toHaveBeenCalledWith('/api/posts')
 
-  // Wait until the DOM updates.
+  // 等待 DOM 更新。
   await flushPromises()
 
-  // Finally, we make sure we've rendered the content from the API.
+  // 最后，确保我们已渲染 API 的内容。
   const posts = wrapper.findAll('[data-test="post"]')
 
   expect(posts).toHaveLength(2)
@@ -82,19 +80,19 @@ test('loads posts on button click', async () => {
 })
 ```
 
-Pay attention that we added prefix `mock` to the variable `mockPostList`. If not, we will get the error: "The module factory of jest.mock() is not allowed to reference any out-of-scope variables.". This is jest-specific, and you can read more about this behavior [in their docs](https://jestjs.io/docs/es6-class-mocks#calling-jestmock-with-the-module-factory-parameter).
+请注意，我们在变量 `mockPostList` 前添加了前缀 `mock`。如果不这样做，我们将收到错误：“The module factory of jest.mock() is not allowed to reference any out-of-scope variables.” 这是 Jest 特有的，您可以在他们的[文档](https://jestjs.io/docs/es6-class-mocks#calling-jestmock-with-the-module-factory-parameter)中了解更多关于这种行为的信息。
 
-Also notice how we awaited `flushPromises` and then interacted with the Component. We do so to ensure that the DOM has been updated before the assertions run.
+还要注意，我们在与组件交互之前等待了 `flushPromises`。这样可以确保在运行断言之前，DOM 已更新。
 
-:::tip Alternatives to jest.mock()
-There are several ways of setting mocks in Jest. The one used in the example above is the simplest. For more powerful alternatives, you might want to check out [axios-mock-adapter](https://github.com/ctimmerm/axios-mock-adapter) or [msw](https://github.com/mswjs/msw), among others.
+:::tip jest.mock() 的替代方案
+在 Jest 中设置模拟有多种方法。上面示例中使用的方式是最简单的。对于更强大的替代方案，您可能想查看 [axios-mock-adapter](https://github.com/ctimmerm/axios-mock-adapter) 或 [msw](https://github.com/mswjs/msw) 等。
 :::
 
-### Asserting loading state
+### 断言加载状态
 
-Now, this `PostList` component is pretty useful, but it lacks some other awesome features. Let's expand it to make it display a fancy message while loading our posts!
+现在，这个 `PostList` 组件非常实用，但缺少一些其他很棒的功能。让我们扩展它，使其在加载文章时显示一个漂亮的消息！
 
-Also, let's disable the `<button>` element while loading, too. We don't want users to keep sending requests while fetching!
+同时，让我们在加载时禁用 `<button>` 元素。我们不希望用户在获取数据时继续发送请求！
 
 ```vue {2,4,19,24,28}
 <template>
@@ -131,44 +129,44 @@ export default {
 </script>
 ```
 
-Let's write a test to assert that all the loading-related elements are rendered on time.
+让我们编写一个测试，以断言所有与加载相关的元素都能及时渲染。
 
 ```js
 test('displays loading state on button click', async () => {
   const wrapper = mount(PostList)
 
-  // Notice that we run the following assertions before clicking on the button
-  // Here, the component should be in a "not loading" state.
+  // 注意，我们在点击按钮之前运行以下断言
+  // 此时组件应该处于“未加载”状态。
   expect(wrapper.find('[role="alert"]').exists()).toBe(false)
   expect(wrapper.get('button').attributes()).not.toHaveProperty('disabled')
 
-  // Now let's trigger it as usual.
+  // 现在像往常一样触发它。
   await wrapper.get('button').trigger('click')
 
-  // We assert for "Loading state" before flushing all promises.
+  // 我们在等待所有承诺完成之前，断言“加载状态”。
   expect(wrapper.find('[role="alert"]').exists()).toBe(true)
   expect(wrapper.get('button').attributes()).toHaveProperty('disabled')
 
-  // As we did before, wait until the DOM updates.
+  // 和之前一样，等待 DOM 更新。
   await flushPromises()
 
-  // After that, we're back at a "not loading" state.
+  // 之后，我们回到“未加载”状态。
   expect(wrapper.find('[role="alert"]').exists()).toBe(false)
   expect(wrapper.get('button').attributes()).not.toHaveProperty('disabled')
 })
 ```
 
-## HTTP requests from Vuex
+## 从 Vuex 发起 HTTP 请求
 
-A typical scenario for more complex applications is to trigger a Vuex action that performs the HTTP request.
+对于更复杂的应用程序，一个典型的场景是触发执行 HTTP 请求的 Vuex 动作。
 
-This is no different from the example outlined above. We might want to load the store as is and mock services such as `axios`. This way, we're mocking our system's boundaries, thus achieving a higher degree of confidence in our tests.
+这与上面概述的示例没有什么不同。我们可能想要像往常一样加载存储并模拟像 `axios` 这样的服务。通过这种方式，我们可以模拟系统的边界，从而在测试中获得更高的信心。
 
-You can check out the [Testing Vuex](vuex.md) docs for more information on testing Vuex with Vue Test Utils.
+您可以查看 [Testing Vuex](vuex.md) 文档，以获取有关使用 Vue Test Utils 测试 Vuex 的更多信息。
 
-## Conclusion
+## 结论
 
-- Vue Test Utils does not require special tools to test HTTP requests. The only thing to take into account is that we're testing asynchronous behavior.
-- Tests must not depend on external services. Use mocking tools such as `jest.mock` to avoid it.
-- `flushPromises()` is a useful tool to make sure the DOM updates after an async operation.
-- Directly triggering HTTP requests by interacting with the component makes your test more resilient.
+- Vue Test Utils 不需要特殊工具来测试 HTTP 请求。唯一需要考虑的是测试异步行为。
+- 测试不应依赖于外部服务。使用模拟工具如 `jest.mock` 来避免这种情况。
+- `flushPromises()` 是一个有用的工具，可以确保在异步操作后 DOM 更新。
+- 通过与组件进行交互来直接触发 HTTP 请求，可以让您的测试更加稳健。

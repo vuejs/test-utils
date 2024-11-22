@@ -2,15 +2,14 @@
 sidebar: auto
 ---
 
-# API Reference
+# API 参考
 
 ## mount
 
-Creates a Wrapper that contains the mounted and rendered Vue component to test.
-Note that when mocking dates/timers with Vitest, this must be called after
-`vi.setSystemTime`.
+创建一个包含已挂载和渲染的 Vue 组件的 Wrapper 以进行测试。
+请注意，当使用 Vitest 模拟日期/计时器时，必须在 `vi.setSystemTime` 之后调用此方法。
 
-**Signature:**
+**签名:**
 
 ```ts
 interface MountingOptions<Props, Data = {}> {
@@ -26,9 +25,9 @@ interface MountingOptions<Props, Data = {}> {
 function mount(Component, options?: MountingOptions): VueWrapper
 ```
 
-**Details:**
+**详细信息:**
 
-`mount` is the main method exposed by Vue Test Utils. It creates a Vue 3 app that holds and renders the Component under testing. In return, it creates a wrapper to act and assert against the Component.
+`mount` 是 Vue Test Utils 提供的主要方法。它创建一个 Vue 3 应用程序，该应用程序持有并渲染正在测试的组件。作为返回，它创建一个 Wrapper 以对组件进行操作和断言。
 
 ```js
 import { mount } from '@vue/test-utils'
@@ -44,9 +43,9 @@ test('mounts a component', () => {
 })
 ```
 
-Notice that `mount` accepts a second parameter to define the component's state configuration.
+注意 `mount` 接受第二个参数以定义组件的状态配置。
 
-**Example : mounting with component props and a Vue App plugin**
+**示例 : 使用组件属性和 Vue 应用插件进行挂载**
 
 ```js
 const wrapper = mount(Component, {
@@ -61,27 +60,27 @@ const wrapper = mount(Component, {
 
 #### options.global
 
-Among component state, you can configure the aformentioned Vue 3 app by the [`MountingOptions.global` config property.](#global) This would be useful for providing mocked values which your components expect to have available.
+组件状态中，您可以通过 [`MountingOptions.global` 配置属性](#global) 配置上述 Vue 3 应用程序。这对于提供组件期望可用的模拟值非常有用。
 
 ::: tip
-If you find yourself having to set common App configuration for many of your tests, then you can set configuration for your entire test suite using the exported [`config` object.](#config)
+如果您发现自己需要为许多测试设置共同的应用配置，则可以使用导出的 [`config` 对象](#config) 为整个测试套件设置配置。
 :::
 
 ### attachTo
 
-Specify the node to mount the component on. This is not available when using `renderToString`.
+指定要挂载组件的节点。当使用 `renderToString` 时，此选项不可用。
 
-**Signature:**
+**签名:**
 
 ```ts
 attachTo?: Element | string
 ```
 
-**Details:**
+**详细信息:**
 
-Can be a valid CSS selector, or an [`Element`](https://developer.mozilla.org/en-US/docs/Web/API/Element) connected to the document.
+可以是有效的 CSS 选择器，或者是连接到文档的 [`Element`](https://developer.mozilla.org/en-US/docs/Web/API/Element)。
 
-Note that the component is appended to the node, it doesn't replace the whole content of the node. If you mount the component on the same node in multiple tests - make sure to unmount it after each test by calling `wrapper.unmount()`, this will remove the rendered elements from the node.
+注意，组件是附加到节点上的，并不会替换节点的整个内容。如果在多个测试中将组件挂载到同一个节点上，请确保在每个测试后调用 `wrapper.unmount()` 以卸载它，这将从节点中移除渲染的元素。
 
 `Component.vue`:
 
@@ -120,15 +119,15 @@ test('mounts on a specific element', () => {
 
 ### attrs
 
-Sets HTML attributes to component.
+为组件设置 HTML 属性。
 
-**Signature:**
+**签名:**
 
 ```ts
 attrs?: Record<string, unknown>
 ```
 
-**Details:**
+**详细信息:**
 
 `Component.spec.js`:
 
@@ -151,7 +150,7 @@ test('attrs', () => {
 })
 ```
 
-Notice that setting a defined prop will always trump an attribute:
+请注意，已定义的属性会覆盖 HTML 属性的设置:
 
 ```js
 import { mount } from '@vue/test-utils'
@@ -174,15 +173,15 @@ test('attribute is overridden by a prop with the same name', () => {
 
 ### data
 
-Overrides a component's default `data`. Must be a function.
+覆盖组件的默认 `data`。必须是一个函数。
 
-**Signature:**
+**签名:**
 
 ```ts
 data?: () => {} extends Data ? any : Data extends object ? Partial<Data> : any
 ```
 
-**Details:**
+**详细信息:**
 
 `Component.vue`
 
@@ -223,15 +222,15 @@ test('data', () => {
 
 ### props
 
-Sets props on a component when mounted.
+在组件挂载时设置 props。
 
-**Signature:**
+**签名:**
 
 ```ts
 props?: (RawProps & Props) | ({} extends Props ? null : never)
 ```
 
-**Details:**
+**详细信息:**
 
 `Component.vue`:
 
@@ -271,9 +270,9 @@ test('props', () => {
 
 ### slots
 
-Sets values for slots on a component.
+为组件的插槽设置值。
 
-**Signature:**
+**签名:**
 
 ```ts
 type Slot = VNode | string | { render: Function } | Function | Component
@@ -281,9 +280,9 @@ type Slot = VNode | string | { render: Function } | Function | Component
 slots?: { [key: string]: Slot } & { default?: Slot }
 ```
 
-**Details:**
+**详细信息:**
 
-Slots can be a string or any valid component definition either imported from a `.vue` file or provided inline
+插槽可以是一个字符串或任何有效的组件定义，既可以从 `.vue` 文件中导入，也可以内联提供。
 
 `Component.vue`:
 
@@ -306,7 +305,7 @@ Slots can be a string or any valid component definition either imported from a `
 `Component.spec.js`:
 
 ```js
-import { h } from 'vue';
+import { h } from 'vue'
 import { mount } from '@vue/test-utils'
 import Component from './Component.vue'
 import Bar from './Bar.vue'
@@ -326,7 +325,7 @@ test('renders slots content', () => {
 
 ### global
 
-**Signature:**
+**签名:**
 
 ```ts
 type GlobalMountOptions = {
@@ -342,19 +341,19 @@ type GlobalMountOptions = {
 }
 ```
 
-You can configure all the `global` options on both a per test basis and also for the entire test suite. [See here for how to configure project wide defaults](#config-global).
+您可以在每个测试基础上以及整个测试套件中配置所有 `global` 选项。 [请参见此处以了解如何配置项目范围的默认值](#config-global)。
 
 #### global.components
 
-Registers components globally to the mounted component.
+将组件全局注册到挂载的组件中。
 
-**Signature:**
+**签名:**
 
 ```ts
 components?: Record<string, Component | object>
 ```
 
-**Details:**
+**详细信息:**
 
 `Component.vue`:
 
@@ -406,9 +405,9 @@ test('global.components', () => {
 
 #### global.config
 
-Configures [Vue's application global configuration](https://v3.vuejs.org/api/application-config.html#application-config).
+配置 [Vue 的应用程序全局配置](https://v3.vuejs.org/api/application-config.html#application-config)。
 
-**Signature:**
+**签名:**
 
 ```ts
 config?: Partial<Omit<AppConfig, 'isNativeTag'>>
@@ -416,15 +415,15 @@ config?: Partial<Omit<AppConfig, 'isNativeTag'>>
 
 #### global.directives
 
-Registers a [directive](https://v3.vuejs.org/api/directives.html#directives) globally to the mounted component.
+将 [指令](https://v3.vuejs.org/api/directives.html#directives) 全局注册到挂载的组件中。
 
-**Signature:**
+**签名:**
 
 ```ts
 directives?: Record<string, Directive>
 ```
 
-**Details:**
+**详细信息:**
 
 `Component.spec.js`:
 
@@ -450,15 +449,15 @@ test('global.directives', () => {
 
 #### global.mixins
 
-Registers a [mixin](https://v3.vuejs.org/guide/mixins.html) globally to the mounted component.
+将 [混入](https://v3.vuejs.org/guide/mixins.html) 全局注册到挂载的组件中。
 
-**Signature:**
+**签名:**
 
 ```ts
 mixins?: ComponentOptions[]
 ```
 
-**Details:**
+**详细信息:**
 
 `Component.spec.js`:
 
@@ -477,18 +476,18 @@ test('global.mixins', () => {
 
 #### global.mocks
 
-Mocks a global instance property. Can be used for mocking out `this.$store`, `this.$router` etc.
+模拟全局实例属性。可用于模拟 `this.$store`、`this.$router` 等。
 
-**Signature:**
+**签名:**
 
 ```ts
 mocks?: Record<string, any>
 ```
 
-**Details:**
+**详细信息:**
 
 ::: warning
-This is designed to mock variables injected by third party plugins, not Vue's native properties such as $root, $children, etc.
+此功能旨在模拟由第三方插件注入的变量，而不是 Vue 的原生属性，如 $root、$children 等。
 :::
 
 `Component.vue`:
@@ -536,15 +535,15 @@ test('global.mocks', async () => {
 
 #### global.plugins
 
-Installs plugins on the mounted component.
+在挂载的组件上安装插件。
 
-**Signature:**
+**签名:**
 
 ```ts
 plugins?: (Plugin | [Plugin, ...any[]])[]
 ```
 
-**Details:**
+**详细信息:**
 
 `Component.spec.js`:
 
@@ -563,7 +562,7 @@ test('global.plugins', () => {
 })
 ```
 
-To use plugin with options, an array of options can be passed.
+要使用带选项的插件，可以传递选项数组。
 
 `Component.spec.js`:
 
@@ -582,15 +581,15 @@ test('global.plugins with options', () => {
 
 #### global.provide
 
-Provides data to be received in a `setup` function via `inject`.
+提供数据，以便在 `setup` 函数中通过 `inject` 接收。
 
-**Signature:**
+**签名:**
 
 ```ts
 provide?: Record<any, any>
 ```
 
-**Details:**
+**详细信息:**
 
 `Component.vue`:
 
@@ -632,7 +631,7 @@ test('global.provide', () => {
 })
 ```
 
-If you are using a ES6 `Symbol` for your provide key, you can use it as a dynamic key:
+如果您使用 ES6 `Symbol` 作为提供键，可以将其用作动态键：
 
 `Component.spec.js`:
 
@@ -653,17 +652,17 @@ mount(Component, {
 
 #### global.renderStubDefaultSlot
 
-Renders the `default` slot content, even when using `shallow` or `shallowMount`.
+即使在使用 `shallow` 或 `shallowMount` 时，也会渲染 `default` 插槽内容。
 
-**Signature:**
+**签名:**
 
 ```ts
 renderStubDefaultSlot?: boolean
 ```
 
-**Details:**
+**详细信息:**
 
-Defaults to **false**.
+默认为 **false**。
 
 `Component.vue`
 
@@ -713,21 +712,21 @@ test('global.renderStubDefaultSlot', () => {
 })
 ```
 
-Due to technical limitations, **this behavior cannot be extended to slots other than the default one**.
+由于技术限制，**此行为无法扩展到除默认插槽之外的其他插槽**。
 
 #### global.stubs
 
-Sets a global stub on the mounted component.
+在挂载的组件上使用全局替代组件（stub）。
 
-**Signature:**
+**签名:**
 
 ```ts
 stubs?: Record<any, any>
 ```
 
-**Details:**
+**详细信息:**
 
-It stubs `Transition` and `TransitionGroup` by default.
+默认情况下，`Transition` 和 `TransitionGroup` 组件会被自动 stub 掉。
 
 `Component.vue`:
 
@@ -789,17 +788,17 @@ test('global.stubs using a custom component', () => {
 
 ### shallow
 
-Stubs out all child components from the component.
+组件的所有子组件替换为 stub。
 
-**Signature:**
+**签名:**
 
 ```ts
 shallow?: boolean
 ```
 
-**Details:**
+**详细信息:**
 
-Defaults to **false**.
+默认为 **false**。
 
 `Component.vue`
 
@@ -835,20 +834,20 @@ test('shallow', () => {
 ```
 
 ::: tip
-`shallowMount()` is an alias to mounting a component with `shallow: true`.
+`shallowMount()` 是使用 `shallow: true` 挂载组件的别名。
 :::
 
 ## Wrapper methods
 
-When you use `mount`, a `VueWrapper` is returned with a number of useful methods for testing. A `VueWrapper` is a thin wrapper around your component instance.
+当你使用 `mount` 时，会返回一个 `VueWrapper`，它包含了一些用于测试的有用方法。`VueWrapper` 是对你的组件实例的一个轻量级包装。
 
-Notice that methods like `find` return a `DOMWrapper`, which is a thin wrapper around the DOM nodes in your component and its children. Both implement a similar API.
+请注意，像 `find` 这样的函数返回一个 `DOMWrapper`，它是对你组件及其子组件中的 DOM 节点的一个轻量级包装。两者都实现了类似的 API。
 
 ### attributes
 
-Returns attributes on a DOM node.
+返回 DOM 节点上的属性。
 
-**Signature:**
+**签名:**
 
 ```ts
 attributes(): { [key: string]: string }
@@ -856,7 +855,7 @@ attributes(key: string): string
 attributes(key?: string): { [key: string]: string } | string
 ```
 
-**Details:**
+**详细信息:**
 
 `Component.vue`:
 
@@ -892,7 +891,7 @@ test('attributes', () => {
 
 ### classes
 
-**Signature:**
+**签名:**
 
 ```ts
 classes(): string[]
@@ -900,9 +899,9 @@ classes(className: string): boolean
 classes(className?: string): string[] | boolean
 ```
 
-**Details:**
+**详细信息:**
 
-Returns an array of classes on an element.
+返回元素上的类名数组。
 
 `Component.vue`:
 
@@ -929,9 +928,9 @@ test('classes', () => {
 
 ### emitted
 
-Returns all the emitted events from the Component.
+返回组件发出的所有事件。
 
-**Signature:**
+**签名:**
 
 ```ts
 emitted<T = unknown>(): Record<string, T[]>
@@ -939,9 +938,9 @@ emitted<T = unknown>(eventName: string): undefined | T[]
 emitted<T = unknown>(eventName?: string): undefined | T[] | Record<string, T[]>
 ```
 
-**Details:**
+**详细信息:**
 
-The arguments are stored in an array, so you can verify which arguments were emitted along with each event.
+参数被存储在一个数组中，因此你可以验证每个事件发出时的参数。
 
 `Component.vue`:
 
@@ -976,17 +975,17 @@ test('emitted', () => {
 
 ### exists
 
-Verify whether an element exists or not.
+验证一个元素是否存在。
 
-**Signature:**
+**签名:**
 
 ```ts
 exists(): boolean
 ```
 
-**Details:**
+**详细信息:**
 
-You can use the same syntax `querySelector` implements.
+您可以使用与 `querySelector` 实现相同的语法。
 
 `Component.vue`:
 
@@ -1012,9 +1011,9 @@ test('exists', () => {
 
 ### find
 
-Finds an element and returns a `DOMWrapper` if one is found.
+查找一个元素，如果找到则返回一个 `DOMWrapper`。
 
-**Signature:**
+**签名:**
 
 ```ts
 find<K extends keyof HTMLElementTagNameMap>(selector: K): DOMWrapper<HTMLElementTagNameMap[K]>
@@ -1024,14 +1023,13 @@ find(selector: string): DOMWrapper<Element>
 find<T extends Node = Node>(selector: string | RefSelector): DOMWrapper<T>;
 ```
 
-**Details:**
+**详细信息:**
 
-You can use the same syntax `querySelector` implements. `find` is basically an alias for `querySelector`. In addition you can search for element refs.
+您可以使用与 `querySelector` 相同的语法。`find` 基本上是 `querySelector` 的别名。此外，您还可以搜索元素引用。
 
-It is similar to `get`, but `find` returns an ErrorWrapper if an element is not found while [`get`](#get) will throw an error.
+它与 `get` 类似，但如果未找到元素，`find` 将返回一个 ErrorWrapper，而 [`get`](#get) 会抛出一个错误。
 
-As a rule of thumb, always use `find` when you are asserting something doesn't exist. If you are asserting something does exist, use [`get`](#get).
-
+根据经验，当您断言某个元素不存在时，请始终使用 `find`。如果您断言某个元素确实存在，请使用 [`get`](#get)。
 
 `Component.vue`:
 
@@ -1061,9 +1059,9 @@ test('find', () => {
 
 ### findAll
 
-Similar to `find`, but instead returns an array of `DOMWrapper`.
+与 `find` 类似，但返回的是一个 `DOMWrapper` 数组。
 
-**Signature:**
+**签名:**
 
 ```ts
 findAll<K extends keyof HTMLElementTagNameMap>(selector: K): DOMWrapper<HTMLElementTagNameMap[K]>[]
@@ -1072,7 +1070,7 @@ findAll<T extends Element>(selector: string): DOMWrapper<T>[]
 findAll(selector: string): DOMWrapper<Element>[]
 ```
 
-**Details:**
+**详细信息:**
 
 `Component.vue`:
 
@@ -1100,9 +1098,9 @@ test('findAll', () => {
 
 ### findComponent
 
-Finds a Vue Component instance and returns a `VueWrapper` if found. Returns `ErrorWrapper` otherwise.
+找到一个 Vue 组件实例并返回一个 `VueWrapper`（如果找到）。否则返回 `ErrorWrapper`。
 
-**Signature:**
+**签名:**
 
 ```ts
 findComponent<T extends never>(selector: string): WrapperLike
@@ -1113,16 +1111,16 @@ findComponent<T extends ComponentPublicInstance>(selector: T | FindComponentSele
 findComponent(selector: FindComponentSelector): WrapperLike
 ```
 
-**Details:**
+**详细信息:**
 
-`findComponent` supports several syntaxes:
+`findComponent` 支持几种语法：
 
-| syntax         | example                       | details                                                      |
-| -------------- | ----------------------------- | ------------------------------------------------------------ |
-| querySelector  | `findComponent('.component')` | Matches standard query selector.                             |
-| Component name | `findComponent({name: 'a'})`  | matches PascalCase, snake-case, camelCase                    |
-| Component ref  | `findComponent({ref: 'ref'})` | Can be used only on direct ref children of mounted component |
-| SFC            | `findComponent(Component)`    | Pass an imported component directly                          |
+| 语法            | 示例                          | 详情                                       |
+| --------------- | ----------------------------- | ------------------------------------------ |
+| querySelector   | `findComponent('.component')` | 匹配标准查询选择器。                       |
+| 组件名称        | `findComponent({name: 'a'})`  | 匹配 PascalCase、snake-case 和 camelCase。 |
+| 组件引用        | `findComponent({ref: 'ref'})` | 仅可用于已挂载组件的直接引用子组件。       |
+| 单文件组件(SFC) | `findComponent(Component)`    | 直接传入导入的组件。                       |
 
 `Foo.vue`
 
@@ -1179,13 +1177,13 @@ test('findComponent', () => {
 ```
 
 :::warning
-If `ref` in component points to HTML element, `findComponent` will return empty wrapper. This is intended behaviour.
+如果组件中的 `ref` 指向 HTML 元素，`findComponent` 将返回一个空的包装器。这是预期的行为。
 :::
 
-:::warning Usage with CSS selectors
-Using `findComponent` with CSS selector might have confusing behavior
+:::warning 使用 CSS 选择器时的注意事项
+使用 `findComponent` 和 CSS 选择器可能会导致混淆的行为。
 
-Consider this example:
+考虑以下示例：
 
 ```js
 const ChildComponent = {
@@ -1204,23 +1202,23 @@ const childByCss = wrapper.findComponent('.child')
 expect(childByCss.vm.$options.name).toBe('Root') // => still Root
 ```
 
-The reason for such behavior is that `RootComponent` and `ChildComponent` are sharing same DOM node and only first matching component is included for each unique DOM node
+这种行为的原因是 `RootComponent` 和 `ChildComponent` 共享相同的 DOM 节点，并且每个唯一的 DOM 节点只包含第一个匹配的组件。
 :::
 
-:::info WrapperLike type when using CSS selector
-When using `wrapper.findComponent('.foo')` for example then VTU will return the `WrapperLike` type. This is because functional components
-would need a `DOMWrapper` otherwise a `VueWrapper`. You can force to return a `VueWrapper` by providing the correct component type:
+:::info 使用 CSS 选择器时的 WrapperLike 类型
+例如，当使用 `wrapper.findComponent('.foo')` 时，VTU 将返回 `WrapperLike` 类型。这是因为功能组件需要一个 `DOMWrapper`，否则返回的是 `VueWrapper`。你可以通过提供正确的组件类型来强制返回 `VueWrapper`：
 
 ```typescript
 wrapper.findComponent('.foo') // returns WrapperLike
 wrapper.findComponent<typeof FooComponent>('.foo') // returns VueWrapper
 wrapper.findComponent<DefineComponent>('.foo') // returns VueWrapper
 ```
+
 :::
 
 ### findAllComponents
 
-**Signature:**
+**签名:**
 
 ```ts
 findAllComponents<T extends never>(selector: string): WrapperLike[]
@@ -1232,12 +1230,12 @@ findAllComponents<T extends ComponentPublicInstance>(selector: T | FindAllCompon
 findAllComponents(selector: FindAllComponentsSelector): WrapperLike[]
 ```
 
-**Details:**
+**详细信息:**
 
-Similar to `findComponent` but finds all Vue Component instances that match the query. Returns an array of `VueWrapper`.
+与 `findComponent` 类似，但查找所有匹配查询的 Vue 组件实例。返回一个 `VueWrapper` 数组。
 
 :::warning
-`ref` syntax is not supported in `findAllComponents`. All other query syntaxes are valid.
+`ref` 语法在 `findAllComponents` 中不支持。所有其他查询语法都是有效的。
 :::
 
 `Component.vue`:
@@ -1264,15 +1262,15 @@ test('findAllComponents', () => {
 })
 ```
 
-:::warning Usage with CSS selectors
-`findAllComponents` has same behavior when used with CSS selector as [findComponent](#findcomponent)
+:::warning 使用 CSS 选择器
+`findAllComponents` 在使用 CSS 选择器时具有与 [findComponent](#findcomponent) 相同的行为。
 :::
 
 ### get
 
-Gets an element and returns a `DOMWrapper` if found. Otherwise it throws an error.
+获取一个元素，如果找到则返回一个 `DOMWrapper`，否则抛出错误。
 
-**Signature:**
+**签名:**
 
 ```ts
 get<K extends keyof HTMLElementTagNameMap>(selector: K): Omit<DOMWrapper<HTMLElementTagNameMap[K]>, 'exists'>
@@ -1281,11 +1279,11 @@ get<T extends Element>(selector: string): Omit<DOMWrapper<T>, 'exists'>
 get(selector: string): Omit<DOMWrapper<Element>, 'exists'>
 ```
 
-**Details:**
+**详细信息:**
 
-It is similar to `find`, but `get` throws an error if an element is not found while [`find`](#find) will return an ErrorWrapper.
+它与 `find` 类似，但如果未找到元素，`get` 会抛出错误，而 [`find`](#find) 会返回一个 ErrorWrapper。
 
-As a rule of thumb, always use `get` except when you are asserting something doesn't exist. In that case use [`find`](#find).
+根据经验，除非你断言某个元素不存在（使用 [`find`](#find)），否则请始终使用 `get`。
 
 `Component.vue`:
 
@@ -1312,9 +1310,9 @@ test('get', () => {
 
 ### getComponent
 
-Gets a Vue Component instance and returns a `VueWrapper` if found. Otherwise it throws an error.
+获取 Vue 组件实例，如果找到则返回一个 `VueWrapper`，否则抛出错误。
 
-**Signature:**
+**签名:**
 
 ```ts
 getComponent<T extends ComponentPublicInstance>(selector: new () => T): Omit<VueWrapper<T>, 'exists'>
@@ -1322,18 +1320,18 @@ getComponent<T extends ComponentPublicInstance>(selector: { name: string } | { r
 getComponent<T extends ComponentPublicInstance>(selector: any): Omit<VueWrapper<T>, 'exists'>
 ```
 
-**Details:**
+**详细信息:**
 
-It is similar to `findComponent`, but `getComponent` throws an error if a Vue Component instance is not found while [`findComponent`](#findComponent) will return an ErrorWrapper.
+它与 `findComponent` 类似，但如果未找到 Vue 组件实例，`getComponent` 会抛出错误，而 [`findComponent`](#findComponent) 会返回一个 ErrorWrapper。
 
-**Supported syntax:**
+**支持的语法:**
 
-| syntax         | example                      | details                                                      |
-| -------------- | ---------------------------- | ------------------------------------------------------------ |
-| querySelector  | `getComponent('.component')` | Matches standard query selector.                             |
-| Component name | `getComponent({name: 'a'})`  | matches PascalCase, snake-case, camelCase                    |
-| Component ref  | `getComponent({ref: 'ref'})` | Can be used only on direct ref children of mounted component |
-| SFC            | `getComponent(Component)`    | Pass an imported component directly                          |
+| 语法            | 示例                         | 详细信息                                 |
+| --------------- | ---------------------------- | ---------------------------------------- |
+| querySelector   | `getComponent('.component')` | 匹配标准查询选择器。                     |
+| 组件名称        | `getComponent({name: 'a'})`  | 匹配 PascalCase、snake-case、camelCase。 |
+| 组件引用        | `getComponent({ref: 'ref'})` | 仅可用于已挂载组件的直接引用子组件。     |
+| 单文件组件(SFC) | `getComponent(Component)`    | 直接传入已导入的组件。                   |
 
 `Foo.vue`
 
@@ -1385,19 +1383,18 @@ test('getComponent', () => {
 
 ### html
 
-Returns the HTML of an element.
+返回元素的 HTML 内容。
 
-By default the output is formatted with [`js-beautify`](https://github.com/beautify-web/js-beautify)
-to make snapshots more readable. Use `raw: true` option to receive the unformatted html string.
+默认情况下，输出会使用 [`js-beautify`](https://github.com/beautify-web/js-beautify) 进行格式化，以使快照更易读。如果需要未格式化的 HTML 字符串，可以使用 `raw: true` 选项。
 
-**Signature:**
+**签名:**
 
 ```ts
 html(): string
 html(options?: { raw?: boolean }): string
 ```
 
-**Details:**
+**详细信息:**
 
 `Component.vue`:
 
@@ -1418,11 +1415,7 @@ import Component from './Component.vue'
 test('html', () => {
   const wrapper = mount(Component)
 
-  expect(wrapper.html()).toBe(
-    '<div>\n' +
-    '  <p>Hello world</p>\n' +
-    '</div>'
-  )
+  expect(wrapper.html()).toBe('<div>\n' + '  <p>Hello world</p>\n' + '</div>')
 
   expect(wrapper.html({ raw: true })).toBe('<div><p>Hello world</p></div>')
 })
@@ -1430,18 +1423,18 @@ test('html', () => {
 
 ### isVisible
 
-Verify whether an element is visible or not.
+验证一个元素是否可见。
 
-**Signature:**
+**签名:**
 
 ```ts
 isVisible(): boolean
 ```
 
-**Details:**
+**详细信息:**
 
 ::: warning
-`isVisible()` only works correctly if the wrapper is attached to the DOM using [`attachTo`](#attachTo)
+`isVisible()` 仅在使用 [`attachTo`](#attachTo) 将包装器附加到 DOM 时才能正确工作。
 :::
 
 ```js
@@ -1452,17 +1445,17 @@ const Component = {
 test('isVisible', () => {
   const wrapper = mount(Component, {
     attachTo: document.body
-  });
+  })
 
-  expect(wrapper.find('span').isVisible()).toBe(false);
+  expect(wrapper.find('span').isVisible()).toBe(false)
 })
 ```
 
 ### props
 
-Returns props passed to a Vue Component.
+返回传递给 Vue 组件的属性（props）。
 
-**Signature:**
+**签名:**
 
 ```ts
 props(): { [key: string]: any }
@@ -1470,7 +1463,7 @@ props(selector: string): any
 props(selector?: string): { [key: string]: any } | any
 ```
 
-**Details:**
+**详细信息:**
 
 `Component.vue`:
 
@@ -1524,25 +1517,25 @@ test('props', () => {
 ```
 
 :::tip
-As a rule of thumb, test against the effects of a passed prop (a DOM update, an emitted event, and so on). This will make tests more powerful than simply asserting that a prop is passed.
+根据经验，测试传递的属性的效果（如 DOM 更新、触发的事件等）。这将使测试比仅仅断言一个属性被传递要更有效。
 :::
 
 ### setData
 
-Updates component internal data.
+更新组件内部数据。
 
-**Signature:**
+**签名:**
 
 ```ts
 setData(data: Record<string, any>): Promise<void>
 ```
 
-**Details:**
+**详细信息:**
 
-`setData` does not allow setting new properties that are not defined in the component.
+`setData` 不允许设置组件中未定义的新属性。
 
 ::: warning
-Also, notice that `setData` does not modify composition API `setup()` data.
+请注意，`setData` 不会修改组合式 API 中 setup() 的数据。
 :::
 
 `Component.vue`:
@@ -1580,20 +1573,20 @@ test('setData', async () => {
 ```
 
 ::: warning
-You should use `await` when you call `setData` to ensure that Vue updates the DOM before you make an assertion.
+在调用 `setData` 时，您应该使用 `await`，以确保 Vue 在您进行断言之前更新 DOM。
 :::
 
 ### setProps
 
-Updates component props.
+更新组件的属性。
 
-**Signature:**
+**签名:**
 
 ```ts
 setProps(props: Record<string, any>): Promise<void>
 ```
 
-**Details:**
+**详细信息:**
 
 `Component.vue`:
 
@@ -1631,25 +1624,25 @@ test('updates prop', async () => {
 ```
 
 ::: warning
-You should use `await` when you call `setProps` to ensure that Vue updates the DOM before you make an assertion.
+在调用 `setProps` 时，您应该使用 `await`，以确保 Vue 在您进行断言之前更新 DOM。
 :::
 
 ### setValue
 
-Sets a value on DOM element. Including:
+在 DOM 元素上设置一个值，包括：
 
 - `<input>`
-  - `type="checkbox"` and `type="radio"` are detected and will have `element.checked` set.
+  - 会检测 `type="checkbox"` 和 `type="radio"`，并将 `element.checked` 设置为相应的值。
 - `<select>`
-  - `<option>` is detected and will have `element.selected` set.
+  - 会检测 `<option>`，并将 `element.selected` 设置为相应的值。
 
-**Signature:**
+**签名:**
 
 ```ts
 setValue(value: unknown, prop?: string): Promise<void>
 ```
 
-**Details:**
+**详细信息:**
 
 `Component.vue`:
 
@@ -1715,20 +1708,20 @@ test('setValue on multi select', async () => {
 ```
 
 ::: warning
-You should use `await` when you call `setValue` to ensure that Vue updates the DOM before you make an assertion.
+在调用 `setValue` 时，您应该使用 `await`，以确保 Vue 在您进行断言之前更新 DOM。
 :::
 
 ### text
 
-Returns the text content of an element.
+返回元素的文本内容。
 
-**Signature:**
+**签名:**
 
 ```ts
 text(): string
 ```
 
-**Details:**
+**详细信息:**
 
 `Component.vue`:
 
@@ -1753,9 +1746,9 @@ test('text', () => {
 
 ### trigger
 
-Triggers a DOM event, for example `click`, `submit` or `keyup`.
+触发一个 DOM 事件，例如 `click`、`submit` 或 `keyup`。
 
-**Signature:**
+**签名:**
 
 ```ts
 interface TriggerOptions {
@@ -1768,7 +1761,7 @@ interface TriggerOptions {
 trigger(eventString: string, options?: TriggerOptions | undefined): Promise<void>
 ```
 
-**Details:**
+**详细信息:**
 
 `Component.vue`:
 
@@ -1804,35 +1797,33 @@ test('trigger', async () => {
 })
 ```
 
-Note that `trigger` accepts a second argument to pass options to the triggered Event:
+请注意，`trigger` 接受第二个参数，以便将选项传递给触发的事件：
 
 ```js
 await wrapper.trigger('keydown', { keyCode: 65 })
 ```
 
 ::: warning
-You should use `await` when you call `trigger` to ensure that Vue updates the DOM before you make an assertion.
+在调用 `trigger` 时，您应该使用 `await`，以确保 Vue 在您进行断言之前更新 DOM。
 :::
 
 ::: warning
-Some events, like clicking on a checkbox to change its `v-model`,
-will only work if the test uses `attachTo: document.body`.
-Otherwise, the `change` event will not be triggered, and the `v-model` value does not change.
+某些事件，例如单击复选框以更改其 `v-model`，仅在测试使用 `attachTo: document.body` 时有效。否则，`change` 事件将不会被触发，`v-model` 的值也不会改变。
 :::
 
 ### unmount
 
-Unmount the application from the DOM.
+从 DOM 中卸载应用程序。
 
-**Signature:**
+**签名:**
 
 ```ts
 unmount(): void
 ```
 
-**Details:**
+**详细信息:**
 
-It only works on the root `VueWrapper` returned from `mount`. Useful for manual clean-up after tests.
+它仅适用于从 `mount` 返回的根 `VueWrapper`。在测试后进行手动清理时非常有用。
 
 `Component.vue`:
 
@@ -1865,27 +1856,27 @@ test('unmount', () => {
 
 ### vm
 
-**Signature:**
+**签名:**
 
 ```ts
 vm: ComponentPublicInstance
 ```
 
-**Details:**
+**详细信息:**
 
-The `Vue` app instance. You can access all of the [instance methods](https://v3.vuejs.org/api/instance-methods.html) and [instance properties](https://v3.vuejs.org/api/instance-properties.html).
+`Vue` 应用实例。您可以访问所有的 [实例方法](https://v3.vuejs.org/api/instance-methods.html) 和 [实例属性](https://v3.vuejs.org/api/instance-properties.html)。
 
-Notice that `vm` is only available on a `VueWrapper`.
+请注意，`vm` 仅在 `VueWrapper` 上可用。
 
 :::tip
-As a rule of thumb, test against the effects of a passed prop (a DOM update, an emitted event, and so on). This will make tests more powerful than simply asserting that a prop is passed.
+根据经验，测试传递的属性的效果（如 DOM 更新、触发的事件等）。这将使测试比仅仅断言一个属性被传递要更有效。
 :::
 
 ## shallowMount
 
-Creates a Wrapper that contains the mounted and rendered Vue component to test with all children stubbed out.
+创建一个包含已挂载（mounted）和渲染（rendered）的 Vue 组件的包装器（Wrapper）。
 
-**Signature:**
+**签名:**
 
 ```ts
 interface MountingOptions<Props, Data = {}> {
@@ -1900,23 +1891,22 @@ interface MountingOptions<Props, Data = {}> {
 function shallowMount(Component, options?: MountingOptions): VueWrapper
 ```
 
-**Details:**
+**详细信息:**
 
-`shallowMount` behaves exactly like `mount`, but it stubs all child components by default. Essentially, `shallowMount(Component)` is an alias of `mount(Component, { shallow: true })`.
+`shallowMount` 的行为与 `mount` 完全相同，但它默认会 stub（替代）所有的子组件。实际上，`shallowMount(Component)` 是 `mount(Component, { shallow: true })` 的别名。
 
 ## enableAutoUnmount
 
-**Signature:**
+**签名:**
 
 ```ts
 enableAutoUnmount(hook: (callback: () => void) => void);
 disableAutoUnmount(): void;
 ```
 
-**Details:**
+**详细信息:**
 
-`enableAutoUnmount` allows to automatically destroy Vue wrappers. Destroy logic is passed as callback to `hook` Function.
-Common usage is to use `enableAutoUnmount` with teardown helper functions provided by your test framework, such as `afterEach`:
+`enableAutoUnmount` 允许自动销毁 Vue Wrapper。销毁逻辑作为回调函数传递给 `hook` 函数。常见用法是将 `enableAutoUnmount` 与测试框架提供的清理辅助函数结合使用，例如 `afterEach`：
 
 ```ts
 import { enableAutoUnmount } from '@vue/test-utils'
@@ -1924,27 +1914,27 @@ import { enableAutoUnmount } from '@vue/test-utils'
 enableAutoUnmount(afterEach)
 ```
 
-`disableAutoUnmount` might be useful if you want this behavior only in specific subset of your test suite and you want to explicitly disable this behavior
+如果您希望这种行为仅在测试套件的特定子集内生效，并且想要显式禁用此行为，则可以使用 `disableAutoUnmount`。
 
 ## flushPromises
 
-**Signature:**
+**签名:**
 
 ```ts
 flushPromises(): Promise<unknown>
 ```
 
-**Details:**
+**详细信息:**
 
-`flushPromises` flushes all resolved promise handlers. This helps make sure async operations such as promises or DOM updates have happened before asserting against them.
+`flushPromises` 会刷新所有已解析的 Promise 处理程序。这有助于确保在进行断言之前，异步操作（如 Promise 或 DOM 更新）已经完成。
 
-Check out [Making HTTP requests](../guide/advanced/http-requests.md) to see an example of `flushPromises` in action.
+您可以查看 [发起 HTTP 请求](../guide/advanced/http-requests.md) 来了解 `flushPromises` 的实际使用示例。
 
 ## config
 
 ### config.global
 
-**Signature:**
+**签名:**
 
 ```ts
 type GlobalMountOptions = {
@@ -1960,13 +1950,13 @@ type GlobalMountOptions = {
 }
 ```
 
-**Details:**
+**详细信息:**
 
-Instead of configuring mounting options on a per test basis, you can configure them for your entire test suite. These will be used by default every time you `mount` a component. If desired, you can then override your defaults on a per test basis.
+您可以选择在整个测试套件中配置挂载选项，而不是在每个测试中单独配置。这些配置将在每次 `mount` 组件时默认使用。如果需要，您可以在每个测试中覆盖这些默认设置。
 
 **Example :**
 
-An example might be globally mocking the `$t` variable from vue-i18n and a component:
+全局模拟来可能是自 vue-i18n 的 `$t` 变量和一个组件：
 
 `Component.vue`:
 
@@ -2013,34 +2003,35 @@ test('config.global mocks and stubs', () => {
 ```
 
 ::: tip
-Remember that this behavior is global, not on a mount by mount basis. You might need to enable/disable it before and after each test.
+请记住，这种行为是全局性的，而不是逐次挂载的。您可能需要在每个测试之前和之后启用/禁用它。
 :::
 
 ## components
 
 ### RouterLinkStub
 
-A component to stub the Vue Router `router-link` component when you don't want to mock or include a full router.
+一个用于替代 Vue Router 的 `router-link` 的组件，当您不想模拟或包含完整路由时，可以使用它。
 
-You can use this component to find a `router-link` component in the render tree.
+您可以使用此组件在渲染树中查找 `router-link` 组件。
 
 **Usage:**
 
-Set as a stub in the mounting options:
+在挂载选项中设置为替换组件(stub)：
+
 ```js
 import { mount, RouterLinkStub } from '@vue/test-utils'
 
 const wrapper = mount(Component, {
   global: {
     stubs: {
-      RouterLink: RouterLinkStub,
-    },
-  },
+      RouterLink: RouterLinkStub
+    }
+  }
 })
 
 expect(wrapper.findComponent(RouterLinkStub).props().to).toBe('/some/path')
 ```
 
-**Usage with slot:**
+**使用插槽:**
 
-The `RouterLinkStub` component supports slot content and will return very basic values for its slot props. If you need more specific slot prop values for your tests, consider using a [real router](../guide/advanced/vue-router.html#using-a-real-router) so you can use a real `router-link` component. Alternatively, you can define your own `RouterLinkStub` component by copying the implementation from the test-utils package.
+`RouterLinkStub` 组件支持插槽内容，并将为其插槽属性返回非常基本的值。如果您需要更具体的插槽属性值进行测试，考虑使用 [真实路由](../guide/advanced/vue-router.html#using-a-real-router)，这样您可以使用真实的 `router-link` 组件。或者，您可以通过复制 test-utils 包中的实现来定义自己的 `RouterLinkStub` 组件。

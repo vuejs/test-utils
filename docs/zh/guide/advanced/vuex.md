@@ -1,12 +1,12 @@
-# Testing Vuex
+# 测试 Vuex
 
-Vuex is just an implementation detail; no special treatment is required for testing components using Vuex. That said, there are some techniques that might make your tests easier to read and write. We will look at those here.
+Vuex 只是一个实现细节；在测试使用 Vuex 的组件时不需要特别处理。尽管如此，有一些技术可以使你的测试更易读和易写。我们将在这里讨论这些技术。
 
-This guide assumes you are familiar with Vuex. Vuex 4 is the version that works with Vue.js 3. Read the docs [here](https://next.vuex.vuejs.org/).
+本指南假设你对 Vuex 已经熟悉。Vuex 4 是与 Vue.js 3 一起使用的版本。可以在 [这里](https://next.vuex.vuejs.org/) 阅读文档。
 
-## A Simple Example
+## 简单示例
 
-Here is a simple Vuex store, and a component that relies on a Vuex store being present:
+以下是一个简单的 Vuex 存储和一个依赖于 Vuex 存储的组件：
 
 ```js
 import { createStore } from 'vuex'
@@ -25,7 +25,7 @@ const store = createStore({
 })
 ```
 
-The store simply stores a count, increasing it when the `increment` mutation is committed. This is the component we will be testing:
+这个存储简单地存储了一个计数，当提交 `increment` 变更时增加计数。以下是我们将要测试的组件：
 
 ```js
 const App = {
@@ -48,18 +48,18 @@ const App = {
 }
 ```
 
-## Testing with a Real Vuex Store
+## 使用真实的 Vuex 存储进行测试
 
-To fully test that this component and the Vuex store are working, we will click on the `<button>` and assert the count is increased. In your Vue applications, usually in `main.js`, you install Vuex like this:
+为了充分测试这个组件和 Vuex 存储的工作情况，我们将点击 `<button>` 并断言计数是否增加。在你的 Vue 应用中，通常在 `main.js` 中，你可以这样安装 Vuex：
 
 ```js
 const app = createApp(App)
 app.use(store)
 ```
 
-This is because Vuex is a plugin. Plugins are applied by calling `app.use` and passing in the plugin.
+这是因为 Vuex 是一个插件。插件通过调用 `app.use` 并传入插件来应用。
 
-Vue Test Utils allows you to install plugins as well, using the `global.plugins` mounting option.
+Vue Test Utils 也允许你安装插件，使用 `global.plugins` 挂载选项。
 
 ```js
 import { createStore } from 'vuex'
@@ -90,11 +90,11 @@ test('vuex', async () => {
 })
 ```
 
-After installing the plugin, we use `trigger` to click the button and assert that `count` is increased. This kind of test, that covers the interaction between different systems (in this case, the Component and the store), is known as an integration test.
+在安装插件后，我们使用 `trigger` 点击按钮并断言 `count` 是否增加。这种测试覆盖了不同系统之间的交互（在这种情况下是组件和存储），称为集成测试。
 
-## Testing with a Mock Store
+## 使用模拟存储进行测试
 
-In contrast, a unit test might isolate and test the component and the store separately. This can be useful if you have a very large application with a complex store. For this use case, you can mock the parts of the store you are interested in using `global.mocks`:
+相比之下，单元测试可能会将组件和存储分开进行测试。如果你有一个非常大的应用程序和复杂的存储，这可能会很有用。对于这种用例，你可以使用 `global.mocks` 模拟你感兴趣的存储部分
 
 ```js
 test('vuex using a mock store', async () => {
@@ -119,13 +119,13 @@ test('vuex using a mock store', async () => {
 })
 ```
 
-Instead of using a real Vuex store and installing it via `global.plugins`, we created our own mock store, only implementing the parts of Vuex used in the component (in this case, the `state` and `commit` functions).
+我们没有使用真实的 Vuex 存储并通过 `global.plugins` 安装它，而是创建了自己的模拟存储，仅实现了组件中使用的 Vuex 部分（在这种情况下是 `state` 和 `commit` 函数）。
 
-While it might seem convenient to test the store in isolation, notice that it won't give you any warning if you break your Vuex store. Consider carefully if you want to mock the Vuex store, or use a real one, and understand the trade-offs.
+虽然在隔离中测试存储似乎很方便，但请注意，如果你破坏了 Vuex 存储，它不会给你任何警告。请仔细考虑是否要模拟 Vuex 存储，或者使用真实的存储，并理解其中的权衡。
 
-## Testing Vuex in Isolation
+## 独立测试 Vuex
 
-You may want to test your Vuex mutations or actions in total isolation, especially if they are complex. You don't need Vue Test Utils for this, since a Vuex store is just regular JavaScript. Here's how you might test the `increment` mutation without Vue Test Utils:
+你可能希望完全独立地测试你的 Vuex 变更或动作，特别是如果它们很复杂。你不需要 Vue Test Utils，因为 Vuex 存储只是常规的 JavaScript。以下是如何在没有 Vue Test Utils 的情况下测试 `increment` 变更：
 
 ```js
 test('increment mutation', () => {
@@ -146,9 +146,9 @@ test('increment mutation', () => {
 })
 ```
 
-## Presetting the Vuex State
+## 预设 Vuex 状态
 
-Sometimes it can be useful to have the Vuex store in a specific state for a test. One useful technique you can use, other than `global.mocks`, is to create a function that wraps `createStore` and takes an argument to seed the initial state. In this example we extend `increment` to take an additional argument, which will be added on to the `state.count`. If that is not provided, we just increment `state.count` by 1.
+有时在测试中将 Vuex 存储设置为特定状态是有用的。除了 `global.mocks`，你可以使用创建一个包装 `createStore` 的函数，并接受一个参数来设置初始状态。在这个示例中，我们扩展 `increment` 以接受一个附加参数，该参数将添加到 `state.count` 上。如果未提供该参数，我们只将 `state.count` 增加 1。
 
 ```js
 const createVuexStore = (initialState) =>
@@ -177,46 +177,50 @@ test('increment mutation with a value', () => {
 })
 ```
 
-By creating a `createVuexStore` function that takes an initial state, we can easily set the initial state. This allows us to test all of the edge cases, while simplifying our tests.
+通过创建一个接受初始状态的 `createVuexStore` 函数，我们可以轻松设置初始状态。这使我们能够测试所有边界情况，同时简化我们的测试。
 
-The [Vue Testing Handbook](https://lmiller1990.github.io/vue-testing-handbook/testing-vuex.html) has more examples for testing Vuex. Note: the examples pertain to Vue.js 2 and Vue Test Utils v1. The ideas and concepts are the same, and the Vue Testing Handbook will be updated for Vue.js 3 and Vue Test Utils 2 in the near future.
+[Vue 测试手册](https://lmiller1990.github.io/vue-testing-handbook/testing-vuex.html)中有更多关于测试 Vuex 的示例。注意：这些示例适用于 Vue.js 2 和 Vue Test Utils v1。思想和概念是相同的，Vue 测试手册将在不久的将来更新为 Vue.js 3 和 Vue Test Utils 2。
 
-## Testing using the Composition API
+## 使用组合 API 进行测试
 
-Vuex is accessed via a `useStore` function when using the Composition API. [Read more about it here](https://next.vuex.vuejs.org/guide/composition-api.html).
+在使用组合 API 时，通过 `useStore` 函数访问 Vuex。[在这里阅读更多相关内容](https://next.vuex.vuejs.org/guide/composition-api.html)。
 
-`useStore` can be used with an optional and unique injection key as discussed [in the Vuex documentation](https://next.vuex.vuejs.org/guide/typescript-support.html#typing-usestore-composition-function).
+`useStore` 可以与可选的唯一注入键一起使用，如 [Vuex 文档中所述](https://next.vuex.vuejs.org/guide/typescript-support.html#typing-usestore-composition-function)。
 
-It looks like this:
+它看起来像这样：
 
 ```js
 import { createStore } from 'vuex'
 import { createApp } from 'vue'
 
-// create a globally unique symbol for the injection key
+// 创建一个全局唯一的符号作为注入键
 const key = Symbol()
 
 const App = {
-  setup () {
-    // use unique key to access store
+  setup() {
+    // 使用唯一键访问存储
     const store = useStore(key)
   }
 }
 
-const store = createStore({ /* ... */ })
-const app = createApp({ /* ... */ })
+const store = createStore({
+  /* ... */
+})
+const app = createApp({
+  /* ... */
+})
 
-// specify key as second argument when calling app.use(store)
+// 在调用 app.use(store) 时指定键作为第二个参数
 app.use(store, key)
 ```
 
-To avoid repeating the key parameter passing whenever `useStore` is used, the Vuex documentation recommends extracting that logic into a helper function and reuse that function instead of the default `useStore` function. [Read more about it here](https://next.vuex.vuejs.org/guide/typescript-support.html#typing-usestore-composition-function). The approach providing a store using Vue Test Utils depends on the way the `useStore` function is used in the component.
+为了避免在每次使用 `useStore` 时重复传递键参数，Vuex 文档建议将该逻辑提取到一个辅助函数中，并重用该函数，而不是使用默认的 `useStore` 函数。[在这里阅读更多内容](https://next.vuex.vuejs.org/guide/typescript-support.html#typing-usestore-composition-function)。使用 Vue Test Utils 提供存储的方法取决于组件中 `useStore` 函数的使用方式。
 
-### Testing Components that Utilize `useStore` without an Injection Key
+### 测试不使用注入键的 `useStore` 的组件
 
-Without an injection key, the store data can just be injected into the component via the global `provide` mounting option. The name of the injected store must be the same as the one in the component, e.g. "store". 
+如果不使用注入键，存储数据可以通过全局 `provide` 挂载选项直接注入到组件中。注入的存储名称必须与组件中的名称相同，例如 "store"。
 
-#### Example for providing the unkeyed `useStore`
+#### 提供未键入的 `useStore` 示例
 
 ```js
 import { createStore } from 'vuex'
@@ -229,20 +233,20 @@ const wrapper = mount(App, {
   global: {
     provide: {
       store: store
-    },
-  },
+    }
+  }
 })
 ```
 
-### Testing Components that Utilize `useStore` with an Injection Key
+### 测试使用注入键的 `useStore` 的组件
 
-When using the store with an injection key ,the previous approach won't work. The store instance won't be returned from `useStore`. In order to access the correct store the identifier needs to be provided.
+当使用带有注入键的存储时，之前的方法将无法工作。存储实例将不会从 `useStore` 返回。为了访问正确的存储，需要提供标识符。
 
-It needs to be the exact key that is passed to `useStore` in the `setup` function of the component or to `useStore` within the custom helper function. Since JavaScript symbols are unique and can't be recreated, it is best to export the key from the real store.
+它必须是传递给组件的 `setup` 函数中 `useStore` 的确切键，或者在自定义辅助函数中调用 `useStore` 时使用的键。由于 JavaScript symbols 是唯一的且无法重建，最好从真实的存储中导出该键。
 
-You can either use `global.provide` with the correct key to inject the store, or `global.plugins` to install the store and specify the key:
+你可以使用 `global.provide` 和正确的键来注入存储，或者使用 `global.plugins` 安装存储并指定键
 
-#### Providing the Keyed `useStore` using `global.provide`
+#### 使用 `global.provide` 提供带有键的 `useStore`
 
 ```js
 // store.js
@@ -254,18 +258,20 @@ export const key = Symbol()
 import { createStore } from 'vuex'
 import { key } from './store'
 
-const store = createStore({ /* ... */ })
+const store = createStore({
+  /* ... */
+})
 
 const wrapper = mount(App, {
   global: {
     provide: {
       [key]: store
-    },
-  },
+    }
+  }
 })
 ```
 
-#### Providing the Keyed `useStore` using `global.plugins`
+#### 使用 `global.plugins` 提供带有键的 `useStore`
 
 ```js
 // store.js
@@ -277,21 +283,21 @@ export const key = Symbol()
 import { createStore } from 'vuex'
 import { key } from './store'
 
-const store = createStore({ /* ... */ })
+const store = createStore({
+  /* ... */
+})
 
 const wrapper = mount(App, {
   global: {
-    // to pass options to plugins, use the array syntax.
+    // 要传递选项给插件，请使用数组语法。
     plugins: [[store, key]]
-  },
+  }
 })
 ```
 
+## 结论
 
-
-## Conclusion
-
-- Use `global.plugins` to install Vuex as a plugin
-- Use `global.mocks` to mock a global object, such as Vuex, for advanced use cases
-- Consider testing complex Vuex mutations and actions in isolation
-- Wrap `createStore` with a function that takes an argument to set up specific test scenarios
+- 使用 `global.plugins` 安装 Vuex 作为插件
+- 使用 `global.mocks` 模拟全局对象，例如 Vuex，以满足高级用例
+- 考虑单独测试复杂的 Vuex 变更和动作
+- 使用一个接受参数的函数来封装 `createStore`，以便设置特定的测试场景

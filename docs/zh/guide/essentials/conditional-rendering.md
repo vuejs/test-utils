@@ -1,12 +1,12 @@
-# Conditional Rendering
+# 条件渲染
 
-Vue Test Utils has a range of features for rendering and making assertions about the state of a component, with the goal of verifying it is behaving correctly. This article will explore how to render components, as well as verify they are rendering content correctly.
+Vue Test Utils 提供了一系列功能，用于渲染组件并对其状态进行断言，以验证其是否正常工作。本文将探讨如何渲染组件，以及验证它们是否正确渲染内容。
 
-This article is also available as a [short video](https://www.youtube.com/watch?v=T3CHtGgEFTs&list=PLC2LZCNWKL9ahK1IoODqYxKu5aA9T5IOA&index=15).
+本文也可以作为 [短视频](https://www.youtube.com/watch?v=T3CHtGgEFTs&list=PLC2LZCNWKL9ahK1IoODqYxKu5aA9T5IOA&index=15) 观看。
 
-## Finding Elements
+## 查找元素
 
-One of the most basic features of Vue is the ability to dynamically insert and remove elements with `v-if`. Let's look at how to test a component that uses `v-if`.
+Vue 的基本特性之一是能够动态插入和移除元素，使用 `v-if` 指令。让我们看看如何测试一个使用 `v-if` 的组件。
 
 ```js
 const Nav = {
@@ -24,56 +24,55 @@ const Nav = {
 }
 ```
 
-In the `<Nav>` component, a link to the user's profile is shown. In addition, if the `admin` value is `true`, we reveal a link to the admin section. There are three scenarios which we should verify are behaving correctly:
+在 `<Nav>` 组件中，显示用户个人资料的链接。此外，如果 `admin` 的值为 `true`，则会显示指向管理员部分的链接。我们需要验证的三个场景是：
 
-1. The `/profile` link should be shown.
-2. When the user is an admin, the `/admin` link should be shown.
-3. When the user is not an admin, the `/admin` link should not be shown.
+1. 应该显示 `/profile` 链接。
+2. 当用户是管理员时，应该显示 `/admin` 链接。
+3. 当用户不是管理员时，应该不显示 `/admin` 链接。
 
-## Using `get()`
+## 使用 `get()`
 
-`wrapper` has a `get()` method that searches for an existing element. It uses [`querySelector`](https://developer.mozilla.org/en-US/docs/Web/API/Document/querySelector) syntax.
+`wrapper` 有一个 `get()` 方法，用于查找现有元素。它使用 [`querySelector`](https://developer.mozilla.org/en-US/docs/Web/API/Document/querySelector) 语法。
 
-We can assert the profile link content by using `get()`:
+我们可以使用 `get()` 来断言 `/profile` 链接的内容：
 
 ```js
 test('renders a profile link', () => {
   const wrapper = mount(Nav)
 
-  // Here we are implicitly asserting that the
-  // element #profile exists.
+  // 在这里，我们隐含地断言元素 #profile 存在。
   const profileLink = wrapper.get('#profile')
 
   expect(profileLink.text()).toEqual('My Profile')
 })
 ```
 
-If `get()` does not return an element matching the selector, it will raise an error, and your test will fail. `get()` returns a `DOMWrapper` if an element is found. A `DOMWrapper` is a thin wrapper around the DOM element that implements the [Wrapper API](/api/#wrapper-methods) - that's why we are able to do `profileLink.text()` and access the text. You can access the raw element using the `element` property.
+如果 `get()` 不返回与选择器匹配的元素，它将引发错误，测试将失败。如果找到元素，`get()` 返回一个 `DOMWrapper`。`DOMWrapper` 是对 DOM 元素的一个薄包装，支持 [Wrapper API](../../api/#Wrapper-methods) - 这就是我们能够使用 `profileLink.text()` 访问文本的原因。您可以使用 `element` 属性访问原始元素。
 
-There is another type of wrapper - a `VueWrapper` - that is returned from [`getComponent`](/api/#getcomponent) that works in the same manner.
+还有另一种类型的包装器 - `VueWrapper` - 它是从 [`getComponent`](../../api/#getComponent) 返回的，工作方式相同。
 
-## Using `find()` and `exists()`
+## 使用 `find()` 和 `exists()`
 
-`get()` works on the assumption that elements do exist and throws an error when they do not. It is _not_ recommended to use it for asserting existence.
+`get()` 假设元素存在，并在不存在时抛出错误。因此，不建议使用它来断言元素的存在。
 
-To do so, we use `find()` and `exists()`. The next test asserts that if `admin` is `false` (which it is by default), the admin link is not present:
+为此，我们使用 `find()` 和 `exists()`。下一个测试断言如果 `admin` 为 `false`（默认值），则管理员链接不存在：
 
 ```js
 test('does not render an admin link', () => {
   const wrapper = mount(Nav)
 
-  // Using `wrapper.get` would throw and make the test fail.
+  // 使用 `wrapper.get` 会抛出错误并使测试失败。
   expect(wrapper.find('#admin').exists()).toBe(false)
 })
 ```
 
-Notice we are calling `exists()` on the value returned from `.find()`. `find()`, like `mount()`, also returns a `wrapper`. `mount()` has a few extra methods, because it's wrapping a Vue component, and `find()` only returns a regular DOM node, but many of the methods are shared between both. Some other methods include `classes()`, which gets the classes a DOM node has, and `trigger()` for simulating user interaction. You can find a list of methods supported [here](../../api/#wrapper-methods).
+请注意，我们在 `.find()` 返回的值上调用 `exists()`。`find()` 和 `mount()` 一样，也返回一个 `wrapper`。`mount()` 有一些额外的方法，因为它包装的是 Vue 组件，而 `find()` 仅返回常规 DOM 节点，但两者之间共享许多方法。其他方法包括 `classes()`，用于获取 DOM 节点的类，以及 `trigger()`，用于模拟用户交互。您可以在 [这里](../../api/#Wrapper-methods) 找到支持的方法列表。
 
-## Using `data`
+## 使用 `data`
 
-The final test is to assert that the admin link is rendered when `admin` is `true`. It's `false` by default, but we can override that using the second argument to `mount()`, the [`mounting options`](../../api/#mount-options).
+最后一个测试是断言当 `admin` 为 `true` 时，管理员链接被渲染。它默认是 `false`，但我们可以使用 `mount()` 的第二个参数，即 [挂载选项](../../api/#mount) 来覆盖它。
 
-For `data`, we use the aptly named `data` option:
+对于 `data`，我们使用命名恰当的 `data` 选项：
 
 ```js
 test('renders an admin link', () => {
@@ -85,21 +84,20 @@ test('renders an admin link', () => {
     }
   })
 
-  // Again, by using `get()` we are implicitly asserting that
-  // the element exists.
+  // 通过使用 `get()` 我们隐含地断言元素存在。
   expect(wrapper.get('#admin').text()).toEqual('Admin')
 })
 ```
 
-If you have other properties in `data`, don't worry - Vue Test Utils will merge the two together. The `data` in the mounting options will take priority over any default values.
+如果您在 `data` 中有其他属性，不用担心 - Vue Test Utils 会将两者合并。挂载选项中的 `data` 将优先于任何默认值。
 
-To learn what other mounting options exist, see [`Passing Data`](../essentials/passing-data.md) or see [`mounting options`](../../api/#mount-options).
+要了解其他挂载选项，请参见 [传递数据](../essentials/passing-data.md) 或 [挂载选项](../../api/#mount)。
 
-## Checking Elements visibility
+## 检查元素可见性
 
-Sometimes you only want to hide/show an element while keeping it in the DOM. Vue offers `v-show` for scenarios as such. (You can check the differences between `v-if` and `v-show` [here](https://v3.vuejs.org/guide/conditional.html#v-if-vs-v-show)).
+有时您只想隐藏/显示一个元素，同时将其保留在 DOM 中。Vue 提供了 `v-show` 以应对这种情况。（您可以在 [这里](https://v3.vuejs.org/guide/conditional.html#v-if-vs-v-show) 查阅 `v-if` 和 `v-show` 之间的区别。）
 
-This is how a component with `v-show` looks like:
+使用 `v-show` 的组件如下所示：
 
 ```js
 const Nav = {
@@ -119,19 +117,19 @@ const Nav = {
 }
 ```
 
-In this scenario, the element is not visible but always rendered. `get()` or `find()` will always return a `Wrapper` – `find()` with `.exists()` always return `true` – because the **element is still in the DOM**.
+在这种情况下，元素不可见但始终被渲染。`get()` 或 `find()` 将始终返回一个 `Wrapper` - `find()` 的 `.exists()` 始终返回 `true` - 因为 **元素仍然在 DOM 中**。
 
-## Using `isVisible()`
+## 使用 `isVisible()`
 
-`isVisible()` gives the capacity to check for hidden elements. In particular `isVisible()` will check if:
+`isVisible()` 可以检查隐藏元素。特别是 `isVisible()` 将检查：
 
-- an element or its ancestors have `display: none`, `visibility: hidden`, `opacity :0` style
-- an element or its ancestors are located inside collapsed `<details>` tag
+- 元素或其祖先是否具有 `display: none`、`visibility: hidden` 或 `opacity: 0` 样式
+- 元素或其祖先是否位于折叠的 `<details>` 标签内
 - an element or its ancestors have the `hidden` attribute
 
-For any of these cases, `isVisible()` returns `false`.
+在这些情况下，`isVisible()` 将返回 `false`。
 
-Testing scenarios using `v-show` will look like:
+使用 `v-show` 进行测试的场景如下：
 
 ```js
 test('does not show the user dropdown', () => {
@@ -141,9 +139,9 @@ test('does not show the user dropdown', () => {
 })
 ```
 
-## Conclusion
+## 结论
 
-- Use `find()` along with `exists()` to verify whether an element is in the DOM.
-- Use `get()` if you expect the element to be in the DOM.
-- The `data` mounting option can be used to set default values on a component.
-- Use `get()` with `isVisible()` to verify the visibility of an element that is in the DOM
+- 使用 `find()` 结合 `exists()` 验证元素是否在 DOM 中。
+- 如果您确认元素应该在 DOM 中，请使用 `get()`。
+- 可以使用 `data` 挂载选项设置组件的默认值。
+- 使用 `get()` 和 `isVisible()` 验证在 DOM 中的元素的可见性。

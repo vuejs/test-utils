@@ -1,12 +1,12 @@
-# Event Handling
+# 事件处理
 
-Vue components interact with each other via props and by emitting events by calling `$emit`. In this guide, we look at how to verify events are correctly emitted using the `emitted()` function.
+Vue 组件通过 props 互相交互，并通过调用 `$emit` 触发事件。在本指南中，我们将探讨如何使用 `emitted()` 函数验证事件是否正确触发。
 
-This article is also available as a [short video](https://www.youtube.com/watch?v=U_j-nDur4oU&list=PLC2LZCNWKL9ahK1IoODqYxKu5aA9T5IOA&index=14).
+本文也有 [短视频](https://www.youtube.com/watch?v=U_j-nDur4oU&list=PLC2LZCNWKL9ahK1IoODqYxKu5aA9T5IOA&index=14) 观看。
 
-## The Counter component
+## 计数器组件
 
-Here is a simple `<Counter>` component. It features a button that, when clicked, increments an internal count variable and emits its value:
+这是一个简单的 `<Counter>` 组件。它包含一个按钮，当点击时，会增加一个内部计数变量并触发该值的事件：
 
 ```js
 const Counter = {
@@ -25,11 +25,11 @@ const Counter = {
 }
 ```
 
-To fully test this component, we should verify that an `increment` event with the latest `count` value is emitted.
+为了全面测试这个组件，我们需要验证是否发出了带有最新 `count` 值的 `increment` 事件。
 
-## Asserting the emitted events
+## 断言触发的事件
 
-To do so, we will rely on the `emitted()` method. It **returns an object with all the events the component has emitted**, and their arguments in an array. Let's see how it works:
+为此，我们将依赖 `emitted()` 方法。它 **返回一个对象，包含组件发出的所有事件**，其参数以数组的形式呈现。让我们看看它是如何工作的：
 
 ```js
 test('emits an event when clicked', () => {
@@ -42,17 +42,17 @@ test('emits an event when clicked', () => {
 })
 ```
 
-> If you haven't seen `trigger()` before, don't worry. It's used to simulate user interaction. You can learn more in [Forms](./forms).
+> 如果您之前没有见过 `trigger()`，不要担心。它用于模拟用户交互。您可以在 [测试表单](./forms) 中了解更多。
 
-The first thing to notice is that `emitted()` returns an object, where each key matches an emitted event. In this case, `increment`.
+首先要注意的是，`emitted()` 返回一个对象，其中每个键对应一个已触发的事件。在这个例子中是 `increment`。
 
-This test should pass. We made sure we emitted an event with the appropriate name.
+这个测试应该通过。我们确保发出了具有适当名称的事件。
 
-## Asserting the arguments of the event
+## 断言事件的参数
 
-This is good - but we can do better! We need to check that we emit the right arguments when `this.$emit('increment', this.count)` is called.
+干得漂亮，但我们可以做得更好！我们需要检查在调用 `this.$emit('increment', this.count)` 时是否发出了正确的参数。
 
-Our next step is to assert that the event contains the `count` value. We do so by passing an argument to `emitted()`.
+我们的下一步是断言事件包含 `count` 值。我们通过向 `emitted()` 传递参数来实现这一点。
 
 ```js {9}
 test('emits an event with count when clicked', () => {
@@ -61,36 +61,35 @@ test('emits an event with count when clicked', () => {
   wrapper.find('button').trigger('click')
   wrapper.find('button').trigger('click')
 
-  // `emitted()` accepts an argument. It returns an array with all the
-  // occurrences of `this.$emit('increment')`.
+  // `emitted()` 接受一个参数。它返回一个数组，包含
+  // 所有 `this.$emit('increment')` 的发生情况。
   const incrementEvent = wrapper.emitted('increment')
 
-  // We have "clicked" twice, so the array of `increment` should
-  // have two values.
+  // 我们“点击”了两次，因此 `increment` 的数组应该有两个值。
   expect(incrementEvent).toHaveLength(2)
 
-  // Assert the result of the first click.
-  // Notice that the value is an array.
+  // 断言第一次点击的结果。
+  // 注意，值是一个数组。
   expect(incrementEvent[0]).toEqual([1])
 
-  // Then, the result of the second one.
+  // 然后是第二次的结果。
   expect(incrementEvent[1]).toEqual([2])
 })
 ```
 
-Let's recap and break down the output of `emitted()`. Each of these keys contains the different values emitted during the test:
+让我们回顾一下并分解 `emitted()` 的输出。每个键包含测试期间发出的不同值：
 
 ```js
 // console.log(wrapper.emitted('increment'))
 ;[
-  [1], // first time it is called, `count` is 1
-  [2] // second time it is called, `count` is 2
+  [1], // 第一次调用时，`count` 为 1
+  [2] // 第二次调用时，`count` 为 2
 ]
 ```
 
-## Asserting complex events
+## 断言复杂事件
 
-Imagine that now our `<Counter>` component needs to emit an object with additional information. For instance, we need to tell any parent component listening to the `@increment` event if `count` is even or odd:
+假设我们的 `<Counter>` 组件现在需要发出一个包含附加信息的对象。例如，我们需要告诉任何监听 `@increment` 事件的父组件 `count` 是偶数还是奇数：
 
 ```js {12-15}
 const Counter = {
@@ -113,7 +112,7 @@ const Counter = {
 }
 ```
 
-As we did before, we need to trigger the `click` event on the `<button>` element. Then, we use `emitted('increment')` to make sure the right values are emitted.
+和之前一样，我们需要在 `<button>` 元素上触发 `click` 事件。然后，我们使用 `emitted('increment')` 确保发出了正确的值。
 
 ```js
 test('emits an event with count when clicked', () => {
@@ -122,12 +121,11 @@ test('emits an event with count when clicked', () => {
   wrapper.find('button').trigger('click')
   wrapper.find('button').trigger('click')
 
-  // We have "clicked" twice, so the array of `increment` should
-  // have two values.
+  // 我们“点击”了两次，因此 `increment` 的数组应该有两个值。
   expect(wrapper.emitted('increment')).toHaveLength(2)
 
-  // Then, we can make sure each element of `wrapper.emitted('increment')`
-  // contains an array with the expected object.
+  // 然后，我们可以确保 `wrapper.emitted('increment')` 的每个元素
+  // 包含一个带有预期对象的数组。
   expect(wrapper.emitted('increment')[0]).toEqual([
     {
       count: 1,
@@ -144,14 +142,14 @@ test('emits an event with count when clicked', () => {
 })
 ```
 
-Testing complex event payloads such as Objects is no different from testing simple values such as numbers or strings.
+测试复杂事件负载（如对象）与测试简单值（如数字或字符串）没有区别。
 
-## Composition API
+## 组合 API
 
-If you are using the Composition API, you will be calling `context.emit()` instead of `this.$emit()`. `emitted()` captures events from both, so you can test your component using the same techniques described here.
+如果您使用的是组合 API，您将调用 `context.emit()` 而不是 `this.$emit()`。`emitted()` 可以捕获两者的事件，因此您可以使用本文中描述的相同方法来测试您的组件。
 
-## Conclusion
+## 结论
 
-- Use `emitted()` to access the events emitted from a Vue component.
-- `emitted(eventName)` returns an array, where each element represents one event emitted.
-- Arguments are stored in `emitted(eventName)[index]` in an array in the same order they are emitted.
+- 使用 `emitted()` 访问从 Vue 组件发出的事件。
+- `emitted(eventName)` 返回一个数组，其中每个元素代表一个已发出的事件。
+- 参数存储在 `emitted(eventName)[index]` 中，按发出顺序以数组形式呈现。

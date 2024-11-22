@@ -1,58 +1,51 @@
-# Plugins
+# 插件
 
-Plugins add global-level functionality to Vue Test Utils' API. This is the
-official way to extend Vue Test Utils' API with custom logic, methods, or
-functionality.
+插件为 Vue Test Utils 的 API 添加了全局功能。这是扩展 Vue Test Utils API 的官方方式，可以添加自定义逻辑、方法或功能。
 
-Some use cases for plugins:
+插件的使用场景：
 
-1. Aliasing existing public methods
-2. Attaching matchers to the Wrapper instance
-3. Attaching functionality to the Wrapper
+1. 为现有的公共方法创建别名
+2. 将匹配器附加到 Wrapper 实例
+3. 将功能附加到 Wrapper
 
-## Wrapper Plugin
+## Wrapper 插件
 
-### Using a Plugin
+### 使用插件
 
-Install plugins by calling the `config.plugins.VueWrapper.install()` method
-. This has to be done before you call `mount`.
+通过调用 `config.plugins.VueWrapper.install()` 方法来安装插件。这必须在调用 `mount` 之前完成。
 
-The `install()` method will receive an instance of `WrapperAPI` containing both
-public and private properties of the instance.
+`install()` 方法将接收一个 `WrapperAPI` 实例，该实例包含该实例的公共和私有属性。
 
 ```js
 // setup.js file
 import { config } from '@vue/test-utils'
 
-// locally defined plugin, see "Writing a Plugin"
+// 本地定义的插件，见“编写插件”
 import MyPlugin from './myPlugin'
 
-// Install a plugin onto VueWrapper
+// 将插件安装到 VueWrapper
 config.plugins.VueWrapper.install(MyPlugin)
 ```
 
-You can optionally pass in some options:
+你可以选择性地传入一些选项：
 
 ```js
 config.plugins.VueWrapper.install(MyPlugin, { someOption: true })
 ```
 
-Your plugin should be installed once. If you are using Jest, this should be in your Jest config's `setupFiles` or `setupFilesAfterEnv` file.
+你的插件应该只安装一次。如果你使用 Jest，这应该在你的 Jest 配置的 `setupFiles` 或 `setupFilesAfterEnv` 文件中。
 
-Some plugins automatically call `config.plugins.VueWrapper.install()` when
-they're imported. This is common if they're extending multiple interfaces at
-once. Follow the instructions of the plugin you're installing.
+某些插件在导入时会自动调用 `config.plugins.VueWrapper.install()`。如果它们同时扩展多个接口，这是常见的情况。请遵循你正在安装的插件的说明。
 
-Check out the [Vue Community Guide](https://vue-community.org/guide/ecosystem/testing.html) or [awesome-vue](https://github.com/vuejs/awesome-vue#test) for a collection of community-contributed plugins and libraries.
+查看 [Vue Community Guide](https://vue-community.org/guide/ecosystem/testing.html) 或 [awesome-vue](https://github.com/vuejs/awesome-vue#test) 获取社区贡献的插件和库的集合。
 
-### Writing a Plugin
+### 编写插件
 
-A Vue Test Utils plugin is simply a function that receives the mounted
-`VueWrapper` or `DOMWrapper` instance and can modify it.
+Vue Test Utils 插件只是一个函数，该函数接收挂载的 `VueWrapper` 或 `DOMWrapper` 实例，并可以对其进行修改。
 
-#### Basic Plugin
+#### 基本插件
 
-Below is a simple plugin to add a convenient alias to map `wrapper.element` to `wrapper.$el`
+以下是一个简单的插件，用于为 `wrapper.element` 创建一个方便的别名 `wrapper.$el`。
 
 ```js
 // setup.js
@@ -60,16 +53,18 @@ import { config } from '@vue/test-utils'
 
 const myAliasPlugin = (wrapper) => {
   return {
-    $el: wrapper.element // simple aliases
+    $el: wrapper.element // 简单别名
   }
 }
 
-// Call install on the type you want to extend
-// You can write a plugin for any value inside of config.plugins
+// 在你要扩展的类型上调用 install
+// 你可以为 config.plugins 中的任何值编写插件
 config.plugins.VueWrapper.install(myAliasPlugin)
 ```
 
-And in your spec, you'll be able to use your plugin after `mount`.
+在你的测试中，你将能够在 `mount` 之后使用你的插件。
+
+// component.spec.js
 
 ```js
 // component.spec.js
@@ -77,11 +72,11 @@ const wrapper = mount({ template: `<h1>🔌 Plugin</h1>` })
 console.log(wrapper.$el.innerHTML) // 🔌 Plugin
 ```
 
-#### Data Test ID Plugin
+#### 数据测试 ID 插件
 
-The below plugin adds a method `findByTestId` to the `VueWrapper` instance. This encourages using a selector strategy relying on test-only attributes on your Vue Components.
+下面的插件为 `VueWrapper` 实例添加了一个 `findByTestId` 方法。这鼓励使用依赖于 Vue 组件上的测试专用属性的选择器策略。
 
-Usage:
+用法:
 
 `MyComponent.vue`:
 
@@ -100,10 +95,10 @@ const wrapper = mount(MyComponent)
 wrapper.findByTestId('name-input') // returns a VueWrapper or DOMWrapper
 ```
 
-Implementation of the plugin:
+插件的实现：
 
 ```js
-import { config, DOMWrapper} from '@vue/test-utils'
+import { config, DOMWrapper } from '@vue/test-utils'
 
 const DataTestIdPlugin = (wrapper) => {
   function findByTestId(selector) {
@@ -120,15 +115,16 @@ const DataTestIdPlugin = (wrapper) => {
 config.plugins.VueWrapper.install(DataTestIdPlugin)
 ```
 
-## Stubs Plugin
+## Stubs 插件
 
-The `config.plugins.createStubs` allows to overwrite the default stub creation provided by VTU.
+`config.plugins.createStubs` 允许覆盖 VTU 提供的默认桩创建。
 
-Some use cases are:
-* You want to add more logic into the stubs (for example named slots)
-* You want to use different stubs for multiple components (for example stub components from a library)
+一些使用场景包括：
 
-### Usage
+- 你想在桩中添加更多逻辑（例如命名插槽）
+- 你想为多个组件使用不同的桩（例如从库中桩化组件）
+
+### 用法
 
 ```typescript
 config.plugins.createStubs = ({ name, component }) => {
@@ -138,7 +134,8 @@ config.plugins.createStubs = ({ name, component }) => {
 }
 ```
 
-This function will be called everytime VTU generates a stub either from
+每当 VTU 生成一个桩时，这个函数都会被调用，无论是通过以下方式：
+
 ```typescript
 const wrapper = mount(Component, {
   global: {
@@ -148,12 +145,15 @@ const wrapper = mount(Component, {
   }
 })
 ```
-or 
+
+还是
+
 ```typescript
 const wrapper = shallowMount(Component)
 ```
 
-But will not be called, when you explicit set a stub
+但当你显式设置桩时，它将不会被调用：
+
 ```typescript
 const wrapper = mount(Component, {
   global: {
@@ -164,20 +164,20 @@ const wrapper = mount(Component, {
 })
 ```
 
-## Using the plugin with TypeScript
+## 使用 TypeScript 的插件
 
-To use your custom wrapper plugin with [TypeScript](https://www.typescriptlang.org/) you have to declare your custom wrapper function. Therefore, add a file named `vue-test-utils.d.ts` with the following content:
+要使用自定义的 Wrapper 插件与 [TypeScript](https://www.typescriptlang.org/) 一起使用，你必须声明你的自定义 wrapper 函数。因此，添加一个名为 `vue-test-utils.d.ts` 的文件，内容如下：
+
 ```typescript
-import { DOMWrapper } from '@vue/test-utils';
+import { DOMWrapper } from '@vue/test-utils'
 
 declare module '@vue/test-utils' {
   interface VueWrapper {
-    findByTestId(testId: string): DOMWrapper[];
+    findByTestId(testId: string): DOMWrapper[]
   }
 }
 ```
 
-## Featuring Your Plugin
+## 推广你的插件
 
-If you're missing functionality, consider writing a plugin to extend Vue Test
-Utils and submit it to be featured at [Vue Community Guide](https://vue-community.org/guide/ecosystem/testing.html) or [awesome-vue](https://github.com/vuejs/awesome-vue#test).
+如果你缺少某些功能，可以考虑编写插件来扩展 Vue Test Utils，并提交以在 [Vue Community Guide](https://vue-community.org/guide/ecosystem/testing.html) 或 [awesome-vue](https://github.com/vuejs/awesome-vue#test) 中推广。

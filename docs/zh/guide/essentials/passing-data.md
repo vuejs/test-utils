@@ -1,12 +1,12 @@
-# Passing Data to Components
+# 传递数据到组件
 
-Vue Test Utils provides several ways to set data and props on a component, to allow you to fully test the component's behavior in different scenarios.
+Vue Test Utils 提供了几种方法来设置组件的数据和属性，以便您可以在不同场景下充分测试组件的行为。
 
-In this section, we explore the `data` and `props` mounting options, as well as `VueWrapper.setProps()` to dynamically update the props a component receives.
+在本节中，我们将探讨 `data` 和 `props` 的挂载选项，以及 `VueWrapper.setProps()`，以动态更新组件接收的属性。
 
-## The Password Component
+## 密码组件
 
-We will demonstrate the above features by building a `<Password>` component. This component verifies a password meets certain criteria, such as length and complexity. We will start with the following and add features, as well as tests to make sure the features are working correctly:
+我们将通过构建一个 `<Password>` 组件来演示上述功能。该组件验证密码是否符合某些标准，例如长度和复杂性。我们将从以下代码开始，并添加功能以及测试以确保这些功能正常工作：
 
 ```js
 const Password = {
@@ -23,13 +23,13 @@ const Password = {
 }
 ```
 
-The first requirement we will add is a minimum length.
+我们将添加的第一个要求是最小长度。
 
-## Using `props` to set a minimum length
+## 使用 `props` 设置最小长度
 
-We want to reuse this component in all our projects, each of which may have different requirements. For this reason, we will make the `minLength` a **prop** which we pass to `<Password>`:
+我们希望在所有项目中重用此组件，而每个项目可能有不同的要求。因此，我们将把 `minLength` 作为一个 **prop** 传递给 `<Password>` 组件：
 
-We will show an error if `password` is less than `minLength`. We can do this by creating an `error` computed property, and conditionally rendering it using `v-if`:
+如果 `password` 的长度小于 `minLength`，我们将显示一个错误。我们可以通过创建一个 `error` 计算属性，并使用 `v-if` 有条件地渲染它来实现：
 
 ```js
 const Password = {
@@ -52,7 +52,7 @@ const Password = {
   computed: {
     error() {
       if (this.password.length < this.minLength) {
-        return `Password must be at least ${this.minLength} characters.`
+        return `密码必须至少包含 ${this.minLength} 个字符.`
       }
       return
     }
@@ -60,7 +60,7 @@ const Password = {
 }
 ```
 
-To test this, we need to set the `minLength`, as well as a `password` that is less than that number. We can do this using the `data` and `props` mounting options. Finally, we will assert the correct error message is rendered:
+为了测试这一点，我们需要设置 `minLength` 以及一个小于该数字的 `password`。我们可以使用 `data` 和 `props` 的挂载选项来实现。最后，我们将断言错误消息是否被渲染：
 
 ```js
 test('renders an error if length is too short', () => {
@@ -75,15 +75,15 @@ test('renders an error if length is too short', () => {
     }
   })
 
-  expect(wrapper.html()).toContain('Password must be at least 10 characters')
+  expect(wrapper.html()).toContain('密码必须至少包含 10 个字符')
 })
 ```
 
-Writing a test for a `maxLength` rule is left as an exercise for the reader! Another way to write this would be using `setValue` to update the input with a password that is too short. You can learn more in [Forms](./forms).
+编写 `maxLength` 规则的测试留给读者作为练习！另一种实现方式是使用 `setValue` 更新输入为过短的密码。您可以在 [测试表单](./forms) 部分了解更多信息。
 
-## Using `setProps`
+## 使用 `setProps`
 
-Sometimes you may need to write a test for a side effect of a prop changing. This simple `<Show>` component renders a greeting if the `show` prop is `true`.
+有时您可能需要编写测试来验证属性更改的副作用。这个简单的 `<Show>` 组件在 `show` 属性为 `true` 时渲染一个问候语。
 
 ```vue
 <template>
@@ -107,7 +107,7 @@ export default {
 </script>
 ```
 
-To test this fully, we might want to verify that `greeting` is rendered by default. We are able to update the `show` prop using `setProps()`, which causes `greeting` to be hidden:
+为了全面测试这一点，我们可能想要验证 `greeting` 是否默认渲染。我们可以使用 `setProps()` 更新 `show` 属性，这将导致 `greeting` 被隐藏：
 
 ```js
 import { mount } from '@vue/test-utils'
@@ -123,11 +123,11 @@ test('renders a greeting when show is true', async () => {
 })
 ```
 
-We also use the `await` keyword when calling `setProps()`, to ensure that the DOM has been updated before the assertions run.
+我们在调用 `setProps()` 时也使用了 `await` 关键字，以确保在断言运行之前 DOM 已被更新。
 
-## Conclusion
+## 结论
 
-- use the `props` and `data` mounting options to pre-set the state of a component.
-- Use `setProps()` to update a prop during a test.
-- Use the `await` keyword before `setProps()` to ensure the Vue will update the DOM before the test continues.
-- Directly interacting with your component can give you greater coverage. Consider using `setValue` or `trigger` in combination with `data` to ensure everything works correctly.
+- 使用 `props` 和 `data` 的挂载选项预设组件的状态。
+- 使用 `setProps()` 在测试期间更新属性。
+- 在 `setProps()` 前使用 await 关键字，以确保 Vue 在测试继续之前会更新 DOM。
+- 直接与组件交互可以提供更大的覆盖率。考虑结合使用 `setValue` 或 `trigger` 以及 `data` 来确保一切正常工作。

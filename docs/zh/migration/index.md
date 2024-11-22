@@ -1,14 +1,14 @@
-# Migrating from Vue Test Utils v1
+# 从 Vue Test Utils v1 迁移
 
-A review of changes VTU v1 -> VTU v2, and some code snippets to showcase required modifications. If you encounter a bug or difference in behavior not documented here, please [open an issue](https://github.com/vuejs/test-utils/issues/new).
+对 VTU v1 到 VTU v2 的更改进行回顾，并提供一些代码片段以展示所需的修改。如果您遇到未在此处记录的错误或行为差异，请 [提交问题](https://github.com/vuejs/test-utils/issues/new)。
 
-## Changes
+## 更改
 
-### `propsData` is now `props`
+### `propsData` 现在是 `props`
 
-In VTU v1, you would pass props using the `propsData` mounting option. This was confusing, because you declare props inside of the `props` option in your Vue components. Now you can pass `props` using the `props` mounting option. `propsData` is and will continue to be supported for backwards compatibility.
+在 VTU v1 中，您使用 `propsData` 挂载选项传递 props。这令人困惑，因为您在 Vue 组件的 `props` 选项中声明 props。现在您可以使用 `props` 挂载选项传递 `props`。为了向后兼容，`propsData` 仍然被支持。
 
-**Before**:
+**之前**:
 
 ```js
 const App = {
@@ -22,7 +22,7 @@ const wrapper = mount(App, {
 }
 ```
 
-**After**:
+**之后**:
 
 ```js
 const App = {
@@ -36,15 +36,15 @@ const wrapper = mount(App, {
 }
 ```
 
-### No more `createLocalVue`
+### 不再需要 `createLocalVue`
 
-In Vue 2, it was common for plugins to mutate the global Vue instance and attach various methods to the prototype. As of Vue 3, this is no longer the case - you create a new Vue app using `createApp` as opposed to `new Vue`, and install plugins with `createApp(App).use(/* ... */)`.
+在 Vue 2 中，插件通常会修改全局 Vue 实例并将各种方法附加到原型上。从 Vue 3 开始，这种情况不再存在 - 您使用 `createApp` 创建新的 Vue 应用，而不是 `new Vue`，并使用 `createApp(App).use(/* ... */)`安装插件。
 
-To avoid polluting the global Vue instance in Vue Test Utils v1, we provided a `createLocalVue` function and `localVue` mounting option. This would let you have an isolated Vue instance for each test, avoiding cross test contamination. This is no longer an issue in Vue 3, since plugins, mixins etc do not mutate the global Vue instance.
+为了避免在 Vue Test Utils v1 中污染全局 Vue 实例，我们提供了 `createLocalVue` 函数和 `localVue` 挂载选项。这使您可以为每个测试拥有一个独立的 Vue 实例，避免跨测试污染。在 Vue 3 中，这不再是问题，因为插件、混入等不会修改全局 Vue 实例。
 
-For most cases where you would previously use `createLocalVue` and the `localVue` mounting option to install a plugin, mixin or directive, you now use the [`global` mounting option](/api/#global-components). Here is an example of a component and test that used `localVue`, and how it now looks (using `global.plugins`, since Vuex is a plugin):
+在大多数情况下，您之前使用 `createLocalVue` 和 `localVue` 挂载选项来安装插件、混入或指令，现在可以使用 [`global` 挂载选项](/api/#global)。以下是一个使用 `localVue` 的组件和测试示例，以及它现在的样子（使用 `global.plugins`，因为 Vuex 是一个插件）：
 
-**Before**:
+**之前**:
 
 ```js
 import Vuex from 'vuex'
@@ -72,7 +72,7 @@ const wrapper = mount(App, {
 })
 ```
 
-**After**:
+**之后**:
 
 ```js
 import { createStore } from 'vuex'
@@ -99,11 +99,11 @@ const wrapper = mount(App, {
 })
 ```
 
-### `mocks` and `stubs` are now in `global`
+### `mocks` 和 `stubs` 现在在 `global` 中
 
-`mocks` and `stubs` are applied to all components, not just the one you are passing to `mount`. To reflect this, `mocks` and `stubs` are in the new `global` mounting option:
+`mocks` 和 `stubs` 应用于所有组件，而不仅仅是您传递给 `mount` 的组件。为了反映这一点，`mocks` 和 `stubs` 现在在新的 `global` 挂载选项中：
 
-**Before**:
+**之前**:
 
 ```js
 const $route = {
@@ -122,7 +122,7 @@ const wrapper = mount(App, {
 }
 ```
 
-**After**:
+**之后**:
 
 ```js
 const $route = {
@@ -143,11 +143,11 @@ const wrapper = mount(App, {
 }
 ```
 
-### `shallowMount` and `renderStubDefaultSlot`
+### `shallowMount` 和 `renderStubDefaultSlot`
 
-`shallowMount` is intended to stub out any custom components. While this was the case in Vue Test Utils v1, stubbed components would still render their default `<slot />`. While this was unintended, some users came to enjoy this feature. This behavior is corrected in v2 - **the slot content for a stubbed component is not rendered**.
+`shallowMount` 旨在存根任何自定义组件。虽然在 Vue Test Utils v1 中是这样的，但存根组件仍会渲染其默认的 `<slot />`。虽然这并非预期的行为，但一些用户对此功能表示喜欢。在 v2 中，这一行为已被修正 - **桩组件的插槽内容不再渲染**。
 
-Given this code:
+给定以下代码：
 
 ```js
 import { shallowMount } from '@vue/test-utils'
@@ -168,7 +168,7 @@ const App = {
 }
 ```
 
-**Before**:
+**之前**:
 
 ```js
 describe('App', () => {
@@ -185,7 +185,7 @@ describe('App', () => {
 })
 ```
 
-**After**:
+**之后**:
 
 ```js
 describe('App', () => {
@@ -201,7 +201,7 @@ describe('App', () => {
 })
 ```
 
-You can enable the old behavior like this:
+您可以通过以下方式启用旧行为：
 
 ```js
 import { config } from '@vue/test-utils'
@@ -209,17 +209,17 @@ import { config } from '@vue/test-utils'
 config.global.renderStubDefaultSlot = true
 ```
 
-### `destroy` is now `unmount` to match Vue 3
+### `destroy` 现在是 `unmount` 以匹配 Vue 3
 
-Vue 3 renamed the `vm.$destroy` to `vm.$unmount`. Vue Test Utils has followed suit; `wrapper.destroy()` is now `wrapper.unmount()`.
+Vue 3 将 `vm.$destroy` 重命名为 `vm.$unmount`。Vue Test Utils 也随之更改；`wrapper.destroy()` 现在是 `wrapper.unmount()`。
 
-### `scopedSlots` is now merged with `slots`
+### `scopedSlots` 现在与 `slots` 合并
 
-Vue 3 united the `slot` and `scoped-slot` syntax under a single syntax, `v-slot`, which you can read about in the [the docs](https://v3.vuejs.org/guide/migration/slots-unification.html#overview). Since `slot` and `scoped-slot` are now merged, the `scopedSlots` mounting option is now deprecated - just use the `slots` mounting option for everything.
+Vue 3 将 `slot` 和 `scoped-slot` 语法统一为单一语法 `v-slot`，您可以在 [文档](https://v3.vuejs.org/guide/migration/slots-unification.html#overview) 中阅读相关内容。由于 `slot` 和 `scoped-slot` 现在合并，因此 `scopedSlots` 挂载选项现在已弃用 - 只需使用 `slots` 挂载选项即可。
 
-### `slots`‘s scope is now exposed as `params`
+### `slots` 的作用域现在作为 `params` 暴露
 
-When using string templates for slot content, if not explicitly defined using a wrapping `<template #slot-name="scopeVar">` tag, slot scope becomes available as a `params` object when the slot is evaluated.
+当使用字符串模板作为插槽内容时，如果没有使用 `<template #slot-name="scopeVar">` 标签显式定义，插槽作用域在插槽评估时作为 `params` 对象可用。
 
 ```diff
 shallowMount(Component, {
@@ -229,29 +229,29 @@ shallowMount(Component, {
 +    default: '<p>{{params.index}},{{params.text}}</p>'
   }
 })
-````
-
-### `findAll().at()` removed
-
-`findAll()` now returns an array of DOMWrappers.
-
-**Before:**
-
-```js
-wrapper.findAll('[data-test="token"]').at(0);
 ```
 
-**After:**
+### `findAll().at()` 被移除
+
+`findAll()` 现在返回一个 DOMWrappers 数组。
+
+**之前:**
 
 ```js
-wrapper.findAll('[data-test="token"]')[0];
+wrapper.findAll('[data-test="token"]').at(0)
 ```
 
-### `createWrapper()` removed
+**之后:**
 
-`createWrapper()` is now an internal function only and cannot be imported anymore. If you need access to a wrapper for a DOM element which isn't a Vue component, you can use `new DOMWrapper()` constructor.
+```js
+wrapper.findAll('[data-test="token"]')[0]
+```
 
-**Before:**
+### `createWrapper()` 被移除
+
+`createWrapper()` 现在是一个内部函数，无法再被导入。如果您需要访问一个不是 Vue 组件的 DOM 元素的包装器，可以使用 `new DOMWrapper()` 构造函数。
+
+**之前:**
 
 ```js
 import { createWrapper } from "@vue/test-utils";
@@ -264,7 +264,7 @@ describe('App', () => {
 
 ```
 
-**After:**
+**之后:**
 
 ```js
 import { DOMWrapper } from "@vue/test-utils";
@@ -276,9 +276,9 @@ describe('App', () => {
   })
 ```
 
-### No more `ref` selector in `findAllComponents`
+### 不再支持 `ref` 选择器在 `findAllComponents` 中
 
-The `ref` syntax is not supported anymore in `findAllComponents`. You could set a `data-test` attribute instead and update the selector:
+`findAllComponents` 不再支持 `ref` 语法。您可以设置 `data-test` 属性并更新选择器：
 
 `Component.vue`:
 
@@ -298,36 +298,38 @@ The `ref` syntax is not supported anymore in `findAllComponents`. You could set 
 + wrapper.findAllComponents('[data-test="number"]')
 ```
 
-## Test runners upgrade notes
+## 测试运行器升级注意事项
 
-> Vue Test Utils is framework agnostic - you can use it with whichever test runner you like.
+> Vue Test Utils 是框架无关的 - 您可以与任何您喜欢的测试运行器一起使用。
 
-This statement is at the core of `@vue/test-utils`. But we do relate to the fact that migrating code bases and corresponding test suites to `vue@3` can be, in some scenarios, a pretty big effort.
+这句话是 `@vue/test-utils` 的核心。但我们确实意识到，在某些情况下，将代码库及其相应的测试套件迁移到 `vue@3` 可能是一项相当大的工作。
 
-This section tries to compile some common gotchas spotted by our community while doing their migrations and also updating their underlying test running stack to more modern versions. These are unrelated to `@vue/test-utils`, but we hope it can help you out completing this important migration step.
+本节试图整理出社区在进行迁移时发现的一些常见问题，以及更新其基础测试运行栈到更现代版本时遇到的问题。这些与 `@vue/test-utils` 无关，但我们希望它能帮助您完成这一重要的迁移步骤。
 
 ### `@vue/vue3-jest` + `jest@^28`
 
-If you've decided to take the opportunity and upgrade your test runner tools to a more modern version, have these in mind.
+如果您决定借此机会将测试运行器工具升级到更现代的版本，请注意以下几点。
 
 #### `ReferenceError: Vue is not defined` [vue-jest#479](https://github.com/vuejs/vue-jest/issues/479)
 
-When `jest-environment-jsdom` package is used, it defaults to load libraries from `package.json` [`browser` entry](https://jestjs.io/docs/configuration#testenvironmentoptions-object). You can override it to use `node` imports instead and fix this error:
+当使用 `jest-environment-jsdom` 包时，它默认从 `package.json` [`browser` entry](https://jestjs.io/docs/configuration#testenvironmentoptions-object) 加载库。您可以覆盖它以使用 `node` 导入，从而修复此错误：
 
 ```js
 // jest.config.js
 module.exports = {
   testEnvironmentOptions: {
-    customExportConditions: ["node", "node-addons"],
+    customExportConditions: ['node', 'node-addons']
   }
 }
 ```
+
 <br/>
 
-#### Snapshots now include my comment nodes
+#### 快照现在包含注释节点
 
-If you use snapshot testing and comment nodes are leaking into your snapshots, note that `comments` are now always [preserved](https://vuejs.org/api/application.html#app-config-compileroptions-comments) and only removed in production. You can override this behaviour by tweaking `app.config.compilerOptions` to remove them from snapshots as well:
-- via `vue-jest` [config](https://github.com/vuejs/vue-jest#compiler-options-in-vue-3).
+如果您使用快照测试并且注释节点泄漏到您的快照中，请注意 `comments` 现在始终 [保留](https://vuejs.org/api/application.html#app-config-compileroptions-comments)，并仅在生产中删除。您可以通过调整 `app.config.compilerOptions` 来覆盖此行为，以便在快照中也删除它们：
+
+- 通过 `vue-jest` [配置](https://github.com/vuejs/vue-jest#compiler-options-in-vue-3).
   ```js
   // jest.config.js
   module.exports = {
@@ -340,50 +342,50 @@ If you use snapshot testing and comment nodes are leaking into your snapshots, n
     }
   }
   ```
-- Via `@vue/test-utils` [`mountingOptions.global.config`](https://test-utils.vuejs.org/api/#global) either globally or on per-test basis.
+- 通过 `@vue/test-utils` [`mountingOptions.global.config`](https://test-utils.vuejs.org/api/#global) 全局或逐个测试基础。
 
-## Comparison with v1
+## 与 v1 的比较
 
-This is table for those coming from VTU 1, comparing the two APIs.
+这是一个针对来自 VTU 1 的用户的表格，比较 API。
 
-### Base API
+### 基础 API
 
-| export            | notes                                                                            |
-|-------------------|----------------------------------------------------------------------------------|
-| enableAutoDestroy | replaced by `enableAutoUnmount`                                                  |
+| API               | 备注                        |
+| ----------------- | --------------------------- |
+| enableAutoDestroy | 被 `enableAutoUnmount` 替代 |
 
-### Mounting Options
+### 挂载选项
 
-| option           | notes                                                                             |
-|------------------|-----------------------------------------------------------------------------------|
-| mocks            | nested in `global`                                                                |
-| propsData        | now called `props`                                                                |
-| provide          | nested in `global`                                                                |
-| mixins           | nested in `global`                                                                |
-| plugins          | nested in `global`                                                                |
-| component        | nested in `global`                                                                |
-| directives       | nested in `global`                                                                |
-| attachToDocument | renamed `attachTo`. See [here](https://github.com/vuejs/vue-test-utils/pull/1492) |
-| scopedSlots      | removed. ScopedSlots are merged with `slots` in Vue 3                             |
-| context          | removed. Different from Vue 2, does not make sense anymore.                       |
-| localVue         | removed. No longer required - in Vue 3 there is no global Vue instance to mutate. |
-| listeners        | removed. No longer exists in Vue 3                                                |
-| parentComponent  | removed                                                                           |
+| 选项             | 备注                                                                                |
+| ---------------- | ----------------------------------------------------------------------------------- |
+| mocks            | 嵌套在 `global` 中                                                                  |
+| propsData        | 现在称为 `props`                                                                    |
+| provide          | 嵌套在 `global` 中                                                                  |
+| mixins           | 嵌套在 `global` 中                                                                  |
+| plugins          | 嵌套在 `global` 中                                                                  |
+| component        | 嵌套在 `global` 中                                                                  |
+| directives       | 嵌套在 `global` 中                                                                  |
+| attachToDocument | 重命名为 `attachTo`. 参见 [此处](https://github.com/vuejs/vue-test-utils/pull/1492) |
+| scopedSlots      | 被移除, ScopedSlots 与 Vue 3 的 `slots` 合并                                        |
+| context          | 被移除, 与 Vue 2 不同，已不再有意义                                                 |
+| localVue         | 被移除, 不再需要 - 在 Vue 3 中没有全局 Vue 实例可供修改                             |
+| listeners        | 被移除, 在 Vue 3 中不再存在                                                         |
+| parentComponent  | 被移除                                                                              |
 
 ### Wrapper API (mount)
 
-| method         | notes                                                                                       |
-|----------------|---------------------------------------------------------------------------------------------|
-| find           | only `querySelector` syntax is supported. Use `findComponent(Comp)` to find a Vue component |
-| setValue       | works for select, checkbox, radio button, input, textarea. Returns `nextTick`.              |
-| trigger        | returns `nextTick`. You can do `await wrapper.find('button').trigger('click')`              |
-| destroy        | renamed to `unmount` to match Vue 3 lifecycle hook name.                                    |
-| contains       | removed. Use `find`                                                                         |
-| emittedByOrder | removed. Use `emitted`                                                                      |
-| setSelected    | removed. Now part of `setValue`                                                             |
-| setChecked     | removed. Now part of `setValue`                                                             |
-| is             | removed                                                                                     |
-| isEmpty        | removed. Use matchers such as [this](https://github.com/testing-library/jest-dom#tobeempty) |
-| isVueInstance  | removed                                                                                     |
-| name           | removed                                                                                     |
-| setMethods     | removed                                                                                     |
+| 方法           | 备注                                                                              |
+| -------------- | --------------------------------------------------------------------------------- |
+| find           | 仅支持 `querySelector` 语法。使用 `findComponent(Comp)` 查找 Vue 组件             |
+| setValue       | 适用于选择框、复选框、单选按钮、输入框、文本区域。返回 `nextTick`                 |
+| trigger        | 返回 `nextTick`。您可以执行 `await wrapper.find('button').trigger('click')`       |
+| destroy        | 重命名为 `unmount` 以匹配 Vue 3 生命周期钩子名称。                                |
+| contains       | 被移除，使用 `find`                                                               |
+| emittedByOrder | 被移除，使用 `emitted`                                                            |
+| setSelected    | 被移除，现在是 `setValue` 的一部分                                                |
+| setChecked     | 被移除，现在是 `setValue` 的一部分                                                |
+| is             | 被移除                                                                            |
+| isEmpty        | 被移除， 使用匹配器 [参考](https://github.com/testing-library/jest-dom#tobeempty) |
+| isVueInstance  | 被移除                                                                            |
+| name           | 被移除                                                                            |
+| setMethods     | 被移除                                                                            |

@@ -1,10 +1,10 @@
-# Slots
+# 插槽
 
-Vue Test Utils provides some useful features for testing components using `slots`.
+Vue Test Utils 提供了一些有用的功能，用于测试使用 `slots` 的组件。
 
-## A Simple Example
+## 简单示例
 
-You might have a generic `<layout>` component that uses a default slot to render some content. For example:
+你可能有一个通用的 `<layout>` 组件，它使用默认插槽来渲染一些内容。例如：
 
 ```js
 const Layout = {
@@ -22,7 +22,7 @@ const Layout = {
 }
 ```
 
-You might want to write a test to ensure the default slot content is rendered. VTU provides the `slots` mounting option for this purpose:
+你可能想编写一个测试，以确保默认插槽的内容被正确渲染。VTU 提供了 `slots` 挂载选项来实现这一目的：
 
 ```js
 test('layout default slot', () => {
@@ -36,7 +36,7 @@ test('layout default slot', () => {
 })
 ```
 
-It passes! In this example, we are passing some text content to the default slot. If you want to be even more specific, and verify the default slot content is rendered inside `<main>`, you could change the assertion:
+测试通过！在这个示例中，我们将一些文本内容传递给默认插槽。如果你想更具体地验证默认插槽的内容是否渲染在 `<main>` 中，你可以修改断言：
 
 ```js
 test('layout default slot', () => {
@@ -50,9 +50,9 @@ test('layout default slot', () => {
 })
 ```
 
-## Named Slots
+## 命名插槽
 
-You may have more complex `<layout>` component with some named slots. For example:
+你可能有一个更复杂的 `<layout>` 组件，带有一些命名插槽。例如：
 
 ```js
 const Layout = {
@@ -73,7 +73,7 @@ const Layout = {
 }
 ```
 
-VTU also supports this. You can write a test as follows. Note that in this example we are passing HTML instead of text content to the slots.
+VTU 也支持这一点。你可以编写如下测试。在这个示例中，我们将 HTML 而不是文本内容传递给插槽
 
 ```js
 test('layout full page layout', () => {
@@ -91,18 +91,15 @@ test('layout full page layout', () => {
 })
 ```
 
-## Multiple Slots
+## 多个插槽
 
-You can pass an array of slots, too:
+你也可以传递一个插槽数组：
 
 ```js
 test('layout full page layout', () => {
   const wrapper = mount(Layout, {
     slots: {
-      default: [
-        '<div id="one">One</div>',
-        '<div id="two">Two</div>'
-      ]
+      default: ['<div id="one">One</div>', '<div id="two">Two</div>']
     }
   })
 
@@ -111,9 +108,9 @@ test('layout full page layout', () => {
 })
 ```
 
-## Advanced Usage
+## 高级用法
 
-You can also pass a render function, an object with template or even an SFC imported from a `vue` file to a slot mounting option:
+你还可以将渲染函数、带有模板的对象，甚至从 `vue` 文件导入的单文件组件传递给插槽挂载选项：
 
 ```js
 import { h } from 'vue'
@@ -135,11 +132,11 @@ test('layout full page layout', () => {
 })
 ```
 
-[Refer to the tests](https://github.com/vuejs/test-utils/blob/9d3c2a6526f3d8751d29b2f9112ad2a3332bbf52/tests/mountingOptions/slots.spec.ts#L124-L167) for more examples and use cases.
+[参考测试](https://github.com/vuejs/test-utils/blob/9d3c2a6526f3d8751d29b2f9112ad2a3332bbf52/tests/mountingOptions/slots.spec.ts#L124-L167) 获取更多示例和用例。
 
-## Scoped Slots
+## 作用域插槽
 
-[Scoped slots](https://v3.vuejs.org/guide/component-slots.html#scoped-slots) and bindings are also supported. 
+[作用域插槽](https://v3.vuejs.org/guide/component-slots.html#scoped-slots) 和绑定也得到了支持。
 
 ```js
 const ComponentWithSlots = {
@@ -169,7 +166,7 @@ test('scoped slots', () => {
 })
 ```
 
-When using string templates for slot content, **if not explicitly defined using a wrapping `<template #scoped="scopeVar">` tag**, slot scope becomes available as a `params` object when the slot is evaluated.
+当使用字符串模板作为插槽内容时，**如果没有使用包裹的** `<template #scoped="scopeVar">` **标签显式定义**，插槽作用域在插槽内容被解析时将作为 `params` 对象。
 
 ```js
 test('scoped slots', () => {
@@ -183,9 +180,9 @@ test('scoped slots', () => {
 })
 ```
 
-## Conclusion
+## 结论
 
-- Use the `slots` mounting option to test components using `<slot>` are rendering content correctly.
-- Content can either be a string, a render function or an imported SFC.
-- Use `default` for the default slot, and the correct name for a named slots.
-- scoped slots and the `#` shorthand is also supported.
+- 使用 `slots` 挂载选项来测试组件使用 `<slot>` 是否正确渲染内容。
+- 内容可以是字符串、渲染函数或导入的单文件组件(SFC)。
+- 使用 `default` 表示默认插槽，使用正确的名称表示命名插槽。
+- 作用域插槽和 `#` 简写也得到了支持。

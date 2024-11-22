@@ -1,15 +1,12 @@
-# FAQ
+# 常见问题
 
 [[toc]]
 
-## Mocking Dates and Timers with Vitest
+## 使用 Vitest 模拟日期和定时器
 
-Vue's scheduler depends on the system time. Make sure to mount components
-*after* calling `vi.setSystemTime`, since Vue depends on its side effects.
-Mounting components before calling `vi.setSystemTime` may cause breaks in
-reactivity.
+Vue 的调度器依赖于系统时间。在调用 `vi.setSystemTime` 之后再挂载组件，因为 Vue 依赖于其副作用。在调用 `vi.setSystemTime` 之前挂载组件可能会导致响应性中断。
 
-See [vuejs/test-utils#2074](https://github.com/vuejs/test-utils/issues/2074).
+请参见 [vuejs/test-utils#2074](https://github.com/vuejs/test-utils/issues/2074).
 
 ## Vue warn: Failed setting prop
 
@@ -18,17 +15,18 @@ See [vuejs/test-utils#2074](https://github.com/vuejs/test-utils/issues/2074).
 TypeError: Cannot set property prefix of #<Element> which has only a getter
 ```
 
-This warning is shown in case you are using `shallowMount` or `stubs` with a property name that is shared with [`Element`](https://developer.mozilla.org/en-US/docs/Web/API/Element).
+如果您使用 `shallowMount` 或 `stubs`，并且使用了与 [`Element`](https://developer.mozilla.org/en-US/docs/Web/API/Element) 共享的属性名称，将会显示此警告。
 
-Common property names that are shared with `Element`:
-* `attributes`
-* `children`
-* `prefix`
+与 `Element` 共享的常见属性名称：
 
-See: https://developer.mozilla.org/en-US/docs/Web/API/Element
+- `attributes`
+- `children`
+- `prefix`
 
-**Possible solutions**
+请参见: https://developer.mozilla.org/en-US/docs/Web/API/Element
 
-1. Use `mount` instead of `shallowMount` to render without stubs
-2. Ignore the warning by mocking `console.warn`
-3. Rename the prop to not clash with `Element` properties
+**可能的解决方案**
+
+1. 使用 `mount` 而不是 `shallowMount` 来渲染而不使用桩
+2. 通过模拟 `console.warn` 来忽略警告
+3. 重命名 prop，以避免与 `Element` 属性冲突

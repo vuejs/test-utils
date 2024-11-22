@@ -1,21 +1,21 @@
-# Testing Vue Router
+# 测试 Vue Router
 
-This article will present two ways to test an application using Vue Router:
+本文将介绍两种方法测试使用 Vue Router 的应用程序：
 
-1. Using the real Vue Router, which is more production like but also may lead to complexity when testing larger applications
-2. Using a mocked router, allowing for more fine grained control of the testing environment.
+1. 使用真实的 Vue Router，这种方法更接近生产环境，但在测试较大应用时可能会导致复杂性。
+2. 使用模拟的路由器，允许对测试环境进行更细粒度的控制。
 
-Notice that Vue Test Utils does not provide any special functions to assist with testing components that rely on Vue Router.
+请注意，Vue Test Utils 并未提供任何特殊函数来辅助测试依赖于 Vue Router 的组件。
 
-## Using a Mocked Router
+## 使用模拟路由器
 
-You can use a mocked router to avoid caring about the implementation details of Vue Router in your unit tests.
+使用模拟路由器可以避免在单元测试中关注 Vue Router 的实现细节。
 
-Instead of using a real Vue Router instance, we can create a mock version which only implements the features we are interested in. We can do this using a combination of `jest.mock` (if you are using Jest), and `global.components`.
+我们可以创建一个仅实现我们感兴趣的功能的模拟版本，而不是使用真实的 Vue Router 实例。可以使用 `jest.mock`（如果你使用 Jest）和 `global.components` 的组合来实现。
 
-When we mock out a dependency, it's usually because **we are not interested in testing its behavior**. We don't want to test clicking `<router-link>` navigates to the correct page - of course it does! We might be interested in ensuring that the `<a>` has the correct `to` attribute, though.
+在模拟依赖时，通常是因为 **我们不关心测试其行为**。我们不想测试点击 `<router-link>` 是否导航到正确的页面，我们可能更关心的是确保 `<a>` 拥有正确的 `to` 属性。
 
-Let's see a more realistic example! This component shows a button that will redirect an authenticated user to the edit post page (based on the current route parameters). An unauthenticated user should be redirected to a `/404` route.
+让我们来看一个更实际的例子！这个组件展示了一个按钮，当用户经过身份验证时，会将其重定向到编辑帖子页面（基于当前路由参数）。未经过身份验证的用户则会被重定向到 `/404` 路由。
 
 ```js
 const Component = {
@@ -33,10 +33,10 @@ const Component = {
 }
 ```
 
-We could use a real router, then navigate to the correct route for this component, then after clicking the button assert that the correct page is rendered... however, this is a lot of setup for a relatively simple test. At its core, the test we want to write is "if authenticated, redirect to X, otherwise redirect to Y". Let's see how we might accomplish this by mocking the routing using the `global.mocks` property:
+我们可以使用真实的路由器，然后导航到该组件的正确路由，点击按钮后断言正确的页面是否被渲染……然而，对于相对简单的测试来说，这需要很多设置。我们想要编写的测试核心是“如果经过身份验证，则重定向到 X，否则重定向到 Y”。下面是如何使用 `global.mocks` 属性模拟路由的示例：
 
 ```js
-import { mount } from '@vue/test-utils';
+import { mount } from '@vue/test-utils'
 
 test('allows authenticated user to edit a post', async () => {
   const mockRoute = {
@@ -95,19 +95,19 @@ test('redirect an unauthenticated user to 404', async () => {
 })
 ```
 
-We used `global.mocks` to provide the necessary dependencies (`this.$route` and `this.$router`) to set an ideal state for each test.
+我们使用 `global.mocks` 提供了必要的依赖（`this.$route` 和 `this.$router`），为每个测试设置了理想状态。
 
-We were then able to use `jest.fn()` to monitor how many times, and with which arguments, `this.$router.push` was called with. Best of all, we don't have to deal with the complexity or caveats of Vue Router in our test! We were only concerned with testing the app logic.
+然后，我们能够使用 `jest.fn()` 监控 `this.$router.push` 被调用的次数和参数。最重要的是，我们不必在测试中处理 Vue Router 的复杂性或注意事项！我们只关注测试应用逻辑。
 
 :::tip
-You might want to test the entire system in an end-to-end manner. You could consider a framework like [Cypress](https://www.cypress.io/) for full system tests using a real browser.
+你可能想以端到端的方式测试整个系统。可以考虑使用 [Cypress](https://www.cypress.io/) 进行使用真实浏览器的完整系统测试。
 :::
 
-## Using a Real Router
+## 使用真实路由器
 
-Now we have seen how to use a mocked router, let's take a look at using the real Vue Router.
+现在我们已经看到了如何使用模拟路由器，让我们看看如何使用真实的 Vue Router。
 
-Let's create a basic blogging application that uses Vue Router. The posts are listed on the `/posts` route:
+我们来创建一个基本的博客应用程序，使用 Vue Router。帖子在 `/posts` 路由上列出：
 
 ```js
 const App = {
@@ -134,9 +134,9 @@ const Posts = {
 }
 ```
 
-The root of the app displays a `<router-link>` leading to `/posts`, where we list the posts.
+应用程序显示一个指向 `/posts` 的 `<router-link>`，在该路由下我们列出帖子。
 
-The real router looks like this. Notice that we're exporting the routes separately from the route, so that we can instantiate a new router for each individual test later.
+真实路由器如下所示。请注意，我们将路由单独导出，以便可以为每个单独的测试实例化一个新的路由器。
 
 ```js
 import { createRouter, createWebHistory } from 'vue-router'
@@ -152,19 +152,19 @@ const routes = [
     path: '/posts',
     component: Posts
   }
-];
+]
 
 const router = createRouter({
   history: createWebHistory(),
-  routes: routes,
+  routes: routes
 })
 
-export { routes };
+export { routes }
 
-export default router;
+export default router
 ```
 
-The best way to illustrate how to test an app using Vue Router is to let the warnings guide us. The following minimal test is enough to get us going:
+验证使用 Vue Router 测试应用程序的最佳方法是让警告引导我们。以下最小测试足以让我们开始：
 
 ```js
 import { mount } from '@vue/test-utils'
@@ -175,7 +175,7 @@ test('routing', () => {
 })
 ```
 
-The test fails. It also prints two warnings:
+测试失败。它还打印了两个警告：
 
 ```bash
 console.warn node_modules/@vue/runtime-core/dist/runtime-core.cjs.js:39
@@ -185,16 +185,16 @@ console.warn node_modules/@vue/runtime-core/dist/runtime-core.cjs.js:39
   [Vue warn]: Failed to resolve component: router-view
 ```
 
-The `<router-link>` and `<router-view>` component are not found. We need to install Vue Router! Since Vue Router is a plugin, we install it using the `global.plugins` mounting option:
+找不到 `<router-link>` 和 `<router-view>` 组件。我们需要安装 Vue Router！由于 Vue Router 是一个插件，我们使用 `global.plugins` 挂载选项来安装它：
 
 ```js {12,13,14}
 import { mount } from '@vue/test-utils'
 import { createRouter, createWebHistory } from 'vue-router'
-import { routes } from "@/router" // This import should point to your routes file declared above
+import { routes } from '@/router' // 此导入应指向您上面声明的路由文件
 
 const router = createRouter({
   history: createWebHistory(),
-  routes: routes,
+  routes: routes
 })
 
 test('routing', () => {
@@ -207,31 +207,31 @@ test('routing', () => {
 })
 ```
 
-Those two warnings are now gone - but now we have another warning:
+这两个警告现在消失了——但现在我们又有了另一个警告：
 
 ```js
 console.warn node_modules/vue-router/dist/vue-router.cjs.js:225
   [Vue Router warn]: Unexpected error when starting the router: TypeError: Cannot read property '_history' of null
 ```
 
-Although it's not entirely clear from the warning, it's related to the fact that **Vue Router 4 handles routing asynchronously**.
+虽然警告的内容并不完全明确，但它与 Vue Router 4 **处理路由是异步的** 有关。
 
-Vue Router provides an `isReady` function that tell us when router is ready. We can then `await` it to ensure the initial navigation has happened.
+Vue Router 提供了一个 `isReady` 函数，告诉我们路由器何时准备就绪。然后我们可以 `await` 它，以确保初始导航已发生。
 
 ```js {13,14}
 import { mount } from '@vue/test-utils'
 import { createRouter, createWebHistory } from 'vue-router'
-import { routes } from "@/router"
+import { routes } from '@/router'
 
 const router = createRouter({
   history: createWebHistory(),
-  routes: routes,
+  routes: routes
 })
 
 test('routing', async () => {
   router.push('/')
 
-  // After this line, router is ready
+  // 这行之后，路由已准备就绪
   await router.isReady()
 
   const wrapper = mount(App, {
@@ -243,18 +243,18 @@ test('routing', async () => {
 })
 ```
 
-The test is now passing! It was quite a bit of work, but now we make sure the application is properly navigating to the initial route.
+测试现在通过了！这确实需要一些工作，但现在我们确保应用程序正确导航到初始路由。
 
-Now let's navigate to `/posts` and make sure the routing is working as expected:
+现在让我们导航到 `/posts`，确保路由按预期工作：
 
 ```js {21,22}
 import { mount } from '@vue/test-utils'
 import { createRouter, createWebHistory } from 'vue-router'
-import { routes } from "@/router"
+import { routes } from '@/router'
 
 const router = createRouter({
   history: createWebHistory(),
-  routes: routes,
+  routes: routes
 })
 
 test('routing', async () => {
@@ -273,7 +273,7 @@ test('routing', async () => {
 })
 ```
 
-Again, another somewhat cryptic error:
+又一个有些隐晦的错误：
 
 ```js
 console.warn node_modules/@vue/runtime-core/dist/runtime-core.cjs.js:39
@@ -284,18 +284,18 @@ console.error node_modules/@vue/runtime-core/dist/runtime-core.cjs.js:211
   TypeError: Cannot read property '_history' of null
 ```
 
-Again, due to Vue Router 4's new asynchronous nature, we need to `await` the routing to complete before making any assertions.
+同样，由于 Vue Router 4 的新异步特性，我们需要在进行任何断言之前 `await` 路由完成。
 
-In this case, however, there is no _hasNavigated_ hook we can await on. One alternative is to use the `flushPromises` function exported from Vue Test Utils:
+然而，在这种情况下，我们没有可以等待的 _hasNavigated_ 钩子。一种替代方法是使用从 Vue Test Utils 导出的 `flushPromises` 函数：
 
 ```js {1,22}
 import { mount, flushPromises } from '@vue/test-utils'
 import { createRouter, createWebHistory } from 'vue-router'
-import { routes } from "@/router"
+import { routes } from '@/router'
 
 const router = createRouter({
   history: createWebHistory(),
-  routes: routes,
+  routes: routes
 })
 
 test('routing', async () => {
@@ -315,20 +315,20 @@ test('routing', async () => {
 })
 ```
 
-It _finally_ passes. Great! This is all very manual, however - and this is for a tiny, trivial app. This is the reason using a mocked router is a common approach when testing Vue components using Vue Test Utils. In case you prefer to keep using a real router, keep in mind that each test should use it's own instance of the router like so:
+它*终于*通过了。太好了！然而，这一切都非常手动——而且这是针对一个微小且无关紧要的应用程序。这就是在使用 Vue Test Utils 测试 Vue 组件时，使用模拟路由器是一种常见方法的原因。如果你倾向于继续使用真实的路由器，请记住每个测试都应该使用自己实例化的路由器，如下所示：
 
 ```js {1,19}
 import { mount, flushPromises } from '@vue/test-utils'
 import { createRouter, createWebHistory } from 'vue-router'
-import { routes } from "@/router"
+import { routes } from '@/router'
 
-let router;
+let router
 beforeEach(async () => {
   router = createRouter({
     history: createWebHistory(),
-    routes: routes,
+    routes: routes
   })
-});
+})
 
 test('routing', async () => {
   router.push('/')
@@ -347,11 +347,11 @@ test('routing', async () => {
 })
 ```
 
-## Using a mocked router with Composition API
+## 在组合式 API 中使用模拟路由器
 
-Vue router 4 allows for working with the router and route inside the `setup` function with the composition API.
+Vue Router 4 允许在组合式 API 的 `setup` 函数中使用路由器和路由。
 
-Consider the same demo component rewritten using the composition API.
+考虑将相同的示例组件重写为组合式 API。
 
 ```js
 import { useRouter, useRoute } from 'vue-router'
@@ -359,7 +359,7 @@ import { useRouter, useRoute } from 'vue-router'
 const Component = {
   template: `<button @click="redirect">Click to Edit</button>`,
   props: ['isAuthenticated'],
-  setup (props) {
+  setup(props) {
     const router = useRouter()
     const route = useRoute()
 
@@ -378,7 +378,7 @@ const Component = {
 }
 ```
 
-This time in order to test the component, we will use jest's ability to mock an imported resource, `vue-router` and mock both the router and route directly.
+这次为了测试组件，我们将使用 Jest 模拟导入的资源 `vue-router`，并直接模拟路由器和路由。
 
 ```js
 import { useRouter, useRoute } from 'vue-router'
@@ -407,7 +407,7 @@ test('allows authenticated user to edit a post', () => {
       isAuthenticated: true
     },
     global: {
-      stubs: ["router-link", "router-view"], // Stubs for router-link and router-view in case they're rendered in your template
+      stubs: ["router-link", "router-view"], // 为可能在模板中渲染的 router-link 和 router-view 提供 Stubs
     }
   })
 
@@ -434,7 +434,7 @@ test('redirect an unauthenticated user to 404', () => {
       isAuthenticated: false
     }
     global: {
-      stubs: ["router-link", "router-view"], // Stubs for router-link and router-view in case they're rendered in your template
+      stubs: ["router-link", "router-view"], // 为可能在模板中渲染的 router-link 和 router-view 提供 Stubs
     }
   })
 
@@ -445,27 +445,26 @@ test('redirect an unauthenticated user to 404', () => {
 })
 ```
 
-## Using a real router with Composition API
+## 使用真实路由器与组合式 API
 
-Using a real router with Composition API works the same as using a real router with Options API. Keep in mind that, just as is the case with Options API, it's considered
-a good practice to instantiate a new router object for each test, instead of importing the router directly from your app.
+使用真实路由器与组合式 API 的方式与使用选项 API 时相同。请记住，和选项 API 一样，建议为每个测试实例化一个新的路由器对象，而不是直接从应用程序中导入路由器。
 
 ```js
 import { mount } from '@vue/test-utils'
 import { createRouter, createWebHistory } from 'vue-router'
-import { routes } from "@/router"
+import { routes } from '@/router'
 
-let router;
+let router
 
 beforeEach(async () => {
   router = createRouter({
     history: createWebHistory(),
-    routes: routes,
+    routes: routes
   })
 
   router.push('/')
   await router.isReady()
-});
+})
 
 test('allows authenticated user to edit a post', async () => {
   const wrapper = mount(Component, {
@@ -473,7 +472,7 @@ test('allows authenticated user to edit a post', async () => {
       isAuthenticated: true
     },
     global: {
-      plugins: [router],
+      plugins: [router]
     }
   })
 
@@ -485,12 +484,12 @@ test('allows authenticated user to edit a post', async () => {
 })
 ```
 
-For those who prefer a non-manual approach, the library [vue-router-mock](https://github.com/posva/vue-router-mock) created by Posva is also available as an alternative.
+对于那些喜欢非手动方法的人，Posva 创建的库 [vue-router-mock](https://github.com/posva/vue-router-mock) 也可以作为替代方案。
 
-## Conclusion
+## 结论
 
-- You can use a real router instance in your tests.
-- There are some caveats, though: Vue Router 4 is asynchronous, and we need to take it into account when writing tests.
-- For more complex applications, consider mocking the router dependency and focus on testing the underlying logic.
-- Make use of your test runner's stubbing/mocking functionality where possible.
-- Use `global.mocks` to mock global dependencies, such as `this.$route` and `this.$router`.
+- 你可以在测试中使用真实的路由器实例。
+- 但是有一些注意事项：Vue Router 4 是异步的，我们需要在编写测试时考虑这一点。
+- 对于更复杂的应用程序，考虑模拟路由器依赖项，专注于测试底层逻辑。
+- 尽可能利用测试运行器的桩(stub)/模拟功能。
+- 使用 `global.mocks` 来模拟全局依赖项，例如 `this.$route` 和 `this.$router`。

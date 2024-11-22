@@ -1,14 +1,14 @@
-# Asynchronous Behavior
+# 异步行为
 
-You may have noticed some other parts of the guide using `await` when calling some methods on `wrapper`, such as `trigger` and `setValue`. What's that all about?
+你可能注意到在指南的某些部分，在调用 `wrapper` 的一些方法时使用了 `await`，例如 `trigger` 和 `setValue`。这是什么意思呢？
 
-You might know Vue updates reactively: when you change a value, the DOM is automatically updated to reflect the latest value. [Vue does these updates asynchronously](https://v3.vuejs.org/guide/change-detection.html#async-update-queue). In contrast, a test runner like Jest runs _synchronously_. This can cause some surprising results in tests.
+你可能知道 [Vue 是以响应式的方式更新的](https://v3.vuejs.org/guide/change-detection.html#async-update-queue)：当你更改一个值时，DOM 会自动更新以反映最新的值。Vue 的这些更新是异步进行的。与此相对，像 Jest 这样的测试运行器是 _同步_ 的。这可能会导致测试中出现一些意外的结果。
 
-Let's look at some strategies to ensure Vue is updating the DOM as expected when we run our tests.
+让我们看看一些策略，以确保在运行测试时 Vue 按预期更新 DOM。
 
-## A Simple Example - Updating with `trigger`
+## 简单示例 - 使用 `trigger` 更新
 
-Let's re-use the `<Counter>` component from [event handling](../essentials/event-handling) with one change; we now render the `count` in the `template`.
+让我们重用来自 [事件处理](../essentials/event-handling) 的 `<Counter>` 组件，唯一的变化是我们现在在 `template` 中渲染 `count`。
 
 ```js
 const Counter = {
@@ -29,7 +29,7 @@ const Counter = {
 }
 ```
 
-Let's write a test to verify the `count` is increasing:
+让我们写一个测试来验证 `count` 是否在增加：
 
 ```js
 test('increments by 1', () => {
@@ -41,13 +41,13 @@ test('increments by 1', () => {
 })
 ```
 
-Surprisingly, this fails! The reason is although `count` is increased, Vue will not update the DOM until the next event loop tick. For this reason, the assertion (`expect()...`) will be called before Vue updates the DOM.
+出乎意料的是，这个测试失败了！原因是虽然 `count` 增加了，但 Vue 不会在下一个事件循环的 tick 之前更新 DOM。因此，断言 (`expect()...`) 会在 Vue 更新 DOM 之前被调用。
 
 :::tip
-If you want to learn more about this core JavaScript behavior, read about the [Event Loop and its macrotasks and microtasks](https://javascript.info/event-loop#macrotasks-and-microtasks).
+如果你想了解更多关于这个核心 JavaScript 行为的信息，可以阅读 [事件循环及其宏任务和微任务](https://javascript.info/event-loop#macrotasks-and-microtasks)。
 :::
 
-Implementation details aside, how can we fix this? Vue actually provides a way for us to wait until the DOM is updated: `nextTick`.
+抛开实现细节，我们该如何修复这个问题呢？实际上，Vue 提供了一种方法让我们等待 DOM 更新：`nextTick`。
 
 ```js {1,7}
 import { nextTick } from 'vue'
@@ -62,9 +62,9 @@ test('increments by 1', async () => {
 })
 ```
 
-Now the test will pass because we ensure the next "tick" has been executed and the DOM has been updated before the assertion runs.
+现在测试将通过，因为我们确保在断言运行之前，下一个 "tick" 已经执行并且 DOM 已经更新。
 
-Since `await nextTick()` is common, Vue Test Utils provides a shortcut. Methods that cause the DOM to update, such as `trigger` and `setValue` return `nextTick`, so you can just `await` those directly:
+由于 `await nextTick()` 是常见的，Vue Test Utils 提供了一个快捷方式。导致 DOM 更新的方法，如 `trigger` 和 `setValue` 返回 `nextTick`，因此你可以直接 `await` 它们：
 
 ```js {4}
 test('increments by 1', async () => {
@@ -76,19 +76,19 @@ test('increments by 1', async () => {
 })
 ```
 
-## Resolving Other Asynchronous Behavior
+## 解决其他异步行为
 
-`nextTick` is useful to ensure some change in reactive data is reflected in the DOM before continuing the test. However, sometimes you may want to ensure other, non Vue-related asynchronous behavior is completed, too.
+`nextTick` 用于确保某个响应式数据的变化在继续测试之前反映在 DOM 中。然而，有时你可能还想确保其他与 Vue 无关的异步行为也已完成。
 
-A common example is a function that returns a `Promise`. Perhaps you mocked your `axios` HTTP client using `jest.mock`:
+一个常见的例子是返回 `Promise` 的函数。也许你使用 `jest.mock` 模拟了你的 `axios` HTTP 客户端：
 
 ```js
 jest.spyOn(axios, 'get').mockResolvedValue({ data: 'some mocked data!' })
 ```
 
-In this case, Vue has no knowledge of the unresolved Promise, so calling `nextTick` will not work - your assertion may run before it is resolved. For scenarios like this, Vue Test Utils exposes [`flushPromises`](../../api/#flushPromises), which causes all outstanding promises to resolve immediately.
+在这种情况下，Vue 对未解决的 Promise 没有任何了解，因此调用 `nextTick` 将不起作用——你的断言可能在 Promise 被解决之前就运行了。对于这种情况，Vue Test Utils 提供了 [`flushPromises`](../../api/#flushPromises) 它可以立即解决所有未完成的 Promise。
 
-Let's see an example:
+让我们看一个例子：
 
 ```js{1,12}
 import { flushPromises } from '@vue/test-utils'
@@ -97,36 +97,34 @@ import axios from 'axios'
 jest.spyOn(axios, 'get').mockResolvedValue({ data: 'some mocked data!' })
 
 test('uses a mocked axios HTTP client and flushPromises', async () => {
-  // some component that makes a HTTP called in `created` using `axios`
+  // 某个在 `created` 中使用 `axios` 进行 HTTP 调用的组件
   const wrapper = mount(AxiosComponent)
 
-  await flushPromises() // axios promise is resolved immediately
+  await flushPromises() // axios 的 Promise 被立即解决
 
-  // after the line above, axios request has resolved with the mocked data.
+  // 在上面的代码执行后，axios 请求已使用模拟数据解决。
 })
 ```
 
 :::tip
-If you want to learn more about testing requests on Components, make sure you check [Making HTTP Requests](http-requests.md) guide.
+如果你想了解更多关于在组件上测试请求的信息，请确保查看 [发起 HTTP 请求](http-requests.md) 指南。
 :::
 
-## Testing asynchronous `setup`
+## 测试异步 `setup`
 
-If the component you want to test uses an asynchronous `setup`,
-then you must mount the component inside a `Suspense` component
-(as you do when you use it in your application).
+如果你要测试的组件使用了异步 `setup`，那么你必须在 `Suspense` 组件内挂载该组件（就像在应用程序中使用时一样）。
 
-For example, this `Async` component:
+例如，这个 `Async` 组件：
 
 ```js
 const Async = defineComponent({
   async setup() {
-    // await something
+    // 等待某些内容
   }
 })
 ```
 
-must be tested as follow:
+必须这样测试：
 
 ```js
 test('Async component', async () => {
@@ -136,16 +134,17 @@ test('Async component', async () => {
   })
 
   const wrapper = mount(TestComponent)
-  await flushPromises();
+  await flushPromises()
   // ...
 })
 ```
-Note: To access your `Async` components' underlying `vm` instance, use the return value of `wrapper.findComponent(Async)`. Since a new component is defined and mounted in this scenario, the wrapper returned by `mount(TestComponent)` contains its' own (empty) `vm`.
 
-## Conclusion
+注意：要访问你的 `Async` 组件的底层 `vm` 实例，请使用 `wrapper.findComponent(Async)` 的返回值。由于在这种情况下定义并挂载了一个新组件，因此 `mount(TestComponent)` 返回的 wrapper 包含它自己的（空的）`vm`。
 
-- Vue updates the DOM asynchronously; tests runner executes code synchronously instead.
-- Use `await nextTick()` to ensure the DOM has updated before the test continues.
-- Functions that might update the DOM (like `trigger` and `setValue`) return `nextTick`, so you need to `await` them.
-- Use `flushPromises` from Vue Test Utils to resolve any unresolved promises from non-Vue dependencies (such as API requests).
-- Use `Suspense` to test components with an asynchronous `setup` in an asynchronous test function.
+## 结论
+
+- Vue 以异步方式更新 DOM；测试运行器以同步方式执行代码。
+- 使用 `await nextTick()` 确保在测试继续之前 DOM 已更新。
+- 可能更新 DOM 的函数（如 `trigger` 和 `setValue`）返回 `nextTick`，因此你需要 `await` 它们。
+- 使用 Vue Test Utils 的 `flushPromises` 来解决来自非 Vue 依赖（如 API 请求）的任何未解决的 Promise。
+- 使用 `Suspense` 在异步测试函数中测试具有异步 `setup` 的组件。

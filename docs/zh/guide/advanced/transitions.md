@@ -1,8 +1,8 @@
-# Transitions
+# 过渡效果
 
-In general, you may want to test the resulting DOM after a transition, and this is why Vue Test Utils mocks `<transition>` and `<transition-group>` by default.
+通常情况下，您可能希望测试过渡后的 DOM 结构，这就是为什么 Vue Test Utils 默认会模拟 `<transition>` 和 `<transition-group>` 的原因。
 
-Following is a simple component that toggles a content wrapped in a fading transition:
+以下是一个简单的组件，它通过淡入淡出的过渡效果切换内容：
 
 ```vue
 <template>
@@ -28,17 +28,19 @@ export default {
 </script>
 
 <style lang="css">
-.fade-enter-active, .fade-leave-active {
+.fade-enter-active,
+.fade-leave-active {
   transition: opacity 0.5s ease;
 }
 
-.fade-enter-from, .fade-leave-to {
+.fade-enter-from,
+.fade-leave-to {
   opacity: 0;
 }
 </style>
 ```
 
-Since Vue Test Utils stubs built-in transitions, you can test the component above as you'd test any other component:
+由于 Vue Test Utils 会模拟内置的过渡效果，您可以像测试其他组件一样测试上述组件：
 
 ```js
 import Component from './Component.vue'
@@ -51,18 +53,19 @@ test('works with transitions', async () => {
 
   await wrapper.find('button').trigger('click')
 
-  // After clicking the button, the <p> element exists and is visible
+  // 点击按钮后，<p> 元素存在并且可见
   expect(wrapper.get('p').text()).toEqual('hello')
 })
 ```
 
-## Partial support
+## 部分支持
 
-The Vue Test Utils built-in transition stub is simple and doesn't cover all of of Vue's [Transition features](https://vuejs.org/guide/built-ins/transition). For instance [javascript hooks](https://vuejs.org/guide/built-ins/transition#javascript-hooks) are not supported. This limitation could potentially lead to Vue warnings.
+Vue Test Utils 内置的过渡效果模拟比较简单，并不涵盖 Vue 所有的 [过渡特性](https://vuejs.org/guide/built-ins/transition)。例如， [JavaScript 钩子](https://vuejs.org/guide/built-ins/transition#javascript-hooks) 不被支持。这一限制可能会导致 Vue 发出警告。
 
 ::: tip
-Potential solutions:
-- You can turn off the auto stubbing by setting [global stubs transition](../../api/#global-stubs) to false
-- You can create your own transition stub that can handle these hooks if necessary.
-- You can spy the warning in the test to silence it.
-:::
+潜在解决方案：
+
+- 您可以通过将 [global stubs transition](../../api/#global-stubs) 设置为 false 来关闭自动模拟。
+- 如果需要，您可以创建自己的过渡效果模拟，以处理这些钩子。
+- 您可以在测试中捕获警告以消除它。
+  :::

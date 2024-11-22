@@ -1,14 +1,13 @@
-# Reusability & Composition
+# 复用与组合
 
-Mostly:
+主要内容：
 
 - `global.mixins`.
 - `global.directives`.
 
-## Testing composables
+## 测试组合函数
 
-When working with the composition API and creating composables, you often want to test only the composable. Let's start
-with a simple example:
+在使用组合式 API 并创建组合式函数时，您通常只想测试组合式函数。让我们从一个简单的示例开始：
 
 ```typescript
 export function useCounter() {
@@ -22,7 +21,7 @@ export function useCounter() {
 }
 ```
 
-In this case, you don't actually need `@vue/test-utils`. Here is the corresponding test:
+在这种情况下，您实际上并不需要 `@vue/test-utils`。对应的测试如下：
 
 ```typescript
 test('increase counter on call', () => {
@@ -36,16 +35,14 @@ test('increase counter on call', () => {
 })
 ```
 
-For more complex composables, which use lifecycle hooks like `onMounted` or `provide`/`inject` handling, you can create
-a simple test helper component. The following composable fetches the user data within the `onMounted` hook.
+对于更复杂的组合式函数，使用了生命周期钩子如 `onMounted` 或 `provide`/`inject` 处理，您可以创建一个简单的测试助手组件。以下组合式函数在 `onMounted` 钩子中获取用户数据。
 
 ```typescript
 export function useUser(userId) {
   const user = ref()
-  
+
   function fetchUser(id) {
-    axios.get(`users/${id}`)
-      .then(response => (user.value = response.data))
+    axios.get(`users/${id}`).then((response) => (user.value = response.data))
   }
 
   onMounted(() => fetchUser(userId))
@@ -54,26 +51,24 @@ export function useUser(userId) {
 }
 ```
 
-To test this composable, you can create a simple `TestComponent` within the tests. The `TestComponent` should use the
-composable the exact same way how the real components would use it.
+要测试这个组合式函数，您可以在测试中创建一个简单的 `TestComponent`。`TestComponent` 应该以与真实组件相同的方式使用组合式函数。
 
 ```typescript
-// Mock API request
+// 模拟 API 请求
 jest.spyOn(axios, 'get').mockResolvedValue({ data: { id: 1, name: 'User' } })
 
 test('fetch user on mount', async () => {
   const TestComponent = defineComponent({
     props: {
-      // Define props, to test the composable with different input arguments
+      // 定义 props，以便使用不同的输入参数测试组合式函数
       userId: {
         type: Number,
         required: true
       }
     },
-    setup (props) {
+    setup(props) {
       return {
-        // Call the composable and expose all return values into our
-        // component instance so we can access them with wrapper.vm
+        // 调用组合式函数并将所有返回值暴露到我们的组件实例中，以便我们可以通过 wrapper.vm 访问它们
         ...useUser(props.userId)
       }
     }
@@ -93,15 +88,14 @@ test('fetch user on mount', async () => {
 })
 ```
 
-## Provide / inject
+## Provide (提供) / Inject (注入)
 
-Vue offers a way to pass props to all child components with `provide` and `inject`. The best way to test this behavior
-is to test the entire tree (parent + children). But sometimes this is not possible, because the tree is too complex, or
-you only want to test a single composable.
+Vue 提供了一种通过 `provide` 和 `inject` 将 props 传递给所有子组件的方法。测试这种行为的最佳方式是测试整个树（父组件 + 子组件）。但有时这并不可能，因为树结构过于复杂，或者您只想测试单个组合式函数。
 
-### Testing `provide`
+### 测试 `provide`
 
-Let's assume the following component you want to test:
+假设您要测试以下组件：
+
 ```vue
 <template>
   <div>
@@ -114,14 +108,13 @@ provide('my-key', 'some-data')
 </script>
 ```
 
-In this case you could either render an actual child component and test the correct usage of `provide` or you can create
-a simple test helper component and pass it into the default slot. 
+在这种情况下，您可以渲染一个实际的子组件并测试 `provide` 的正确用法，或者您可以创建一个简单的测试助手组件并将其传递到默认插槽中。
 
 ```typescript
 test('provides correct data', () => {
   const TestComponent = defineComponent({
     template: '<span id="provide-test">{{value}}</span>',
-    setup () {
+    setup() {
       const value = inject('my-key')
       return { value }
     }
@@ -137,8 +130,7 @@ test('provides correct data', () => {
 })
 ```
 
-If your component does not contain a slot you can use a [`stub`](./stubs-shallow-mount.md#stubbing-a-single-child-component)
-and replace a child component with your test helper:
+如果您的组件不包含插槽，您可以使用 [`stub`](./stubs-shallow-mount.md#Stubbing-a-single-child-component) 替换子组件为您的测试助手：
 
 ```vue
 <template>
@@ -154,13 +146,13 @@ provide('my-key', 'some-data')
 </script>
 ```
 
-And the test:
+测试如下：
 
 ```typescript
 test('provides correct data', () => {
   const TestComponent = defineComponent({
     template: '<span id="provide-test">{{value}}</span>',
-    setup () {
+    setup() {
       const value = inject('my-key')
       return { value }
     }
@@ -178,9 +170,9 @@ test('provides correct data', () => {
 })
 ```
 
-### Testing `inject`
+### 测试 `inject`
 
-When your Component uses `inject` and you need to pass data with `provide`, then you can use the `global.provide` option.
+当您的组件使用 `inject` 并需要通过 `provide` 传递数据时，您可以使用 `global.provide` 选项。
 
 ```vue
 <template>
@@ -194,7 +186,7 @@ const value = inject('my-key')
 </script>
 ```
 
-The unit test could simply look like: 
+单元测试可以简单地写成：
 
 ```typescript
 test('renders correct data', () => {
@@ -210,9 +202,9 @@ test('renders correct data', () => {
 })
 ```
 
-## Conclusion
+## 结论
 
-- test simple composables without a component and `@vue/test-utils`
-- create a test helper component to test more complex composables
-- create a test helper component to test your component provides the correct data with `provide`
-- use `global.provide` to pass data to your component which uses `inject`
+- 测试简单的组合式函数时无需组件和 `@vue/test-utils`
+- 创建测试助手组件以测试更复杂的组合式函数
+- 创建测试助手组件以测试您的组件是否通过 `provide` 提供正确的数据
+- 使用 `global.provide` 将数据传递给使用 `inject` 的组件

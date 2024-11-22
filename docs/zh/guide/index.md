@@ -1,24 +1,24 @@
-# Getting Started
+# 开始
 
-Welcome to Vue Test Utils, the official testing utility library for Vue.js!
+欢迎使用 Vue Test Utils，这是 Vue.js 的官方测试工具库！
 
-This is the documentation for Vue Test Utils v2, which targets Vue 3.
+这是 Vue Test Utils v2 的文档，适用于 Vue 3。
 
-In short:
+简而言之：
 
-- [Vue Test Utils 1](https://github.com/vuejs/vue-test-utils/) targets [Vue 2](https://github.com/vuejs/vue/).
-- [Vue Test Utils 2](https://github.com/vuejs/test-utils/) targets [Vue 3](https://github.com/vuejs/core/).
+- [Vue Test Utils 1](https://github.com/vuejs/vue-test-utils/) 适用于 [Vue 2](https://github.com/vuejs/vue/).
+- [Vue Test Utils 2](https://github.com/vuejs/test-utils/) 使用于 [Vue 3](https://github.com/vuejs/core/).
 
-## What is Vue Test Utils?
+## 什么是 Vue Test Utils？
 
-Vue Test Utils (VTU) is a set of utility functions aimed to simplify testing Vue.js components. It provides some methods to mount and interact with Vue components in an isolated manner.
+Vue Test Utils (VTU) 是一组实用函数，旨在简化对 Vue.js 组件的测试。它提供了一些方法来以独立的方式挂载和与 Vue 组件进行交互。
 
-Let's see an example:
+让我们看一个例子：
 
 ```js
 import { mount } from '@vue/test-utils'
 
-// The component to test
+// 要测试的组件
 const MessageComponent = {
   template: '<p>{{ msg }}</p>',
   props: ['msg']
@@ -31,29 +31,29 @@ test('displays message', () => {
     }
   })
 
-  // Assert the rendered text of the component
+  // 断言组件的渲染文本
   expect(wrapper.text()).toContain('Hello world')
 })
 ```
 
-Vue Test Utils is commonly used with a test runner. Popular test runners include:
+Vue Test Utils 通常与测试运行器一起使用。流行的测试运行器包括：
 
-- [Vitest](https://vitest.dev/). Terminal based, has experimental browser UI.
-- [Cypress](https://cypress.io/). Browser based, supports Vite, webpack.
-- [Playwright](https://playwright.dev/docs/test-components) (experimental). Browser based, supports Vite.
-- [WebdriverIO](https://webdriver.io/docs/component-testing/vue). Browser based, supports Vite, Webpack, cross browser support.
+- [Vitest](https://vitest.dev/). 基于终端，具有实验性的浏览器 UI。
+- [Cypress](https://cypress.io/). 基于浏览器，支持 Vite、webpack。
+- [Playwright](https://playwright.dev/docs/test-components) （实验性）基于浏览器，支持 Vite。
+- [WebdriverIO](https://webdriver.io/docs/component-testing/vue). 基于浏览器，支持 Vite、Webpack，跨浏览器支持。
 
-Vue Test Utils is a minimal and unopinionated library. For something more featureful, ergonomic and opinionated you may want to consider [Cypress Component Testing](https://docs.cypress.io/guides/component-testing/overview) which has a hot reload development environment, or [Testing Library](https://testing-library.com/docs/vue-testing-library/intro/) which emphasizes accessibility based selectors when making assertions. Both of these tools use Vue Test Utils under the hood and expose the same API.
+Vue Test Utils 是一个简单且不拘泥于特定风格的库的库。如果您希望使用更具功能性、易用性和明确意见的工具，可以考虑 [Cypress 组件测试](https://docs.cypress.io/guides/component-testing/overview)，它具有热重载开发环境，或者 [Testing Library](https://testing-library.com/docs/vue-testing-library/intro/)，它在进行断言时强调可访问性选择器(Accessibility)。这两种工具在底层都使用 Vue Test Utils，并暴露相同的 API。
 
-## What Next?
+## 接下来做什么？
 
-To see Vue Test Utils in action, [take the Crash Course](../guide/essentials/a-crash-course.md), where we build a simple Todo app using a test-first approach.
+要查看 Vue Test Utils 的实际应用，请 [查阅快速上手](../guide/essentials/a-crash-course.md)，我们将使用测试优先的方法构建一个简单的待办事项应用。
 
-Docs are split into two main sections:
+文档分为两个主要部分：
 
-- **Essentials**, to cover common use cases you'll face when testing Vue components.
-- **Vue Test Utils in Depth**, to explore other advanced features of the library.
+- **基础知识**, 涵盖您在测试 Vue 组件时可能遇到的常见用例。
+- **深入学习 Vue Test Utils**, 探索库的其他高级功能。
 
-You can also explore the full [API](../api/).
+您还可以探索完整的 [API](../api/)。
 
-Alternatively, if you prefer to learn via video, there is [a number of lectures available here](https://www.youtube.com/playlist?list=PLC2LZCNWKL9ahK1IoODqYxKu5aA9T5IOA).
+或者，如果您更喜欢通过视频学习，这里有 [一系列讲座可供观看](https://www.youtube.com/playlist?list=PLC2LZCNWKL9ahK1IoODqYxKu5aA9T5IOA)。
