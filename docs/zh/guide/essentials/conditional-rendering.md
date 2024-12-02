@@ -47,7 +47,7 @@ test('renders a profile link', () => {
 })
 ```
 
-如果 `get()` 不返回与选择器匹配的元素，它将引发错误，测试将失败。如果找到元素，`get()` 返回一个 `DOMWrapper`。`DOMWrapper` 是对 DOM 元素的一个薄包装，支持 [Wrapper API](../../api/#Wrapper-methods) - 这就是我们能够使用 `profileLink.text()` 访问文本的原因。您可以使用 `element` 属性访问原始元素。
+如果 `get()` 不返回与选择器匹配的元素，它将引发错误，测试将失败。如果找到元素，`get()` 返回一个 `DOMWrapper`。`DOMWrapper` 是对 DOM 元素的一个薄包装，支持 [Wrapper API](../../api/#Wrapper-methods) - 这就是我们能够使用 `profileLink.text()` 访问文本的原因。你可以使用 `element` 属性访问原始元素。
 
 还有另一种类型的包装器 - `VueWrapper` - 它是从 [`getComponent`](../../api/#getComponent) 返回的，工作方式相同。
 
@@ -66,7 +66,7 @@ test('does not render an admin link', () => {
 })
 ```
 
-请注意，我们在 `.find()` 返回的值上调用 `exists()`。`find()` 和 `mount()` 一样，也返回一个 `wrapper`。`mount()` 有一些额外的方法，因为它包装的是 Vue 组件，而 `find()` 仅返回常规 DOM 节点，但两者之间共享许多方法。其他方法包括 `classes()`，用于获取 DOM 节点的类，以及 `trigger()`，用于模拟用户交互。您可以在[这里](../../api/#Wrapper-methods)找到支持的方法列表。
+请注意，我们在 `.find()` 返回的值上调用 `exists()`。`find()` 和 `mount()` 一样，也返回一个 `wrapper`。`mount()` 有一些额外的方法，因为它包装的是 Vue 组件，而 `find()` 仅返回常规 DOM 节点，但两者之间共享许多方法。其他方法包括 `classes()`，用于获取 DOM 节点的类，以及 `trigger()`，用于模拟用户交互。你可以在[这里](../../api/#Wrapper-methods)找到支持的方法列表。
 
 ## 使用 `data`
 
@@ -89,13 +89,13 @@ test('renders an admin link', () => {
 })
 ```
 
-如果您在 `data` 中有其他属性，不用担心 - Vue Test Utils 会将两者合并。挂载选项中的 `data` 将优先于任何默认值。
+如果你在 `data` 中有其他属性，不用担心 - Vue Test Utils 会将两者合并。挂载选项中的 `data` 将优先于任何默认值。
 
 要了解其他挂载选项，请参见[传递数据](../essentials/passing-data.md)或[挂载选项](../../api/#mount)。
 
 ## 检查元素可见性
 
-有时您只想隐藏/显示一个元素，同时将其保留在 DOM 中。Vue 提供了 `v-show` 以应对这种情况。(您可以在[这里](https://v3.vuejs.org/guide/conditional.html#v-if-vs-v-show)查阅 `v-if` 和 `v-show` 之间的区别。)
+有时你只想隐藏/显示一个元素，同时将其保留在 DOM 中。Vue 提供了 `v-show` 以应对这种情况。(你可以在[这里](https://v3.vuejs.org/guide/conditional.html#v-if-vs-v-show)查阅 `v-if` 和 `v-show` 之间的区别。)
 
 使用 `v-show` 的组件如下所示：
 
@@ -142,6 +142,6 @@ test('does not show the user dropdown', () => {
 ## 结论
 
 - 使用 `find()` 结合 `exists()` 验证元素是否在 DOM 中。
-- 如果您确认元素应该在 DOM 中，请使用 `get()`。
+- 如果你确认元素应该在 DOM 中，请使用 `get()`。
 - 可以使用 `data` 挂载选项设置组件的默认值。
 - 使用 `get()` 和 `isVisible()` 验证在 DOM 中的元素的可见性。

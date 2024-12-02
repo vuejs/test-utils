@@ -5,7 +5,7 @@ Vue 3 引入了一个新的内置组件：`<Teleport>`，它允许组件将其�
 以下是一些使用 `<Teleport>` 测试组件的策略和技术。
 
 ::: tip
-如果您想测试组件的其余部分，而忽略 `teleport`，可以通过在[全局 stubs 选项](../../api/#global-stubs)中传递 `teleport: true` 来 stub `teleport`。
+如果你想测试组件的其余部分，而忽略 `teleport`，可以通过在[全局 stubs 选项](../../api/#global-stubs)中传递 `teleport: true` 来 stub `teleport`。
 :::
 
 ## 示例
@@ -121,7 +121,7 @@ test('teleport', async () => {
 
 我们看到 Vue 用于处理 `<Teleport>` 的一些注释——但没有 `<input>`。这是因为 `<Signup>` 组件 (及其 HTML) 不再渲染在 `<Navbar>` 内部——它被传送到了外面。
 
-尽管实际的 HTML 被传送到外部，但与 `<Navbar>` 相关的虚拟 DOM 仍然保持对原始组件的引用。这意味着您可以使用 `getComponent` 和 `findComponent`，它们在虚拟 DOM 上操作，而不是常规 DOM。
+尽管实际的 HTML 被传送到外部，但与 `<Navbar>` 相关的虚拟 DOM 仍然保持对原始组件的引用。这意味着你可以使用 `getComponent` 和 `findComponent`，它们在虚拟 DOM 上操作，而不是常规 DOM。
 
 ```ts {12}
 beforeEach(() => {
@@ -139,7 +139,7 @@ test('teleport', async () => {
 })
 ```
 
-`getComponent` 返回一个 `VueWrapper`。现在您可以使用 `get`、`find` 和 `trigger` 等方法。
+`getComponent` 返回一个 `VueWrapper`。现在你可以使用 `get`、`find` 和 `trigger` 等方法。
 
 让我们完成测试：
 
@@ -187,7 +187,7 @@ test('teleport', async () => {
 })
 ```
 
-您可以通过使用 `teleport: true` 来 stub teleport：
+你可以通过使用 `teleport: true` 来 stub teleport：
 
 ```ts
 import { mount } from '@vue/test-utils'

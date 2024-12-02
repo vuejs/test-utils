@@ -60,10 +60,10 @@ const wrapper = mount(Component, {
 
 #### options.global
 
-组件状态中，您可以通过 [`MountingOptions.global` 配置属性](#global)配置上述 Vue 3 应用程序。这对于提供组件期望可用的模拟值非常有用。
+组件状态中，你可以通过 [`MountingOptions.global` 配置属性](#global)配置上述 Vue 3 应用程序。这对于提供组件期望可用的模拟值非常有用。
 
 ::: tip
-如果您发现自己需要为许多测试设置共同的应用配置，则可以使用导出的 [`config` 对象](#config)为整个测试套件设置配置。
+如果你发现自己需要为许多测试设置共同的应用配置，则可以使用导出的 [`config` 对象](#config)为整个测试套件设置配置。
 :::
 
 ### attachTo
@@ -341,7 +341,7 @@ type GlobalMountOptions = {
 }
 ```
 
-您可以在每个测试基础上以及整个测试套件中配置所有 `global` 选项。[请参见此处以了解如何配置项目范围的默认值](#config-global)。
+你可以在每个测试基础上以及整个测试套件中配置所有 `global` 选项。[请参见此处以了解如何配置项目范围的默认值](#config-global)。
 
 #### global.components
 
@@ -631,7 +631,7 @@ test('global.provide', () => {
 })
 ```
 
-如果您使用 ES6 `Symbol` 作为提供键，可以将其用作动态键：
+如果你使用 ES6 `Symbol` 作为提供键，可以将其用作动态键：
 
 `Component.spec.js`:
 
@@ -985,7 +985,7 @@ exists(): boolean
 
 **详细信息：**
 
-您可以使用与 `querySelector` 实现相同的语法。
+你可以使用与 `querySelector` 实现相同的语法。
 
 `Component.vue`:
 
@@ -1025,11 +1025,11 @@ find<T extends Node = Node>(selector: string | RefSelector): DOMWrapper<T>;
 
 **详细信息：**
 
-您可以使用与 `querySelector` 相同的语法。`find` 基本上是 `querySelector` 的别名。此外，您还可以搜索元素引用。
+你可以使用与 `querySelector` 相同的语法。`find` 基本上是 `querySelector` 的别名。此外，你还可以搜索元素引用。
 
 它与 `get` 类似，但如果未找到元素，`find` 将返回一个 ErrorWrapper，而 [`get`](#get) 会抛出一个错误。
 
-根据经验，当您断言某个元素不存在时，请始终使用 `find`。如果您断言某个元素确实存在，请使用 [`get`](#get)。
+根据经验，当你断言某个元素不存在时，请始终使用 `find`。如果你断言某个元素确实存在，请使用 [`get`](#get)。
 
 `Component.vue`:
 
@@ -1573,7 +1573,7 @@ test('setData', async () => {
 ```
 
 ::: warning
-在调用 `setData` 时，您应该使用 `await`，以确保 Vue 在您进行断言之前更新 DOM。
+在调用 `setData` 时，你应该使用 `await`，以确保 Vue 在你进行断言之前更新 DOM。
 :::
 
 ### setProps
@@ -1624,7 +1624,7 @@ test('updates prop', async () => {
 ```
 
 ::: warning
-在调用 `setProps` 时，您应该使用 `await`，以确保 Vue 在您进行断言之前更新 DOM。
+在调用 `setProps` 时，你应该使用 `await`，以确保 Vue 在你进行断言之前更新 DOM。
 :::
 
 ### setValue
@@ -1708,7 +1708,7 @@ test('setValue on multi select', async () => {
 ```
 
 ::: warning
-在调用 `setValue` 时，您应该使用 `await`，以确保 Vue 在您进行断言之前更新 DOM。
+在调用 `setValue` 时，你应该使用 `await`，以确保 Vue 在你进行断言之前更新 DOM。
 :::
 
 ### text
@@ -1804,7 +1804,7 @@ await wrapper.trigger('keydown', { keyCode: 65 })
 ```
 
 ::: warning
-在调用 `trigger` 时，您应该使用 `await`，以确保 Vue 在您进行断言之前更新 DOM。
+在调用 `trigger` 时，你应该使用 `await`，以确保 Vue 在你进行断言之前更新 DOM。
 :::
 
 ::: warning
@@ -1864,7 +1864,7 @@ vm: ComponentPublicInstance
 
 **详细信息：**
 
-`Vue` 应用实例。您可以访问所有的[实例方法](https://v3.vuejs.org/api/instance-methods.html)和[实例属性](https://v3.vuejs.org/api/instance-properties.html)。
+`Vue` 应用实例。你可以访问所有的[实例方法](https://v3.vuejs.org/api/instance-methods.html)和[实例属性](https://v3.vuejs.org/api/instance-properties.html)。
 
 请注意，`vm` 仅在 `VueWrapper` 上可用。
 
@@ -1914,7 +1914,7 @@ import { enableAutoUnmount } from '@vue/test-utils'
 enableAutoUnmount(afterEach)
 ```
 
-如果您希望这种行为仅在测试套件的特定子集内生效，并且想要显式禁用此行为，则可以使用 `disableAutoUnmount`。
+如果你希望这种行为仅在测试套件的特定子集内生效，并且想要显式禁用此行为，则可以使用 `disableAutoUnmount`。
 
 ## flushPromises
 
@@ -1928,7 +1928,7 @@ flushPromises(): Promise<unknown>
 
 `flushPromises` 会刷新所有已解析的 Promise 处理程序。这有助于确保在进行断言之前，异步操作 (如 Promise 或 DOM 更新) 已经完成。
 
-您可以查看[发起 HTTP 请求](../guide/advanced/http-requests.md)来了解 `flushPromises` 的实际使用示例。
+你可以查看[发起 HTTP 请求](../guide/advanced/http-requests.md)来了解 `flushPromises` 的实际使用示例。
 
 ## config
 
@@ -1952,7 +1952,7 @@ type GlobalMountOptions = {
 
 **详细信息：**
 
-您可以选择在整个测试套件中配置挂载选项，而不是在每个测试中单独配置。这些配置将在每次 `mount` 组件时默认使用。如果需要，您可以在每个测试中覆盖这些默认设置。
+你可以选择在整个测试套件中配置挂载选项，而不是在每个测试中单独配置。这些配置将在每次 `mount` 组件时默认使用。如果需要，你可以在每个测试中覆盖这些默认设置。
 
 **Example :**
 
@@ -2003,16 +2003,16 @@ test('config.global mocks and stubs', () => {
 ```
 
 ::: tip
-请记住，这种行为是全局性的，而不是逐次挂载的。您可能需要在每个测试之前和之后启用/禁用它。
+请记住，这种行为是全局性的，而不是逐次挂载的。你可能需要在每个测试之前和之后启用/禁用它。
 :::
 
 ## components
 
 ### RouterLinkStub
 
-一个用于替代 Vue Router 的 `router-link` 的组件，当您不想模拟或包含完整路由时，可以使用它。
+一个用于替代 Vue Router 的 `router-link` 的组件，当你不想模拟或包含完整路由时，可以使用它。
 
-您可以使用此组件在渲染树中查找 `router-link` 组件。
+你可以使用此组件在渲染树中查找 `router-link` 组件。
 
 **Usage:**
 
@@ -2034,4 +2034,4 @@ expect(wrapper.findComponent(RouterLinkStub).props().to).toBe('/some/path')
 
 **使用插槽：**
 
-`RouterLinkStub` 组件支持插槽内容，并将为其插槽属性返回非常基本的值。如果您需要更具体的插槽属性值进行测试，考虑使用[真实路由](../guide/advanced/vue-router.html#using-a-real-router)，这样您可以使用真实的 `router-link` 组件。或者，您可以通过复制 test-utils 包中的实现来定义自己的 `RouterLinkStub` 组件。
+`RouterLinkStub` 组件支持插槽内容，并将为其插槽属性返回非常基本的值。如果你需要更具体的插槽属性值进行测试，考虑使用[真实路由](../guide/advanced/vue-router.html#using-a-real-router)，这样你可以使用真实的 `router-link` 组件。或者，你可以通过复制 test-utils 包中的实现来定义自己的 `RouterLinkStub` 组件。

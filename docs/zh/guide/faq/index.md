@@ -15,7 +15,7 @@ Vue 的调度器依赖于系统时间。在调用 `vi.setSystemTime` 之后再�
 TypeError: Cannot set property prefix of #<Element> which has only a getter
 ```
 
-如果您使用 `shallowMount` 或 `stubs`，并且使用了与 [`Element`](https://developer.mozilla.org/en-US/docs/Web/API/Element) 共享的属性名称，将会显示此警告。
+如果你使用 `shallowMount` 或 `stubs`，并且使用了与 [`Element`](https://developer.mozilla.org/en-US/docs/Web/API/Element) 共享的属性名称，将会显示此警告。
 
 与 `Element` 共享的常见属性名称：
 

@@ -7,7 +7,7 @@
 
 ## 测试组合函数
 
-在使用组合式 API 并创建组合式函数时，您通常只想测试组合式函数。让我们从一个简单的示例开始：
+在使用组合式 API 并创建组合式函数时，你通常只想测试组合式函数。让我们从一个简单的示例开始：
 
 ```typescript
 export function useCounter() {
@@ -21,7 +21,7 @@ export function useCounter() {
 }
 ```
 
-在这种情况下，您实际上并不需要 `@vue/test-utils`。对应的测试如下：
+在这种情况下，你实际上并不需要 `@vue/test-utils`。对应的测试如下：
 
 ```typescript
 test('increase counter on call', () => {
@@ -35,7 +35,7 @@ test('increase counter on call', () => {
 })
 ```
 
-对于更复杂的组合式函数，使用了生命周期钩子如 `onMounted` 或 `provide`/`inject` 处理，您可以创建一个简单的测试助手组件。以下组合式函数在 `onMounted` 钩子中获取用户数据。
+对于更复杂的组合式函数，使用了生命周期钩子如 `onMounted` 或 `provide`/`inject` 处理，你可以创建一个简单的测试助手组件。以下组合式函数在 `onMounted` 钩子中获取用户数据。
 
 ```typescript
 export function useUser(userId) {
@@ -51,7 +51,7 @@ export function useUser(userId) {
 }
 ```
 
-要测试这个组合式函数，您可以在测试中创建一个简单的 `TestComponent`。`TestComponent` 应该以与真实组件相同的方式使用组合式函数。
+要测试这个组合式函数，你可以在测试中创建一个简单的 `TestComponent`。`TestComponent` 应该以与真实组件相同的方式使用组合式函数。
 
 ```typescript
 // 模拟 API 请求
@@ -90,11 +90,11 @@ test('fetch user on mount', async () => {
 
 ## Provide (提供) / Inject (注入)
 
-Vue 提供了一种通过 `provide` 和 `inject` 将 props 传递给所有子组件的方法。测试这种行为的最佳方式是测试整个树 (父组件 + 子组件)。但有时这并不可能，因为树结构过于复杂，或者您只想测试单个组合式函数。
+Vue 提供了一种通过 `provide` 和 `inject` 将 props 传递给所有子组件的方法。测试这种行为的最佳方式是测试整个树 (父组件 + 子组件)。但有时这并不可能，因为树结构过于复杂，或者你只想测试单个组合式函数。
 
 ### 测试 `provide`
 
-假设您要测试以下组件：
+假设你要测试以下组件：
 
 ```vue
 <template>
@@ -108,7 +108,7 @@ provide('my-key', 'some-data')
 </script>
 ```
 
-在这种情况下，您可以渲染一个实际的子组件并测试 `provide` 的正确用法，或者您可以创建一个简单的测试助手组件并将其传递到默认插槽中。
+在这种情况下，你可以渲染一个实际的子组件并测试 `provide` 的正确用法，或者你可以创建一个简单的测试助手组件并将其传递到默认插槽中。
 
 ```typescript
 test('provides correct data', () => {
@@ -130,7 +130,7 @@ test('provides correct data', () => {
 })
 ```
 
-如果您的组件不包含插槽，您可以使用 [`stub`](./stubs-shallow-mount.md#Stubbing-a-single-child-component) 替换子组件为您的测试助手：
+如果你的组件不包含插槽，你可以使用 [`stub`](./stubs-shallow-mount.md#Stubbing-a-single-child-component) 替换子组件为你的测试助手：
 
 ```vue
 <template>
@@ -172,7 +172,7 @@ test('provides correct data', () => {
 
 ### 测试 `inject`
 
-当您的组件使用 `inject` 并需要通过 `provide` 传递数据时，您可以使用 `global.provide` 选项。
+当你的组件使用 `inject` 并需要通过 `provide` 传递数据时，你可以使用 `global.provide` 选项。
 
 ```vue
 <template>
@@ -206,5 +206,5 @@ test('renders correct data', () => {
 
 - 测试简单的组合式函数时无需组件和 `@vue/test-utils`
 - 创建测试助手组件以测试更复杂的组合式函数
-- 创建测试助手组件以测试您的组件是否通过 `provide` 提供正确的数据
+- 创建测试助手组件以测试你的组件是否通过 `provide` 提供正确的数据
 - 使用 `global.provide` 将数据传递给使用 `inject` 的组件

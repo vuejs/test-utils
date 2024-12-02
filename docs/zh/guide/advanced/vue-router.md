@@ -190,7 +190,7 @@ console.warn node_modules/@vue/runtime-core/dist/runtime-core.cjs.js:39
 ```js {12,13,14}
 import { mount } from '@vue/test-utils'
 import { createRouter, createWebHistory } from 'vue-router'
-import { routes } from '@/router' // 此导入应指向您上面声明的路由文件
+import { routes } from '@/router' // 此导入应指向你上面声明的路由文件
 
 const router = createRouter({
   history: createWebHistory(),

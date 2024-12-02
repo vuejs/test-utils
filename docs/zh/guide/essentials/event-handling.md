@@ -42,7 +42,7 @@ test('emits an event when clicked', () => {
 })
 ```
 
-> 如果您之前没有见过 `trigger()`，不要担心。它用于模拟用户交互。您可以在[测试表单](./forms)中了解更多。
+> 如果你之前没有见过 `trigger()`，不要担心。它用于模拟用户交互。你可以在[测试表单](./forms)中了解更多。
 
 首先要注意的是，`emitted()` 返回一个对象，其中每个键对应一个已触发的事件。在这个例子中是 `increment`。
 
@@ -146,7 +146,7 @@ test('emits an event with count when clicked', () => {
 
 ## 组合 API
 
-如果您使用的是组合 API，您将调用 `context.emit()` 而不是 `this.$emit()`。`emitted()` 可以捕获两者的事件，因此您可以使用本文中描述的相同方法来测试您的组件。
+如果你使用的是组合 API，你将调用 `context.emit()` 而不是 `this.$emit()`。`emitted()` 可以捕获两者的事件，因此你可以使用本文中描述的相同方法来测试你的组件。
 
 ## 结论
 

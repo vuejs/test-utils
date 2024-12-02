@@ -35,7 +35,7 @@ export default {
 
 ### 设置元素值
 
-在 Vue 中，将输入绑定到数据的最常见方法是使用 `v-model`。正如您可能已经知道的，它处理每个表单元素发出的事件以及它接受的 props，使我们更容易处理表单元素。
+在 Vue 中，将输入绑定到数据的最常见方法是使用 `v-model`。正如你可能已经知道的，它处理每个表单元素发出的事件以及它接受的 props，使我们更容易处理表单元素。
 
 要在 VTU 中更改输入的值，可以使用 `setValue()` 方法。它接受一个参数，通常是一个 `String` 或 `Boolean`，并返回一个 `Promise`，在 Vue 更新 DOM 后解析。
 
@@ -50,7 +50,7 @@ test('sets the value', async () => {
 })
 ```
 
-如您所见，`setValue` 将输入元素的 `value` 属性设置为我们传递的值。
+如你所见，`setValue` 将输入元素的 `value` 属性设置为我们传递的值。
 
 我们使用 `await` 确保 Vue 完成更新，并且更改已反映在 DOM 中，然后再进行任何断言。
 
@@ -76,7 +76,7 @@ test('trigger', async () => {
 })
 ```
 
-> 如果您之前没有见过 `emitted()`，不要担心。它用于断言组件发出的事件。您可以在[事件处理](./event-handling)中了解更多。
+> 如果你之前没有见过 `emitted()`，不要担心。它用于断言组件发出的事件。你可以在[事件处理](./event-handling)中了解更多。
 
 我们触发 `click` 事件监听器，以便组件执行 `submit` 方法。与 `setValue` 一样，我们使用 `await` 确保操作已被 Vue 处理。
 
@@ -171,19 +171,19 @@ test('submits a form', async () => {
 })
 ```
 
-如您所见，`setValue` 是一个非常通用的方法。它可以与所有类型的表单元素一起使用。
+如你所见，`setValue` 是一个非常通用的方法。它可以与所有类型的表单元素一起使用。
 
 我们在每个地方都使用 `await`，以确保在触发下一个事件之前，每个更改都已应用。这是推荐的做法，以确保在 DOM 更新后进行断言。
 
 ::: tip
-如果您不为 `OPTION`、`CHECKBOX` 或 `RADIO` 传递参数给 `setValue`，它们将被设置为 `checked`。
+如果你不为 `OPTION`、`CHECKBOX` 或 `RADIO` 传递参数给 `setValue`，它们将被设置为 `checked`。
 :::
 
 我们已经在表单中设置了值，现在该提交表单并进行一些断言了。
 
 ### 触发复杂事件监听器
 
-事件监听器并不总是简单的 `click` 事件。Vue 允许您监听各种 DOM 事件，添加特殊修饰符如 `.prevent` 等。让我们看看如何测试这些。
+事件监听器并不总是简单的 `click` 事件。Vue 允许你监听各种 DOM 事件，添加特殊修饰符如 `.prevent` 等。让我们看看如何测试这些。
 
 在上面的表单中，我们将事件从 `button` 移动到 `form` 元素。这是一个好的实践，因为这样可以通过按 `enter` 键提交表单，这是一种更原生的方式。
 
@@ -229,7 +229,7 @@ test('submits the form', async () => {
 
 #### 同一事件上的多个修饰符
 
-假设您有一个非常详细和复杂的表单，具有特殊的交互处理。我们该如何测试呢？
+假设你有一个非常详细和复杂的表单，具有特殊的交互处理。我们该如何测试呢？
 
 ```html
 <input @keydown.meta.c.exact.prevent="captureCopy" v-model="input" />
@@ -243,7 +243,7 @@ test('handles complex events', async () => {
 
   await wrapper.find(input).trigger('keydown.meta.c.exact.prevent')
 
-  // 运行您的断言
+  // 运行你的断言
 })
 ```
 
@@ -259,7 +259,7 @@ Vue Test Utils 会读取事件并将适当的属性应用于事件对象。在�
 
 #### 向事件添加额外数据
 
-假设您的代码需要从 `event` 对象中获取一些信息。您可以通过将额外数据作为第二个参数来测试这种情况。
+假设你的代码需要从 `event` 对象中获取一些信息。你可以通过将额外数据作为第二个参数来测试这种情况。
 
 ```vue
 <template>
@@ -340,7 +340,7 @@ export default {
 <custom-input v-model="input" label="Text Input" class="text-input" />
 ```
 
-与普通元素一样，这些 Vue 驱动的输入通常内部都有一个真实的 `button` 或 `input`。您可以轻松找到该元素并对其进行操作：
+与普通元素一样，这些 Vue 驱动的输入通常内部都有一个真实的 `button` 或 `input`。你可以轻松找到该元素并对其进行操作：
 
 ```js
 test('fills in the form', async () => {
@@ -354,9 +354,9 @@ test('fills in the form', async () => {
 
 ### 测试复杂输入组件
 
-如果您的输入组件不那么简单怎么办？您可能正在使用 UI 库，例如 Vuetify。如果您依赖内部标记以找到正确的元素，那么如果外部库更改其内部结构，您的测试可能会失败。
+如果你的输入组件不那么简单怎么办？你可能正在使用 UI 库，例如 Vuetify。如果你依赖内部标记以找到正确的元素，那么如果外部库更改其内部结构，你的测试可能会失败。
 
-在这种情况下，您可以直接使用组件实例和 `setValue` 设置值。
+在这种情况下，你可以直接使用组件实例和 `setValue` 设置值。
 
 假设我们有一个使用 Vuetify 文本区域的表单：
 

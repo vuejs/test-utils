@@ -80,12 +80,12 @@ test('loads posts on button click', async () => {
 })
 ```
 
-请注意，我们在变量 `mockPostList` 前添加了前缀 `mock`。如果不这样做，我们将收到错误：“The module factory of jest.mock() is not allowed to reference any out-of-scope variables。” 这是 Jest 特有的，您可以在他们的[文档](https://jestjs.io/docs/es6-class-mocks#calling-jestmock-with-the-module-factory-parameter)中了解更多关于这种行为的信息。
+请注意，我们在变量 `mockPostList` 前添加了前缀 `mock`。如果不这样做，我们将收到错误：“The module factory of jest.mock() is not allowed to reference any out-of-scope variables。” 这是 Jest 特有的，你可以在他们的[文档](https://jestjs.io/docs/es6-class-mocks#calling-jestmock-with-the-module-factory-parameter)中了解更多关于这种行为的信息。
 
 还要注意，我们在与组件交互之前等待了 `flushPromises`。这样可以确保在运行断言之前，DOM 已更新。
 
 :::tip jest.mock() 的替代方案
-在 Jest 中设置模拟有多种方法。上面示例中使用的方式是最简单的。对于更强大的替代方案，您可能想查看 [axios-mock-adapter](https://github.com/ctimmerm/axios-mock-adapter) 或 [msw](https://github.com/mswjs/msw) 等。
+在 Jest 中设置模拟有多种方法。上面示例中使用的方式是最简单的。对于更强大的替代方案，你可能想查看 [axios-mock-adapter](https://github.com/ctimmerm/axios-mock-adapter) 或 [msw](https://github.com/mswjs/msw) 等。
 :::
 
 ### 断言加载状态
@@ -162,11 +162,11 @@ test('displays loading state on button click', async () => {
 
 这与上面概述的示例没有什么不同。我们可能想要像往常一样加载存储并模拟像 `axios` 这样的服务。通过这种方式，我们可以模拟系统的边界，从而在测试中获得更高的信心。
 
-您可以查看 [Testing Vuex](vuex.md) 文档，以获取有关使用 Vue Test Utils 测试 Vuex 的更多信息。
+你可以查看 [Testing Vuex](vuex.md) 文档，以获取有关使用 Vue Test Utils 测试 Vuex 的更多信息。
 
 ## 结论
 
 - Vue Test Utils 不需要特殊工具来测试 HTTP 请求。唯一需要考虑的是测试异步行为。
 - 测试不应依赖于外部服务。使用模拟工具如 `jest.mock` 来避免这种情况。
 - `flushPromises()` 是一个有用的工具，可以确保在异步操作后 DOM 更新。
-- 通过与组件进行交互来直接触发 HTTP 请求，可以让您的测试更加稳健。
+- 通过与组件进行交互来直接触发 HTTP 请求，可以让你的测试更加稳健。
