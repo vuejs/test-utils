@@ -1,8 +1,8 @@
 # 测试 `v-model`
 
-在编写依赖于 `v-model` 交互的组件时（即 `update:modelValue` 事件），需要处理 `event` 和 `props`。
+在编写依赖于 `v-model` 交互的组件时 (即 `update:modelValue` 事件)，需要处理 `event` 和 `props`。
 
-可以查看 ["vmodel integration" 讨论](https://github.com/vuejs/test-utils/discussions/279) 获取一些社区解决方案。
+可以查看 [“vmodel integration” 讨论](https://github.com/vuejs/test-utils/discussions/279)获取一些社区解决方案。
 
 有关 v-model 事件的更多信息，请查看 [VueJS VModel 事件文档](https://vuejs.org/guide/components/events.html#usage-with-v-model)。
 

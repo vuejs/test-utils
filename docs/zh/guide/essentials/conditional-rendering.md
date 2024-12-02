@@ -2,7 +2,7 @@
 
 Vue Test Utils 提供了一系列功能，用于渲染组件并对其状态进行断言，以验证其是否正常工作。本文将探讨如何渲染组件，以及验证它们是否正确渲染内容。
 
-本文也可以作为 [短视频](https://www.youtube.com/watch?v=T3CHtGgEFTs&list=PLC2LZCNWKL9ahK1IoODqYxKu5aA9T5IOA&index=15) 观看。
+本文也可以作为[短视频](https://www.youtube.com/watch?v=T3CHtGgEFTs&list=PLC2LZCNWKL9ahK1IoODqYxKu5aA9T5IOA&index=15)观看。
 
 ## 查找元素
 
@@ -55,7 +55,7 @@ test('renders a profile link', () => {
 
 `get()` 假设元素存在，并在不存在时抛出错误。因此，不建议使用它来断言元素的存在。
 
-为此，我们使用 `find()` 和 `exists()`。下一个测试断言如果 `admin` 为 `false`（默认值），则管理员链接不存在：
+为此，我们使用 `find()` 和 `exists()`。下一个测试断言如果 `admin` 为 `false` (默认值)，则管理员链接不存在：
 
 ```js
 test('does not render an admin link', () => {
@@ -66,11 +66,11 @@ test('does not render an admin link', () => {
 })
 ```
 
-请注意，我们在 `.find()` 返回的值上调用 `exists()`。`find()` 和 `mount()` 一样，也返回一个 `wrapper`。`mount()` 有一些额外的方法，因为它包装的是 Vue 组件，而 `find()` 仅返回常规 DOM 节点，但两者之间共享许多方法。其他方法包括 `classes()`，用于获取 DOM 节点的类，以及 `trigger()`，用于模拟用户交互。您可以在 [这里](../../api/#Wrapper-methods) 找到支持的方法列表。
+请注意，我们在 `.find()` 返回的值上调用 `exists()`。`find()` 和 `mount()` 一样，也返回一个 `wrapper`。`mount()` 有一些额外的方法，因为它包装的是 Vue 组件，而 `find()` 仅返回常规 DOM 节点，但两者之间共享许多方法。其他方法包括 `classes()`，用于获取 DOM 节点的类，以及 `trigger()`，用于模拟用户交互。您可以在[这里](../../api/#Wrapper-methods)找到支持的方法列表。
 
 ## 使用 `data`
 
-最后一个测试是断言当 `admin` 为 `true` 时，管理员链接被渲染。它默认是 `false`，但我们可以使用 `mount()` 的第二个参数，即 [挂载选项](../../api/#mount) 来覆盖它。
+最后一个测试是断言当 `admin` 为 `true` 时，管理员链接被渲染。它默认是 `false`，但我们可以使用 `mount()` 的第二个参数，即[挂载选项](../../api/#mount)来覆盖它。
 
 对于 `data`，我们使用命名恰当的 `data` 选项：
 
@@ -91,11 +91,11 @@ test('renders an admin link', () => {
 
 如果您在 `data` 中有其他属性，不用担心 - Vue Test Utils 会将两者合并。挂载选项中的 `data` 将优先于任何默认值。
 
-要了解其他挂载选项，请参见 [传递数据](../essentials/passing-data.md) 或 [挂载选项](../../api/#mount)。
+要了解其他挂载选项，请参见[传递数据](../essentials/passing-data.md)或[挂载选项](../../api/#mount)。
 
 ## 检查元素可见性
 
-有时您只想隐藏/显示一个元素，同时将其保留在 DOM 中。Vue 提供了 `v-show` 以应对这种情况。（您可以在 [这里](https://v3.vuejs.org/guide/conditional.html#v-if-vs-v-show) 查阅 `v-if` 和 `v-show` 之间的区别。）
+有时您只想隐藏/显示一个元素，同时将其保留在 DOM 中。Vue 提供了 `v-show` 以应对这种情况。(您可以在[这里](https://v3.vuejs.org/guide/conditional.html#v-if-vs-v-show)查阅 `v-if` 和 `v-show` 之间的区别。)
 
 使用 `v-show` 的组件如下所示：
 
@@ -117,7 +117,7 @@ const Nav = {
 }
 ```
 
-在这种情况下，元素不可见但始终被渲染。`get()` 或 `find()` 将始终返回一个 `Wrapper` - `find()` 的 `.exists()` 始终返回 `true` - 因为 **元素仍然在 DOM 中**。
+在这种情况下，元素不可见但始终被渲染。`get()` 或 `find()` 将始终返回一个 `Wrapper` - `find()` 的 `.exists()` 始终返回 `true` - 因为**元素仍然在 DOM 中**。
 
 ## 使用 `isVisible()`
 

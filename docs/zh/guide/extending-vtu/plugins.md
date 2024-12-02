@@ -76,7 +76,7 @@ console.log(wrapper.$el.innerHTML) // 🔌 Plugin
 
 下面的插件为 `VueWrapper` 实例添加了一个 `findByTestId` 方法。这鼓励使用依赖于 Vue 组件上的测试专用属性的选择器策略。
 
-用法:
+用法：
 
 `MyComponent.vue`:
 
@@ -121,8 +121,8 @@ config.plugins.VueWrapper.install(DataTestIdPlugin)
 
 一些使用场景包括：
 
-- 你想在桩中添加更多逻辑（例如命名插槽）
-- 你想为多个组件使用不同的桩（例如从库中桩化组件）
+- 你想在桩中添加更多逻辑 (例如命名插槽)
+- 你想为多个组件使用不同的桩 (例如从库中桩化组件)
 
 ### 用法
 

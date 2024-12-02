@@ -40,7 +40,7 @@ export default {
 
 为了正确测试这个组件，我们需要做几件事。
 
-我们的第一个目标是测试这个组件 **而不实际访问 API**。这样会导致测试变得不稳定且可能执行缓慢。
+我们的第一个目标是测试这个组件**而不实际访问 API**。这样会导致测试变得不稳定且可能执行缓慢。
 
 其次，我们需要断言组件是否以正确的参数进行了正确的调用。虽然我们不会从 API 获取结果，但仍需确保请求了正确的资源。
 
@@ -80,7 +80,7 @@ test('loads posts on button click', async () => {
 })
 ```
 
-请注意，我们在变量 `mockPostList` 前添加了前缀 `mock`。如果不这样做，我们将收到错误：“The module factory of jest.mock() is not allowed to reference any out-of-scope variables.” 这是 Jest 特有的，您可以在他们的[文档](https://jestjs.io/docs/es6-class-mocks#calling-jestmock-with-the-module-factory-parameter)中了解更多关于这种行为的信息。
+请注意，我们在变量 `mockPostList` 前添加了前缀 `mock`。如果不这样做，我们将收到错误：“The module factory of jest.mock() is not allowed to reference any out-of-scope variables。” 这是 Jest 特有的，您可以在他们的[文档](https://jestjs.io/docs/es6-class-mocks#calling-jestmock-with-the-module-factory-parameter)中了解更多关于这种行为的信息。
 
 还要注意，我们在与组件交互之前等待了 `flushPromises`。这样可以确保在运行断言之前，DOM 已更新。
 

@@ -9,7 +9,7 @@ sidebar: auto
 创建一个包含已挂载和渲染的 Vue 组件的 Wrapper 以进行测试。
 请注意，当使用 Vitest 模拟日期/计时器时，必须在 `vi.setSystemTime` 之后调用此方法。
 
-**签名:**
+**签名：**
 
 ```ts
 interface MountingOptions<Props, Data = {}> {
@@ -25,7 +25,7 @@ interface MountingOptions<Props, Data = {}> {
 function mount(Component, options?: MountingOptions): VueWrapper
 ```
 
-**详细信息:**
+**详细信息：**
 
 `mount` 是 Vue Test Utils 提供的主要方法。它创建一个 Vue 3 应用程序，该应用程序持有并渲染正在测试的组件。作为返回，它创建一个 Wrapper 以对组件进行操作和断言。
 
@@ -45,7 +45,7 @@ test('mounts a component', () => {
 
 注意 `mount` 接受第二个参数以定义组件的状态配置。
 
-**示例 : 使用组件属性和 Vue 应用插件进行挂载**
+**示例：使用组件属性和 Vue 应用插件进行挂载**
 
 ```js
 const wrapper = mount(Component, {
@@ -60,23 +60,23 @@ const wrapper = mount(Component, {
 
 #### options.global
 
-组件状态中，您可以通过 [`MountingOptions.global` 配置属性](#global) 配置上述 Vue 3 应用程序。这对于提供组件期望可用的模拟值非常有用。
+组件状态中，您可以通过 [`MountingOptions.global` 配置属性](#global)配置上述 Vue 3 应用程序。这对于提供组件期望可用的模拟值非常有用。
 
 ::: tip
-如果您发现自己需要为许多测试设置共同的应用配置，则可以使用导出的 [`config` 对象](#config) 为整个测试套件设置配置。
+如果您发现自己需要为许多测试设置共同的应用配置，则可以使用导出的 [`config` 对象](#config)为整个测试套件设置配置。
 :::
 
 ### attachTo
 
 指定要挂载组件的节点。当使用 `renderToString` 时，此选项不可用。
 
-**签名:**
+**签名：**
 
 ```ts
 attachTo?: Element | string
 ```
 
-**详细信息:**
+**详细信息：**
 
 可以是有效的 CSS 选择器，或者是连接到文档的 [`Element`](https://developer.mozilla.org/en-US/docs/Web/API/Element)。
 
@@ -121,13 +121,13 @@ test('mounts on a specific element', () => {
 
 为组件设置 HTML 属性。
 
-**签名:**
+**签名：**
 
 ```ts
 attrs?: Record<string, unknown>
 ```
 
-**详细信息:**
+**详细信息：**
 
 `Component.spec.js`:
 
@@ -150,7 +150,7 @@ test('attrs', () => {
 })
 ```
 
-请注意，已定义的属性会覆盖 HTML 属性的设置:
+请注意，已定义的属性会覆盖 HTML 属性的设置：
 
 ```js
 import { mount } from '@vue/test-utils'
@@ -175,13 +175,13 @@ test('attribute is overridden by a prop with the same name', () => {
 
 覆盖组件的默认 `data`。必须是一个函数。
 
-**签名:**
+**签名：**
 
 ```ts
 data?: () => {} extends Data ? any : Data extends object ? Partial<Data> : any
 ```
 
-**详细信息:**
+**详细信息：**
 
 `Component.vue`
 
@@ -224,13 +224,13 @@ test('data', () => {
 
 在组件挂载时设置 props。
 
-**签名:**
+**签名：**
 
 ```ts
 props?: (RawProps & Props) | ({} extends Props ? null : never)
 ```
 
-**详细信息:**
+**详细信息：**
 
 `Component.vue`:
 
@@ -272,7 +272,7 @@ test('props', () => {
 
 为组件的插槽设置值。
 
-**签名:**
+**签名：**
 
 ```ts
 type Slot = VNode | string | { render: Function } | Function | Component
@@ -280,7 +280,7 @@ type Slot = VNode | string | { render: Function } | Function | Component
 slots?: { [key: string]: Slot } & { default?: Slot }
 ```
 
-**详细信息:**
+**详细信息：**
 
 插槽可以是一个字符串或任何有效的组件定义，既可以从 `.vue` 文件中导入，也可以内联提供。
 
@@ -325,7 +325,7 @@ test('renders slots content', () => {
 
 ### global
 
-**签名:**
+**签名：**
 
 ```ts
 type GlobalMountOptions = {
@@ -341,19 +341,19 @@ type GlobalMountOptions = {
 }
 ```
 
-您可以在每个测试基础上以及整个测试套件中配置所有 `global` 选项。 [请参见此处以了解如何配置项目范围的默认值](#config-global)。
+您可以在每个测试基础上以及整个测试套件中配置所有 `global` 选项。[请参见此处以了解如何配置项目范围的默认值](#config-global)。
 
 #### global.components
 
 将组件全局注册到挂载的组件中。
 
-**签名:**
+**签名：**
 
 ```ts
 components?: Record<string, Component | object>
 ```
 
-**详细信息:**
+**详细信息：**
 
 `Component.vue`:
 
@@ -407,7 +407,7 @@ test('global.components', () => {
 
 配置 [Vue 的应用程序全局配置](https://v3.vuejs.org/api/application-config.html#application-config)。
 
-**签名:**
+**签名：**
 
 ```ts
 config?: Partial<Omit<AppConfig, 'isNativeTag'>>
@@ -415,15 +415,15 @@ config?: Partial<Omit<AppConfig, 'isNativeTag'>>
 
 #### global.directives
 
-将 [指令](https://v3.vuejs.org/api/directives.html#directives) 全局注册到挂载的组件中。
+将[指令](https://v3.vuejs.org/api/directives.html#directives)全局注册到挂载的组件中。
 
-**签名:**
+**签名：**
 
 ```ts
 directives?: Record<string, Directive>
 ```
 
-**详细信息:**
+**详细信息：**
 
 `Component.spec.js`:
 
@@ -449,15 +449,15 @@ test('global.directives', () => {
 
 #### global.mixins
 
-将 [混入](https://v3.vuejs.org/guide/mixins.html) 全局注册到挂载的组件中。
+将[混入](https://v3.vuejs.org/guide/mixins.html)全局注册到挂载的组件中。
 
-**签名:**
+**签名：**
 
 ```ts
 mixins?: ComponentOptions[]
 ```
 
-**详细信息:**
+**详细信息：**
 
 `Component.spec.js`:
 
@@ -478,13 +478,13 @@ test('global.mixins', () => {
 
 模拟全局实例属性。可用于模拟 `this.$store`、`this.$router` 等。
 
-**签名:**
+**签名：**
 
 ```ts
 mocks?: Record<string, any>
 ```
 
-**详细信息:**
+**详细信息：**
 
 ::: warning
 此功能旨在模拟由第三方插件注入的变量，而不是 Vue 的原生属性，如 $root、$children 等。
@@ -537,13 +537,13 @@ test('global.mocks', async () => {
 
 在挂载的组件上安装插件。
 
-**签名:**
+**签名：**
 
 ```ts
 plugins?: (Plugin | [Plugin, ...any[]])[]
 ```
 
-**详细信息:**
+**详细信息：**
 
 `Component.spec.js`:
 
@@ -583,13 +583,13 @@ test('global.plugins with options', () => {
 
 提供数据，以便在 `setup` 函数中通过 `inject` 接收。
 
-**签名:**
+**签名：**
 
 ```ts
 provide?: Record<any, any>
 ```
 
-**详细信息:**
+**详细信息：**
 
 `Component.vue`:
 
@@ -654,13 +654,13 @@ mount(Component, {
 
 即使在使用 `shallow` 或 `shallowMount` 时，也会渲染 `default` 插槽内容。
 
-**签名:**
+**签名：**
 
 ```ts
 renderStubDefaultSlot?: boolean
 ```
 
-**详细信息:**
+**详细信息：**
 
 默认为 **false**。
 
@@ -716,15 +716,15 @@ test('global.renderStubDefaultSlot', () => {
 
 #### global.stubs
 
-在挂载的组件上使用全局替代组件（stub）。
+在挂载的组件上使用全局替代组件 (stub)。
 
-**签名:**
+**签名：**
 
 ```ts
 stubs?: Record<any, any>
 ```
 
-**详细信息:**
+**详细信息：**
 
 默认情况下，`Transition` 和 `TransitionGroup` 组件会被自动 stub 掉。
 
@@ -790,13 +790,13 @@ test('global.stubs using a custom component', () => {
 
 组件的所有子组件替换为 stub。
 
-**签名:**
+**签名：**
 
 ```ts
 shallow?: boolean
 ```
 
-**详细信息:**
+**详细信息：**
 
 默认为 **false**。
 
@@ -847,7 +847,7 @@ test('shallow', () => {
 
 返回 DOM 节点上的属性。
 
-**签名:**
+**签名：**
 
 ```ts
 attributes(): { [key: string]: string }
@@ -855,7 +855,7 @@ attributes(key: string): string
 attributes(key?: string): { [key: string]: string } | string
 ```
 
-**详细信息:**
+**详细信息：**
 
 `Component.vue`:
 
@@ -891,7 +891,7 @@ test('attributes', () => {
 
 ### classes
 
-**签名:**
+**签名：**
 
 ```ts
 classes(): string[]
@@ -899,7 +899,7 @@ classes(className: string): boolean
 classes(className?: string): string[] | boolean
 ```
 
-**详细信息:**
+**详细信息：**
 
 返回元素上的类名数组。
 
@@ -930,7 +930,7 @@ test('classes', () => {
 
 返回组件发出的所有事件。
 
-**签名:**
+**签名：**
 
 ```ts
 emitted<T = unknown>(): Record<string, T[]>
@@ -938,7 +938,7 @@ emitted<T = unknown>(eventName: string): undefined | T[]
 emitted<T = unknown>(eventName?: string): undefined | T[] | Record<string, T[]>
 ```
 
-**详细信息:**
+**详细信息：**
 
 参数被存储在一个数组中，因此你可以验证每个事件发出时的参数。
 
@@ -977,13 +977,13 @@ test('emitted', () => {
 
 验证一个元素是否存在。
 
-**签名:**
+**签名：**
 
 ```ts
 exists(): boolean
 ```
 
-**详细信息:**
+**详细信息：**
 
 您可以使用与 `querySelector` 实现相同的语法。
 
@@ -1013,7 +1013,7 @@ test('exists', () => {
 
 查找一个元素，如果找到则返回一个 `DOMWrapper`。
 
-**签名:**
+**签名：**
 
 ```ts
 find<K extends keyof HTMLElementTagNameMap>(selector: K): DOMWrapper<HTMLElementTagNameMap[K]>
@@ -1023,7 +1023,7 @@ find(selector: string): DOMWrapper<Element>
 find<T extends Node = Node>(selector: string | RefSelector): DOMWrapper<T>;
 ```
 
-**详细信息:**
+**详细信息：**
 
 您可以使用与 `querySelector` 相同的语法。`find` 基本上是 `querySelector` 的别名。此外，您还可以搜索元素引用。
 
@@ -1061,7 +1061,7 @@ test('find', () => {
 
 与 `find` 类似，但返回的是一个 `DOMWrapper` 数组。
 
-**签名:**
+**签名：**
 
 ```ts
 findAll<K extends keyof HTMLElementTagNameMap>(selector: K): DOMWrapper<HTMLElementTagNameMap[K]>[]
@@ -1070,7 +1070,7 @@ findAll<T extends Element>(selector: string): DOMWrapper<T>[]
 findAll(selector: string): DOMWrapper<Element>[]
 ```
 
-**详细信息:**
+**详细信息：**
 
 `Component.vue`:
 
@@ -1098,9 +1098,9 @@ test('findAll', () => {
 
 ### findComponent
 
-找到一个 Vue 组件实例并返回一个 `VueWrapper`（如果找到）。否则返回 `ErrorWrapper`。
+找到一个 Vue 组件实例并返回一个 `VueWrapper` (如果找到)。否则返回 `ErrorWrapper`。
 
-**签名:**
+**签名：**
 
 ```ts
 findComponent<T extends never>(selector: string): WrapperLike
@@ -1111,7 +1111,7 @@ findComponent<T extends ComponentPublicInstance>(selector: T | FindComponentSele
 findComponent(selector: FindComponentSelector): WrapperLike
 ```
 
-**详细信息:**
+**详细信息：**
 
 `findComponent` 支持几种语法：
 
@@ -1218,7 +1218,7 @@ wrapper.findComponent<DefineComponent>('.foo') // returns VueWrapper
 
 ### findAllComponents
 
-**签名:**
+**签名：**
 
 ```ts
 findAllComponents<T extends never>(selector: string): WrapperLike[]
@@ -1230,7 +1230,7 @@ findAllComponents<T extends ComponentPublicInstance>(selector: T | FindAllCompon
 findAllComponents(selector: FindAllComponentsSelector): WrapperLike[]
 ```
 
-**详细信息:**
+**详细信息：**
 
 与 `findComponent` 类似，但查找所有匹配查询的 Vue 组件实例。返回一个 `VueWrapper` 数组。
 
@@ -1270,7 +1270,7 @@ test('findAllComponents', () => {
 
 获取一个元素，如果找到则返回一个 `DOMWrapper`，否则抛出错误。
 
-**签名:**
+**签名：**
 
 ```ts
 get<K extends keyof HTMLElementTagNameMap>(selector: K): Omit<DOMWrapper<HTMLElementTagNameMap[K]>, 'exists'>
@@ -1279,11 +1279,11 @@ get<T extends Element>(selector: string): Omit<DOMWrapper<T>, 'exists'>
 get(selector: string): Omit<DOMWrapper<Element>, 'exists'>
 ```
 
-**详细信息:**
+**详细信息：**
 
 它与 `find` 类似，但如果未找到元素，`get` 会抛出错误，而 [`find`](#find) 会返回一个 ErrorWrapper。
 
-根据经验，除非你断言某个元素不存在（使用 [`find`](#find)），否则请始终使用 `get`。
+根据经验，除非你断言某个元素不存在 (使用 [`find`](#find))，否则请始终使用 `get`。
 
 `Component.vue`:
 
@@ -1312,7 +1312,7 @@ test('get', () => {
 
 获取 Vue 组件实例，如果找到则返回一个 `VueWrapper`，否则抛出错误。
 
-**签名:**
+**签名：**
 
 ```ts
 getComponent<T extends ComponentPublicInstance>(selector: new () => T): Omit<VueWrapper<T>, 'exists'>
@@ -1320,11 +1320,11 @@ getComponent<T extends ComponentPublicInstance>(selector: { name: string } | { r
 getComponent<T extends ComponentPublicInstance>(selector: any): Omit<VueWrapper<T>, 'exists'>
 ```
 
-**详细信息:**
+**详细信息：**
 
 它与 `findComponent` 类似，但如果未找到 Vue 组件实例，`getComponent` 会抛出错误，而 [`findComponent`](#findComponent) 会返回一个 ErrorWrapper。
 
-**支持的语法:**
+**支持的语法：**
 
 | 语法            | 示例                         | 详细信息                                 |
 | --------------- | ---------------------------- | ---------------------------------------- |
@@ -1387,14 +1387,14 @@ test('getComponent', () => {
 
 默认情况下，输出会使用 [`js-beautify`](https://github.com/beautify-web/js-beautify) 进行格式化，以使快照更易读。如果需要未格式化的 HTML 字符串，可以使用 `raw: true` 选项。
 
-**签名:**
+**签名：**
 
 ```ts
 html(): string
 html(options?: { raw?: boolean }): string
 ```
 
-**详细信息:**
+**详细信息：**
 
 `Component.vue`:
 
@@ -1425,13 +1425,13 @@ test('html', () => {
 
 验证一个元素是否可见。
 
-**签名:**
+**签名：**
 
 ```ts
 isVisible(): boolean
 ```
 
-**详细信息:**
+**详细信息：**
 
 ::: warning
 `isVisible()` 仅在使用 [`attachTo`](#attachTo) 将包装器附加到 DOM 时才能正确工作。
@@ -1453,9 +1453,9 @@ test('isVisible', () => {
 
 ### props
 
-返回传递给 Vue 组件的属性（props）。
+返回传递给 Vue 组件的属性 (props)。
 
-**签名:**
+**签名：**
 
 ```ts
 props(): { [key: string]: any }
@@ -1463,7 +1463,7 @@ props(selector: string): any
 props(selector?: string): { [key: string]: any } | any
 ```
 
-**详细信息:**
+**详细信息：**
 
 `Component.vue`:
 
@@ -1517,20 +1517,20 @@ test('props', () => {
 ```
 
 :::tip
-根据经验，测试传递的属性的效果（如 DOM 更新、触发的事件等）。这将使测试比仅仅断言一个属性被传递要更有效。
+根据经验，测试传递的属性的效果 (如 DOM 更新、触发的事件等)。这将使测试比仅仅断言一个属性被传递要更有效。
 :::
 
 ### setData
 
 更新组件内部数据。
 
-**签名:**
+**签名：**
 
 ```ts
 setData(data: Record<string, any>): Promise<void>
 ```
 
-**详细信息:**
+**详细信息：**
 
 `setData` 不允许设置组件中未定义的新属性。
 
@@ -1580,13 +1580,13 @@ test('setData', async () => {
 
 更新组件的属性。
 
-**签名:**
+**签名：**
 
 ```ts
 setProps(props: Record<string, any>): Promise<void>
 ```
 
-**详细信息:**
+**详细信息：**
 
 `Component.vue`:
 
@@ -1636,13 +1636,13 @@ test('updates prop', async () => {
 - `<select>`
   - 会检测 `<option>`，并将 `element.selected` 设置为相应的值。
 
-**签名:**
+**签名：**
 
 ```ts
 setValue(value: unknown, prop?: string): Promise<void>
 ```
 
-**详细信息:**
+**详细信息：**
 
 `Component.vue`:
 
@@ -1715,13 +1715,13 @@ test('setValue on multi select', async () => {
 
 返回元素的文本内容。
 
-**签名:**
+**签名：**
 
 ```ts
 text(): string
 ```
 
-**详细信息:**
+**详细信息：**
 
 `Component.vue`:
 
@@ -1748,7 +1748,7 @@ test('text', () => {
 
 触发一个 DOM 事件，例如 `click`、`submit` 或 `keyup`。
 
-**签名:**
+**签名：**
 
 ```ts
 interface TriggerOptions {
@@ -1761,7 +1761,7 @@ interface TriggerOptions {
 trigger(eventString: string, options?: TriggerOptions | undefined): Promise<void>
 ```
 
-**详细信息:**
+**详细信息：**
 
 `Component.vue`:
 
@@ -1815,13 +1815,13 @@ await wrapper.trigger('keydown', { keyCode: 65 })
 
 从 DOM 中卸载应用程序。
 
-**签名:**
+**签名：**
 
 ```ts
 unmount(): void
 ```
 
-**详细信息:**
+**详细信息：**
 
 它仅适用于从 `mount` 返回的根 `VueWrapper`。在测试后进行手动清理时非常有用。
 
@@ -1856,27 +1856,27 @@ test('unmount', () => {
 
 ### vm
 
-**签名:**
+**签名：**
 
 ```ts
 vm: ComponentPublicInstance
 ```
 
-**详细信息:**
+**详细信息：**
 
-`Vue` 应用实例。您可以访问所有的 [实例方法](https://v3.vuejs.org/api/instance-methods.html) 和 [实例属性](https://v3.vuejs.org/api/instance-properties.html)。
+`Vue` 应用实例。您可以访问所有的[实例方法](https://v3.vuejs.org/api/instance-methods.html)和[实例属性](https://v3.vuejs.org/api/instance-properties.html)。
 
 请注意，`vm` 仅在 `VueWrapper` 上可用。
 
 :::tip
-根据经验，测试传递的属性的效果（如 DOM 更新、触发的事件等）。这将使测试比仅仅断言一个属性被传递要更有效。
+根据经验，测试传递的属性的效果 (如 DOM 更新、触发的事件等)。这将使测试比仅仅断言一个属性被传递要更有效。
 :::
 
 ## shallowMount
 
-创建一个包含已挂载（mounted）和渲染（rendered）的 Vue 组件的包装器（Wrapper）。
+创建一个包含已挂载 (mounted) 和渲染 (rendered) 的 Vue 组件的包装器 (Wrapper)。
 
-**签名:**
+**签名：**
 
 ```ts
 interface MountingOptions<Props, Data = {}> {
@@ -1891,20 +1891,20 @@ interface MountingOptions<Props, Data = {}> {
 function shallowMount(Component, options?: MountingOptions): VueWrapper
 ```
 
-**详细信息:**
+**详细信息：**
 
-`shallowMount` 的行为与 `mount` 完全相同，但它默认会 stub（替代）所有的子组件。实际上，`shallowMount(Component)` 是 `mount(Component, { shallow: true })` 的别名。
+`shallowMount` 的行为与 `mount` 完全相同，但它默认会 stub (替代) 所有的子组件。实际上，`shallowMount(Component)` 是 `mount(Component, { shallow: true })` 的别名。
 
 ## enableAutoUnmount
 
-**签名:**
+**签名：**
 
 ```ts
 enableAutoUnmount(hook: (callback: () => void) => void);
 disableAutoUnmount(): void;
 ```
 
-**详细信息:**
+**详细信息：**
 
 `enableAutoUnmount` 允许自动销毁 Vue Wrapper。销毁逻辑作为回调函数传递给 `hook` 函数。常见用法是将 `enableAutoUnmount` 与测试框架提供的清理辅助函数结合使用，例如 `afterEach`：
 
@@ -1918,23 +1918,23 @@ enableAutoUnmount(afterEach)
 
 ## flushPromises
 
-**签名:**
+**签名：**
 
 ```ts
 flushPromises(): Promise<unknown>
 ```
 
-**详细信息:**
+**详细信息：**
 
-`flushPromises` 会刷新所有已解析的 Promise 处理程序。这有助于确保在进行断言之前，异步操作（如 Promise 或 DOM 更新）已经完成。
+`flushPromises` 会刷新所有已解析的 Promise 处理程序。这有助于确保在进行断言之前，异步操作 (如 Promise 或 DOM 更新) 已经完成。
 
-您可以查看 [发起 HTTP 请求](../guide/advanced/http-requests.md) 来了解 `flushPromises` 的实际使用示例。
+您可以查看[发起 HTTP 请求](../guide/advanced/http-requests.md)来了解 `flushPromises` 的实际使用示例。
 
 ## config
 
 ### config.global
 
-**签名:**
+**签名：**
 
 ```ts
 type GlobalMountOptions = {
@@ -1950,7 +1950,7 @@ type GlobalMountOptions = {
 }
 ```
 
-**详细信息:**
+**详细信息：**
 
 您可以选择在整个测试套件中配置挂载选项，而不是在每个测试中单独配置。这些配置将在每次 `mount` 组件时默认使用。如果需要，您可以在每个测试中覆盖这些默认设置。
 
@@ -2016,7 +2016,7 @@ test('config.global mocks and stubs', () => {
 
 **Usage:**
 
-在挂载选项中设置为替换组件(stub)：
+在挂载选项中设置为替换组件 (stub)：
 
 ```js
 import { mount, RouterLinkStub } from '@vue/test-utils'
@@ -2032,6 +2032,6 @@ const wrapper = mount(Component, {
 expect(wrapper.findComponent(RouterLinkStub).props().to).toBe('/some/path')
 ```
 
-**使用插槽:**
+**使用插槽：**
 
-`RouterLinkStub` 组件支持插槽内容，并将为其插槽属性返回非常基本的值。如果您需要更具体的插槽属性值进行测试，考虑使用 [真实路由](../guide/advanced/vue-router.html#using-a-real-router)，这样您可以使用真实的 `router-link` 组件。或者，您可以通过复制 test-utils 包中的实现来定义自己的 `RouterLinkStub` 组件。
+`RouterLinkStub` 组件支持插槽内容，并将为其插槽属性返回非常基本的值。如果您需要更具体的插槽属性值进行测试，考虑使用[真实路由](../guide/advanced/vue-router.html#using-a-real-router)，这样您可以使用真实的 `router-link` 组件。或者，您可以通过复制 test-utils 包中的实现来定义自己的 `RouterLinkStub` 组件。

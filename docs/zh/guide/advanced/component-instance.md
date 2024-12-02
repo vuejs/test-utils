@@ -38,7 +38,7 @@ test('renders a greeting', () => {
 }
 ```
 
-我们可以看到 `msg1` 和 `msg2`！如果定义了 `methods` 和 `computed` 属性，它们也会显示出来。在编写测试时，虽然通常建议对 DOM 进行断言（使用 `wrapper.html()` 等），但在一些特殊情况下，你可能需要访问底层的 Vue 实例。
+我们可以看到 `msg1` 和 `msg2`！如果定义了 `methods` 和 `computed` 属性，它们也会显示出来。在编写测试时，虽然通常建议对 DOM 进行断言 (使用 `wrapper.html()` 等)，但在一些特殊情况下，你可能需要访问底层的 Vue 实例。
 
 ## 与 `getComponent` 和 `findComponent` 的使用
 

@@ -2,7 +2,7 @@
 
 Vue 组件通过 props 互相交互，并通过调用 `$emit` 触发事件。在本指南中，我们将探讨如何使用 `emitted()` 函数验证事件是否正确触发。
 
-本文也有 [短视频](https://www.youtube.com/watch?v=U_j-nDur4oU&list=PLC2LZCNWKL9ahK1IoODqYxKu5aA9T5IOA&index=14) 观看。
+本文也有[短视频](https://www.youtube.com/watch?v=U_j-nDur4oU&list=PLC2LZCNWKL9ahK1IoODqYxKu5aA9T5IOA&index=14)观看。
 
 ## 计数器组件
 
@@ -29,7 +29,7 @@ const Counter = {
 
 ## 断言触发的事件
 
-为此，我们将依赖 `emitted()` 方法。它 **返回一个对象，包含组件发出的所有事件**，其参数以数组的形式呈现。让我们看看它是如何工作的：
+为此，我们将依赖 `emitted()` 方法。它**返回一个对象，包含组件发出的所有事件**，其参数以数组的形式呈现。让我们看看它是如何工作的：
 
 ```js
 test('emits an event when clicked', () => {
@@ -42,7 +42,7 @@ test('emits an event when clicked', () => {
 })
 ```
 
-> 如果您之前没有见过 `trigger()`，不要担心。它用于模拟用户交互。您可以在 [测试表单](./forms) 中了解更多。
+> 如果您之前没有见过 `trigger()`，不要担心。它用于模拟用户交互。您可以在[测试表单](./forms)中了解更多。
 
 首先要注意的是，`emitted()` 返回一个对象，其中每个键对应一个已触发的事件。在这个例子中是 `increment`。
 
@@ -142,7 +142,7 @@ test('emits an event with count when clicked', () => {
 })
 ```
 
-测试复杂事件负载（如对象）与测试简单值（如数字或字符串）没有区别。
+测试复杂事件负载 (如对象) 与测试简单值 (如数字或字符串) 没有区别。
 
 ## 组合 API
 

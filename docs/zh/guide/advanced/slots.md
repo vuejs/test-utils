@@ -132,11 +132,11 @@ test('layout full page layout', () => {
 })
 ```
 
-[参考测试](https://github.com/vuejs/test-utils/blob/9d3c2a6526f3d8751d29b2f9112ad2a3332bbf52/tests/mountingOptions/slots.spec.ts#L124-L167) 获取更多示例和用例。
+[参考测试](https://github.com/vuejs/test-utils/blob/9d3c2a6526f3d8751d29b2f9112ad2a3332bbf52/tests/mountingOptions/slots.spec.ts#L124-L167)获取更多示例和用例。
 
 ## 作用域插槽
 
-[作用域插槽](https://v3.vuejs.org/guide/component-slots.html#scoped-slots) 和绑定也得到了支持。
+[作用域插槽](https://v3.vuejs.org/guide/component-slots.html#scoped-slots)和绑定也得到了支持。
 
 ```js
 const ComponentWithSlots = {
@@ -183,6 +183,6 @@ test('scoped slots', () => {
 ## 结论
 
 - 使用 `slots` 挂载选项来测试组件使用 `<slot>` 是否正确渲染内容。
-- 内容可以是字符串、渲染函数或导入的单文件组件(SFC)。
+- 内容可以是字符串、渲染函数或导入的单文件组件 (SFC)。
 - 使用 `default` 表示默认插槽，使用正确的名称表示命名插槽。
 - 作用域插槽和 `#` 简写也得到了支持。

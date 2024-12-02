@@ -60,7 +60,7 @@ test('works with transitions', async () => {
 
 ## 部分支持
 
-Vue Test Utils 内置的过渡效果模拟比较简单，并不涵盖 Vue 所有的 [过渡特性](https://vuejs.org/guide/built-ins/transition)。例如， [JavaScript 钩子](https://vuejs.org/guide/built-ins/transition#javascript-hooks) 不被支持。这一限制可能会导致 Vue 发出警告。
+Vue Test Utils 内置的过渡效果模拟比较简单，并不涵盖 Vue 所有的[过渡特性](https://vuejs.org/guide/built-ins/transition)。例如，[JavaScript 钩子](https://vuejs.org/guide/built-ins/transition#javascript-hooks)不被支持。这一限制可能会导致 Vue 发出警告。
 
 ::: tip
 潜在解决方案：

@@ -1,6 +1,6 @@
 # 从 Vue Test Utils v1 迁移
 
-对 VTU v1 到 VTU v2 的更改进行回顾，并提供一些代码片段以展示所需的修改。如果您遇到未在此处记录的错误或行为差异，请 [提交问题](https://github.com/vuejs/test-utils/issues/new)。
+对 VTU v1 到 VTU v2 的更改进行回顾，并提供一些代码片段以展示所需的修改。如果您遇到未在此处记录的错误或行为差异，请[提交问题](https://github.com/vuejs/test-utils/issues/new)。
 
 ## 更改
 
@@ -8,7 +8,7 @@
 
 在 VTU v1 中，您使用 `propsData` 挂载选项传递 props。这令人困惑，因为您在 Vue 组件的 `props` 选项中声明 props。现在您可以使用 `props` 挂载选项传递 `props`。为了向后兼容，`propsData` 仍然被支持。
 
-**之前**:
+**之前**：
 
 ```js
 const App = {
@@ -22,7 +22,7 @@ const wrapper = mount(App, {
 }
 ```
 
-**之后**:
+**之后**：
 
 ```js
 const App = {
@@ -38,13 +38,13 @@ const wrapper = mount(App, {
 
 ### 不再需要 `createLocalVue`
 
-在 Vue 2 中，插件通常会修改全局 Vue 实例并将各种方法附加到原型上。从 Vue 3 开始，这种情况不再存在 - 您使用 `createApp` 创建新的 Vue 应用，而不是 `new Vue`，并使用 `createApp(App).use(/* ... */)`安装插件。
+在 Vue 2 中，插件通常会修改全局 Vue 实例并将各种方法附加到原型上。从 Vue 3 开始，这种情况不再存在 - 您使用 `createApp` 创建新的 Vue 应用，而不是 `new Vue`，并使用 `createApp(App).use(/* ... */)` 安装插件。
 
 为了避免在 Vue Test Utils v1 中污染全局 Vue 实例，我们提供了 `createLocalVue` 函数和 `localVue` 挂载选项。这使您可以为每个测试拥有一个独立的 Vue 实例，避免跨测试污染。在 Vue 3 中，这不再是问题，因为插件、混入等不会修改全局 Vue 实例。
 
-在大多数情况下，您之前使用 `createLocalVue` 和 `localVue` 挂载选项来安装插件、混入或指令，现在可以使用 [`global` 挂载选项](/api/#global)。以下是一个使用 `localVue` 的组件和测试示例，以及它现在的样子（使用 `global.plugins`，因为 Vuex 是一个插件）：
+在大多数情况下，您之前使用 `createLocalVue` 和 `localVue` 挂载选项来安装插件、混入或指令，现在可以使用 [`global` 挂载选项](/api/#global)。以下是一个使用 `localVue` 的组件和测试示例，以及它现在的样子 (使用 `global.plugins`，因为 Vuex 是一个插件)：
 
-**之前**:
+**之前**：
 
 ```js
 import Vuex from 'vuex'
@@ -72,7 +72,7 @@ const wrapper = mount(App, {
 })
 ```
 
-**之后**:
+**之后**：
 
 ```js
 import { createStore } from 'vuex'
@@ -103,7 +103,7 @@ const wrapper = mount(App, {
 
 `mocks` 和 `stubs` 应用于所有组件，而不仅仅是您传递给 `mount` 的组件。为了反映这一点，`mocks` 和 `stubs` 现在在新的 `global` 挂载选项中：
 
-**之前**:
+**之前**：
 
 ```js
 const $route = {
@@ -122,7 +122,7 @@ const wrapper = mount(App, {
 }
 ```
 
-**之后**:
+**之后**：
 
 ```js
 const $route = {
@@ -168,7 +168,7 @@ const App = {
 }
 ```
 
-**之前**:
+**之前**：
 
 ```js
 describe('App', () => {
@@ -185,7 +185,7 @@ describe('App', () => {
 })
 ```
 
-**之后**:
+**之后**：
 
 ```js
 describe('App', () => {
@@ -215,7 +215,7 @@ Vue 3 将 `vm.$destroy` 重命名为 `vm.$unmount`。Vue Test Utils 也随之更
 
 ### `scopedSlots` 现在与 `slots` 合并
 
-Vue 3 将 `slot` 和 `scoped-slot` 语法统一为单一语法 `v-slot`，您可以在 [文档](https://v3.vuejs.org/guide/migration/slots-unification.html#overview) 中阅读相关内容。由于 `slot` 和 `scoped-slot` 现在合并，因此 `scopedSlots` 挂载选项现在已弃用 - 只需使用 `slots` 挂载选项即可。
+Vue 3 将 `slot` 和 `scoped-slot` 语法统一为单一语法 `v-slot`，您可以在[文档](https://v3.vuejs.org/guide/migration/slots-unification.html#overview)中阅读相关内容。由于 `slot` 和 `scoped-slot` 现在合并，因此 `scopedSlots` 挂载选项现在已弃用 - 只需使用 `slots` 挂载选项即可。
 
 ### `slots` 的作用域现在作为 `params` 暴露
 
@@ -235,13 +235,13 @@ shallowMount(Component, {
 
 `findAll()` 现在返回一个 DOMWrappers 数组。
 
-**之前:**
+**之前：**
 
 ```js
 wrapper.findAll('[data-test="token"]').at(0)
 ```
 
-**之后:**
+**之后：**
 
 ```js
 wrapper.findAll('[data-test="token"]')[0]
@@ -251,7 +251,7 @@ wrapper.findAll('[data-test="token"]')[0]
 
 `createWrapper()` 现在是一个内部函数，无法再被导入。如果您需要访问一个不是 Vue 组件的 DOM 元素的包装器，可以使用 `new DOMWrapper()` 构造函数。
 
-**之前:**
+**之前：**
 
 ```js
 import { createWrapper } from "@vue/test-utils";
@@ -264,7 +264,7 @@ describe('App', () => {
 
 ```
 
-**之后:**
+**之后：**
 
 ```js
 import { DOMWrapper } from "@vue/test-utils";
@@ -327,9 +327,9 @@ module.exports = {
 
 #### 快照现在包含注释节点
 
-如果您使用快照测试并且注释节点泄漏到您的快照中，请注意 `comments` 现在始终 [保留](https://vuejs.org/api/application.html#app-config-compileroptions-comments)，并仅在生产中删除。您可以通过调整 `app.config.compilerOptions` 来覆盖此行为，以便在快照中也删除它们：
+如果您使用快照测试并且注释节点泄漏到您的快照中，请注意 `comments` 现在始终[保留](https://vuejs.org/api/application.html#app-config-compileroptions-comments)，并仅在生产中删除。您可以通过调整 `app.config.compilerOptions` 来覆盖此行为，以便在快照中也删除它们：
 
-- 通过 `vue-jest` [配置](https://github.com/vuejs/vue-jest#compiler-options-in-vue-3).
+- 通过 `vue-jest` [配置](https://github.com/vuejs/vue-jest#compiler-options-in-vue-3)。
   ```js
   // jest.config.js
   module.exports = {

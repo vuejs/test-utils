@@ -11,11 +11,11 @@
 
 使用模拟路由器可以避免在单元测试中关注 Vue Router 的实现细节。
 
-我们可以创建一个仅实现我们感兴趣的功能的模拟版本，而不是使用真实的 Vue Router 实例。可以使用 `jest.mock`（如果你使用 Jest）和 `global.components` 的组合来实现。
+我们可以创建一个仅实现我们感兴趣的功能的模拟版本，而不是使用真实的 Vue Router 实例。可以使用 `jest.mock` (如果你使用 Jest) 和 `global.components` 的组合来实现。
 
-在模拟依赖时，通常是因为 **我们不关心测试其行为**。我们不想测试点击 `<router-link>` 是否导航到正确的页面，我们可能更关心的是确保 `<a>` 拥有正确的 `to` 属性。
+在模拟依赖时，通常是因为**我们不关心测试其行为**。我们不想测试点击 `<router-link>` 是否导航到正确的页面，我们可能更关心的是确保 `<a>` 拥有正确的 `to` 属性。
 
-让我们来看一个更实际的例子！这个组件展示了一个按钮，当用户经过身份验证时，会将其重定向到编辑帖子页面（基于当前路由参数）。未经过身份验证的用户则会被重定向到 `/404` 路由。
+让我们来看一个更实际的例子！这个组件展示了一个按钮，当用户经过身份验证时，会将其重定向到编辑帖子页面 (基于当前路由参数)。未经过身份验证的用户则会被重定向到 `/404` 路由。
 
 ```js
 const Component = {
@@ -33,7 +33,7 @@ const Component = {
 }
 ```
 
-我们可以使用真实的路由器，然后导航到该组件的正确路由，点击按钮后断言正确的页面是否被渲染……然而，对于相对简单的测试来说，这需要很多设置。我们想要编写的测试核心是“如果经过身份验证，则重定向到 X，否则重定向到 Y”。下面是如何使用 `global.mocks` 属性模拟路由的示例：
+我们可以使用真实的路由器，然后导航到该组件的正确路由，点击按钮后断言正确的页面是否被渲染……然而，对于相对简单的测试来说，这需要很多设置。我们想要编写的测试核心是 “如果经过身份验证，则重定向到 X，否则重定向到 Y”。下面是如何使用 `global.mocks` 属性模拟路由的示例：
 
 ```js
 import { mount } from '@vue/test-utils'
@@ -95,7 +95,7 @@ test('redirect an unauthenticated user to 404', async () => {
 })
 ```
 
-我们使用 `global.mocks` 提供了必要的依赖（`this.$route` 和 `this.$router`），为每个测试设置了理想状态。
+我们使用 `global.mocks` 提供了必要的依赖 (`this.$route` 和 `this.$router`)，为每个测试设置了理想状态。
 
 然后，我们能够使用 `jest.fn()` 监控 `this.$router.push` 被调用的次数和参数。最重要的是，我们不必在测试中处理 Vue Router 的复杂性或注意事项！我们只关注测试应用逻辑。
 
@@ -214,7 +214,7 @@ console.warn node_modules/vue-router/dist/vue-router.cjs.js:225
   [Vue Router warn]: Unexpected error when starting the router: TypeError: Cannot read property '_history' of null
 ```
 
-虽然警告的内容并不完全明确，但它与 Vue Router 4 **处理路由是异步的** 有关。
+虽然警告的内容并不完全明确，但它与 Vue Router 4 **处理路由是异步的**有关。
 
 Vue Router 提供了一个 `isReady` 函数，告诉我们路由器何时准备就绪。然后我们可以 `await` 它，以确保初始导航已发生。
 
@@ -491,5 +491,5 @@ test('allows authenticated user to edit a post', async () => {
 - 你可以在测试中使用真实的路由器实例。
 - 但是有一些注意事项：Vue Router 4 是异步的，我们需要在编写测试时考虑这一点。
 - 对于更复杂的应用程序，考虑模拟路由器依赖项，专注于测试底层逻辑。
-- 尽可能利用测试运行器的桩(stub)/模拟功能。
+- 尽可能利用测试运行器的桩 (stub)/模拟功能。
 - 使用 `global.mocks` 来模拟全局依赖项，例如 `this.$route` 和 `this.$router`。

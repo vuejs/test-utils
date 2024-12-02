@@ -6,7 +6,7 @@
 
 Vue 的调度器依赖于系统时间。在调用 `vi.setSystemTime` 之后再挂载组件，因为 Vue 依赖于其副作用。在调用 `vi.setSystemTime` 之前挂载组件可能会导致响应性中断。
 
-请参见 [vuejs/test-utils#2074](https://github.com/vuejs/test-utils/issues/2074).
+请参见 [vuejs/test-utils#2074](https://github.com/vuejs/test-utils/issues/2074)。
 
 ## Vue warn: Failed setting prop
 
@@ -23,7 +23,7 @@ TypeError: Cannot set property prefix of #<Element> which has only a getter
 - `children`
 - `prefix`
 
-请参见: https://developer.mozilla.org/en-US/docs/Web/API/Element
+请参见：https://developer.mozilla.org/en-US/docs/Web/API/Element
 
 **可能的解决方案**
 

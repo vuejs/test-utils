@@ -1,11 +1,11 @@
 # 测试 Teleport
 
-Vue 3 引入了一个新的内置组件：`<Teleport>`，它允许组件将其内容“传送”到其 `<template>` 之外的某处。大多数使用 Vue Test Utils 编写的测试都是针对传递给 `mount` 的组件，这在测试被传送到最初渲染组件之外的组件时引入了一些复杂性。
+Vue 3 引入了一个新的内置组件：`<Teleport>`，它允许组件将其内容 “传送” 到其 `<template>` 之外的某处。大多数使用 Vue Test Utils 编写的测试都是针对传递给 `mount` 的组件，这在测试被传送到最初渲染组件之外的组件时引入了一些复杂性。
 
 以下是一些使用 `<Teleport>` 测试组件的策略和技术。
 
 ::: tip
-如果您想测试组件的其余部分，而忽略 `teleport`，可以通过在 [全局stubs选项](../../api/#global-stubs) 中传递 `teleport: true` 来stub `teleport`。
+如果您想测试组件的其余部分，而忽略 `teleport`，可以通过在[全局 stubs 选项](../../api/#global-stubs)中传递 `teleport: true` 来 stub `teleport`。
 :::
 
 ## 示例
@@ -119,7 +119,7 @@ test('teleport', async () => {
 <!--teleport end-->
 ```
 
-我们看到 Vue 用于处理 `<Teleport>` 的一些注释——但没有 `<input>`。这是因为 `<Signup>` 组件（及其 HTML）不再渲染在 `<Navbar>` 内部——它被传送到了外面。
+我们看到 Vue 用于处理 `<Teleport>` 的一些注释——但没有 `<input>`。这是因为 `<Signup>` 组件 (及其 HTML) 不再渲染在 `<Navbar>` 内部——它被传送到了外面。
 
 尽管实际的 HTML 被传送到外部，但与 `<Navbar>` 相关的虚拟 DOM 仍然保持对原始组件的引用。这意味着您可以使用 `getComponent` 和 `findComponent`，它们在虚拟 DOM 上操作，而不是常规 DOM。
 

@@ -76,7 +76,7 @@ test('trigger', async () => {
 })
 ```
 
-> 如果您之前没有见过 `emitted()`，不要担心。它用于断言组件发出的事件。您可以在 [事件处理](./event-handling) 中了解更多。
+> 如果您之前没有见过 `emitted()`，不要担心。它用于断言组件发出的事件。您可以在[事件处理](./event-handling)中了解更多。
 
 我们触发 `click` 事件监听器，以便组件执行 `submit` 方法。与 `setValue` 一样，我们使用 `await` 确保操作已被 Vue 处理。
 

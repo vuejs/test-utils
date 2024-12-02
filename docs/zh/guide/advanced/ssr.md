@@ -1,7 +1,7 @@
 # 测试服务端渲染
 
-Vue Test Utils provides `renderToString` to test Vue applications that use server-side rendering (SSR).
-Vue Test Utils 提供了 `renderToString` 方法，用于测试使用服务器端渲染（SSR）的 Vue 应用程序。本指南将带你了解如何测试使用 SSR 的 Vue 应用程序。
+Vue Test Utils provides `renderToString` to test Vue applications that use server-side rendering (SSR)。
+Vue Test Utils 提供了 `renderToString` 方法，用于测试使用服务器端渲染 (SSR) 的 Vue 应用程序。本指南将带你了解如何测试使用 SSR 的 Vue 应用程序。
 
 ## `renderToString`
 

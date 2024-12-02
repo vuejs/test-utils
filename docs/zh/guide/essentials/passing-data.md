@@ -79,7 +79,7 @@ test('renders an error if length is too short', () => {
 })
 ```
 
-编写 `maxLength` 规则的测试留给读者作为练习！另一种实现方式是使用 `setValue` 更新输入为过短的密码。您可以在 [测试表单](./forms) 部分了解更多信息。
+编写 `maxLength` 规则的测试留给读者作为练习！另一种实现方式是使用 `setValue` 更新输入为过短的密码。您可以在[测试表单](./forms)部分了解更多信息。
 
 ## 使用 `setProps`
 
