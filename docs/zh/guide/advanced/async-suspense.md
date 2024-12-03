@@ -2,7 +2,7 @@
 
 你可能注意到在指南的某些部分，在调用 `wrapper` 的一些方法时使用了 `await`，例如 `trigger` 和 `setValue`。这是什么意思呢？
 
-你可能知道 [Vue 是以响应式的方式更新的](https://v3.vuejs.org/guide/change-detection.html#async-update-queue)：当你更改一个值时，DOM 会自动更新以反映最新的值。Vue 的这些更新是异步进行的。与此相对，像 Jest 这样的测试运行器是 _同步_ 的。这可能会导致测试中出现一些意外的结果。
+你可能知道 [Vue 是以响应式的方式更新的](https://v3.vuejs.org/guide/change-detection.html#async-update-queue)：当你更改一个值时，DOM 会自动更新以反映最新的值。Vue 的这些更新是异步进行的。与此相对，像 Jest 这样的测试运行器是*同步*的。这可能会导致测试中出现一些意外的结果。
 
 让我们看看一些策略，以确保在运行测试时 Vue 按预期更新 DOM。
 
@@ -47,7 +47,7 @@ test('increments by 1', () => {
 如果你想了解更多关于这个核心 JavaScript 行为的信息，可以阅读[事件循环及其宏任务和微任务](https://javascript.info/event-loop#macrotasks-and-microtasks)。
 :::
 
-抛开实现细节，我们该如何修复这个问题呢？实际上，Vue 提供了一种方法让我们等待 DOM 更新：`nextTick`。
+先抛开实现细节，我们该如何修复这个问题呢？实际上，Vue 提供了一种方法让我们等待 DOM 更新：`nextTick`。
 
 ```js {1,7}
 import { nextTick } from 'vue'
@@ -62,7 +62,7 @@ test('increments by 1', async () => {
 })
 ```
 
-现在测试将通过，因为我们确保在断言运行之前，下一个 "tick" 已经执行并且 DOM 已经更新。
+现在的测试将会通过，因为我们确保在断言运行之前，下一个 "tick" 已经执行并且 DOM 已经更新。
 
 由于 `await nextTick()` 是常见的，Vue Test Utils 提供了一个快捷方式。导致 DOM 更新的方法，如 `trigger` 和 `setValue` 返回 `nextTick`，因此你可以直接 `await` 它们：
 
