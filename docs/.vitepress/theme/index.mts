@@ -5,7 +5,7 @@ import status from '../translation-status.json'
 import './custom.css'
 const i18nLabels = {
   fr: 'La traduction est synchronisée avec les docs du ${date} dont le hash du commit est <code>${hash}</code>.',
-  zh: '翻译与${date}的文档同步，其 commit 的哈希值为 <code>${hash}</code>。'
+  zh: '该翻译已同步到了 ${date} 的版本，其对应的 commit hash 是 <code>${hash}</code>。'
 }
 
 
