@@ -8,7 +8,7 @@
 
 ## 简单示例 - 使用 `trigger` 更新
 
-让我们重用来自 [事件处理](../essentials/event-handling) 的 `<Counter>` 组件，唯一的变化是我们现在在 `template` 中渲染 `count`。
+让我们重用来自[事件处理](../essentials/event-handling)的 `<Counter>` 组件，唯一的变化是我们现在在 `template` 中渲染 `count`。
 
 ```js
 const Counter = {
@@ -44,7 +44,7 @@ test('increments by 1', () => {
 出乎意料的是，这个测试失败了！原因是虽然 `count` 增加了，但 Vue 不会在下一个事件循环的 tick 之前更新 DOM。因此，断言 (`expect()...`) 会在 Vue 更新 DOM 之前被调用。
 
 :::tip
-如果你想了解更多关于这个核心 JavaScript 行为的信息，可以阅读 [事件循环及其宏任务和微任务](https://javascript.info/event-loop#macrotasks-and-microtasks)。
+如果你想了解更多关于这个核心 JavaScript 行为的信息，可以阅读[事件循环及其宏任务和微任务](https://javascript.info/event-loop#macrotasks-and-microtasks)。
 :::
 
 抛开实现细节，我们该如何修复这个问题呢？实际上，Vue 提供了一种方法让我们等待 DOM 更新：`nextTick`。
@@ -107,7 +107,7 @@ test('uses a mocked axios HTTP client and flushPromises', async () => {
 ```
 
 :::tip
-如果你想了解更多关于在组件上测试请求的信息，请确保查看 [发起 HTTP 请求](http-requests.md) 指南。
+如果你想了解更多关于在组件上测试请求的信息，请确保查看[发起 HTTP 请求](http-requests.md) 指南。
 :::
 
 ## 测试异步 `setup`

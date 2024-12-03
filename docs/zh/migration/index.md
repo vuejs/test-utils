@@ -329,7 +329,7 @@ module.exports = {
 
 如果你使用快照测试并且注释节点泄漏到你的快照中，请注意 `comments` 现在始终[保留](https://vuejs.org/api/application.html#app-config-compileroptions-comments)，并仅在生产中删除。你可以通过调整 `app.config.compilerOptions` 来覆盖此行为，以便在快照中也删除它们：
 
-- 通过 `vue-jest` [配置](https://github.com/vuejs/vue-jest#compiler-options-in-vue-3)。
+- 通过 `vue-jest`[配置](https://github.com/vuejs/vue-jest#compiler-options-in-vue-3)。
   ```js
   // jest.config.js
   module.exports = {
@@ -365,7 +365,7 @@ module.exports = {
 | plugins          | 嵌套在 `global` 中                                                                  |
 | component        | 嵌套在 `global` 中                                                                  |
 | directives       | 嵌套在 `global` 中                                                                  |
-| attachToDocument | 重命名为 `attachTo`. 参见 [此处](https://github.com/vuejs/vue-test-utils/pull/1492) |
+| attachToDocument | 重命名为 `attachTo`. 参见[此处](https://github.com/vuejs/vue-test-utils/pull/1492) |
 | scopedSlots      | 被移除, ScopedSlots 与 Vue 3 的 `slots` 合并                                        |
 | context          | 被移除, 与 Vue 2 不同，已不再有意义                                                 |
 | localVue         | 被移除, 不再需要 - 在 Vue 3 中没有全局 Vue 实例可供修改                             |
@@ -385,7 +385,7 @@ module.exports = {
 | setSelected    | 被移除，现在是 `setValue` 的一部分                                                |
 | setChecked     | 被移除，现在是 `setValue` 的一部分                                                |
 | is             | 被移除                                                                            |
-| isEmpty        | 被移除， 使用匹配器 [参考](https://github.com/testing-library/jest-dom#tobeempty) |
+| isEmpty        | 被移除， 使用匹配器[参考](https://github.com/testing-library/jest-dom#tobeempty) |
 | isVueInstance  | 被移除                                                                            |
 | name           | 被移除                                                                            |
 | setMethods     | 被移除                                                                            |
