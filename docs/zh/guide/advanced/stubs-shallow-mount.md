@@ -1,6 +1,6 @@
 # 桩 (Stubs) 与浅层挂载
 
-Vue Test Utils 提供了一些高级功能用于 _ 桩 _ 组件和指令。*桩*是指将自定义组件或指令的现有实现替换为一个不执行任何操作的虚拟实现，这可以简化本来复杂的测试。让我们来看一个例子。
+Vue Test Utils 提供了一些高级功能用于 _桩_ 组件和指令。_桩_ 是指将自定义组件或指令的现有实现替换为一个不执行任何操作的虚拟实现，这可以简化本来复杂的测试。让我们来看一个例子。
 
 ## 桩化单个子组件
 
@@ -81,7 +81,7 @@ test('stubs component', () => {
 })
 ```
 
-这将桩化整个渲染树中的*所有* `<FetchDataFromApi />` 组件，而不管它们出现在哪个层级。这就是为什么它在 `global` 挂载选项中的原因。
+这将桩化整个渲染树中的_所有_ `<FetchDataFromApi />` 组件，而不管它们出现在哪个层级。这就是为什么它在 `global` 挂载选项中的原因。
 
 ::: tip
 要桩化组件，你可以使用 `components` 中的键或组件的名称。如果在 `global.stubs` 中同时给出这两者，将优先使用键。
@@ -89,7 +89,7 @@ test('stubs component', () => {
 
 ## 桩化所有子组件
 
-有时你可能想要桩化 _ 所有 _ 自定义组件。例如，你可能有这样的组件：
+有时你可能想要桩化 _所有_ 自定义组件。例如，你可能有这样的组件：
 
 ```js
 const ComplexComponent = {
@@ -141,7 +141,7 @@ test('shallow stubs out all child components', () => {
 
 ## 桩化所有子组件但有例外
 
-有时你想要桩化 _ 所有 _ 自定义组件，除了特定的一个。让我们考虑一个例子：
+有时你想要桩化 _所有_ 自定义组件，除了特定的一个。让我们考虑一个例子：
 
 ```js
 const ComplexA = {
@@ -307,7 +307,7 @@ test('stubs component with custom template', () => {
 我们刚刚用自己的实现替换了指令的实现！
 
 ::: warning
-桩化指令在功能组件或 `<script setup>` 中不起作用，因为在 [withDirectives](https://vuejs.org/api/render-function.html#withdirectives) 函数中缺少指令名称。如果你需要模拟在功能组件中使用的指令，请考虑通过你的测试框架模拟指令模块。请参见 https://github.com/vuejs/core/issues/6887 以解锁此功能。
+桩化指令在功能组件或 `<script setup>` 中不起作用，因为在 [withDirectives](https://vuejs.org/api/render-function.html#withdirectives) 函数中缺少指令名称。如果你需要模拟在功能组件中使用的指令，请考虑通过你的测试框架模拟指令模块。请参见 <https://github.com/vuejs/core/issues/6887> 以解锁此功能。
 :::
 
 ## 默认插槽和 `shallow`
