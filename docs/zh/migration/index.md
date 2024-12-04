@@ -330,6 +330,7 @@ module.exports = {
 如果你使用快照测试并且注释节点泄漏到你的快照中，请注意 `comments` 现在始终[保留](https://vuejs.org/api/application.html#app-config-compileroptions-comments)，并仅在生产中删除。你可以通过调整 `app.config.compilerOptions` 来覆盖此行为，以便在快照中也删除它们：
 
 - 通过 `vue-jest`[配置](https://github.com/vuejs/vue-jest#compiler-options-in-vue-3)。
+
   ```js
   // jest.config.js
   module.exports = {
@@ -342,11 +343,12 @@ module.exports = {
     }
   }
   ```
+
 - 通过 `@vue/test-utils` [`mountingOptions.global.config`](https://test-utils.vuejs.org/api/#global) 全局或逐个测试基础。
 
 ## 与 v1 的比较
 
-这是一个针对来自 VTU 1 的用户的表格，比较 API。
+这是一个针对来自 VTU 1 用户的表格，其比较了两者的 API。
 
 ### 基础 API
 

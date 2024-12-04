@@ -51,7 +51,7 @@ export function useUser(userId) {
 }
 ```
 
-要测试这个组合式函数，你可以在测试中创建一个简单的 `TestComponent`。`TestComponent` 应该以与真实组件相同的方式使用组合式函数。
+要测试这个组合式函数，你可以在测试中创建一个简单的 `TestComponent`。`TestComponent` 应该与真实组件相同的方式使用组合式函数。
 
 ```typescript
 // 模拟 API 请求
