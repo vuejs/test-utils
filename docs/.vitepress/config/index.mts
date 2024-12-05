@@ -10,6 +10,6 @@ export default defineConfig({
   locales: {
     root: { label: 'English', lang: 'en-US', link: '/', ...enConfig },
     fr: { label: 'Français', lang: 'fr-FR', link: '/fr/', ...frConfig },
-    zh: { label: '简体中文', lang: 'zh-CN', link: '/zh/', ...zhConfig }
+    zh: { label: '简体中文 (校对中)', lang: 'zh-CN', link: '/zh/', ...zhConfig }
   }
 })
