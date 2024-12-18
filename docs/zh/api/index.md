@@ -60,10 +60,10 @@ const wrapper = mount(Component, {
 
 #### options.global
 
-在组件状态中，你可以通过 [`MountingOptions.global` 配置属性](#global) 配置上述 Vue 3 应用程序。这对于提供组件期望可用的模拟值非常有用。
+在组件状态中，你可以通过 [`MountingOptions.global` 配置属性](#global)配置上述 Vue 3 应用程序。这对于提供组件期望可用的模拟值非常有用。
 
 ::: tip
-如果你发现自己需要为许多测试设置共同的应用配置，则可以使用导出的 [`config` 对象](#config) 为整个测试套件设置配置。
+如果你发现自己需要为许多测试设置共同的应用配置，则可以使用导出的 [`config` 对象](#config)为整个测试套件设置配置。
 :::
 
 ### attachTo
@@ -1954,7 +1954,7 @@ type GlobalMountOptions = {
 
 你可以选择在整个测试套件中配置挂载选项，而不是在每个测试中单独配置。这些配置将在每次 `mount` 组件时默认使用。如果需要，你可以在每个测试中覆盖这些默认设置。
 
-**示例：** 全局模拟 `$t` 变量和一个组件：
+**示例：**全局模拟 `$t` 变量和一个组件：
 
 `Component.vue`:
 
