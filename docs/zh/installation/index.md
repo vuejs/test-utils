@@ -1,11 +1,16 @@
 # 安装
 
-```bash
-npm install --save-dev @vue/test-utils
+::: code-group
 
-# or
+```shell [npm]
+npm install --save-dev @vue/test-utils
+```
+
+```shell [yarn]
 yarn add --dev @vue/test-utils
 ```
+
+:::
 
 ## 用法
 
