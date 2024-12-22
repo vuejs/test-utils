@@ -41,7 +41,7 @@ test('emits an event when clicked', () => {
 })
 ```
 
-> Если ты еще не видел `trigger()` до этого, не беспокойся. Он используется для имитации действий пользователя. Ты можешь узнать больше в [Формы](/guide/essentials/forms).
+> Если ты еще не видел `trigger()` до этого, не беспокойся. Он используется для имитации действий пользователя. Ты можешь узнать больше в [Формы](/ru/guide/essentials/forms).
 
 Обратите внимание, что `emitted()` возвращает объект, где каждый ключ совпадает с генерированным событием. В данном случае, `increment`.
 
@@ -112,7 +112,7 @@ const Counter = {
 }
 ```
 
-Как делали раньше, нам нужно инициировать `click` событие на `<button>` элементе. После, мы используем `emitted('increment')`, чтобы убедиться в правильных сгенерированных значениях.
+Как делали раньше, нам нужно вызвать `click` событие на `<button>` элементе. После, мы используем `emitted('increment')`, чтобы убедиться в правильных сгенерированных значениях.
 
 ```js
 test('emits an event with count when clicked', () => {
@@ -121,7 +121,7 @@ test('emits an event with count when clicked', () => {
   wrapper.find('button').trigger('click')
   wrapper.find('button').trigger('click')
 
-  // Мы инициировали "clicked" дважды, поэтому массив `increment` должен
+  // Мы вызвали "clicked" дважды, поэтому массив `increment` должен
   // иметь два значения.
   expect(wrapper.emitted('increment')).toHaveLength(2)
 

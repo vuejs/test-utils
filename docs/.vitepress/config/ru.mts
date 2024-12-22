@@ -54,7 +54,7 @@ export const ruConfig: LocaleSpecificConfig<DefaultTheme.Config> = {
               text: 'Тестирование генерации событий',
               link: '/ru/guide/essentials/event-handling'
             },
-            { text: 'Testing Forms', link: '/guide/essentials/forms' },
+            { text: 'Тестирование форм', link: '/ru/guide/essentials/forms' },
             {
               text: 'Passing Data to Components',
               link: '/guide/essentials/passing-data'
