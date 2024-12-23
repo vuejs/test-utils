@@ -56,8 +56,8 @@ export const ruConfig: LocaleSpecificConfig<DefaultTheme.Config> = {
             },
             { text: 'Тестирование форм', link: '/ru/guide/essentials/forms' },
             {
-              text: 'Passing Data to Components',
-              link: '/guide/essentials/passing-data'
+              text: 'Передача данных в компоненты',
+              link: '/ru/guide/essentials/passing-data'
             },
             {
               text: 'Write components that are easy to test',
