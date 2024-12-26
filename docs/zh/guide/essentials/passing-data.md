@@ -60,7 +60,7 @@ const Password = {
 }
 ```
 
-为了测试这一点，我们需要设置 `minLength` 以及一个小于该数字的 `password`。我们可以使用 `data` 和 `props` 的挂载选项来实现。最后，我们将断言错误消息是否被渲染：
+为了测试这一点，我们需要设置 `minLength` 以及一个小于该数字的 `password`。我们可以使用 `data` 和 `props` 的挂载选项来实现。最后，我们将断言错误消息是否被正确渲染：
 
 ```js
 test('renders an error if length is too short', () => {
@@ -129,5 +129,5 @@ test('renders a greeting when show is true', async () => {
 
 - 使用 `props` 和 `data` 的挂载选项预设组件的状态。
 - 使用 `setProps()` 在测试期间更新属性。
-- 在 `setProps()` 前使用 await 关键字，以确保 Vue 在测试继续之前会更新 DOM。
+- 在 `setProps()` 前使用 `await` 关键字，以确保 Vue 在测试继续之前会更新 DOM。
 - 直接与组件交互可以提供更大的覆盖率。考虑结合使用 `setValue` 或 `trigger` 以及 `data` 来确保一切正常工作。
