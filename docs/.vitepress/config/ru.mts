@@ -60,8 +60,8 @@ export const ruConfig: LocaleSpecificConfig<DefaultTheme.Config> = {
               link: '/ru/guide/essentials/passing-data'
             },
             {
-              text: 'Write components that are easy to test',
-              link: '/guide/essentials/easy-to-test'
+              text: 'Пишем компоненты для легкого тестирования',
+              link: '/ru/guide/essentials/easy-to-test'
             }
           ]
         },
