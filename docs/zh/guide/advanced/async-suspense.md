@@ -1,8 +1,8 @@
 # 异步行为
 
-你可能注意到在指南的某些部分，在调用 `wrapper` 的一些方法时使用了 `await`，例如 `trigger` 和 `setValue`。这是什么意思呢？
+你可能注意到在指南的某些部分，在调用 `wrapper` 的一些方法时使用了 `await`，例如 `trigger` 和 `setValue`。这是怎么回事呢？
 
-你可能知道 [Vue 是以响应式的方式更新的](https://v3.vuejs.org/guide/change-detection.html#async-update-queue)：当你更改一个值时，DOM 会自动更新以反映最新的值。Vue 的这些更新是异步进行的。与此相对，像 Jest 这样的测试运行器是*同步*的。这可能会导致测试中出现一些意外的结果。
+你可能知道 [Vue 是响应式更新的](https://v3.vuejs.org/guide/change-detection.html#async-update-queue)：当你更改一个值时，DOM 会自动更新以反映最新的值。Vue 的这些更新是异步进行的。相比之下，像 Jest 这样的测试运行器是*同步*的。这可能会导致测试中出现一些意外的结果。
 
 让我们看看一些策略，以确保在运行测试时 Vue 按预期更新 DOM。
 
@@ -78,7 +78,7 @@ test('increments by 1', async () => {
 
 ## 解决其他异步行为
 
-`nextTick` 用于确保某个响应式数据的变化在继续测试之前反映在 DOM 中。然而，有时你可能还想确保其他与 Vue 无关的异步行为也已完成。
+`nextTick` 用于确保某些响应式数据的变化在继续测试之前反映在 DOM 中。然而，有时你可能还想确保其他与 Vue 无关的异步行为也已完成。
 
 一个常见的例子是返回 `Promise` 的函数。也许你使用 `jest.mock` 模拟了你的 `axios` HTTP 客户端：
 
