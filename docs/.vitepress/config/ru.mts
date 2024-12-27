@@ -68,7 +68,7 @@ export const ruConfig: LocaleSpecificConfig<DefaultTheme.Config> = {
         {
           text: 'Углубленно',
           items: [
-            { text: 'Slots', link: '/guide/advanced/slots' },
+            { text: 'Слоты', link: '/ru/guide/advanced/slots' },
             {
               text: 'Asynchronous Behavior',
               link: '/guide/advanced/async-suspense'
