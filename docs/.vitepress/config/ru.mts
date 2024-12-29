@@ -70,8 +70,8 @@ export const ruConfig: LocaleSpecificConfig<DefaultTheme.Config> = {
           items: [
             { text: 'Слоты', link: '/ru/guide/advanced/slots' },
             {
-              text: 'Asynchronous Behavior',
-              link: '/guide/advanced/async-suspense'
+              text: 'Асинхронное поведение',
+              link: '/ru/guide/advanced/async-suspense'
             },
             {
               text: 'Making HTTP Requests',
