@@ -74,8 +74,8 @@ export const ruConfig: LocaleSpecificConfig<DefaultTheme.Config> = {
               link: '/ru/guide/advanced/async-suspense'
             },
             {
-              text: 'Making HTTP Requests',
-              link: '/guide/advanced/http-requests'
+              text: 'Выполнение HTTP запросов',
+              link: '/ru/guide/advanced/http-requests'
             },
             { text: 'Transitions', link: '/guide/advanced/transitions' },
             {
