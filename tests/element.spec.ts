@@ -60,6 +60,36 @@ describe('element', () => {
     expect(wrapper.text()).toBe('foobarbaz')
   })
 
+  it('returns correct output for functional component with multiple text roots', () => {
+    const Func = () => ['foo', 'bar']
+
+    const Parent = defineComponent({
+      name: 'Parent',
+      components: { Func },
+      template: '<div><Func/></div>'
+    })
+    const wrapper = mount(Parent)
+
+    expect(wrapper.findComponent(Func).html()).toBe('foo\nbar')
+    expect(wrapper.findComponent(Func).text()).toBe('foobar')
+  })
+
+  it('returns correct output for functional component with multiple element roots', () => {
+    const Func = () => [h('div', {}, 'foo'), h('div', {}, 'bar')]
+
+    const Parent = defineComponent({
+      name: 'Parent',
+      components: { Func },
+      template: '<div><Func/></div>'
+    })
+    const wrapper = mount(Parent)
+
+    expect(wrapper.findComponent(Func).html()).toBe(
+      '<div>foo</div>\n<div>bar</div>'
+    )
+    expect(wrapper.findComponent(Func).text()).toBe('foobar')
+  })
+
   it('returns correct element for root slot', () => {
     const Parent = defineComponent({
       components: { ReturnSlot },
