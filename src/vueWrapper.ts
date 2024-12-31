@@ -173,7 +173,7 @@ export class VueWrapper<
   ): DOMWrapper<SVGElementTagNameMap[K]>[]
   findAll<T extends Element>(selector: string): DOMWrapper<T>[]
   findAll(selector: string): DOMWrapper<Element>[] {
-    return this.findAllDOMElements(selector).map(createDOMWrapper)
+    return this.findAllDOMElements(selector).map((e) => createDOMWrapper(e))
   }
 
   private attachNativeEventListener(): void {

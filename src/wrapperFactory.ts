@@ -1,4 +1,4 @@
-import { ComponentPublicInstance, App } from 'vue'
+import { ComponentPublicInstance, App, VNode } from 'vue'
 import type { DOMWrapper as DOMWrapperType } from './domWrapper'
 import type { VueWrapper as VueWrapperType } from './vueWrapper'
 
@@ -8,7 +8,8 @@ export enum WrapperType {
 }
 
 type DOMWrapperFactory = <T extends Node>(
-  element: T | null | undefined
+  element: T | null | undefined,
+  subTree?: VNode
 ) => DOMWrapperType<T>
 type VueWrapperFactory = <T extends ComponentPublicInstance>(
   app: App | null,
@@ -36,7 +37,7 @@ export function registerFactory(
   factories[type] = fn
 }
 
-export const createDOMWrapper: DOMWrapperFactory = (element) =>
-  factories[WrapperType.DOMWrapper]!(element)
+export const createDOMWrapper: DOMWrapperFactory = (element, subTree) =>
+  factories[WrapperType.DOMWrapper]!(element, subTree)
 export const createVueWrapper: VueWrapperFactory = (app, vm, setProps) =>
   factories[WrapperType.VueWrapper]!(app, vm, setProps)
