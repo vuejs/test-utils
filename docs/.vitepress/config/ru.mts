@@ -77,26 +77,26 @@ export const ruConfig: LocaleSpecificConfig<DefaultTheme.Config> = {
               text: 'Выполнение HTTP запросов',
               link: '/ru/guide/advanced/http-requests'
             },
-            { text: 'Transitions', link: '/guide/advanced/transitions' },
+            { text: 'Transitions', link: '/ru/guide/advanced/transitions' },
             {
               text: 'Component Instance',
-              link: '/guide/advanced/component-instance'
+              link: '/ru/guide/advanced/component-instance'
             },
             {
               text: 'Reusability and Composition',
-              link: '/guide/advanced/reusability-composition'
+              link: '/ru/guide/advanced/reusability-composition'
             },
-            { text: 'Testing v-model', link: '/guide/advanced/v-model' },
-            { text: 'Testing Vuex', link: '/guide/advanced/vuex' },
-            { text: 'Testing Vue Router', link: '/guide/advanced/vue-router' },
-            { text: 'Testing Teleport', link: '/guide/advanced/teleport' },
+            { text: 'Testing v-model', link: '/ru/guide/advanced/v-model' },
+            { text: 'Testing Vuex', link: '/ru/guide/advanced/vuex' },
+            { text: 'Testing Vue Router', link: '/ru/guide/advanced/vue-router' },
+            { text: 'Testing Teleport', link: '/ru/guide/advanced/teleport' },
             {
               text: 'Stubs and Shallow Mount',
-              link: '/guide/advanced/stubs-shallow-mount'
+              link: '/ru/guide/advanced/stubs-shallow-mount'
             },
             {
               text: 'Testing Server-side Rendering',
-              link: '/guide/advanced/ssr'
+              link: '/ru/guide/advanced/ssr'
             }
           ]
         },
@@ -106,7 +106,7 @@ export const ruConfig: LocaleSpecificConfig<DefaultTheme.Config> = {
             { text: 'Плагины', link: '/guide/extending-vtu/plugins' },
             {
               text: 'Сообщество и обучение',
-              link: '/guide/extending-vtu/community-learning'
+              link: '/ru/guide/extending-vtu/community-learning'
             }
           ]
         },
