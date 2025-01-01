@@ -56,7 +56,7 @@ const mockPostList = [
   { id: 2, title: 'title2' }
 ]
 
-// 以下行代码告诉 Jest 模拟任何对 `axios.get` 的调用并返回 `mockPostList`
+// 以下代码告诉 Jest 模拟任何对 `axios.get` 的调用并返回 `mockPostList`
 jest.spyOn(axios, 'get').mockResolvedValue(mockPostList)
 
 test('loads posts on button click', async () => {
@@ -82,10 +82,10 @@ test('loads posts on button click', async () => {
 
 请注意，我们在变量 `mockPostList` 前添加了前缀 `mock`。如果不这样做，我们将收到错误：“The module factory of jest.mock() is not allowed to reference any out-of-scope variables。” 这是 Jest 特有的，你可以在他们的[文档](https://jestjs.io/docs/es6-class-mocks#calling-jestmock-with-the-module-factory-parameter)中了解更多关于这种行为的信息。
 
-还要注意，我们在与组件交互之前等待了 `flushPromises`。这样可以确保在运行断言之前，DOM 已更新。
+还要注意，我们在等待 `flushPromises` 之后再与组件进行交互。这样可以确保在运行断言之前，DOM 已更新。
 
 :::tip jest.mock() 的替代方案
-在 Jest 中设置模拟有多种方法。上面示例中使用的方式是最简单的。对于更强大的替代方案，你可能想查看 [axios-mock-adapter](https://github.com/ctimmerm/axios-mock-adapter) 或 [msw](https://github.com/mswjs/msw) 等。
+在 Jest 中设置模拟有多种方法。上面示例中使用的方式是最简单的。对于更强大的替代方案，你可能想查看 [axios-mock-adapter](https://github.com/ctimmerm/axios-mock-adapter) 或 [msw](https://github.com/mswjs/msw) 等其他工具。
 :::
 
 ### 断言加载状态
@@ -160,7 +160,7 @@ test('displays loading state on button click', async () => {
 
 对于更复杂的应用程序，一个典型的场景是触发执行 HTTP 请求的 Vuex 动作。
 
-这与上面概述的示例没有什么不同。我们可能想要像往常一样加载存储并模拟像 `axios` 这样的服务。通过这种方式，我们可以模拟系统的边界，从而在测试中获得更高的信心。
+这与上面概述的示例没有什么不同。我们可能希望像往常一样加载存储并模拟像 `axios` 这样的服务。通过这种方式，我们可以模拟系统的边界，从而在测试中获得更高的信心。
 
 你可以查看 [Testing Vuex](vuex.md) 文档，以获取有关使用 Vue Test Utils 测试 Vuex 的更多信息。
 
