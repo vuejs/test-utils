@@ -79,7 +79,7 @@ export const ruConfig: LocaleSpecificConfig<DefaultTheme.Config> = {
             },
             { text: 'Transitions', link: '/ru/guide/advanced/transitions' },
             {
-              text: 'Component Instance',
+              text: 'Экземпляр компонента',
               link: '/ru/guide/advanced/component-instance'
             },
             {
