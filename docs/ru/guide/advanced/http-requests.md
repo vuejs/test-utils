@@ -137,7 +137,8 @@ export default {
 test('displays loading state on button click', async () => {
   const wrapper = mount(PostList)
 
-  // Обратите внимание, что мы запускаем следующие проверки до того, как нажали на кнопку.
+  // Обратите внимание, что мы запускаем следующие проверки до того, 
+  // как нажали на кнопку.
   // Здесь компонент должен быть не в состоянии загрузки.
   expect(wrapper.find('[role="alert"]').exists()).toBe(false)
   expect(wrapper.get('button').attributes()).not.toHaveProperty('disabled')

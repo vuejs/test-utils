@@ -83,19 +83,19 @@ export const ruConfig: LocaleSpecificConfig<DefaultTheme.Config> = {
               link: '/ru/guide/advanced/component-instance'
             },
             {
-              text: 'Reusability and Composition',
+              text: 'Переиспользование и композиция',
               link: '/ru/guide/advanced/reusability-composition'
             },
-            { text: 'Testing v-model', link: '/ru/guide/advanced/v-model' },
-            { text: 'Testing Vuex', link: '/ru/guide/advanced/vuex' },
-            { text: 'Testing Vue Router', link: '/ru/guide/advanced/vue-router' },
-            { text: 'Testing Teleport', link: '/ru/guide/advanced/teleport' },
+            { text: 'Тестирование v-model', link: '/ru/guide/advanced/v-model' },
+            { text: 'Тестирование Vuex', link: '/ru/guide/advanced/vuex' },
+            { text: 'Тестирование Vue Router', link: '/ru/guide/advanced/vue-router' },
+            { text: 'Тестирование Teleport', link: '/ru/guide/advanced/teleport' },
             {
               text: 'Stubs and Shallow Mount',
               link: '/ru/guide/advanced/stubs-shallow-mount'
             },
             {
-              text: 'Testing Server-side Rendering',
+              text: 'Тестирование Server-side Rendering',
               link: '/ru/guide/advanced/ssr'
             }
           ]

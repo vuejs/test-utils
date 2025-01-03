@@ -97,7 +97,8 @@ import axios from 'axios'
 jest.spyOn(axios, 'get').mockResolvedValue({ data: 'some mocked data!' })
 
 test('uses a mocked axios HTTP client and flushPromises', async () => {
-  // какой-то компонент, который выполняет HTTP запрос, вызванный в `created`, используя `axios`
+  // какой-то компонент, который выполняет HTTP запрос, 
+  // вызванный в `created`, используя `axios`
   const wrapper = mount(AxiosComponent)
 
   await flushPromises() // axios промис выполнился сразу
