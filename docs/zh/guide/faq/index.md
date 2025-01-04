@@ -4,7 +4,7 @@
 
 ## 使用 Vitest 模拟日期和计时器
 
-Vue 的调度器依赖于系统时间。确保在调用 `vi.setSystemTime` 后再挂载组件，因为 Vue 依赖于其副作用。在调用 `vi.setSystemTime` 之前挂载组件可能会导致响应性出现问题。
+Vue 的调度器依赖于系统时间。请务必在调用 `vi.setSystemTime` 后再挂载组件，因为 Vue 依赖于其副作用。在调用 `vi.setSystemTime` 之前挂载组件可能会破坏其响应性。
 
 请查看 [vuejs/test-utils#2074](https://github.com/vuejs/test-utils/issues/2074)。
 
@@ -22,7 +22,7 @@ TypeError: Cannot set property prefix of #<Element> which has only a getter
 * `children`
 * `prefix`
 
-请参阅：https://developer.mozilla.org/en-US/docs/Web/API/Element
+请参阅：https://developer.mozilla.org/zh-CN/docs/Web/API/Element
 
 **可能的解决方案**
 
