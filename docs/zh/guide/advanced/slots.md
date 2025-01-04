@@ -136,7 +136,7 @@ test('layout full page layout', () => {
 
 ## 作用域插槽
 
-我们也支持[作用域插槽](https://v3.vuejs.org/guide/component-slots.html#scoped-slots)及其绑定。
+我们也支持[作用域插槽](https://cn.vuejs.org/guide/components/slots.html#scoped-slots)及其绑定。
 
 ```js
 const ComponentWithSlots = {
