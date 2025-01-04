@@ -36,7 +36,7 @@ test('layout default slot', () => {
 })
 ```
 
-测试通过！在这个示例中，我们将一些文本内容传递给默认插槽。如果你想更明确地验证默认插槽的内容是否渲染在 `<main>` 中，你可以修改断言：
+测试通过！在这个示例中，我们将一些文本内容传递给默认插槽。如果你想更具体地验证默认插槽的内容是否渲染在 `<main>` 中，你可以修改断言：
 
 ```js
 test('layout default slot', () => {
@@ -132,11 +132,11 @@ test('layout full page layout', () => {
 })
 ```
 
-[参考](https://github.com/vuejs/test-utils/blob/9d3c2a6526f3d8751d29b2f9112ad2a3332bbf52/tests/mountingOptions/slots.spec.ts#L124-L167)获取更多示例和用例。
+[参考这些测试](https://github.com/vuejs/test-utils/blob/9d3c2a6526f3d8751d29b2f9112ad2a3332bbf52/tests/mountingOptions/slots.spec.ts#L124-L167)以获取更多示例和用例。
 
 ## 作用域插槽
 
-同样支持[作用域插槽](https://v3.vuejs.org/guide/component-slots.html#scoped-slots)和绑定。
+我们也支持[作用域插槽](https://v3.vuejs.org/guide/component-slots.html#scoped-slots)及其绑定。
 
 ```js
 const ComponentWithSlots = {
@@ -172,7 +172,7 @@ test('scoped slots', () => {
 test('scoped slots', () => {
   const wrapper = mount(ComponentWithSlots, {
     slots: {
-      scoped: `Hello {{ params.msg }}` // 没有包裹template标签时，插槽作用域暴露为params对象
+      scoped: `Hello {{ params.msg }}` // 没有包装 template 标签时，插槽作用域暴露为“params”
     }
   })
 
@@ -182,7 +182,7 @@ test('scoped slots', () => {
 
 ## 结论
 
-- 使用 `slots` 挂载选项来测试使用 `<slot>`的组件是否正确渲染内容。
+- 使用 `slots` 挂载选项来测试使用 `<slot>` 的组件是否正确渲染内容。
 - 内容可以是字符串、渲染函数或导入的单文件组件 (SFC)。
-- 对于默认插槽使用 `default`，对于具名插槽使用正确的名称。
-- 支持作用域插槽和 `#`简写。
+- 对于默认插槽使用 `default`，对于具名插槽使用对应的名称。
+- 支持作用域插槽和 `#` 简写。
