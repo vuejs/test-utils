@@ -2,7 +2,7 @@
 layout: home
 
 title: Vue Test Utils
-titleTemplate: Vue Test Utils for Vue.js 3
+titleTemplate: Vue.js 3 测试工具
 
 hero:
   name: Vue Test Utils
