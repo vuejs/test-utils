@@ -14,9 +14,9 @@ yarn add --dev @vue/test-utils
 
 ## 用法
 
-Vue Test Utils 是与框架无关的 - 你可以与任何你喜欢的测试运行器一起使用。最简单的尝试方式是使用 [Jest](https://jestjs.io/)，这是一个流行的测试运行器。
+Vue Test Utils 是与测试框架无关的——你可以与任何你喜欢的测试运行器一起使用。最简单的尝试方式是使用 [Jest](https://jestjs.io/)，这是一个流行的测试运行器。
 
-要在 Jest 中加载 `.vue` 文件，你需要 `vue-jest`。`vue-jest` v5 是支持 Vue 3 的版本。它仍处于 alpha 阶段，就像 Vue.js 3 生态系统的其他部分一样，所以如果你发现错误，请在[这里](https://github.com/vuejs/vue-jest/)报告，并说明你正在使用 `vue-jest` v5。
+你需要 `vue-jest` 在 Jest 中加载 `.vue` 文件。`vue-jest` v5 是支持 Vue 3 的版本。它和 Vue.js 3 生态系统的其他部分一样仍处于 alpha 阶段。如果你发现任何错误，请在[这里](https://github.com/vuejs/vue-jest/)报告，并注明你正在使用 `vue-jest` v5。
 
 你可以通过 `vue-jest@next` 安装它。然后，你需要使用 Jest 的 [transform](https://jestjs.io/docs/en/configuration#transform-objectstring-pathtotransformer--pathtotransformer-object) 选项进行配置。
 
