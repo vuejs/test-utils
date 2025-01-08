@@ -42,6 +42,9 @@ interface StubOptions {
   renderStubDefaultSlot?: boolean
 }
 
+function stubbedFunctionProp() {}
+stubbedFunctionProp.toString = () => '[Function]'
+
 const normalizeStubProps = (props: ComponentPropsOptions) => {
   // props are always normalized to object syntax
   const $props = props as unknown as ComponentObjectPropsOptions
@@ -51,7 +54,7 @@ const normalizeStubProps = (props: ComponentPropsOptions) => {
       return { ...acc, [key]: [value?.toString()] }
     }
     if (typeof value === 'function') {
-      return { ...acc, [key]: ['[Function]'] }
+      return { ...acc, [key]: [stubbedFunctionProp] }
     }
     return { ...acc, [key]: value }
   }, {})
