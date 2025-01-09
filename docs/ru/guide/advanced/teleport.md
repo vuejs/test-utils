@@ -207,4 +207,4 @@ test('teleport', async () => {
 ## Заключение
 
 - Создайте элемент для телепортирования при помощи `document.createElement`.
-- Найдите телепортированные компоненты при помощи `getComponent` или `findComponent`, которые работают с Virtual DOM уровнем.
+- Найдите телепортированные компоненты при помощи `getComponent` или `findComponent`, которые работают с Virtual DOM.
