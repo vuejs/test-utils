@@ -22,13 +22,17 @@ import { ShapeFlags } from './utils/vueShared'
  */
 function createVMProxy<T extends ComponentPublicInstance>(
   vm: T,
-  setupState: Record<string, any>
+  setupState: Record<string, any>,
+  exposed: Record<string, any> | null
 ): T {
   return new Proxy(vm, {
     get(vm, key, receiver) {
       if (vm.$.exposed && vm.$.exposeProxy && key in vm.$.exposeProxy) {
         // first if the key is exposed
         return Reflect.get(vm.$.exposeProxy, key, receiver)
+      } else if (exposed && key in exposed) {
+        // first if the key is exposed
+        return Reflect.get(exposed, key, receiver)
       } else if (key in setupState) {
         // second if the key is acccessible from the setupState
         return Reflect.get(setupState, key, receiver)
@@ -107,11 +111,24 @@ export class VueWrapper<
     // if we return it as `vm`
     // This does not work for functional components though (as they have no vm)
     // or for components with a setup that returns a render function (as they have an empty proxy)
-    // in both cases, we return `vm` directly instead
+    // in both cases, we return `vm` directly instead.
+    //
+    // NOTE https://github.com/vuejs/test-utils/issues/2591
+    // I'm sry i'm not entirely sure why, but exposed properties — via expose/defineExpose
+    // are not assigned to the componentVM when the the `vm` argument provided
+    // to this constructor comes from `findComponent` — as in, not the original instance
+    // but already the proxied one. I first suspected that was by design of defineExpose
+    // but that doesn't explain why it works when finding a .vue component or
+    // vs it's bundled version, where the different is conversion of to a render
+    // function. Also i've noticed that sometimes we can get some exceptions in
+    // bundle code becuase render function is hoisted and exposed if properties
+    // are returned to template, they also become available in th einstance.
+    //
     if (hasSetupState(vm)) {
-      this.componentVM = createVMProxy<T>(vm, vm.$.setupState)
+      this.componentVM = createVMProxy<T>(vm, vm.$.setupState, vm.$.exposed)
     } else {
       this.componentVM = vm
+      Object.assign(this.componentVM, vm.$.exposed)
     }
     this.__setProps = setProps
 

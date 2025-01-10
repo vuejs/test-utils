@@ -4,6 +4,14 @@ import { mount } from '../src'
 import Hello from './components/Hello.vue'
 import ComponentWithoutName from './components/ComponentWithoutName.vue'
 import ScriptSetupWithChildren from './components/ScriptSetupWithChildren.vue'
+import ExposeWithOptionsAndTemplate from './components/DefineExpose.vue'
+import ExposeWithOptionsAndRenderFunction from './components/DefineExposeWithRenderFunction.vue'
+import ExposeWithScriptSetup from './components/ScriptSetup_Expose.vue'
+import ExposeWithBundledCode from './components/DefineExposeBundled.ts'
+import FindComponentExposeScriptSetup from './components/FindComponentExposeScriptSetup.vue'
+import FindComponentExposeScriptSetupBundled from './components/FindComponentExposeScriptSetupBundled.ts'
+import FindComponentExposeTemplate from './components/FindComponentExposeTemplate.vue'
+import FindComponentExposeRenderFunction from './components/FindComponentExposeRenderFunction.js'
 
 const compC = defineComponent({
   name: 'ComponentC',
@@ -560,5 +568,129 @@ describe('findComponent', () => {
       }
     })
     expect(wrapper.findComponent(ChildComponent).exists()).toBe(true)
+  })
+
+  // https://github.com/vuejs/test-utils/issues/2591
+  describe('found VueWrapper’s `vm` includes exposed properties', () => {
+    it.each([
+      {
+        description: 'options.setup + template',
+        target: ExposeWithOptionsAndTemplate,
+        exposedProperty: 'exposedMethod1'
+      },
+      {
+        description: 'options.setup + render fn',
+        target: ExposeWithOptionsAndRenderFunction,
+        exposedProperty: 'exposedMethod1'
+      },
+      {
+        description: '<script setup> + defineExpose',
+        target: ExposeWithScriptSetup,
+        exposedProperty: 'exposedMethod1'
+      },
+      {
+        description: '<script> setup sample bundled code',
+        target: ExposeWithBundledCode,
+        exposedProperty: 'exposedMethod1'
+      },
+      // same as above but with simplified components for easier debugging
+      {
+        description: '<script setup> + defineExpose',
+        target: FindComponentExposeScriptSetup,
+        exposedProperty: 'exposedFn'
+      },
+      {
+        description: 'bundled <script setup> sample code',
+        target: FindComponentExposeScriptSetupBundled,
+        exposedProperty: 'exposedFn'
+      },
+      {
+        description: 'FindComponentExposeTemplate',
+        target: FindComponentExposeTemplate,
+        exposedProperty: 'exposedFn'
+      },
+      {
+        description: 'FindComponentExposeRenderFunction',
+        target: FindComponentExposeRenderFunction,
+        exposedProperty: 'exposedFn'
+      }
+    ])(
+      'when found component was defined with $description',
+      ({ target: ExposeTarget, exposedProperty }) => {
+        const wrapped = mount({
+          components: {
+            ExposeTarget
+          },
+          template: `<div><expose-target /></div>`
+        })
+
+        const target = wrapped.findComponent(ExposeTarget)
+
+        expect(target.exists()).toBe(true)
+        // @ts-ignore
+        expect(target.vm[exposedProperty]).toBeInstanceOf(Function)
+      }
+    )
+
+    // todo: using refs works without any code change.
+    it.each([
+      {
+        description: 'options.setup + template',
+        target: ExposeWithOptionsAndTemplate,
+        exposedProperty: 'exposedMethod1'
+      },
+      {
+        description: 'options.setup + render fn',
+        target: ExposeWithOptionsAndRenderFunction,
+        exposedProperty: 'exposedMethod1'
+      },
+      {
+        description: '<script setup> + defineExpose',
+        target: ExposeWithScriptSetup,
+        exposedProperty: 'exposedMethod1'
+      },
+      {
+        description: '<script> setup sample bundled code',
+        target: ExposeWithBundledCode,
+        exposedProperty: 'exposedMethod1'
+      },
+      // same as above but with simplified components for easier debugging
+      {
+        description: '<script setup> + defineExpose',
+        target: FindComponentExposeScriptSetup,
+        exposedProperty: 'exposedFn'
+      },
+      {
+        description: 'bundled <script setup> sample code',
+        target: FindComponentExposeScriptSetupBundled,
+        exposedProperty: 'exposedFn'
+      },
+      {
+        description: 'FindComponentExposeTemplate',
+        target: FindComponentExposeTemplate,
+        exposedProperty: 'exposedFn'
+      },
+      {
+        description: 'FindComponentExposeRenderFunction',
+        target: FindComponentExposeRenderFunction,
+        exposedProperty: 'exposedFn'
+      }
+    ])(
+      'workaround: using ref, when found component was defined with $description',
+      ({ target: ExposeTarget, exposedProperty }) => {
+        const wrapped = mount({
+          components: {
+            ExposeTarget
+          },
+          template: `<div><expose-target ref="foo"></div>`
+        })
+
+        const target = wrapped.findComponent({ ref: 'foo' })
+
+        expect(target.exists()).toBe(true)
+        // @ts-ignore
+        expect(target.vm[exposedProperty]).toBeInstanceOf(Function)
+      }
+    )
   })
 })
