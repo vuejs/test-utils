@@ -42,7 +42,7 @@
     "@vue/compiler-sfc": "3.5.13",
     "@vue/server-renderer": "3.5.13",
     "eslint": "9.17.0",
-    "eslint-config-prettier": "9.1.0",
+    "eslint-config-prettier": "10.0.1",
     "eslint-plugin-prettier": "5.2.1",
     "husky": "9.1.7",
     "jsdom": "26.0.0",
