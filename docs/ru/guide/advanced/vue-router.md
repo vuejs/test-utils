@@ -185,7 +185,7 @@ console.warn node_modules/@vue/runtime-core/dist/runtime-core.cjs.js:39
   [Vue warn]: Failed to resolve component: router-view
 ```
 
-`<router-link>` и `<router-view>` компоненты не найдены. Нам нужно установить Vue Router! Поскольку Vue Router - это плагин, мы установим его, используя `global.plugins` опцию в `mount`:
+`<router-link>` и `<router-view>` компоненты не найдены. Нам нужно установить Vue Router! Поскольку Vue Router - это плагин, мы установим его, используя `global.plugins` опцию монтирования:
 
 ```js {12,13,14}
 import { mount } from '@vue/test-utils'

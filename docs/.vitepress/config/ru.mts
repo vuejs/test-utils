@@ -91,7 +91,7 @@ export const ruConfig: LocaleSpecificConfig<DefaultTheme.Config> = {
             { text: 'Тестирование Vue Router', link: '/ru/guide/advanced/vue-router' },
             { text: 'Тестирование Teleport', link: '/ru/guide/advanced/teleport' },
             {
-              text: 'Stubs and Shallow Mount',
+              text: 'Заглушки и неглубокий Mount',
               link: '/ru/guide/advanced/stubs-shallow-mount'
             },
             {
