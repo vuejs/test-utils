@@ -139,7 +139,7 @@ export function isComponent(
 
 export function isFunctionalComponent(
   component: unknown
-): component is FunctionalComponent {
+): component is FunctionalComponent<any> {
   return typeof component === 'function' && !isClassComponent(component)
 }
 

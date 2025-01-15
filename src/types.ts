@@ -22,7 +22,7 @@ export interface NameSelector {
 
 export type FindAllComponentsSelector =
   | DefinedComponent
-  | FunctionalComponent
+  | FunctionalComponent<any>
   | ComponentOptions
   | NameSelector
   | string
