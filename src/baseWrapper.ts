@@ -133,11 +133,13 @@ export default abstract class BaseWrapper<ElementType extends Node>
   >
   // searching for component created via defineComponent results in VueWrapper of proper type
   findComponent<T extends DefinedComponent>(
-    selector: T | Exclude<FindComponentSelector, FunctionalComponent>
+    selector: T | Exclude<FindComponentSelector, FunctionalComponent<any>>
   ): VueWrapper<InstanceType<T>>
   // searching for functional component results in DOMWrapper
-  findComponent<T extends FunctionalComponent>(selector: T): DOMWrapper<Node>
-  findComponent<T extends FunctionalComponent>(
+  findComponent<T extends FunctionalComponent<any>>(
+    selector: T
+  ): DOMWrapper<Node>
+  findComponent<T extends FunctionalComponent<any>>(
     selector: string
   ): DOMWrapper<Element>
   // searching by name or ref always results in VueWrapper
@@ -189,12 +191,12 @@ export default abstract class BaseWrapper<ElementType extends Node>
 
   findAllComponents<T extends never>(selector: string): WrapperLike[]
   findAllComponents<T extends DefinedComponent>(
-    selector: T | Exclude<FindAllComponentsSelector, FunctionalComponent>
+    selector: T | Exclude<FindAllComponentsSelector, FunctionalComponent<any>>
   ): VueWrapper<InstanceType<T>>[]
-  findAllComponents<T extends FunctionalComponent>(
+  findAllComponents<T extends FunctionalComponent<any>>(
     selector: T
   ): DOMWrapper<Node>[]
-  findAllComponents<T extends FunctionalComponent>(
+  findAllComponents<T extends FunctionalComponent<any>>(
     selector: string
   ): DOMWrapper<Element>[]
   findAllComponents<T extends never>(selector: NameSelector): VueWrapper[]
@@ -296,10 +298,10 @@ export default abstract class BaseWrapper<ElementType extends Node>
 
   getComponent<T extends never>(selector: string): Omit<WrapperLike, 'exists'>
   getComponent<T extends DefinedComponent>(
-    selector: T | Exclude<FindComponentSelector, FunctionalComponent>
+    selector: T | Exclude<FindComponentSelector, FunctionalComponent<any>>
   ): Omit<VueWrapper<InstanceType<T>>, 'exists'>
   // searching for functional component results in DOMWrapper
-  getComponent<T extends FunctionalComponent>(
+  getComponent<T extends FunctionalComponent<any>>(
     selector: T | string
   ): Omit<DOMWrapper<Element>, 'exists'>
   // searching by name or ref always results in VueWrapper

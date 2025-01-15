@@ -5,6 +5,13 @@ import WrapperLike from '../src/interfaces/wrapperLike'
 
 const FuncComponent = () => 'hello'
 
+const FuncComponentWithProps = (props: { a: string }) => 'hello'
+
+const FuncComponentWithEmits = (
+  props: object,
+  ctx: { emit: (event: 'hi') => void }
+) => 'hello'
+
 const ComponentToFind = defineComponent({
   props: {
     a: {
@@ -43,6 +50,18 @@ expectType<VueWrapper<InstanceType<typeof ComponentWithEmits>>>(
 const functionalComponentByType = wrapper.findComponent(FuncComponent)
 expectType<DOMWrapper<Node>>(functionalComponentByType)
 
+// find by type - functional component with props
+const functionalComponentWithPropsByType = wrapper.findComponent(
+  FuncComponentWithProps
+)
+expectType<DOMWrapper<Node>>(functionalComponentWithPropsByType)
+
+// find by type - functional component with emits
+const functionalComponentWithEmitsByType = wrapper.findComponent(
+  FuncComponentWithEmits
+)
+expectType<DOMWrapper<Node>>(functionalComponentWithEmitsByType)
+
 // find by string
 const componentByString = wrapper.findComponent('.foo')
 expectType<WrapperLike>(componentByString)
@@ -57,6 +76,14 @@ expectType<VueWrapper<InstanceType<typeof ComponentToFind>>>(
 const functionalComponentByStringWithParam =
   wrapper.findComponent<typeof FuncComponent>('.foo')
 expectType<DOMWrapper<Element>>(functionalComponentByStringWithParam)
+
+const functionalComponentWithPropsByString =
+  wrapper.findComponent<typeof FuncComponentWithProps>('.foo')
+expectType<DOMWrapper<Element>>(functionalComponentWithPropsByString)
+
+const functionalComponentWithEmitsByString =
+  wrapper.findComponent<typeof FuncComponentWithEmits>('.foo')
+expectType<DOMWrapper<Element>>(functionalComponentWithEmitsByString)
 
 // find by ref
 const componentByRef = wrapper.findComponent({ ref: 'foo' })

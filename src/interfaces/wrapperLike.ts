@@ -34,9 +34,9 @@ export default interface WrapperLike {
 
   findComponent<T extends never>(selector: string): WrapperLike
   findComponent<T extends DefinedComponent>(
-    selector: T | Exclude<FindComponentSelector, FunctionalComponent>
+    selector: T | Exclude<FindComponentSelector, FunctionalComponent<any>>
   ): VueWrapper<InstanceType<T>>
-  findComponent<T extends FunctionalComponent>(
+  findComponent<T extends FunctionalComponent<any>>(
     selector: T | string
   ): DOMWrapper<Element>
   findComponent<T extends never>(
@@ -49,12 +49,12 @@ export default interface WrapperLike {
 
   findAllComponents<T extends never>(selector: string): WrapperLike[]
   findAllComponents<T extends DefinedComponent>(
-    selector: T | Exclude<FindAllComponentsSelector, FunctionalComponent>
+    selector: T | Exclude<FindAllComponentsSelector, FunctionalComponent<any>>
   ): VueWrapper<InstanceType<T>>[]
-  findAllComponents<T extends FunctionalComponent>(
+  findAllComponents<T extends FunctionalComponent<any>>(
     selector: string
   ): DOMWrapper<Element>[]
-  findAllComponents<T extends FunctionalComponent>(
+  findAllComponents<T extends FunctionalComponent<any>>(
     selector: T
   ): DOMWrapper<Node>[]
   findAllComponents<T extends never>(selector: NameSelector): VueWrapper[]
@@ -78,10 +78,10 @@ export default interface WrapperLike {
 
   getComponent<T extends never>(selector: string): Omit<WrapperLike, 'exists'>
   getComponent<T extends DefinedComponent>(
-    selector: T | Exclude<FindComponentSelector, FunctionalComponent>
+    selector: T | Exclude<FindComponentSelector, FunctionalComponent<any>>
   ): Omit<VueWrapper<InstanceType<T>>, 'exists'>
   // searching for functional component results in DOMWrapper
-  getComponent<T extends FunctionalComponent>(
+  getComponent<T extends FunctionalComponent<any>>(
     selector: T | string
   ): Omit<DOMWrapper<Element>, 'exists'>
   getComponent<T extends ComponentPublicInstance>(
