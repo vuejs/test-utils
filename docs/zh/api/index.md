@@ -1104,8 +1104,8 @@ test('findAll', () => {
 
 ```ts
 findComponent<T extends never>(selector: string): WrapperLike
-findComponent<T extends DefinedComponent>(selector: T | Exclude<FindComponentSelector, FunctionalComponent>): VueWrapper<InstanceType<T>>
-findComponent<T extends FunctionalComponent>(selector: T | string): DOMWrapper<Element>
+findComponent<T extends DefinedComponent>(selector: T | Exclude<FindComponentSelector, FunctionalComponent<any>>): VueWrapper<InstanceType<T>>
+findComponent<T extends FunctionalComponent<any>>(selector: T | string): DOMWrapper<Element>
 findComponent<T extends never>(selector: NameSelector | RefSelector): VueWrapper
 findComponent<T extends ComponentPublicInstance>(selector: T | FindComponentSelector): VueWrapper<T>
 findComponent(selector: FindComponentSelector): WrapperLike
@@ -1222,9 +1222,9 @@ wrapper.findComponent<DefineComponent>('.foo') // returns VueWrapper
 
 ```ts
 findAllComponents<T extends never>(selector: string): WrapperLike[]
-findAllComponents<T extends DefinedComponent>(selector: T | Exclude<FindAllComponentsSelector, FunctionalComponent>): VueWrapper<InstanceType<T>>[]
-findAllComponents<T extends FunctionalComponent>(selector: string): DOMWrapper<Element>[]
-findAllComponents<T extends FunctionalComponent>(selector: T): DOMWrapper<Node>[]
+findAllComponents<T extends DefinedComponent>(selector: T | Exclude<FindAllComponentsSelector, FunctionalComponent<any>>): VueWrapper<InstanceType<T>>[]
+findAllComponents<T extends FunctionalComponent<any>>(selector: string): DOMWrapper<Element>[]
+findAllComponents<T extends FunctionalComponent<any>>(selector: T): DOMWrapper<Node>[]
 findAllComponents<T extends never>(selector: NameSelector): VueWrapper[]
 findAllComponents<T extends ComponentPublicInstance>(selector: T | FindAllComponentsSelector): VueWrapper<T>[]
 findAllComponents(selector: FindAllComponentsSelector): WrapperLike[]
