@@ -25,7 +25,7 @@ export const ruConfig: LocaleSpecificConfig<DefaultTheme.Config> = {
     },
     nav: [
       { text: 'Руководство', link: '/ru/guide/' },
-      { text: 'API', link: '/api/' },
+      { text: 'API', link: '/ru/api/' },
       { text: 'Миграция с Vue 2', link: '/migration/' },
       {
         text: 'Changelog',
@@ -120,7 +120,7 @@ export const ruConfig: LocaleSpecificConfig<DefaultTheme.Config> = {
         },
         {
           text: 'API руководство',
-          link: '/api/'
+          link: '/ru/api/'
         }
       ]
     }
