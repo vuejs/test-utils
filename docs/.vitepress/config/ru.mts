@@ -26,7 +26,7 @@ export const ruConfig: LocaleSpecificConfig<DefaultTheme.Config> = {
     nav: [
       { text: 'Руководство', link: '/ru/guide/' },
       { text: 'API', link: '/ru/api/' },
-      { text: 'Миграция с Vue 2', link: '/migration/' },
+      { text: 'Миграция с Vue 2', link: '/ru/migration/' },
       {
         text: 'Changelog',
         link: 'https://github.com/vuejs/test-utils/releases'
@@ -103,7 +103,7 @@ export const ruConfig: LocaleSpecificConfig<DefaultTheme.Config> = {
         {
           text: 'Дополнительные темы',
           items: [
-            { text: 'Плагины', link: '/guide/extending-vtu/plugins' },
+            { text: 'Плагины', link: '/ru/guide/extending-vtu/plugins' },
             {
               text: 'Сообщество и обучение',
               link: '/ru/guide/extending-vtu/community-learning'
@@ -112,11 +112,11 @@ export const ruConfig: LocaleSpecificConfig<DefaultTheme.Config> = {
         },
         {
           text: 'Ответы на вопросы',
-          link: '/guide/faq/'
+          link: '/ru/guide/faq/'
         },
         {
           text: 'Миграция с Vue 2',
-          link: '/migration/'
+          link: '/ru/migration/'
         },
         {
           text: 'API руководство',
