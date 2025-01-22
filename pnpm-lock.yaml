@@ -103,11 +103,11 @@ importers:
         specifier: 6.0.11
         version: 6.0.11(@types/node@22.10.7)(yaml@2.6.1)
       vitepress:
-        specifier: 1.6.1
-        version: 1.6.1(@algolia/client-search@5.19.0)(@types/node@22.10.7)(postcss@8.4.49)(search-insights@2.7.0)(typescript@5.7.3)
+        specifier: 1.6.2
+        version: 1.6.2(@algolia/client-search@5.19.0)(@types/node@22.10.7)(postcss@8.4.49)(search-insights@2.7.0)(typescript@5.7.3)
       vitepress-translation-helper:
         specifier: 0.2.2
-        version: 0.2.2(vitepress@1.6.1(@algolia/client-search@5.19.0)(@types/node@22.10.7)(postcss@8.4.49)(search-insights@2.7.0)(typescript@5.7.3))(vue@3.5.13(typescript@5.7.3))
+        version: 0.2.2(vitepress@1.6.2(@algolia/client-search@5.19.0)(@types/node@22.10.7)(postcss@8.4.49)(search-insights@2.7.0)(typescript@5.7.3))(vue@3.5.13(typescript@5.7.3))
       vitest:
         specifier: 3.0.3
         version: 3.0.3(@types/node@22.10.7)(jsdom@26.0.0)(yaml@2.6.1)
@@ -957,26 +957,26 @@ packages:
     cpu: [x64]
     os: [win32]
 
-  '@shikijs/core@2.0.3':
-    resolution: {integrity: sha512-dhbLagx1As0BmaNGUTxJ/qshb4MPyKYIvjCcd7y1utDToebUS4BZI3FH+WVCJF3/VwWWKOhuzX4lgjOb7qtSjQ==}
+  '@shikijs/core@2.1.0':
+    resolution: {integrity: sha512-v795KDmvs+4oV0XD05YLzfDMe9ISBgNjtFxP4PAEv5DqyeghO1/TwDqs9ca5/E6fuO95IcAcWqR6cCX9TnqLZA==}
 
-  '@shikijs/engine-javascript@2.0.3':
-    resolution: {integrity: sha512-GMmfP8xEmUl0H7RXo4VTFYqAWzAADtlghA9perlm6mzuo0n/Ih+owh57ZLWBMMe/N1TUMis4SGJRvx31HtK3jg==}
+  '@shikijs/engine-javascript@2.1.0':
+    resolution: {integrity: sha512-cgIUdAliOsoaa0rJz/z+jvhrpRd+fVAoixVFEVxUq5FA+tHgBZAIfVJSgJNVRj2hs/wZ1+4hMe82eKAThVh0nQ==}
 
-  '@shikijs/engine-oniguruma@2.0.3':
-    resolution: {integrity: sha512-MicRzo0aNaS18yXBnXjYFLnzi5Sh3NUHtm/WXzavtpGiWd75gRdZsZDMceeFyTL9MMy9iGifK2JePXY5dlZHIA==}
+  '@shikijs/engine-oniguruma@2.1.0':
+    resolution: {integrity: sha512-Ujik33wEDqgqY2WpjRDUBECGcKPv3eGGkoXPujIXvokLaRmGky8NisSk8lHUGeSFxo/Cz5sgFej9sJmA9yeepg==}
 
-  '@shikijs/langs@2.0.3':
-    resolution: {integrity: sha512-L+QcwH6tjVY21xDxe3etR+C+33mAbkyQVvUIsszwnQrRVI54r7VPNTMVWR4EbZfPFwWmwLCoO83V5YiBWusvVg==}
+  '@shikijs/langs@2.1.0':
+    resolution: {integrity: sha512-Jn0gS4rPgerMDPj1ydjgFzZr5fAIoMYz4k7ZT3LJxWWBWA6lokK0pumUwVtb+MzXtlpjxOaQejLprmLbvMZyww==}
 
-  '@shikijs/themes@2.0.3':
-    resolution: {integrity: sha512-NFnArltjzmYAssn1SLIFlKX9HJEL9K12z0uBB0tg579hW6UHIXwfd+AhsaB/+cXYLix2YuN5uEPJpqtRN2zi0A==}
+  '@shikijs/themes@2.1.0':
+    resolution: {integrity: sha512-oS2mU6+bz+8TKutsjBxBA7Z3vrQk21RCmADLpnu8cy3tZD6Rw0FKqDyXNtwX52BuIDKHxZNmRlTdG3vtcYv3NQ==}
 
-  '@shikijs/transformers@2.0.3':
-    resolution: {integrity: sha512-Y5qmHA2LyoXccq6IPP5AeGqialn54ZORPBxbyNH+NEbCaw1nTCCy+Tfm3idRkqYLZOw0yq+0MUSDWbGezHksow==}
+  '@shikijs/transformers@2.1.0':
+    resolution: {integrity: sha512-3sfvh6OKUVkT5wZFU1xxiq1qqNIuCwUY3yOb9ZGm19y80UZ/eoroLE2orGNzfivyTxR93GfXXZC/ghPR0/SBow==}
 
-  '@shikijs/types@2.0.3':
-    resolution: {integrity: sha512-jyP6NMdWkbBpEn3WqqH8TCfkzE52/hS7msKGJAvxcwyQQah7+hU8x7ejFhCVoxrBaW001v+ID4zl3wspcDSaaw==}
+  '@shikijs/types@2.1.0':
+    resolution: {integrity: sha512-OFOdHA6VEVbiQvepJ8yqicC6VmBrKxFFhM2EsHHrZESqLVAXOSeRDiuSYV185lIgp15TVic5vYBYNhTsk1xHLg==}
 
   '@shikijs/vscode-textmate@10.0.1':
     resolution: {integrity: sha512-fTIQwLF+Qhuws31iw7Ncl1R3HUDtGwIipiJ9iU+UsDUwMhegFcQKQHd51nZjb7CArq0MvON8rbgCGQYWHUKAdg==}
@@ -2297,8 +2297,8 @@ packages:
     resolution: {integrity: sha512-7++dFhtcx3353uBaq8DDR4NuxBetBzC7ZQOhmTQInHEd6bSrXdiEyzCvG07Z44UYdLShWUyXt5M/yhz8ekcb1A==}
     engines: {node: '>=8'}
 
-  shiki@2.0.3:
-    resolution: {integrity: sha512-njF3iF97mxWcEFxxB591EeVFgf5VPpXJKFIB3RCFSkcgINetMIb+9CfNInmzkz8BlPWlEEY1nSGd0F1807YhCg==}
+  shiki@2.1.0:
+    resolution: {integrity: sha512-yvKPdNGLXZv7WC4bl7JBbU3CEcUxnBanvMez8MG3gZXKpClGL4bHqFyLhTx+2zUvbjClUANs/S22HXb7aeOgmA==}
 
   siginfo@2.0.0:
     resolution: {integrity: sha512-ybx0WO1/8bSBLEWXZvEd7gMW3Sn3JFlW3TvX1nREbDLRNQNaeNN8WK0meBwPdAaOI7TtRRRJn/Es1zhrrCHu7g==}
@@ -2600,8 +2600,8 @@ packages:
       vitepress: ^1.0.0
       vue: ^3.4.8
 
-  vitepress@1.6.1:
-    resolution: {integrity: sha512-n41KBL08aonxaWMnk5V+TkpZ29rZF4sgYjvIqU2k0foteNhgms5BmbVWw9xTqD5hps12H1W+EZUwc7NlHh1s3g==}
+  vitepress@1.6.2:
+    resolution: {integrity: sha512-pKAgner8wqetwyL6VyjhJnrw/Kwc8hNlwaS/efUlEBhQsRiCvjIsKqjWyjyUMa6u39ktMle16nYAUOcZ6MhV6Q==}
     hasBin: true
     peerDependencies:
       markdown-it-mathjax3: ^4
@@ -3477,40 +3477,40 @@ snapshots:
   '@rollup/rollup-win32-x64-msvc@4.31.0':
     optional: true
 
-  '@shikijs/core@2.0.3':
+  '@shikijs/core@2.1.0':
     dependencies:
-      '@shikijs/engine-javascript': 2.0.3
-      '@shikijs/engine-oniguruma': 2.0.3
-      '@shikijs/types': 2.0.3
+      '@shikijs/engine-javascript': 2.1.0
+      '@shikijs/engine-oniguruma': 2.1.0
+      '@shikijs/types': 2.1.0
       '@shikijs/vscode-textmate': 10.0.1
       '@types/hast': 3.0.4
       hast-util-to-html: 9.0.4
 
-  '@shikijs/engine-javascript@2.0.3':
+  '@shikijs/engine-javascript@2.1.0':
     dependencies:
-      '@shikijs/types': 2.0.3
+      '@shikijs/types': 2.1.0
       '@shikijs/vscode-textmate': 10.0.1
       oniguruma-to-es: 2.3.0
 
-  '@shikijs/engine-oniguruma@2.0.3':
+  '@shikijs/engine-oniguruma@2.1.0':
     dependencies:
-      '@shikijs/types': 2.0.3
+      '@shikijs/types': 2.1.0
       '@shikijs/vscode-textmate': 10.0.1
 
-  '@shikijs/langs@2.0.3':
+  '@shikijs/langs@2.1.0':
     dependencies:
-      '@shikijs/types': 2.0.3
+      '@shikijs/types': 2.1.0
 
-  '@shikijs/themes@2.0.3':
+  '@shikijs/themes@2.1.0':
     dependencies:
-      '@shikijs/types': 2.0.3
+      '@shikijs/types': 2.1.0
 
-  '@shikijs/transformers@2.0.3':
+  '@shikijs/transformers@2.1.0':
     dependencies:
-      '@shikijs/core': 2.0.3
-      '@shikijs/types': 2.0.3
+      '@shikijs/core': 2.1.0
+      '@shikijs/types': 2.1.0
 
-  '@shikijs/types@2.0.3':
+  '@shikijs/types@2.1.0':
     dependencies:
       '@shikijs/vscode-textmate': 10.0.1
       '@types/hast': 3.0.4
@@ -4960,14 +4960,14 @@ snapshots:
 
   shebang-regex@3.0.0: {}
 
-  shiki@2.0.3:
+  shiki@2.1.0:
     dependencies:
-      '@shikijs/core': 2.0.3
-      '@shikijs/engine-javascript': 2.0.3
-      '@shikijs/engine-oniguruma': 2.0.3
-      '@shikijs/langs': 2.0.3
-      '@shikijs/themes': 2.0.3
-      '@shikijs/types': 2.0.3
+      '@shikijs/core': 2.1.0
+      '@shikijs/engine-javascript': 2.1.0
+      '@shikijs/engine-oniguruma': 2.1.0
+      '@shikijs/langs': 2.1.0
+      '@shikijs/themes': 2.1.0
+      '@shikijs/types': 2.1.0
       '@shikijs/vscode-textmate': 10.0.1
       '@types/hast': 3.0.4
 
@@ -5230,23 +5230,23 @@ snapshots:
       fsevents: 2.3.3
       yaml: 2.6.1
 
-  vitepress-translation-helper@0.2.2(vitepress@1.6.1(@algolia/client-search@5.19.0)(@types/node@22.10.7)(postcss@8.4.49)(search-insights@2.7.0)(typescript@5.7.3))(vue@3.5.13(typescript@5.7.3)):
+  vitepress-translation-helper@0.2.2(vitepress@1.6.2(@algolia/client-search@5.19.0)(@types/node@22.10.7)(postcss@8.4.49)(search-insights@2.7.0)(typescript@5.7.3))(vue@3.5.13(typescript@5.7.3)):
     dependencies:
       minimist: 1.2.8
       simple-git: 3.23.0
-      vitepress: 1.6.1(@algolia/client-search@5.19.0)(@types/node@22.10.7)(postcss@8.4.49)(search-insights@2.7.0)(typescript@5.7.3)
+      vitepress: 1.6.2(@algolia/client-search@5.19.0)(@types/node@22.10.7)(postcss@8.4.49)(search-insights@2.7.0)(typescript@5.7.3)
       vue: 3.5.13(typescript@5.7.3)
     transitivePeerDependencies:
       - supports-color
 
-  vitepress@1.6.1(@algolia/client-search@5.19.0)(@types/node@22.10.7)(postcss@8.4.49)(search-insights@2.7.0)(typescript@5.7.3):
+  vitepress@1.6.2(@algolia/client-search@5.19.0)(@types/node@22.10.7)(postcss@8.4.49)(search-insights@2.7.0)(typescript@5.7.3):
     dependencies:
       '@docsearch/css': 3.8.3
       '@docsearch/js': 3.8.3(@algolia/client-search@5.19.0)(search-insights@2.7.0)
       '@iconify-json/simple-icons': 1.2.21
-      '@shikijs/core': 2.0.3
-      '@shikijs/transformers': 2.0.3
-      '@shikijs/types': 2.0.3
+      '@shikijs/core': 2.1.0
+      '@shikijs/transformers': 2.1.0
+      '@shikijs/types': 2.1.0
       '@types/markdown-it': 14.1.2
       '@vitejs/plugin-vue': 5.2.1(vite@5.4.14(@types/node@22.10.7))(vue@3.5.13(typescript@5.7.3))
       '@vue/devtools-api': 7.7.0
@@ -5256,7 +5256,7 @@ snapshots:
       focus-trap: 7.6.4
       mark.js: 8.11.1
       minisearch: 7.1.1
-      shiki: 2.0.3
+      shiki: 2.1.0
       vite: 5.4.14(@types/node@22.10.7)
       vue: 3.5.13(typescript@5.7.3)
     optionalDependencies:
