@@ -61,7 +61,8 @@ test('emits an event with count when clicked', () => {
   wrapper.find('button').trigger('click')
   wrapper.find('button').trigger('click')
 
-  // `emitted()` 接受一个参数。它返回一个包含所有 `this.$emit('increment')` 发生情况的数组。
+  // `emitted()` 接受一个参数。
+  // 它返回一个包含所有 `this.$emit('increment')` 发生情况的数组。
   const incrementEvent = wrapper.emitted('increment')
 
   // 我们“点击”了两次，所以 `increment` 的数组应该有两个值。
