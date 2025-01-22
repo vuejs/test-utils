@@ -20,7 +20,7 @@
 // setup.js файл
 import { config } from '@vue/test-utils'
 
-// Локально написанный плагин, смотрите "Writing a Plugin"
+// Локально написанный плагин, смотрите "Написание плагина"
 import MyPlugin from './myPlugin'
 
 // Установить плагин в VueWrapper
@@ -113,7 +113,7 @@ const DataTestIdPlugin = (wrapper) => {
 config.plugins.VueWrapper.install(DataTestIdPlugin)
 ```
 
-## Stubs Plugin
+## Пользовательская заглушка для плагина
 
 `config.plugins.createStubs` позволяет перезаписать стандартное создание заглушек, предоставляемое VTU.
 
