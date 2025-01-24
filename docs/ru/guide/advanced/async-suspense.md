@@ -8,7 +8,7 @@
 
 ## Простой пример - Обновление при помощи `trigger`
 
-Давайте пере используем `<Counter>` компонент из [обработка события](/ru/guide/essentials/event-handling) с одним изменением; мы сейчас отразим `count` в `template`.
+Давайте используем компонент `<Counter>` из [обработка события](/ru/guide/essentials/event-handling) с одним изменением; мы сейчас отобразим `count` в `template`.
 
 ```js
 const Counter = {
