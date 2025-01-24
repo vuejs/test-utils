@@ -47,7 +47,7 @@ test('increments by 1', () => {
 Если ты хочешь изучить больше об этом базовом JavaScript поведении, прочитайте про [Event Loop и его macrotasks и microtasks](https://javascript.info/event-loop#macrotasks-and-microtasks).
 :::
 
-Как мы можем изменить это? Vue в действительности предоставляет возможность нам ждать, пока DOM не обновится: `nextTick`.
+Как мы можем изменить это? Vue предоставляет нам способ дождаться обновления DOM – `nextTick`.
 
 ```js {1,7}
 import { nextTick } from 'vue'
