@@ -58,7 +58,7 @@
     "vite": "6.0.11",
     "vitepress": "1.6.3",
     "vitepress-translation-helper": "0.2.2",
-    "vitest": "3.0.4",
+    "vitest": "3.0.5",
     "vue": "3.5.13",
     "vue-class-component": "8.0.0-rc.1",
     "vue-router": "4.5.0",
