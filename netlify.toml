@@ -7,3 +7,5 @@
   command = "pnpm docs:build"
 [build.environment]
   NODE_VERSION = "18"
+  # Useful until https://github.com/nodejs/corepack/issues/612 is fixed
+  COREPACK_INTEGRITY_KEYS = "0"

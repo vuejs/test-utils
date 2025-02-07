@@ -15,6 +15,9 @@ importers:
         specifier: ^2.0.0
         version: 2.0.1
     devDependencies:
+      '@eslint/js':
+        specifier: 9.19.0
+        version: 9.19.0
       '@rollup/plugin-commonjs':
         specifier: 28.0.2
         version: 28.0.2(rollup@4.32.1)
