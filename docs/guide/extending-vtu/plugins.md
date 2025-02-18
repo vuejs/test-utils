@@ -43,7 +43,7 @@ Some plugins automatically call `config.plugins.VueWrapper.install()` when
 they're imported. This is common if they're extending multiple interfaces at
 once. Follow the instructions of the plugin you're installing.
 
-Check out the [Vue Community Guide](https://vue-community.org/guide/ecosystem/testing.html) or [awesome-vue](https://github.com/vuejs/awesome-vue#test) for a collection of community-contributed plugins and libraries.
+Check out [awesome-vue](https://github.com/vuejs/awesome-vue#test) for a collection of community-contributed plugins and libraries.
 
 ### Writing a Plugin
 
