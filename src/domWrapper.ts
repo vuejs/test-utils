@@ -1,3 +1,4 @@
+import { VNode } from 'vue'
 import { config } from './config'
 import BaseWrapper from './baseWrapper'
 import WrapperLike from './interfaces/wrapperLike'
@@ -11,16 +12,24 @@ import { isRefSelector } from './utils'
 import { createWrapperError } from './errorWrapper'
 
 export class DOMWrapper<NodeType extends Node> extends BaseWrapper<NodeType> {
-  constructor(element: NodeType | null | undefined) {
+  protected readonly subTree: VNode | null | undefined = null
+
+  constructor(element: NodeType | null | undefined, subTree?: VNode | null) {
     if (!element) {
       return createWrapperError('DOMWrapper')
     }
     super(element)
+    this.subTree = subTree
+
     // plugins hook
     config.plugins.DOMWrapper.extend(this)
   }
 
   getRootNodes() {
+    if (Array.isArray(this.subTree?.children)) {
+      // Any type should be fixed
+      return this.subTree.children.map((node) => (node as any)?.el)
+    }
     return [this.wrapperElement]
   }
 
@@ -64,7 +73,7 @@ export class DOMWrapper<NodeType extends Node> extends BaseWrapper<NodeType> {
     }
     return Array.from(
       this.wrapperElement.querySelectorAll(selector),
-      createDOMWrapper
+      (element) => createDOMWrapper(element)
     )
   }
 
@@ -155,4 +164,7 @@ export class DOMWrapper<NodeType extends Node> extends BaseWrapper<NodeType> {
   }
 }
 
-registerFactory(WrapperType.DOMWrapper, (element) => new DOMWrapper(element))
+registerFactory(
+  WrapperType.DOMWrapper,
+  (element, subTree) => new DOMWrapper(element, subTree)
+)
