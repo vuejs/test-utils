@@ -1,6 +1,6 @@
 # 组件实例
 
-[`mount`](/api/#mount) 返回一个 `VueWrapper`，提供了许多方便的测试 Vue 组件的方法。有时你可能希望访问底层的 Vue 实例。可以通过 `vm` 属性访问它。
+[`mount`](/api/#mount) 会返回一个 `VueWrapper`，它提供了许多方便的测试 Vue 组件的方法。有时你可能希望访问底层的 Vue 实例，通过 `vm` 属性访问它即可。
 
 ## 简单示例
 
@@ -40,9 +40,9 @@ test('renders a greeting', () => {
 
 我们可以看到 `msg1` 和 `msg2`！如果定义了 `methods` 和 `computed` 属性，它们也会显示出来。在编写测试时，虽然通常建议对 DOM 进行断言 (使用 `wrapper.html()` 等)，但在一些特殊情况下，你可能需要访问底层的 Vue 实例。
 
-## 与 `getComponent` 和 `findComponent` 的使用
+## `getComponent` 和 `findComponent` 的用法
 
-`getComponent` 和 `findComponent` 返回一个 `VueWrapper`，与从 `mount` 获取的相似。这意味着你也可以在 `getComponent` 或 `findComponent` 的结果上访问所有相同的属性，包括 `vm`。
+`getComponent` 和 `findComponent` 返回一个 `VueWrapper`，与通过 `mount` 获取的相似。这意味着你也可以在 `getComponent` 或 `findComponent` 的结果上访问所有相同的属性，包括 `vm`。
 
 下面是一个简单的示例：
 
@@ -65,17 +65,16 @@ test('asserts correct props are passed', () => {
 })
 ```
 
-一种更彻底的测试方式是对渲染的内容进行断言。这样可以确保正确的 prop 被传递*并*渲染。
+一种更彻底的测试方式是对渲染的内容进行断言。这样可以确保 prop 被正确地传递*并*渲染。
 
 :::warning 使用 CSS 选择器时的 WrapperLike 类型
-例如，当使用 `wrapper.findComponent('.foo')` 时，VTU 将返回 `WrapperLike` 类型。这是因为功能组件需要一个 `DOMWrapper`，否则返回 `VueWrapper`。你可以通过提供正确的组件类型来强制返回 `VueWrapper`：
+例如，当使用 `wrapper.findComponent('.foo')` 时，VTU 将返回 `WrapperLike` 类型。这是因为函数式组件需要一个 `DOMWrapper`，否则将返回一个 `VueWrapper`。你可以通过提供正确的组件类型来强制返回一个 `VueWrapper`：
 
 ```typescript
 wrapper.findComponent('.foo') // 返回 WrapperLike
 wrapper.findComponent<typeof FooComponent>('.foo') // 返回 VueWrapper
 wrapper.findComponent<DefineComponent>('.foo') // 返回 VueWrapper
 ```
-
 :::
 
 ## 结论
