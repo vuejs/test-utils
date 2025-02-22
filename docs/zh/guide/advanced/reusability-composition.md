@@ -35,7 +35,7 @@ test('increase counter on call', () => {
 })
 ```
 
-对于更复杂的组合式函数，使用了生命周期钩子如 `onMounted` 或 `provide`/`inject` 处理，你可以创建一个简单的测试助手组件。以下组合式函数在 `onMounted` 钩子中获取用户数据。
+对于更复杂的，使用了如 `onMounted` 的生命周期钩子或 `provide`/`inject` 的组合式函数，你可以创建一个简单的辅助测试组件。以下组合式函数会在 `onMounted` 钩子中获取用户数据。
 
 ```typescript
 export function useUser(userId) {
@@ -51,7 +51,7 @@ export function useUser(userId) {
 }
 ```
 
-要测试这个组合式函数，你可以在测试中创建一个简单的 `TestComponent`。`TestComponent` 应该与真实组件相同的方式使用组合式函数。
+要测试这个组合式函数，你可以在测试中创建一个简单的 `TestComponent`。`TestComponent` 应该以真实组件相同的方式使用组合式函数。
 
 ```typescript
 // 模拟 API 请求
@@ -68,7 +68,8 @@ test('fetch user on mount', async () => {
     },
     setup(props) {
       return {
-        // 调用组合式函数并将所有返回值暴露到我们的组件实例中，以便我们可以通过 wrapper.vm 访问它们
+        // 调用组合式函数并将所有返回值暴露到我们的组件实例中，
+        // 以便我们可以通过 wrapper.vm 访问它们
         ...useUser(props.userId)
       }
     }
@@ -108,7 +109,7 @@ provide('my-key', 'some-data')
 </script>
 ```
 
-在这种情况下，你可以渲染一个实际的子组件并测试 `provide` 的正确用法，或者你可以创建一个简单的测试助手组件并将其传递到默认插槽中。
+在这种情况下，你可以渲染一个实际的子组件并测试 `provide` 的正确用法，或者你可以创建一个简单的辅助测试组件并将其传递到默认插槽中。
 
 ```typescript
 test('provides correct data', () => {
@@ -130,7 +131,7 @@ test('provides correct data', () => {
 })
 ```
 
-如果你的组件不包含插槽，你可以使用 [`stub`](./stubs-shallow-mount.md#Stubbing-a-single-child-component) 替换子组件为你的测试助手：
+如果你的组件不包含插槽，你可以使用 [`stub`](./stubs-shallow-mount.md#Stubbing-a-single-child-component) 将一个子组件替换为辅助测试组件：
 
 ```vue
 <template>
@@ -204,7 +205,7 @@ test('renders correct data', () => {
 
 ## 结论
 
-- 测试简单的组合式函数时无需组件和 `@vue/test-utils`
-- 创建测试助手组件以测试更复杂的组合式函数
-- 创建测试助手组件以测试你的组件是否通过 `provide` 提供正确的数据
+- 测试简单的组合式函数时无需额外的组件或 `@vue/test-utils`
+- 创建辅助测试组件以测试更复杂的组合式函数
+- 创建辅助测试组件以测试你的组件是否通过 `provide` 提供正确的数据
 - 使用 `global.provide` 将数据传递给使用 `inject` 的组件
