@@ -1,10 +1,10 @@
 # 测试 `v-model`
 
-在编写依赖于 `v-model` 交互的组件时 (即 `update:modelValue` 事件)，需要处理 `event` 和 `props`。
+在编写基于 `v-model` 交互 (即 `update:modelValue` 事件) 的组件时，你需要处理 `event` 和 `props`。
 
-可以查看 [“vmodel integration” 讨论](https://github.com/vuejs/test-utils/discussions/279)获取一些社区解决方案。
+查阅[“vmodel integration”讨论](https://github.com/vuejs/test-utils/discussions/279)获取一些社区的解决方案。
 
-有关 v-model 事件的更多信息，请查看 [VueJS VModel 事件文档](https://vuejs.org/guide/components/events.html#usage-with-v-model)。
+查阅 [VueJS VModel 事件文档](https://vuejs.org/guide/components/events.html#usage-with-v-model)。
 
 ## 简单的示例
 
@@ -24,7 +24,7 @@ const Editor = {
 }
 ```
 
-这个组件将表现得像一个输入组件：
+这个组件表现得像一个输入组件：
 
 ```js
 const App = {
@@ -60,9 +60,9 @@ test('modelValue should be updated', async () => {
 
 # 多个 `v-model`
 
-在某些情况下，我们可以有多个 `v-model` 定向到特定属性。
+在某些情况下，我们可以通过多个 `v-model` 定向到特定的多个属性。
 
-例如在一个货币编辑器中，我们可以有 `currency` 和 `modelValue` 属性。
+例如在一个货币编辑器中，我们有 `currency` 和 `modelValue` 属性。
 
 ```js
 const MoneyEditor = {
@@ -75,7 +75,7 @@ const MoneyEditor = {
 }
 ```
 
-我们可以通过以下方式测试这两个属性：
+我们可以这样测试这它们：
 
 ```js
 test('modelValue and currency should be updated', async () => {
