@@ -1,8 +1,8 @@
-# 桩 (Stubs) 与浅层挂载
+# 测试替身 (stub) 与浅挂载
 
-Vue Test Utils 提供了一些高级功能用于*桩*组件和指令。*桩*是指将自定义组件或指令的现有实现替换为一个不执行任何操作的虚拟实现，这可以简化本来复杂的测试。让我们来看一个例子。
+Vue Test Utils 提供了一些高级功能用于为组件和指令*创建测试替身* (stubbing)。*测试替身* (stub) 是指将自定义组件或指令的现有实现替换为一个不执行任何操作的虚拟实现，这可以简化本来复杂的测试。让我们来看一个例子。
 
-## 桩化单个子组件
+## 为单个子组件创建测试替身
 
 一个常见的例子是当你想要测试一个在组件层级中非常高的组件时。
 
@@ -57,9 +57,9 @@ test('stubs component with custom template', () => {
 })
 ```
 
-注意，模板中显示的是 `<span></span>`，而不是 `<fetch-data-from-api />`。我们用一个桩替换了它——在这种情况下，我们通过传入一个 `template` 提供了自己的实现。
+注意，模板中显示的是 `<span></span>`，而不是 `<fetch-data-from-api />`。我们用一个测试替身替换了它，在这种情况下，我们通过传入一个 `template` 提供了自己的实现。
 
-你也可以获取一个默认的桩，而不需要提供自己的实现：
+你也可以获取一个默认的测试替身，而不需要提供自己的实现：
 
 ```js
 test('stubs component', () => {
@@ -81,15 +81,15 @@ test('stubs component', () => {
 })
 ```
 
-这将桩化整个渲染树中的*所有* `<FetchDataFromApi />` 组件，而不管它们出现在哪个层级。这就是为什么它在 `global` 挂载选项中的原因。
+这将为整个渲染树中的*所有* `<FetchDataFromApi />` 组件创建测试替身，而不管它们出现在哪个层级。这就是为什么它在 `global` 挂载选项中的原因。
 
 ::: tip
 要桩化组件，你可以使用 `components` 中的键或组件的名称。如果在 `global.stubs` 中同时给出这两者，将优先使用键。
 :::
 
-## 桩化所有子组件
+## 为所有子组件创建测试替身
 
-有时你可能想要桩化*所有*自定义组件。例如，你可能有这样的组件：
+有时你可能想要为*所有*自定义组件创建测试替身。例如，你可能有这样的组件：
 
 ```js
 const ComplexComponent = {
@@ -103,7 +103,7 @@ const ComplexComponent = {
 }
 ```
 
-想象一下，每个 `<Complex>` 组件都做一些复杂的事情，而你只对测试 `<h1>` 是否渲染正确的问候语感兴趣。你可以这样做：
+想象一下，每个 `<Complex>` 组件都会做一些复杂的事情，而你只对测试 `<h1>` 是否渲染正确的问候语感兴趣。那么你可以这样做：
 
 ```js
 const wrapper = mount(ComplexComponent, {
@@ -117,7 +117,7 @@ const wrapper = mount(ComplexComponent, {
 })
 ```
 
-但这需要很多样板代码。VTU 有一个 `shallow` 挂载选项，可以自动桩化所有子组件：
+但这需要很多样板代码。VTU 有一个 `shallow` 挂载选项，可以自动为所有子组件创建测试替身：
 
 ```js {3}
 test('shallow stubs out all child components', () => {
@@ -136,12 +136,12 @@ test('shallow stubs out all child components', () => {
 ```
 
 ::: tip
-如果你使用的是 VTU V1，你可能记得这个方法叫 `shallowMount`。这个方法仍然可用——它与写 `shallow: true` 是一样的。
+如果你使用的是 VTU V1，你可能记得这个方法叫 `shallowMount`。这个方法仍然可用，它与写 `shallow: true` 是一样的。
 :::
 
-## 桩化所有子组件但有例外
+## 为所有子组件创建测试替身同时接受例外
 
-有时你想要桩化*所有*自定义组件，除了特定的一个。让我们考虑一个例子：
+有时你想要为*所有*自定义组件创建测试替身，但除了特定的一个。让我们考虑一个例子：
 
 ```js
 const ComplexA = {
@@ -159,7 +159,7 @@ const ComplexComponent = {
 }
 ```
 
-通过使用 `shallow` 挂载选项，可以自动桩化所有子组件。如果我们想要明确选择不桩化特定组件，可以在 `stubs` 中提供其名称，值设置为 `false。`
+通过使用 `shallow` 挂载选项，可以自动为所有子组件创建测试替身。如果我们想要明确选择不为某个特定组件创建测试替身，可以在 `stubs` 中提供其名称，值设置为 `false。`
 
 ```js {3}
 test('shallow allows opt-out of stubbing specific component', () => {
@@ -180,9 +180,9 @@ test('shallow allows opt-out of stubbing specific component', () => {
 })
 ```
 
-## 桩化异步组件
+## 为异步组件创建测试替身
 
-如果你想要桩化一个异步组件，则有两种行为。例如，你可能有这样的组件：
+如果你想要为一个异步组件创建测试替身，则有两种做法。例如，你可能有这样的组件：
 
 ```js
 // AsyncComponent.js
@@ -200,8 +200,7 @@ const App = defineComponent({
 })
 ```
 
-第一种行为是使用你在组件中定义的键来加载异步组件。在这个例子中，我们使用了键 “MyComponent”。
-在测试用例中不需要使用 `async/await`，因为组件在解析之前已经被桩化。
+第一种做法是使用你在组件中定义的键来加载异步组件。在这个例子中，我们使用了键 “MyComponent”。在测试用例中不需要使用 `async/await`，因为组件在解析之前已经被创建了测试替身。
 
 ```js
 test('stubs async component without resolving', () => {
@@ -217,8 +216,7 @@ test('stubs async component without resolving', () => {
 })
 ```
 
-第二种行为是使用异步组件的名称。在这个例子中，我们使用了名称 “AsyncComponent”。
-现在需要使用 `async/await`，因为异步组件需要解析，然后才能通过在异步组件中定义的名称进行桩化。
+第二种做法是使用异步组件的名称。在这个例子中，我们使用了名称 “AsyncComponent”。现在需要使用 `async/await`，因为异步组件需要解析，然后才能通过在异步组件中定义的名称创建测试替身。
 
 **确保在异步组件中定义名称！**
 
@@ -238,7 +236,7 @@ test('stubs async component with resolving', async () => {
 })
 ```
 
-## 桩化指令
+## 为指令创建测试替身
 
 有时指令会执行非常复杂的操作，比如进行大量的 DOM 操作，这可能导致测试中的错误 (由于 JSDOM 与整个 DOM 行为不相似)。一个常见的例子是来自各种库的工具提示指令，它们通常严重依赖于测量 DOM 节点的位置/大小。
 
@@ -275,10 +273,10 @@ test('stubs component with custom template', () => {
 ```
 
 ::: tip
-使用 `vCustomDirective` 命名方案来区分组件和指令，灵感来自于[相同方法](https://vuejs.org/api/sfc-script-setup.html#using-custom-directives)在 `<script setup>` 中的使用。
+使用 `vCustomDirective` 命名方案来区分组件和指令，灵感来自于[同一方案](https://vuejs.org/api/sfc-script-setup.html#using-custom-directives)在 `<script setup>` 中的使用。
 :::
 
-有时，我们需要指令功能的一部分 (通常是因为某些代码依赖于它)。假设我们的指令在执行时添加 `with-tooltip` CSS 类，而这对我们的代码是重要的行为。在这种情况下，我们可以用我们的模拟指令实现替换 `true`。
+有时，我们需要指令功能的一部分 (通常是因为某些代码依赖于它)。假设我们的指令在执行时添加 `with-tooltip` CSS 类，而这一行为对于我们的代码至关重要。这时我们可以用模拟指令实现替换 `true`。
 
 ```js
 test('stubs component with custom template', () => {
@@ -307,12 +305,12 @@ test('stubs component with custom template', () => {
 我们刚刚用自己的实现替换了指令的实现！
 
 ::: warning
-桩化指令在功能组件或 `<script setup>` 中不起作用，因为在 [withDirectives](https://vuejs.org/api/render-function.html#withdirectives) 函数中缺少指令名称。如果你需要模拟在功能组件中使用的指令，请考虑通过你的测试框架模拟指令模块。请参见 <https://github.com/vuejs/core/issues/6887> 以解锁此功能。
+为指令创建测试替身在函数式组件或 `<script setup>` 中不起作用，因为在 [withDirectives](https://vuejs.org/api/render-function.html#withdirectives) 函数中缺少指令名称。如果你需要模拟在函数式组件中使用的指令，请考虑通过你的测试框架模拟指令模块。请参见 https://github.com/vuejs/core/issues/6887 以解锁此功能。
 :::
 
 ## 默认插槽和 `shallow`
 
-由于 `shallow` 会桩化组件的所有内容，因此在使用 `shallow` 时，任何 `<slot>` 都不会被渲染。虽然在大多数情况下这不是问题，但在某些场景下这并不理想。
+由于 `shallow` 会为组件的所有内容创建测试替身，因此在使用 `shallow` 时，任何 `<slot>` 都不会被渲染。虽然在大多数情况下这不是问题，但在某些场景下这并不理想。
 
 ```js
 const CustomButton = {
@@ -339,9 +337,9 @@ const App = {
 }
 ```
 
-如果你使用 `shallow`，插槽将不会被渲染，因为 `<custom-button />` 中的渲染函数被桩化了。这意味着你将无法验证是否渲染了正确的文本！
+如果你使用 `shallow`，插槽将不会被渲染，因为我们为 `<custom-button />` 中的渲染函数创建了测试替身。这意味着你将无法验证是否渲染了正确的文本！
 
-对于这种用例，你可以使用 `config.renderStubDefaultSlot`，即使在使用 `shallow` 时也会渲染默认插槽内容：
+这时，你可以使用 `config.renderStubDefaultSlot`，即使在使用 `shallow` 时也会渲染默认插槽内容：
 
 ```js {1,4,8}
 import { config, mount } from '@vue/test-utils'
@@ -366,19 +364,19 @@ test('shallow with stubs', () => {
 })
 ```
 
-由于此行为是全局的，而不是逐个 `mount` 的基础上，你需要记得在每个测试之前和之后启用/禁用它。
+由于此行为是全局的，而不是基于某个 `mount`，你需要记得在每个测试之前和之后启用/禁用它。
 
 ::: tip
-你也可以通过在测试设置文件中导入 `config` 并将 `renderStubDefaultSlot` 设置为 `true` 来全局启用此功能。不幸的是，由于技术限制，此行为不扩展到默认插槽以外的插槽。
+你也可以通过在测试设置文件中导入 `config` 并将 `renderStubDefaultSlot` 设置为 `true` 来全局启用此功能。不幸的是，由于技术限制，此行为无法扩展到非默认插槽。
 :::
 
-## `mount`、`shallow` 和 `stubs`：选择哪个，何时使用？
+## `mount`、`shallow` 和 `stubs`：如何选择？何时使用？
 
-根据经验，**你的测试越像软件的使用方式**，它们就能给你提供越多的信心。
+根据经验，**你的测试越接近软件的真实使用方式**，它们就能给你提供越多的信心。
 
 使用 `mount` 的测试将渲染整个组件层次结构，这与用户在真实浏览器中的体验更接近。
 
-另一方面，使用 `shallow` 的测试则专注于特定组件。`shallow` 对于在完全隔离的情况下测试高级组件非常有用。如果你只有一两个与测试无关的组件，考虑使用 `mount` 结合 `stubs` 而不是 `shallow`。你桩化得越多，测试就越不具备生产环境的特性。
+另一方面，使用 `shallow` 的测试则专注于特定组件。`shallow` 对于在完全隔离的情况下测试高级组件非常有用。如果你只有一两个与测试无关的组件，考虑使用 `mount` 结合 `stubs` 而不是 `shallow`。你创建的测试替身越多，测试就越不具备生产环境的特性。
 
 请记住，无论你选择全挂载还是浅层渲染 (shallow render)，好的测试都应专注于输入 (`props` 和用户交互，如使用 `trigger`) 和输出 (渲染的 DOM 元素和事件)，而不是实现细节。
 
@@ -387,5 +385,5 @@ test('shallow with stubs', () => {
 ## 结论
 
 - 使用 `global.stubs` 将组件或指令替换为虚拟实现，以简化测试
-- 使用 `shallow: true` (或 `shallowMount`) 来桩化所有子组件
-- 使用 `global.renderStubDefaultSlot` 渲染桩化组件的默认 `<slot>`
+- 使用 `shallow: true` (或 `shallowMount`) 为所有子组件创建测试替身
+- 使用 `global.renderStubDefaultSlot` 渲染组件测试替身的默认 `<slot>`
