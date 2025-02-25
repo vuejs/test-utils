@@ -1,8 +1,8 @@
 # 从 Vue Test Utils v1 迁移
 
-对 VTU v1 到 VTU v2 的更改进行回顾，并提供一些代码片段以展示所需的修改。如果你遇到未在此处记录的错误或行为差异，请[提交问题](https://github.com/vuejs/test-utils/issues/new)。
+这是一篇对 VTU v1 到 VTU v2 变更的回顾，并提供一些代码片段以展示所需的修改。如果你遇到了未在此处记录的错误或行为差异，请[创建 issue](https://github.com/vuejs/test-utils/issues/new)。
 
-## 更改
+## 变更
 
 ### `propsData` 现在是 `props`
 
