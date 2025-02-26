@@ -43,7 +43,7 @@
     "@vue/compiler-sfc": "3.5.13",
     "@vue/server-renderer": "3.5.13",
     "eslint": "9.21.0",
-    "eslint-config-prettier": "10.0.1",
+    "eslint-config-prettier": "10.0.2",
     "eslint-plugin-prettier": "5.2.3",
     "husky": "9.1.7",
     "jsdom": "26.0.0",
@@ -116,7 +116,7 @@
     "url": "git+https://github.com/vuejs/test-utils.git"
   },
   "homepage": "https://github.com/vuejs/test-utils",
-  "packageManager": "pnpm@10.5.0",
+  "packageManager": "pnpm@10.5.1",
   "pnpm": {
     "peerDependencyRules": {
       "ignoreMissing": [
