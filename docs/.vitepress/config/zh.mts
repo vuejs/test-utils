@@ -114,7 +114,7 @@ export const zhConfig: LocaleSpecificConfig<DefaultTheme.Config> = {
               link: '/zh/guide/advanced/teleport'
             },
             {
-              text: 'Stubs 和浅挂载',
+              text: '测试替身 (stub) 和浅挂载',
               link: '/zh/guide/advanced/stubs-shallow-mount'
             },
             {
