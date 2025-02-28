@@ -40,7 +40,7 @@ export default {
 </style>
 ```
 
-由于 Vue Test Utils 会模拟内置的过渡效果，你可以像测试其他组件一样测试上述组件：
+由于 Vue Test Utils 会为内置的 transition 组件创建测试替身，你可以像测试其他组件一样测试上述组件：
 
 ```js
 import Component from './Component.vue'
@@ -60,11 +60,11 @@ test('works with transitions', async () => {
 
 ## 部分支持
 
-Vue Test Utils 内置的过渡效果模拟比较简单，并不涵盖 Vue 所有的[过渡特性](https://vuejs.org/guide/built-ins/transition)。例如它不支持 [JavaScript 钩子](https://vuejs.org/guide/built-ins/transition#javascript-hooks)。这一限制可能会导致 Vue 发出警告。
+Vue Test Utils 内置的 transition 组件的测试替身比较简单，并不涵盖 Vue 所有的[过渡特性](https://vuejs.org/guide/built-ins/transition)。例如它不支持 [JavaScript 钩子](https://vuejs.org/guide/built-ins/transition#javascript-hooks)。这一限制可能会导致 Vue 发出警告。
 
 ::: tip
 潜在解决方案：
-- 你可以通过将 [global stubs transition](../../api/#global-stubs) 设置为 false 来关闭自动模拟。
-- 如果需要，你可以自行模拟过渡效果，以处理这些钩子。
+- 你可以通过将[全局 transition 测试替身](../../api/#global-stubs) 设置为 false 来停止自从创建测试替身。
+- 如果需要，你可以自行创建 transition 的测试替身，以处理这些钩子。
 - 你可以在测试中捕获警告以消除它。
 :::

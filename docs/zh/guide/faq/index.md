@@ -26,6 +26,6 @@ TypeError: Cannot set property prefix of #<Element> which has only a getter
 
 **可能的解决方案**
 
-1. 使用 `mount` 而不是 `shallowMount` 进行不带存根的渲染
+1. 使用 `mount` 而不是 `shallowMount` 进行不带测试替身的渲染
 2. 通过模拟 `console.warn` 来忽略警告
 3. 重命名 prop，以避免与 `Element` 属性冲突

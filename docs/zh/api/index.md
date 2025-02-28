@@ -716,7 +716,7 @@ test('global.renderStubDefaultSlot', () => {
 
 #### global.stubs
 
-在挂载的组件上使用全局替代组件 (stub)。
+在挂载的组件上使用全局测试替身 (stub)。
 
 **签名：**
 
@@ -726,7 +726,7 @@ stubs?: Record<any, any>
 
 **详细信息：**
 
-默认情况下，`Transition` 和 `TransitionGroup` 组件会被自动 stub 掉。
+默认情况下，`Transition` 和 `TransitionGroup` 组件会被自动创建测试替身。
 
 `Component.vue`:
 
@@ -788,7 +788,7 @@ test('global.stubs using a custom component', () => {
 
 ### shallow
 
-组件的所有子组件替换为 stub。
+组件的所有子组件替换为测试替身。
 
 **签名：**
 
@@ -1893,7 +1893,7 @@ function shallowMount(Component, options?: MountingOptions): VueWrapper
 
 **详细信息：**
 
-`shallowMount` 的行为与 `mount` 完全相同，但它默认会 stub (替代) 所有的子组件。实际上，`shallowMount(Component)` 是 `mount(Component, { shallow: true })` 的别名。
+`shallowMount` 的行为与 `mount` 完全相同，但它默认为所有的子组件创建测试替身。实际上，`shallowMount(Component)` 是 `mount(Component, { shallow: true })` 的别名。
 
 ## enableAutoUnmount
 
