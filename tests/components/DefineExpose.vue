@@ -60,6 +60,7 @@ export default defineComponent({
     })
 
     return {
+      exposedMethod1,
       returnedState,
     }
   }
