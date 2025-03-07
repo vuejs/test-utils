@@ -1,3 +1,4 @@
+import { VNode } from 'vue'
 import { textContent } from './utils'
 import type { TriggerOptions } from './createDomEvent'
 import {
@@ -219,7 +220,7 @@ export default abstract class BaseWrapper<ElementType extends Node>
     return results.map((c) =>
       c.proxy
         ? createVueWrapper(null, c.proxy)
-        : createDOMWrapper(c.vnode.el as Element)
+        : createDOMWrapper(c.vnode.el as Element, c.subTree as VNode)
     )
   }
   abstract setValue(value?: any): Promise<void>
