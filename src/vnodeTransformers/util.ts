@@ -85,7 +85,16 @@ export const createVNodeTransformer = ({
       registerStub({ source: originalType, stub: transformedType })
       // https://github.com/vuejs/test-utils/issues/1829 & https://github.com/vuejs/test-utils/issues/1888
       // Teleport/KeepAlive should return child nodes as a function
-      if (isTeleport(originalType) || isKeepAlive(originalType)) {
+      if (isTeleport(originalType)) {
+        return [
+          originalType,
+          { ...props, disabled: true },
+          children,
+          ...restVNodeArgs
+        ]
+      }
+
+      if (isKeepAlive(originalType)) {
         return [transformedType, props, () => children, ...restVNodeArgs]
       }
     }
