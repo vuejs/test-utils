@@ -58,7 +58,7 @@ test('works with transitions', async () => {
 
 ## Partial support
 
-The Vue Test Utils built-in transition stub is simple and doesn't cover all of of Vue's [Transition features](https://vuejs.org/guide/built-ins/transition). For instance [javascript hooks](https://vuejs.org/guide/built-ins/transition#javascript-hooks) are not supported. This limitation could potentially lead to Vue warnings.
+The Vue Test Utils built-in transition stub is simple and doesn't cover all of Vue's [Transition features](https://vuejs.org/guide/built-ins/transition). For instance [javascript hooks](https://vuejs.org/guide/built-ins/transition#javascript-hooks) are not supported. This limitation could potentially lead to Vue warnings.
 
 ::: tip
 Potential solutions:
