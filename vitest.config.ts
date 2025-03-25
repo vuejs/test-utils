@@ -24,7 +24,7 @@ export default defineConfig({
   },
   test: {
     environment: 'jsdom',
-    pool: 'vmThreads',
+    pool: 'threads',
     setupFiles: [path.resolve(__dirname, './setup.js')],
     include: ['tests/**/*.spec.ts'],
     server: {
