@@ -344,7 +344,7 @@ describe('trigger', () => {
   })
 
   describe('errors', () => {
-    it('throws error if options contains a target value', () => {
+    it('throws error if options contains a target value', async () => {
       const expectedErrorMessage =
         '[vue-test-utils]: you cannot set the target value of an event. See the notes section of the docs for more details—https://vue-test-utils.vuejs.org/api/wrapper/trigger.html'
 
@@ -356,7 +356,7 @@ describe('trigger', () => {
       const wrapper = mount(Component, {})
 
       const fn = wrapper.trigger('click', { target: 'something' })
-      expect(fn).rejects.toThrowError(expectedErrorMessage)
+      await expect(fn).rejects.toThrowError(expectedErrorMessage)
 
       expect(clickHandler).not.toHaveBeenCalled()
     })
