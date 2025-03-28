@@ -124,9 +124,9 @@ const todos = ref([
 ])
 
 const createTodo = () => {
-  this.todos.push({
+  todos.value.push({
     id: 2,
-    text: this.newTodo,
+    text: newTodo.value,
     completed: false
   })
 }
