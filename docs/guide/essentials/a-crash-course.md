@@ -17,22 +17,16 @@ We will start off with a simple `TodoApp` component with a single todo:
   <div></div>
 </template>
 
-<script>
-export default {
-  name: 'TodoApp',
+<script setup>
+import { ref } from 'vue'
 
-  data() {
-    return {
-      todos: [
-        {
-          id: 1,
-          text: 'Learn Vue.js 3',
-          completed: false
-        }
-      ]
-    }
+const todos = ref([
+  {
+    id: 1,
+    text: 'Learn Vue.js 3',
+    completed: false
   }
-}
+])
 </script>
 ```
 
@@ -117,32 +111,24 @@ If we run this test, it will obviously fail. Let's update `TodoApp.vue` to have 
   </div>
 </template>
 
-<script>
-export default {
-  name: 'TodoApp',
+<script setup>
+import { ref } from 'vue'
 
-  data() {
-    return {
-      newTodo: '',
-      todos: [
-        {
-          id: 1,
-          text: 'Learn Vue.js 3',
-          completed: false
-        }
-      ]
-    }
-  },
-
-  methods: {
-    createTodo() {
-      this.todos.push({
-        id: 2,
-        text: this.newTodo,
-        completed: false
-      })
-    }
+const newTodo = ref(''),
+const todos = ref([
+  {
+    id: 1,
+    text: 'Learn Vue.js 3',
+    completed: false
   }
+])
+
+const createTodo = () => {
+  this.todos.push({
+    id: 2,
+    text: this.newTodo,
+    completed: false
+  })
 }
 </script>
 ```
