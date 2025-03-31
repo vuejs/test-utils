@@ -16,22 +16,16 @@ Commençons par un simple composant TodoApp avec une seule tâche&nbsp;:
   <div></div>
 </template>
 
-<script>
-export default {
-  name: 'TodoApp',
+<script setup>
+import { ref } from 'vue'
 
-  data() {
-    return {
-      todos: [
-        {
-          id: 1,
-          text: 'Apprendre Vue.js 3',
-          completed: false,
-        },
-      ],
-    };
-  },
-};
+const todos = ref([
+  {
+    id: 1,
+    text: 'Apprendre Vue.js 3',
+    completed: false
+  }
+])
 </script>
 ```
 
@@ -116,33 +110,25 @@ Si nous exécutons ce test, il échouera. Modifions `TodoApp.vue` pour avoir les
   </div>
 </template>
 
-<script>
-export default {
-  name: 'TodoApp',
+<script setup>
+import { ref } from 'vue'
 
-  data() {
-    return {
-      newTodo: '',
-      todos: [
-        {
-          id: 1,
-          text: 'Apprendre Vue.js 3',
-          completed: false,
-        },
-      ],
-    };
-  },
+const newTodo = ref(''),
+const todos = ref([
+  {
+    id: 1,
+    text: 'Apprendre Vue.js 3',
+    completed: false
+  }
+])
 
-  methods: {
-    createTodo() {
-      this.todos.push({
-        id: 2,
-        text: this.newTodo,
-        completed: false,
-      });
-    },
-  },
-};
+const createTodo = () => {
+  todos.value.push({
+    id: 2,
+    text: newTodo.value,
+    completed: false
+  })
+}
 </script>
 ```
 
