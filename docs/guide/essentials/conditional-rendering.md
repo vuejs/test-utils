@@ -8,7 +8,7 @@ This article is also available as a [short video](https://www.youtube.com/watch?
 
 One of the most basic features of Vue is the ability to dynamically insert and remove elements with `v-if`. Let's look at how to test a component that uses `v-if`.
 
-```js
+```vue
 <!-- Nav.vue -->
 <script setup>
 import { ref } from 'vue'
@@ -101,7 +101,7 @@ Sometimes you only want to hide/show an element while keeping it in the DOM. Vue
 
 This is how a component with `v-show` looks like:
 
-```js
+```vue
 <!-- Nav.vue -->
 <script setup>
 import { ref } from 'vue'
