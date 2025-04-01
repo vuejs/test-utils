@@ -9,19 +9,19 @@ Cet article est également disponible sous la forme d'une [courte vidéo](https:
 L'une des fonctionnalités les plus basiques de Vue est la capacité d'insérer et de supprimer dynamiquement des éléments avec `v-if`. Voyons comment tester un composant qui utilise `v-if`.
 
 ```js
-const Nav = {
-  template: `
-    <nav>
-      <a id="profile" href="/profile">Mon Profil</a>
-      <a v-if="admin" id="admin" href="/admin">Administration</a>
-    </nav>
-  `,
-  data() {
-    return {
-      admin: false,
-    };
-  },
-};
+<!-- Nav.vue -->
+<script setup>
+import { ref } from 'vue'
+
+const admin = ref(false)
+</script>
+
+<template>
+  <nav>
+    <a id="profile" href="/profile">Mon Profil</a>
+    <a v-if="admin" id="admin" href="/admin">Administration</a>
+  </nav>
+</template>
 ```
 
 Dans le composant `<Nav>`, un lien vers le profil de l'utilisateur est affiché. De plus, si la valeur `admin` est à `true`, nous affichons un lien vers la section administrateur. Il y a trois scénarios dont le comportement doit être vérifié&nbsp;:
@@ -100,21 +100,21 @@ Parfois, vous ne voulez que masquer/afficher un élément tout en le conservant 
 Voici à quoi ressemble un composant avec `v-show`&nbsp;:
 
 ```js
-const Nav = {
-  template: `
-    <nav>
-      <a id="user" href="/profile">Mon Profil</a>
-      <ul v-show="shouldShowDropdown" id="user-dropdown">
-        <!-- dropdown content -->
-      </ul>
-    </nav>
-  `,
-  data() {
-    return {
-      shouldShowDropdown: false,
-    };
-  },
-};
+<!-- Nav.vue -->
+<script setup>
+import { ref } from 'vue'
+
+const shouldShowDropdown = ref(false)
+<script>
+
+<template>
+  <nav>
+    <a id="user" href="/profile">Mon Profil</a>
+    <ul v-show="shouldShowDropdown" id="user-dropdown">
+      <!-- dropdown content -->
+    </ul>
+  </nav>
+</template>
 ```
 
 Dans ce scénario, l'élément n'est pas visible, mais toujours rendu dans le DOM. `get()` ou `find()` retournera toujours un `Wrapper` - `find()` avec `.exists()` retournera toujours `true` - car **l'élément est toujours dans le DOM**.
