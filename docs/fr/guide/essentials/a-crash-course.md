@@ -113,7 +113,7 @@ Si nous exécutons ce test, il échouera. Modifions `TodoApp.vue` pour avoir les
 <script setup>
 import { ref } from 'vue'
 
-const newTodo = ref(''),
+const newTodo = ref('')
 const todos = ref([
   {
     id: 1,
