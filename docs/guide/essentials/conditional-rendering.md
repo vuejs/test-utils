@@ -9,19 +9,19 @@ This article is also available as a [short video](https://www.youtube.com/watch?
 One of the most basic features of Vue is the ability to dynamically insert and remove elements with `v-if`. Let's look at how to test a component that uses `v-if`.
 
 ```js
-const Nav = {
-  template: `
-    <nav>
-      <a id="profile" href="/profile">My Profile</a>
-      <a v-if="admin" id="admin" href="/admin">Admin</a>
-    </nav>
-  `,
-  data() {
-    return {
-      admin: false
-    }
-  }
-}
+<!-- Nav.vue -->
+<script setup>
+import { ref } from 'vue'
+
+const admin = ref(false)
+</script>
+
+<template>
+  <nav>
+    <a id="profile" href="/profile">My Profile</a>
+    <a v-if="admin" id="admin" href="/admin">Admin</a>
+  </nav>
+</template>
 ```
 
 In the `<Nav>` component, a link to the user's profile is shown. In addition, if the `admin` value is `true`, we reveal a link to the admin section. There are three scenarios which we should verify are behaving correctly:
@@ -102,21 +102,21 @@ Sometimes you only want to hide/show an element while keeping it in the DOM. Vue
 This is how a component with `v-show` looks like:
 
 ```js
-const Nav = {
-  template: `
-    <nav>
-      <a id="user" href="/profile">My Profile</a>
-      <ul v-show="shouldShowDropdown" id="user-dropdown">
-        <!-- dropdown content -->
-      </ul>
-    </nav>
-  `,
-  data() {
-    return {
-      shouldShowDropdown: false
-    }
-  }
-}
+<!-- Nav.vue -->
+<script setup>
+import { ref } from 'vue'
+
+const shouldShowDropdown = ref(false)
+<script>
+
+<template>
+  <nav>
+    <a id="user" href="/profile">My Profile</a>
+    <ul v-show="shouldShowDropdown" id="user-dropdown">
+      <!-- dropdown content -->
+    </ul>
+  </nav>
+</template>
 ```
 
 In this scenario, the element is not visible but always rendered. `get()` or `find()` will always return a `Wrapper` – `find()` with `.exists()` always return `true` – because the **element is still in the DOM**.
