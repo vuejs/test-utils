@@ -135,13 +135,13 @@ const submit = () => {
 
     <select v-model="form.city">
       <option value="new-york">New York</option>
-      <option value="moscow">Moscou</option>
+      <option value="moscou">Moscou</option>
     </select>
 
     <input type="checkbox" v-model="form.subscribe" />
 
-    <input type="radio" value="weekly" v-model="form.interval" />
-    <input type="radio" value="monthly" v-model="form.interval" />
+    <input type="radio" value="hebdomadaire" v-model="form.interval" />
+    <input type="radio" value="mensuelle" v-model="form.interval" />
 
     <button type="submit">Soumettre</button>
   </form>
