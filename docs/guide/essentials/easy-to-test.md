@@ -31,23 +31,21 @@ The rule of thumb is that **a test should not break on a refactor**, that is, wh
 For example, let's assume a basic Counter component that features a button to increment a counter:
 
 ```vue
+<!-- Counter.vue -->
+<script setup>
+import { ref } from 'vue'
+
+const count = ref(0)
+
+const increment = () => {
+  count.value++
+}
+</script>
+
 <template>
   <p class="paragraph">Times clicked: {{ count }}</p>
   <button @click="increment">increment</button>
 </template>
-
-<script>
-export default {
-  data() {
-    return { count: 0 }
-  },
-  methods: {
-    increment() {
-      this.count++
-    }
-  }
-}
-</script>
 ```
 
 We could write the following test:

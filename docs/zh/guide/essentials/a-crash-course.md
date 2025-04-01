@@ -113,7 +113,7 @@ test('creates a todo', () => {
 <script setup>
 import { ref } from 'vue'
 
-const newTodo = ref(''),
+const newTodo = ref('')
 const todos = ref([
   {
     id: 1,

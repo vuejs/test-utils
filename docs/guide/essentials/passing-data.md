@@ -8,19 +8,18 @@ In this section, we explore the `data` and `props` mounting options, as well as 
 
 We will demonstrate the above features by building a `<Password>` component. This component verifies a password meets certain criteria, such as length and complexity. We will start with the following and add features, as well as tests to make sure the features are working correctly:
 
-```js
-const Password = {
-  template: `
-    <div>
-      <input v-model="password">
-    </div>
-  `,
-  data() {
-    return {
-      password: ''
-    }
-  }
-}
+```vue
+<!-- Password.vue -->
+<script setup>
+import { ref } from 'vue'
+const password = ref('')
+<script>
+
+<template>
+  <div>
+    <input v-model="password" />
+  </div>
+</template>
 ```
 
 The first requirement we will add is a minimum length.
@@ -31,33 +30,28 @@ We want to reuse this component in all our projects, each of which may have diff
 
 We will show an error if `password` is less than `minLength`. We can do this by creating an `error` computed property, and conditionally rendering it using `v-if`:
 
-```js
-const Password = {
-  template: `
-    <div>
-      <input v-model="password">
-      <div v-if="error">{{ error }}</div>
-    </div>
-  `,
-  props: {
-    minLength: {
-      type: Number
-    }
-  },
-  data() {
-    return {
-      password: ''
-    }
-  },
-  computed: {
-    error() {
-      if (this.password.length < this.minLength) {
-        return `Password must be at least ${this.minLength} characters.`
-      }
-      return
-    }
+```vue
+<!-- Password.vue -->
+<script setup>
+import { ref } from 'vue'
+
+const props = defineProps(['minLength'])
+const password = ref('')
+
+const error = computed(() => {
+  if (password.value.length < props.minLength) {
+    return `Password must be at least ${props.minLength} characters.`
   }
-}
+  return
+})
+<script>
+
+<template>
+  <div>
+    <input v-model="password" />
+    <div v-if="error">{{ error }}</div>
+  </div>
+</template>
 ```
 
 To test this, we need to set the `minLength`, as well as a `password` that is less than that number. We can do this using the `data` and `props` mounting options. Finally, we will assert the correct error message is rendered:
@@ -86,25 +80,17 @@ Writing a test for a `maxLength` rule is left as an exercise for the reader! Ano
 Sometimes you may need to write a test for a side effect of a prop changing. This simple `<Show>` component renders a greeting if the `show` prop is `true`.
 
 ```vue
+<!-- Show.vue -->
+<script setup>
+import { ref } from 'vue'
+
+const { show = true } = defineProps(['show'])
+const greeting = ref('Hello')
+</script>
+
 <template>
   <div v-if="show">{{ greeting }}</div>
 </template>
-
-<script>
-export default {
-  props: {
-    show: {
-      type: Boolean,
-      default: true
-    }
-  },
-  data() {
-    return {
-      greeting: 'Hello'
-    }
-  }
-}
-</script>
 ```
 
 To test this fully, we might want to verify that `greeting` is rendered by default. We are able to update the `show` prop using `setProps()`, which causes `greeting` to be hidden:

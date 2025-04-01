@@ -114,7 +114,7 @@ If we run this test, it will obviously fail. Let's update `TodoApp.vue` to have 
 <script setup>
 import { ref } from 'vue'
 
-const newTodo = ref(''),
+const newTodo = ref('')
 const todos = ref([
   {
     id: 1,

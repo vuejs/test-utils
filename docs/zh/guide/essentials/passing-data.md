@@ -8,19 +8,18 @@ Vue Test Utils 提供了几种方法来设置组件的数据和属性，以便�
 
 我们将通过构建一个 `<Password>` 组件来演示上述功能。该组件验证密码是否符合某些标准，例如长度和复杂性。我们将从以下代码开始，并添加功能以及测试以确保这些功能正常工作：
 
-```js
-const Password = {
-  template: `
-    <div>
-      <input v-model="password">
-    </div>
-  `,
-  data() {
-    return {
-      password: ''
-    }
-  }
-}
+```vue
+<!-- Password.vue -->
+<script setup>
+import { ref } from 'vue'
+const password = ref('')
+<script>
+
+<template>
+  <div>
+    <input v-model="password" />
+  </div>
+</template>
 ```
 
 我们将添加的第一个要求是最小长度。
@@ -31,33 +30,28 @@ const Password = {
 
 如果 `password` 的长度小于 `minLength`，我们将显示一个错误。我们可以通过创建一个 `error` 计算属性，并使用 `v-if` 有条件地渲染它来实现：
 
-```js
-const Password = {
-  template: `
-    <div>
-      <input v-model="password">
-      <div v-if="error">{{ error }}</div>
-    </div>
-  `,
-  props: {
-    minLength: {
-      type: Number
-    }
-  },
-  data() {
-    return {
-      password: ''
-    }
-  },
-  computed: {
-    error() {
-      if (this.password.length < this.minLength) {
-        return `密码必须至少包含 ${this.minLength} 个字符.`
-      }
-      return
-    }
+```vue
+<!-- Password.vue -->
+<script setup>
+import { ref, computed } from 'vue'
+
+const props = defineProps(['minLength'])
+const password = ref('')
+
+const error = computed(() => {
+  if (password.value.length < props.minLength) {
+    return `Password must be at least ${props.minLength} characters.`
   }
-}
+  return
+})
+<script>
+
+<template>
+  <div>
+    <input v-model="password" />
+    <div v-if="error">{{ error }}</div>
+  </div>
+</template>
 ```
 
 为了测试这一点，我们需要设置 `minLength` 以及一个小于该数字的 `password`。我们可以使用 `data` 和 `props` 的挂载选项来实现。最后，我们将断言错误消息是否被正确渲染：
@@ -86,25 +80,17 @@ test('renders an error if length is too short', () => {
 有时你可能需要编写测试来验证属性更改的副作用。这个简单的 `<Show>` 组件在 `show` 属性为 `true` 时渲染一个问候语。
 
 ```vue
+<!-- Show.vue -->
+<script setup>
+import { ref } from 'vue'
+
+const { show = true } = defineProps(['show'])
+const greeting = ref('Hello')
+</script>
+
 <template>
   <div v-if="show">{{ greeting }}</div>
 </template>
-
-<script>
-export default {
-  props: {
-    show: {
-      type: Boolean,
-      default: true
-    }
-  },
-  data() {
-    return {
-      greeting: 'Hello'
-    }
-  }
-}
-</script>
 ```
 
 为了全面测试这一点，我们可能想要验证 `greeting` 是否默认渲染。我们可以使用 `setProps()` 更新 `show` 属性，这将导致 `greeting` 被隐藏：

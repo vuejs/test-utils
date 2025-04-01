@@ -31,23 +31,21 @@ Vue Test Utils 帮助你为 Vue 组件编写测试。然而，VTU 的功能是�
 例如，假设有一个简单的计数器组件，包含一个增加计数的按钮：
 
 ```vue
-<template>
-  <p class="paragraph">Times clicked: {{ count }}</p>
-  <button @click="increment">increment</button>
-</template>
+<!-- Counter.vue -->
+<script setup>
+import { ref } from 'vue'
 
-<script>
-export default {
-  data() {
-    return { count: 0 }
-  },
-  methods: {
-    increment() {
-      this.count++
-    }
-  }
+const count = ref(0)
+
+const increment = () => {
+  count.value++
 }
 </script>
+
+<template>
+  <p class="paragraph">Times clicked: {{ count }}</p>
+  <button @click="increment">Increment</button>
+</template>
 ```
 
 我们可以编写以下测试：
