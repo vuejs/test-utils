@@ -48,7 +48,7 @@ const error = computed(() => {
 
 <template>
   <div>
-    <input v-model="password">
+    <input v-model="password" />
     <div v-if="error">{{ error }}</div>
   </div>
 </template>
