@@ -9,6 +9,18 @@
 让我们看一个非常基本的表单：
 
 ```vue
+<!-- Form.vue -->
+<script setup>
+import { ref } from 'vue'
+
+const email = ref('')
+const emit = defineEmits(['submit'])
+
+const submit = () => {
+  emit('submit', email.value)
+}
+</script>
+
 <template>
   <div>
     <input type="email" v-model="email" />
@@ -16,21 +28,6 @@
     <button @click="submit">Submit</button>
   </div>
 </template>
-
-<script>
-export default {
-  data() {
-    return {
-      email: ''
-    }
-  },
-  methods: {
-    submit() {
-      this.$emit('submit', this.email)
-    }
-  }
-}
-</script>
 ```
 
 ### 给元素赋值
@@ -110,6 +107,25 @@ test('emits the input to its parent', async () => {
 让我们看一个更复杂的表单，它包含更多类型的输入。
 
 ```vue
+<!-- FormComponent.vue -->
+<script setup>
+import { ref } from 'vue'
+
+const form = ref({
+  email: '',
+  description: '',
+  city: '',
+  subscribe: false,
+  interval: ''
+})
+const emit = defineEmits(['submit'])
+
+const submit = () => {
+  emit('submit', { ...form.value })
+}
+</script>
+
+
 <template>
   <form @submit.prevent="submit">
     <input type="email" v-model="form.email" />
@@ -129,27 +145,6 @@ test('emits the input to its parent', async () => {
     <button type="submit">Submit</button>
   </form>
 </template>
-
-<script>
-export default {
-  data() {
-    return {
-      form: {
-        email: '',
-        description: '',
-        city: '',
-        subscribe: false,
-        interval: ''
-      }
-    }
-  },
-  methods: {
-    async submit() {
-      this.$emit('submit', this.form)
-    }
-  }
-}
-</script>
 ```
 
 我们扩展的 Vue 组件稍微长一些，包含更多输入类型，并且 `submit` 处理程序已移至 `<form/>` 元素。
@@ -262,29 +257,26 @@ Vue Test Utils 会读取事件并将适当的属性应用于事件对象。在�
 假设你的代码需要从 `event` 对象中获取一些信息。你可以通过将额外数据作为第二个参数来测试这种情况。
 
 ```vue
-<template>
-  <form>
-    <input type="text" v-model="value" @blur="handleBlur" />
-    <button>Submit</button>
-  </form>
-</template>
+<!-- Form.vue -->
+<script setup>
+import { ref } from 'vue'
 
-<script>
-export default {
-  data() {
-    return {
-      value: ''
-    }
-  },
-  methods: {
-    handleBlur(event) {
-      if (event.relatedTarget.tagName === 'BUTTON') {
-        this.$emit('focus-lost')
-      }
-    }
+const inputValue = ref('')
+const emit = defineEmits(['focus-lost'])
+
+const handleBlur = (event) => {
+  if (event.relatedTarget.tagName === 'BUTTON') {
+    emit('focus-lost')
   }
 }
 </script>
+
+<template>
+  <form>
+    <input type="text" v-model="inputValue" @blur="handleBlur" />
+    <button>Submit</button>
+  </form>
+</template>
 ```
 
 ```js
@@ -314,6 +306,11 @@ test('emits an event only if you lose focus to a button', () => {
 以下是一个包装 `label` 和 `input` 元素的组件：
 
 ```vue
+<!-- CustomInput.vue -->
+<script setup>
+defineProps(['modelValue', 'label'])
+</script>
+
 <template>
   <label>
     {{ label }}
@@ -324,14 +321,6 @@ test('emits an event only if you lose focus to a button', () => {
     />
   </label>
 </template>
-
-<script>
-export default {
-  name: 'CustomInput',
-
-  props: ['modelValue', 'label']
-}
-</script>
 ```
 
 这个 Vue 组件也会回显用户输入。使用它的方法如下：
@@ -361,28 +350,24 @@ test('fills in the form', async () => {
 假设我们有一个使用 Vuetify 文本区域的表单：
 
 ```vue
+<!-- CustomTextarea.vue -->
+<script setup>
+import { ref } from 'vue'
+
+const description = ref('')
+const emit = defineEmits(['submitted'])
+
+const handleSubmit = () => {
+  emit('submitted', description.value)
+}
+</script>
+
 <template>
   <form @submit.prevent="handleSubmit">
     <v-textarea v-model="description" ref="description" />
     <button type="submit">Send</button>
   </form>
 </template>
-
-<script>
-export default {
-  name: 'CustomTextarea',
-  data() {
-    return {
-      description: ''
-    }
-  },
-  methods: {
-    handleSubmit() {
-      this.$emit('submitted', this.description)
-    }
-  }
-}
-</script>
 ```
 
 我们可以使用 `findComponent` 找到组件实例，然后给它赋值。
