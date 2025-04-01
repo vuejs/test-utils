@@ -10,6 +10,18 @@ The methods we will be using the most are `setValue()` and `trigger()`.
 Let's take a look at a very basic form:
 
 ```vue
+<!-- Form.vue -->
+<script setup>
+import { ref } from 'vue'
+
+const email = ref('')
+const emit = defineEmits(['submit'])
+
+const submit = () => {
+  emit('submit', email.value)
+}
+</script>
+
 <template>
   <div>
     <input type="email" v-model="email" />
@@ -17,21 +29,6 @@ Let's take a look at a very basic form:
     <button @click="submit">Submit</button>
   </div>
 </template>
-
-<script>
-export default {
-  data() {
-    return {
-      email: ''
-    }
-  },
-  methods: {
-    submit() {
-      this.$emit('submit', this.email)
-    }
-  }
-}
-</script>
 ```
 
 ### Setting element values
@@ -43,7 +40,7 @@ To change the value of an input in VTU, you can use the `setValue()` method. It 
 
 ```js
 test('sets the value', async () => {
-  const wrapper = mount(Component)
+  const wrapper = mount(Form)
   const input = wrapper.find('input')
 
   await input.setValue('my@mail.com')
@@ -68,7 +65,7 @@ To trigger a click event, we can use the `trigger` method.
 
 ```js
 test('trigger', async () => {
-  const wrapper = mount(Component)
+  const wrapper = mount(Form)
 
   // trigger the element
   await wrapper.find('button').trigger('click')
@@ -88,7 +85,7 @@ Let's combine these two to test whether our simple form is emitting the user inp
 
 ```js
 test('emits the input to its parent', async () => {
-  const wrapper = mount(Component)
+  const wrapper = mount(Form)
 
   // set the value
   await wrapper.find('input').setValue('my@mail.com')
@@ -112,6 +109,25 @@ We saw `setValue` works with input elements, but is much more versatile, as it c
 Let's take a look at a more complicated form, which has more types of inputs.
 
 ```vue
+<!-- FormComponent.vue -->
+<script setup>
+import { ref } from 'vue'
+
+const form = ref({
+  email: '',
+  description: '',
+  city: '',
+  subscribe: false,
+  interval: ''
+})
+const emit = defineEmits(['submit'])
+
+const submit = () => {
+  emit('submit', { ...form.value })
+}
+</script>
+
+
 <template>
   <form @submit.prevent="submit">
     <input type="email" v-model="form.email" />
@@ -131,27 +147,6 @@ Let's take a look at a more complicated form, which has more types of inputs.
     <button type="submit">Submit</button>
   </form>
 </template>
-
-<script>
-export default {
-  data() {
-    return {
-      form: {
-        email: '',
-        description: '',
-        city: '',
-        subscribe: false,
-        interval: ''
-      }
-    }
-  },
-  methods: {
-    async submit() {
-      this.$emit('submit', this.form)
-    }
-  }
-}
-</script>
 ```
 
 Our extended Vue component is a bit longer, has a few more input types and now has the `submit` handler moved to a `<form/>` element.
@@ -264,29 +259,26 @@ Vue Test Utils reads the event and applies the appropriate properties to the eve
 Let's say your code needs something from inside the `event` object. You can test such scenarios by passing extra data as a second parameter.
 
 ```vue
-<template>
-  <form>
-    <input type="text" v-model="value" @blur="handleBlur" />
-    <button>Submit</button>
-  </form>
-</template>
+<!-- Form.vue -->
+<script setup>
+import { ref } from 'vue'
 
-<script>
-export default {
-  data() {
-    return {
-      value: ''
-    }
-  },
-  methods: {
-    handleBlur(event) {
-      if (event.relatedTarget.tagName === 'BUTTON') {
-        this.$emit('focus-lost')
-      }
-    }
+const inputValue = ref('')
+const emit = defineEmits(['focus-lost'])
+
+const handleBlur = (event) => {
+  if (event.relatedTarget.tagName === 'BUTTON') {
+    emit('focus-lost')
   }
 }
 </script>
+
+<template>
+  <form>
+    <input type="text" v-model="inputValue" @blur="handleBlur" />
+    <button>Submit</button>
+  </form>
+</template>
 ```
 
 ```js
@@ -316,6 +308,11 @@ Testing forms that use such inputs can be daunting at first, but with a few simp
 Following is a Component that wraps a `label` and an `input` element:
 
 ```vue
+<!-- CustomInput.vue -->
+<script setup>
+defineProps(['modelValue', 'label'])
+</script>
+
 <template>
   <label>
     {{ label }}
@@ -326,14 +323,6 @@ Following is a Component that wraps a `label` and an `input` element:
     />
   </label>
 </template>
-
-<script>
-export default {
-  name: 'CustomInput',
-
-  props: ['modelValue', 'label']
-}
-</script>
 ```
 
 This Vue component also emits back whatever you type. To use it you do:
@@ -363,28 +352,24 @@ In such cases you can set the value directly, using the component instance and `
 Assume we have a form that uses the Vuetify textarea:
 
 ```vue
+<!-- CustomTextarea.vue -->
+<script setup>
+import { ref } from 'vue'
+
+const description = ref('')
+const emit = defineEmits(['submitted'])
+
+const handleSubmit = () => {
+  emit('submitted', description.value)
+}
+</script>
+
 <template>
   <form @submit.prevent="handleSubmit">
     <v-textarea v-model="description" ref="description" />
     <button type="submit">Send</button>
   </form>
 </template>
-
-<script>
-export default {
-  name: 'CustomTextarea',
-  data() {
-    return {
-      description: ''
-    }
-  },
-  methods: {
-    handleSubmit() {
-      this.$emit('submitted', this.description)
-    }
-  }
-}
-</script>
 ```
 
 We can use `findComponent` to find the component instance, and then set its value.
