@@ -8,21 +8,23 @@ This article is also available as a [short video](https://www.youtube.com/watch?
 
 Here is a simple `<Counter>` component. It features a button that, when clicked, increments an internal count variable and emits its value:
 
-```js
-const Counter = {
-  template: '<button @click="handleClick">Increment</button>',
-  data() {
-    return {
-      count: 0
-    }
-  },
-  methods: {
-    handleClick() {
-      this.count += 1
-      this.$emit('increment', this.count)
-    }
-  }
+```vue
+<!-- Counter.vue -->
+<script setup>
+import { ref } from 'vue'
+
+const count = ref(0)
+const emit = defineEmits(['increment'])
+
+const handleClick = () => {
+  count.value += 1
+  emit('increment', count.value)
 }
+</script>
+
+<template>
+  <button @click="handleClick">Increment</button>
+</template>
 ```
 
 To fully test this component, we should verify that an `increment` event with the latest `count` value is emitted.
@@ -92,25 +94,27 @@ Let's recap and break down the output of `emitted()`. Each of these keys contain
 
 Imagine that now our `<Counter>` component needs to emit an object with additional information. For instance, we need to tell any parent component listening to the `@increment` event if `count` is even or odd:
 
-```js {12-15}
-const Counter = {
-  template: `<button @click="handleClick">Increment</button>`,
-  data() {
-    return {
-      count: 0
-    }
-  },
-  methods: {
-    handleClick() {
-      this.count += 1
+```vue
+<!-- Counter.vue -->
+<script setup>
+import { ref } from 'vue'
 
-      this.$emit('increment', {
-        count: this.count,
-        isEven: this.count % 2 === 0
-      })
-    }
-  }
+const count = ref(0)
+
+const emit = defineEmits(['increment'])
+
+const handleClick = () => {
+  count.value += 1
+  emit('increment', {
+    count: count.value,
+    isEven: count.value % 2 === 0,
+  })
 }
+</script>
+
+<template>
+  <button @click="handleClick">Increment</button>
+</template>
 ```
 
 As we did before, we need to trigger the `click` event on the `<button>` element. Then, we use `emitted('increment')` to make sure the right values are emitted.
@@ -145,10 +149,6 @@ test('emits an event with count when clicked', () => {
 ```
 
 Testing complex event payloads such as Objects is no different from testing simple values such as numbers or strings.
-
-## Composition API
-
-If you are using the Composition API, you will be calling `context.emit()` instead of `this.$emit()`. `emitted()` captures events from both, so you can test your component using the same techniques described here.
 
 ## Conclusion
 
