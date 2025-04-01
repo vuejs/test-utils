@@ -8,21 +8,24 @@ Vue 组件通过 props 和调用 `$emit` 触发事件来进行交互。在本指
 
 这是一个简单的 `<Counter>` 组件。它包含一个按钮，当点击时，会增加一个内部计数变量并触发该值的事件：
 
-```js
-const Counter = {
-  template: '<button @click="handleClick">Increment</button>',
-  data() {
-    return {
-      count: 0
-    }
-  },
-  methods: {
-    handleClick() {
-      this.count += 1
-      this.$emit('increment', this.count)
-    }
-  }
+```vue
+<!-- Counter.vue -->
+<script setup>
+import { ref } from 'vue'
+
+const count = ref(0)
+
+const emit = defineEmits(['increment'])
+
+const handleClick = () => {
+  count.value += 1
+  emit('increment', count.value)
 }
+</script>
+
+<template>
+  <button @click="handleClick">Increment</button>
+</template>
 ```
 
 为了全面测试这个组件，我们需要验证是否触发了带有最新 `count` 值的 `increment` 事件。
@@ -90,25 +93,27 @@ test('emits an event with count when clicked', () => {
 
 假设我们的 `<Counter>` 组件现在需要触发一个包含附加信息的对象。例如，我们需要告诉任何监听 `@increment` 事件的父组件 `count` 是偶数还是奇数：
 
-```js {12-15}
-const Counter = {
-  template: `<button @click="handleClick">Increment</button>`,
-  data() {
-    return {
-      count: 0
-    }
-  },
-  methods: {
-    handleClick() {
-      this.count += 1
+```vue
+<!-- Counter.vue -->
+<script setup>
+import { ref } from 'vue'
 
-      this.$emit('increment', {
-        count: this.count,
-        isEven: this.count % 2 === 0
-      })
-    }
-  }
+const count = ref(0)
+
+const emit = defineEmits(['increment'])
+
+const handleClick = () => {
+  count.value += 1
+  emit('increment', {
+    count: count.value,
+    isEven: count.value % 2 === 0,
+  })
 }
+</script>
+
+<template>
+  <button @click="handleClick">Increment</button>
+</template>
 ```
 
 正如我们之前所做的那样，我们需要在 `<button>` 元素上触发 `click` 事件。然后，我们使用 `emitted('increment')` 来确保触发了正确的值。
@@ -141,10 +146,6 @@ test('emits an event with count when clicked', () => {
 ```
 
 测试复杂事件负载 (如对象) 与测试简单值 (如数字或字符串) 没有区别。
-
-## 组合 API
-
-如果你使用的是组合 API，你将调用 `context.emit()` 而不是 `this.$emit()`。`emitted()` 可以捕获两者的事件，因此你可以使用本文中描述的相同方法来测试你的组件。
 
 ## 结论
 
