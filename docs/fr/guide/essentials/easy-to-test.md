@@ -31,23 +31,21 @@ La règle de base est qu'**un test ne devrait pas échouer lors d'une refonte de
 Par exemple, supposons qu'il existe un composant de compteur de base qui comporte un bouton pour incrémenter un compteur&nbsp;:
 
 ```vue
+<!-- Counter.vue -->
+<script setup>
+import { ref } from 'vue'
+
+const count = ref(0)
+
+const increment = () => {
+  count.value++
+}
+</script>
+
 <template>
   <p class="paragraph">Nombre de clicks: {{ count }}</p>
   <button @click="increment">Incrémenter</button>
 </template>
-
-<script>
-export default {
-  data() {
-    return { count: 0 };
-  },
-  methods: {
-    increment() {
-      this.count++;
-    },
-  },
-};
-</script>
 ```
 
 Nous pourrions écrire le test suivant&nbsp;:
