@@ -8,7 +8,7 @@ Vue Test Utils 提供了一系列功能，用于渲染组件并对其状态进�
 
 Vue 最基础的特性之一是能够使用 `v-if` 动态地插入和移除元素。让我们看看如何测试一个使用了 `v-if` 的组件。
 
-```js
+```vue
 <!-- Nav.vue -->
 <script setup>
 import { ref } from 'vue'
@@ -99,7 +99,7 @@ test('renders an admin link', () => {
 
 使用 `v-show` 的组件如下所示：
 
-```js
+```vue
 <!-- Nav.vue -->
 <script setup>
 import { ref } from 'vue'
