@@ -8,21 +8,24 @@ Cet article est également disponible dans cette [courte video](https://www.yout
 
 Voici un composant simple `<Counter>`. Il possède un bouton qui, lorsqu'il est cliqué, incrémente une variable et émet sa valeur.
 
-```js
-const Counter = {
-  template: '<button @click="handleClick">Incrémenter</button>',
-  data() {
-    return {
-      count: 0,
-    };
-  },
-  methods: {
-    handleClick() {
-      this.count += 1;
-      this.$emit('increment', this.count);
-    },
-  },
-};
+```vue
+<!-- Counter.vue -->
+<script setup>
+import { ref } from 'vue'
+
+const count = ref(0)
+
+const emit = defineEmits(['increment'])
+
+const handleClick = () => {
+  count.value += 1
+  emit('increment', count.value)
+}
+</script>
+
+<template>
+  <button @click="handleClick">Incrémenter</button>
+</template>
 ```
 
 Pour tester complètement ce composant, nous devrions vérifier qu'un événement `increment` avec la dernière valeur de `count` est émis.
@@ -90,25 +93,27 @@ Récapitulons et détaillons le retour de la fonction `emmitted()`. Chaque clé 
 
 Imaginons maintenant que notre composant `<Counter>` a besoin d'émettre un objet avec des informations supplémentaires. Par exemple, nous devons informer tout composant parent écoutant l'événement `@increment` si la valeur de `count` est paire ou impaire.
 
-```js {12-15}
-const Counter = {
-  template: `<button @click="handleClick">Incrémenter</button>`,
-  data() {
-    return {
-      count: 0,
-    };
-  },
-  methods: {
-    handleClick() {
-      this.count += 1;
+```vue
+<!-- Counter.vue -->
+<script setup>
+import { ref } from 'vue'
 
-      this.$emit('increment', {
-        count: this.count,
-        isEven: this.count % 2 === 0,
-      });
-    },
-  },
-};
+const count = ref(0)
+
+const emit = defineEmits(['increment'])
+
+const handleClick = () => {
+  count.value += 1
+  emit('increment', {
+    count: count.value,
+    isEven: count.value % 2 === 0,
+  })
+}
+</script>
+
+<template>
+  <button @click="handleClick">Incrémenter</button>
+</template>
 ```
 
 Comme nous l'avons fait auparavant, nous devons déclencher l'événement `click` sur l'élément `<button>`. Ensuite, nous utilisons `emitted('increment')` pour nous assurer que les bonnes valeurs sont émises.
@@ -141,10 +146,6 @@ test('émet un évènement avec le compteur quand le boutton est cliqué', () =>
 ```
 
 En testant des types complexes tels que des objets, cela ne diffère pas des tests de types primaires tels que des nombres ou des chaînes de caractères.
-
-## API de Composition
-
-Si vous utilisez l'API de Composition, vous devez appeler `context.emit()` à la place de `this.$emit()`. `emitted()` capture les événements de l'un ou l'autre, vous pouvez donc tester votre composant en utilisant les mêmes techniques décrites précédemment.
 
 ## Conclusion
 
