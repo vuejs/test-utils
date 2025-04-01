@@ -9,19 +9,19 @@ Vue Test Utils 提供了一系列功能，用于渲染组件并对其状态进�
 Vue 最基础的特性之一是能够使用 `v-if` 动态地插入和移除元素。让我们看看如何测试一个使用了 `v-if` 的组件。
 
 ```js
-const Nav = {
-  template: `
-    <nav>
-      <a id="profile" href="/profile">My Profile</a>
-      <a v-if="admin" id="admin" href="/admin">Admin</a>
-    </nav>
-  `,
-  data() {
-    return {
-      admin: false
-    }
-  }
-}
+<!-- Nav.vue -->
+<script setup>
+import { ref } from 'vue'
+
+const admin = ref(false)
+</script>
+
+<template>
+  <nav>
+    <a id="profile" href="/profile">My Profile</a>
+    <a v-if="admin" id="admin" href="/admin">Admin</a>
+  </nav>
+</template>
 ```
 
 在 `<Nav>` 组件中，我们首先显示指向个人资料的链接。此外，如果 `admin` 的值为 `true`，我们还会显示指向管理中心的链接。这里有三个我们需要验证的场景：
@@ -100,21 +100,21 @@ test('renders an admin link', () => {
 使用 `v-show` 的组件如下所示：
 
 ```js
-const Nav = {
-  template: `
-    <nav>
-      <a id="user" href="/profile">My Profile</a>
-      <ul v-show="shouldShowDropdown" id="user-dropdown">
-        <!-- dropdown content -->
-      </ul>
-    </nav>
-  `,
-  data() {
-    return {
-      shouldShowDropdown: false
-    }
-  }
-}
+<!-- Nav.vue -->
+<script setup>
+import { ref } from 'vue'
+
+const shouldShowDropdown = ref(false)
+<script>
+
+<template>
+  <nav>
+    <a id="user" href="/profile">My Profile</a>
+    <ul v-show="shouldShowDropdown" id="user-dropdown">
+      <!-- dropdown content -->
+    </ul>
+  </nav>
+</template>
 ```
 
 在这种场景下，元素虽然不可见但始终被渲染。`get()` 或 `find()` 将始终返回一个 `Wrapper`——因为**该元素仍然在 DOM 中**，所以 `find()` 结合 `.exists()` 始终返回 `true`。
