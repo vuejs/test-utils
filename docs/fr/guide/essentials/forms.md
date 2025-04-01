@@ -11,6 +11,18 @@ Les méthodes que nous utiliserons le plus seront `setValue()` et `trigger()`.
 Jetons un œil à un formulaire très basique&nbsp;:
 
 ```vue
+<!-- Form.vue -->
+<script setup>
+import { ref } from 'vue'
+
+const email = ref('')
+const emit = defineEmits(['submit'])
+
+const submit = () => {
+  emit('submit', email.value)
+}
+</script>
+
 <template>
   <div>
     <input type="email" v-model="email" />
@@ -18,21 +30,6 @@ Jetons un œil à un formulaire très basique&nbsp;:
     <button @click="submit">Soumettre</button>
   </div>
 </template>
-
-<script>
-export default {
-  data() {
-    return {
-      email: '',
-    };
-  },
-  methods: {
-    submit() {
-      this.$emit('submit', this.email);
-    },
-  },
-};
-</script>
 ```
 
 ### Définir les valeurs des éléments
@@ -111,6 +108,25 @@ Nous avons vu que `setValue` fonctionne avec les `input` simples, mais est en v�
 Examinons un formulaire plus complexe, qui comporte plusieurs types d'`input`.
 
 ```vue
+<!-- FormComponent.vue -->
+<script setup>
+import { ref } from 'vue'
+
+const form = ref({
+  email: '',
+  description: '',
+  city: '',
+  subscribe: false,
+  interval: ''
+})
+const emit = defineEmits(['submit'])
+
+const submit = () => {
+  emit('submit', { ...form.value })
+}
+</script>
+
+
 <template>
   <form @submit.prevent="submit">
     <input type="email" v-model="form.email" />
@@ -119,38 +135,17 @@ Examinons un formulaire plus complexe, qui comporte plusieurs types d'`input`.
 
     <select v-model="form.city">
       <option value="new-york">New York</option>
-      <option value="moscou">Moscou</option>
+      <option value="moscow">Moscou</option>
     </select>
 
     <input type="checkbox" v-model="form.subscribe" />
 
-    <input type="radio" value="hebdomadaire" v-model="form.interval" />
-    <input type="radio" value="mensuelle" v-model="form.interval" />
+    <input type="radio" value="weekly" v-model="form.interval" />
+    <input type="radio" value="monthly" v-model="form.interval" />
 
     <button type="submit">Soumettre</button>
   </form>
 </template>
-
-<script>
-export default {
-  data() {
-    return {
-      form: {
-        email: '',
-        description: '',
-        city: '',
-        subscribe: false,
-        interval: '',
-      },
-    };
-  },
-  methods: {
-    async submit() {
-      this.$emit('submit', this.form);
-    },
-  },
-};
-</script>
 ```
 
 Notre composant Vue est un peu plus long, a quelques types d'`input` supplémentaires et maintenant, la gestion de la soumission du formulaire est déplacé vers un élément `<form/>`.
@@ -262,29 +257,26 @@ Vue Test Utils lit l'événement et applique les propriétés appropriées à l'
 Supposons que votre code ait besoin de quelque chose à l'intérieur de l'objet `event`. Vous pouvez tester ce cas en passant des données supplémentaires en tant que deuxième paramètre.
 
 ```vue
+<!-- Form.vue -->
+<script setup>
+import { ref } from 'vue'
+
+const inputValue = ref('')
+const emit = defineEmits(['focus-lost'])
+
+const handleBlur = (event) => {
+  if (event.relatedTarget.tagName === 'BUTTON') {
+    emit('focus-lost')
+  }
+}
+</script>
+
 <template>
   <form>
-    <input type="text" v-model="value" @blur="handleBlur" />
+    <input type="text" v-model="inputValue" @blur="handleBlur" />
     <button>Soumettre</button>
   </form>
 </template>
-
-<script>
-export default {
-  data() {
-    return {
-      value: '',
-    };
-  },
-  methods: {
-    handleBlur(event) {
-      if (event.relatedTarget.tagName === 'BUTTON') {
-        this.$emit('focus-lost');
-      }
-    },
-  },
-};
-</script>
 ```
 
 ```js
@@ -314,6 +306,11 @@ Le test de formulaires utilisant de tels `input` peut être intimidant au début
 Ci-dessous se trouve un composant qui comprend un `label` et un `input`&nbsp;:
 
 ```vue
+<!-- CustomInput.vue -->
+<script setup>
+defineProps(['modelValue', 'label'])
+</script>
+
 <template>
   <label>
     {{ label }}
@@ -324,14 +321,6 @@ Ci-dessous se trouve un composant qui comprend un `label` et un `input`&nbsp;:
     />
   </label>
 </template>
-
-<script>
-export default {
-  name: 'CustomInput',
-
-  props: ['modelValue', 'label'],
-};
-</script>
 ```
 
 Ce composant Vue émet également ce que vous tapez. Vous pouvez l'utiliser comme ceci&nbsp;:
@@ -361,28 +350,24 @@ Le cas échéant, vous pouvez définir la valeur directement en utilisant l'inst
 Supposons que nous ayons un formulaire qui utilise la `<textarea>` Vuetify&nbsp;:
 
 ```vue
+<!-- CustomTextarea.vue -->
+<script setup>
+import { ref } from 'vue'
+
+const description = ref('')
+const emit = defineEmits(['submitted'])
+
+const handleSubmit = () => {
+  emit('submitted', description.value)
+}
+</script>
+
 <template>
   <form @submit.prevent="handleSubmit">
     <v-textarea v-model="description" ref="description" />
     <button type="submit">Envoyer</button>
   </form>
 </template>
-
-<script>
-export default {
-  name: 'CustomTextarea',
-  data() {
-    return {
-      description: '',
-    };
-  },
-  methods: {
-    handleSubmit() {
-      this.$emit('submitted', this.description);
-    },
-  },
-};
-</script>
 ```
 
 Nous pouvons utiliser `findComponent` pour trouver l'instance du composant et définir sa valeur.
