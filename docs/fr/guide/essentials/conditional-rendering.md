@@ -8,7 +8,7 @@ Cet article est également disponible sous la forme d'une [courte vidéo](https:
 
 L'une des fonctionnalités les plus basiques de Vue est la capacité d'insérer et de supprimer dynamiquement des éléments avec `v-if`. Voyons comment tester un composant qui utilise `v-if`.
 
-```js
+```vue
 <!-- Nav.vue -->
 <script setup>
 import { ref } from 'vue'
@@ -99,7 +99,7 @@ Parfois, vous ne voulez que masquer/afficher un élément tout en le conservant 
 
 Voici à quoi ressemble un composant avec `v-show`&nbsp;:
 
-```js
+```vue
 <!-- Nav.vue -->
 <script setup>
 import { ref } from 'vue'
