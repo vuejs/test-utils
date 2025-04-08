@@ -1,11 +1,18 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
-import { h, defineComponent, defineAsyncComponent, Directive } from 'vue'
+import {
+  h,
+  defineComponent,
+  defineAsyncComponent,
+  Directive,
+  nextTick
+} from 'vue'
 import { config, flushPromises, mount, RouterLinkStub } from '../../src'
 import Hello from '../components/Hello.vue'
 import ComponentWithoutName from '../components/ComponentWithoutName.vue'
 import ComponentWithSlots from '../components/ComponentWithSlots.vue'
 import ScriptSetupWithChildren from '../components/ScriptSetupWithChildren.vue'
 import AutoImportScriptSetup from '../components/AutoImportScriptSetup.vue'
+import TeleportRemountParent from '../components/TeleportRemountParent.vue'
 
 describe('mounting options: stubs', () => {
   const configStubsSave = config.global.stubs
@@ -603,9 +610,9 @@ describe('mounting options: stubs', () => {
       })
 
       expect(wrapper.html()).toBe(
-        '<teleport-stub to="body">\n' +
-          '  <div id="content"></div>\n' +
-          '</teleport-stub>'
+        '<!--teleport start-->\n' +
+          '<div id="content"></div>\n' +
+          '<!--teleport end-->'
       )
       // Make sure that we don't have a warning when stubbing teleport
       // https://github.com/vuejs/test-utils/issues/1829
@@ -643,10 +650,51 @@ describe('mounting options: stubs', () => {
       })
 
       expect(wrapper.html()).toBe(
-        '<teleport-stub to="body">\n' +
-          '  <div id="content-global-stubs-teleport"></div>\n' +
-          '</teleport-stub>'
+        '<!--teleport start-->\n' +
+          '<div id="content-global-stubs-teleport"></div>\n' +
+          '<!--teleport end-->'
       )
+    })
+
+    describe('should not unmount the content', () => {
+      it('without stub', async () => {
+        const div = document.createElement('div')
+        div.id = 'teleport-target'
+        document.body.appendChild(div)
+
+        const wrapper = mount(TeleportRemountParent, {
+          global: {
+            stubs: {
+              teleport: false
+            }
+          }
+        })
+
+        await nextTick()
+
+        const childElement = div.innerHTML
+        expect(childElement).toBe('<span>child</span>')
+
+        const parentValue = wrapper.find('#parent-value').text()
+        expect(JSON.parse(parentValue!)).toStrictEqual(['mount'])
+
+        document.body.innerHTML = ''
+      })
+
+      it('with stub', async () => {
+        const wrapper = mount(TeleportRemountParent, {
+          global: {
+            stubs: {
+              teleport: true
+            }
+          }
+        })
+
+        await nextTick()
+
+        const parentValue = wrapper.find('#parent-value').text()
+        expect(JSON.parse(parentValue)).toStrictEqual(['mount'])
+      })
     })
   })
 
