@@ -11,6 +11,7 @@ import {
   DefineComponent,
   transformVNodeArgs
 } from 'vue'
+import reactivity from '@vue/reactivity'
 
 import { MountingOptions, Slot } from './types'
 import {
@@ -20,6 +21,7 @@ import {
   isObject,
   isObjectComponent,
   isScriptSetup,
+  mergeDeep,
   mergeGlobalProperties
 } from './utils'
 import { processSlot } from './utils/compileSlots'
@@ -153,11 +155,22 @@ export function createInstance(
     if (isObjectComponent(originalComponent)) {
       // component is guaranteed to be the same type as originalComponent
       const objectComponent = component as ComponentOptions
-      const originalDataFn = originalComponent.data || (() => ({}))
-      objectComponent.data = (vm) => ({
-        ...originalDataFn.call(vm, vm),
-        ...providedData
-      })
+      if (originalComponent.data) {
+        const originalDataFn = originalComponent.data
+        objectComponent.data = (vm) => ({
+          ...originalDataFn.call(vm, vm),
+          ...providedData
+        })
+      } else if (objectComponent.setup) {
+        const originalSetupFn = objectComponent.setup
+        objectComponent.setup = function (a, b) {
+          const data = originalSetupFn(a, b)
+          Object.assign(data, providedData)
+          return data
+        }
+      } else {
+        objectComponent.data = () => ({ ...providedData })
+      }
     } else {
       throw new Error(
         'data() option is not supported on functional and class components'

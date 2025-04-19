@@ -1,7 +1,8 @@
 import { describe, expect, it, vi } from 'vitest'
 import { defineComponent, ref } from 'vue'
 
-import { mount } from '../src'
+import { mount, shallowMount } from '../src'
+import ScriptSetup from './components/ScriptSetup.vue'
 
 describe('setData', () => {
   it('sets component data', async () => {
@@ -108,20 +109,6 @@ describe('setData', () => {
 
     expect(() => wrapper.setData({ foo: 'bar' })).toThrowError(
       'Cannot add property foo'
-    )
-  })
-
-  it('does not modify composition API setup data', async () => {
-    const Component = defineComponent({
-      template: `<div>Count is: {{ count }}</div>`,
-      setup: () => ({ count: ref(1) })
-    })
-    const wrapper = mount(Component)
-
-    expect(wrapper.html()).toContain('Count is: 1')
-
-    expect(() => wrapper.setData({ count: 2 })).toThrowError(
-      'Cannot add property count'
     )
   })
 
@@ -265,5 +252,60 @@ describe('setData', () => {
       firstArray: [1, 2],
       secondArray: [3, 4]
     })
+  })
+
+  it('updates initial data on a component using <script setup>', async () => {
+    const wrapper = shallowMount(ScriptSetup, {
+      data() {
+        return {
+          count: 10
+        }
+      }
+    })
+    expect(wrapper.html()).toContain('10')
+  })
+
+  it('updates nested data returned from setup()', async () => {
+    const Component = {
+      template: `<div>{{ nested.property }}</div>`,
+      setup: () => ({
+        nested: ref({
+          property: 'initial value'
+        })
+      })
+    }
+
+    const wrapper = mount(Component)
+
+    expect(wrapper.html()).toContain('initial value')
+
+    await wrapper.setData({ nested: { property: 'updated value' } })
+
+    expect(wrapper.html()).toContain('updated value')
+  })
+
+  it('updates data on an scf using <script setup>', async () => {
+    const wrapper = shallowMount(ScriptSetup)
+    await wrapper.setData({ count: 20 })
+    expect(wrapper.html()).toContain('20')
+  })
+
+  it('updates data on a component using setup()', async () => {
+    const Component = {
+      template: `<div><div v-if="show" id="show">Show</div></div>`,
+      setup() {
+        return {
+          show: ref(false)
+        }
+      }
+    }
+
+    const wrapper = mount(Component)
+
+    expect(wrapper.find('#show').exists()).toBe(false)
+
+    await wrapper.setData({ show: true })
+
+    expect(wrapper.find('#show').exists()).toBe(true)
   })
 })

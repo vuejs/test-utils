@@ -1,4 +1,6 @@
 import { nextTick, App, ComponentPublicInstance, VNode } from 'vue'
+import { EMPTY_OBJ as VUE_UNWRITABLE_PLACEHOLDER_OBJECT } from '@vue/shared'
+import reactivity from '@vue/reactivity'
 
 import { config } from './config'
 import domEvents from './constants/dom-events'
@@ -247,7 +249,31 @@ export class VueWrapper<
   }
 
   setData(data: Record<string, unknown>): Promise<void> {
-    mergeDeep(this.componentVM.$data, data)
+    // setupState is always defined,
+    // Even when using the object api without defining a setup() function
+    // Check if the setupState actually originates from <script setup>
+    // @ts-ignore
+    if (this.componentVM.$.setupState.__isScriptSetup) {
+      // result from <script setup>
+      // @ts-ignore
+      mergeDeep(this.componentVM.$.setupState, data)
+    } else if (
+      // @ts-ignore
+      this.componentVM.$.setupState != null &&
+      // Vue always defined the setupState property
+      // However, it uses a shared readonly singleton if the component doesn't define a setup()
+      // Check this and don't use it.
+      // @ts-ignore
+      this.componentVM.$.setupState !== VUE_UNWRITABLE_PLACEHOLDER_OBJECT
+    ) {
+      // is the return value of the setup() function when using the object api,
+      // i.e. defineComponent({ setup() {} })
+      // @ts-ignore
+      mergeDeep(reactivity.proxyRefs(this.componentVM.$.setupState), data)
+    } else {
+      // is the data object when using the object api
+      mergeDeep(this.componentVM.$data, data)
+    }
     return nextTick()
   }
 
