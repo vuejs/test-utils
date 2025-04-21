@@ -11,7 +11,6 @@ import {
   DefineComponent,
   transformVNodeArgs
 } from 'vue'
-import reactivity from '@vue/reactivity'
 
 import { MountingOptions, Slot } from './types'
 import {
@@ -21,7 +20,6 @@ import {
   isObject,
   isObjectComponent,
   isScriptSetup,
-  mergeDeep,
   mergeGlobalProperties
 } from './utils'
 import { processSlot } from './utils/compileSlots'

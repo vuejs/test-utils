@@ -1,6 +1,6 @@
 import { nextTick, App, ComponentPublicInstance, VNode } from 'vue'
 import { EMPTY_OBJ as VUE_UNWRITABLE_PLACEHOLDER_OBJECT } from '@vue/shared'
-import reactivity from '@vue/reactivity'
+import * as reactivity from '@vue/reactivity'
 
 import { config } from './config'
 import domEvents from './constants/dom-events'
