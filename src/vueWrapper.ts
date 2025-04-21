@@ -1,5 +1,4 @@
 import { nextTick, App, ComponentPublicInstance, VNode } from 'vue'
-import { EMPTY_OBJ as VUE_UNWRITABLE_PLACEHOLDER_OBJECT } from '@vue/shared'
 import * as reactivity from '@vue/reactivity'
 
 import { config } from './config'
@@ -249,29 +248,27 @@ export class VueWrapper<
   }
 
   setData(data: Record<string, unknown>): Promise<void> {
-    // setupState is always defined,
-    // Even when using the object api without defining a setup() function
-    // Check if the setupState actually originates from <script setup>
+    /*
+    Depending on how the component was defined, data can live in different places 
+    Vue sets some default placeholder in all the locations however, so we cannot just check
+    if the data object exists or not.
+    When using <script setup>, data lives in the setupState object, which is then marked with __isScriptSetup
+    When using the setup() function, data lives in the setupState object, but is not marked with __isScriptSetup
+    When using the object api, data lives in the data object, proxied through $data, HOWEVER
+    the setupState object will also exist, and be frozen.
+    */
     // @ts-ignore
     if (this.componentVM.$.setupState.__isScriptSetup) {
-      // result from <script setup>
+      // data from <script setup>
       // @ts-ignore
       mergeDeep(this.componentVM.$.setupState, data)
-    } else if (
       // @ts-ignore
-      this.componentVM.$.setupState != null &&
-      // Vue always defined the setupState property
-      // However, it uses a shared readonly singleton if the component doesn't define a setup()
-      // Check this and don't use it.
-      // @ts-ignore
-      this.componentVM.$.setupState !== VUE_UNWRITABLE_PLACEHOLDER_OBJECT
-    ) {
-      // is the return value of the setup() function when using the object api,
-      // i.e. defineComponent({ setup() {} })
+    } else if (!Object.isFrozen(this.componentVM.$.setupState)) {
+      // data from setup() function when using the object api
       // @ts-ignore
       mergeDeep(reactivity.proxyRefs(this.componentVM.$.setupState), data)
     } else {
-      // is the data object when using the object api
+      // data when using data: {...} in the object api
       mergeDeep(this.componentVM.$data, data)
     }
     return nextTick()

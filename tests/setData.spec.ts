@@ -284,7 +284,7 @@ describe('setData', () => {
     expect(wrapper.html()).toContain('updated value')
   })
 
-  it('updates data on an scf using <script setup>', async () => {
+  it('updates data on a component using <script setup>', async () => {
     const wrapper = shallowMount(ScriptSetup)
     await wrapper.setData({ count: 20 })
     expect(wrapper.html()).toContain('20')
