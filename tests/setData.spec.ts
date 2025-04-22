@@ -308,4 +308,30 @@ describe('setData', () => {
 
     expect(wrapper.find('#show').exists()).toBe(true)
   })
+
+  it('correctly sets initial array refs data when using <script setup>', async () => {
+    const Component = {
+      template: `<div><div v-for="item in items" :key="item">{{ item }}</div></div>`,
+      setup() {
+        const items = ref([])
+        return { items }
+      }
+    }
+
+    const wrapper = shallowMount(Component, {
+      data() {
+        return {
+          items: ['item1', 'item2']
+        }
+      }
+    })
+
+    expect(wrapper.html()).toContain('item1')
+    expect(wrapper.html()).toContain('item2')
+
+    await wrapper.setData({ items: ['item3', 'item4'] })
+
+    expect(wrapper.html()).toContain('item3')
+    expect(wrapper.html()).toContain('item4')
+  })
 })

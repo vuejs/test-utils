@@ -9,7 +9,8 @@ import {
   ComponentOptions,
   ConcreteComponent,
   DefineComponent,
-  transformVNodeArgs
+  transformVNodeArgs,
+  proxyRefs
 } from 'vue'
 
 import { MountingOptions, Slot } from './types'
@@ -20,6 +21,7 @@ import {
   isObject,
   isObjectComponent,
   isScriptSetup,
+  mergeDeep,
   mergeGlobalProperties
 } from './utils'
 import { processSlot } from './utils/compileSlots'
@@ -163,7 +165,7 @@ export function createInstance(
         const originalSetupFn = objectComponent.setup
         objectComponent.setup = function (a, b) {
           const data = originalSetupFn(a, b)
-          Object.assign(data, providedData)
+          mergeDeep(proxyRefs(data), providedData)
           return data
         }
       } else {

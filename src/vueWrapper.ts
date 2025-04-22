@@ -1,5 +1,4 @@
-import { nextTick, App, ComponentPublicInstance, VNode } from 'vue'
-import * as reactivity from '@vue/reactivity'
+import { nextTick, App, ComponentPublicInstance, VNode, proxyRefs } from 'vue'
 
 import { config } from './config'
 import domEvents from './constants/dom-events'
@@ -266,7 +265,7 @@ export class VueWrapper<
     } else if (!Object.isFrozen(this.componentVM.$.setupState)) {
       // data from setup() function when using the object api
       // @ts-ignore
-      mergeDeep(reactivity.proxyRefs(this.componentVM.$.setupState), data)
+      mergeDeep(proxyRefs(this.componentVM.$.setupState), data)
     } else {
       // data when using data: {...} in the object api
       mergeDeep(this.componentVM.$data, data)
