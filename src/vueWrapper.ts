@@ -1,4 +1,4 @@
-import { nextTick, App, ComponentPublicInstance, VNode } from 'vue'
+import { nextTick, App, ComponentPublicInstance, VNode, proxyRefs } from 'vue'
 
 import { config } from './config'
 import domEvents from './constants/dom-events'
@@ -247,7 +247,29 @@ export class VueWrapper<
   }
 
   setData(data: Record<string, unknown>): Promise<void> {
-    mergeDeep(this.componentVM.$data, data)
+    /*
+    Depending on how the component was defined, data can live in different places 
+    Vue sets some default placeholder in all the locations however, so we cannot just check
+    if the data object exists or not.
+    When using <script setup>, data lives in the setupState object, which is then marked with __isScriptSetup
+    When using the setup() function, data lives in the setupState object, but is not marked with __isScriptSetup
+    When using the object api, data lives in the data object, proxied through $data, HOWEVER
+    the setupState object will also exist, and be frozen.
+    */
+    // @ts-ignore
+    if (this.componentVM.$.setupState.__isScriptSetup) {
+      // data from <script setup>
+      // @ts-ignore
+      mergeDeep(this.componentVM.$.setupState, data)
+      // @ts-ignore
+    } else if (!Object.isFrozen(this.componentVM.$.setupState)) {
+      // data from setup() function when using the object api
+      // @ts-ignore
+      mergeDeep(proxyRefs(this.componentVM.$.setupState), data)
+    } else {
+      // data when using data: {...} in the object api
+      mergeDeep(this.componentVM.$data, data)
+    }
     return nextTick()
   }
 
