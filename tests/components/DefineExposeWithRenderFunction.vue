@@ -33,7 +33,7 @@ export default defineComponent({
     expose({
       /* ------ Common Test Case ------ */
       exposeObjectLiteral: 'exposeObjectLiteral',
-  
+
       exposedState1,
       exposedState2Alias: exposedState2,
       exposedState2Getter,
@@ -46,7 +46,8 @@ export default defineComponent({
       /* ------ Common Test Case ------ */
     })
 
-    return () => [h('div', refUseByRenderFnButNotExposed.value)]
+    return () => [
+      h('div', refUseByRenderFnButNotExposed.value)]
   }
 })
 </script>
