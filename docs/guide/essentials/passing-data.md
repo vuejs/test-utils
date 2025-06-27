@@ -13,7 +13,7 @@ We will demonstrate the above features by building a `<Password>` component. Thi
 <script setup>
 import { ref } from 'vue'
 const password = ref('')
-<script>
+</script>
 
 <template>
   <div>
