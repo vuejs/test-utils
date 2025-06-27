@@ -83,7 +83,7 @@ test('emits an event with count when clicked', () => {
 
 ```js
 // console.log(wrapper.emitted('increment'))
-;[
+[
   [1], // 第一次调用时，`count` 为 1
   [2] // 第二次调用时，`count` 为 2
 ]
