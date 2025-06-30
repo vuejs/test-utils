@@ -13,7 +13,7 @@ Vue Test Utils 提供了几种方法来设置组件的数据和属性，以便�
 <script setup>
 import { ref } from 'vue'
 const password = ref('')
-<script>
+</script>
 
 <template>
   <div>

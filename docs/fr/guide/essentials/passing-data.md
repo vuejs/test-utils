@@ -13,7 +13,7 @@ Nous allons détailler les fonctionnalités ci-dessus en construisant un composa
 <script setup>
 import { ref } from 'vue'
 const password = ref('')
-<script>
+</script>
 
 <template>
   <div>
