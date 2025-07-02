@@ -63,7 +63,7 @@
     "vue": "3.5.17",
     "vue-class-component": "8.0.0-rc.1",
     "vue-router": "4.5.1",
-    "vue-tsc": "3.0.0",
+    "vue-tsc": "3.0.1",
     "vuex": "4.1.0"
   },
   "peerDependencies": {
