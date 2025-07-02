@@ -24,7 +24,7 @@
   ],
   "dependencies": {
     "js-beautify": "^1.14.9",
-    "vue-component-type-helpers": "^2.0.0"
+    "vue-component-type-helpers": "^3.0.0"
   },
   "devDependencies": {
     "@eslint/js": "9.30.1",

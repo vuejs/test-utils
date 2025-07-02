@@ -12,8 +12,8 @@ importers:
         specifier: ^1.14.9
         version: 1.14.9
       vue-component-type-helpers:
-        specifier: ^2.0.0
-        version: 2.0.1
+        specifier: ^3.0.0
+        version: 3.0.1
     devDependencies:
       '@eslint/js':
         specifier: 9.30.1
@@ -2704,8 +2704,8 @@ packages:
     peerDependencies:
       vue: ^3.0.0
 
-  vue-component-type-helpers@2.0.1:
-    resolution: {integrity: sha512-TSOLgONQc8YzdLzTvPwcBdPnGAIIY3T8jWUQA9gt/LhmYKpJV/2ErD3nKzG4WZ255XYc4malvZDAvfKDCPI0Jg==}
+  vue-component-type-helpers@3.0.1:
+    resolution: {integrity: sha512-j23mCB5iEbGsyIhnVdXdWUOg+UdwmVxpKnYYf2j+4ppCt5VSFXKjwu9YFt0QYxUaf5G99PuHsVfRScjHCRSsGQ==}
 
   vue-router@4.5.1:
     resolution: {integrity: sha512-ogAF3P97NPm8fJsE4by9dwSYtDwXIY1nFY9T6DyQnGHd1E2Da94w9JIolpe42LJGIl0DwOHBi8TcRPlPGwbTtw==}
@@ -5457,7 +5457,7 @@ snapshots:
     dependencies:
       vue: 3.5.17(typescript@5.8.3)
 
-  vue-component-type-helpers@2.0.1: {}
+  vue-component-type-helpers@3.0.1: {}
 
   vue-router@4.5.1(vue@3.5.17(typescript@5.8.3)):
     dependencies:
