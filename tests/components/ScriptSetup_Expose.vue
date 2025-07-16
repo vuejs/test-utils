@@ -60,6 +60,10 @@ defineExpose({
   resetCount,
   refNonExposedGetter,
 })
+
+defineOptions({
+  name: 'Hello',
+})
 </script>
 
 <template>
