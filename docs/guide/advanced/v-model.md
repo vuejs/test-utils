@@ -49,7 +49,11 @@ test('modelValue should be updated', async () => {
   const wrapper = mount(Editor, {
     props: {
       modelValue: 'initialText',
-      'onUpdate:modelValue': (e) => wrapper.setProps({ modelValue: e })
+      'onUpdate:modelValue': async (e) => {
+        // async/await necessary if modelValue is updated in the setup function
+        await nextTick()
+        await wrapper.setProps({ modelValue: e })
+      }
     }
   })
 
