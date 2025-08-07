@@ -170,9 +170,9 @@ describe('teleport', () => {
 
     expect(wrapper.html()).toBe(
       '<div><button>Add</button>\n' +
-        '  <teleport-stub to="body">\n' +
-        '    <div id="count">1</div>\n' +
-        '  </teleport-stub>\n' +
+        '  <!--teleport start-->\n' +
+        '  <div id="count">1</div>\n' +
+        '  <!--teleport end-->\n' +
         '</div>'
     )
 
