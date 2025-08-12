@@ -104,12 +104,18 @@ describe('mount: general tests', () => {
   })
 
   it('should remove wrapper div when unmount', () => {
-    expect(document.body.firstChild, 'Container should be empty').toBeNull();
+    expect(document.body.firstChild, 'Container should be empty').toBeNull()
 
-    const wrapper = mount(Hello, { props: { msg: 'Hello world' }, attachTo: document.body });
-    expect(document.body.firstChild, 'Container should have mounted component wrapper').toBeInstanceOf(HTMLDivElement);
-    
-    wrapper.unmount();
-    expect(document.body.firstChild, 'Container should be empty').toBeNull();
+    const wrapper = mount(Hello, {
+      props: { msg: 'Hello world' },
+      attachTo: document.body
+    })
+    expect(
+      document.body.firstChild,
+      'Container should have mounted component wrapper'
+    ).toBeInstanceOf(HTMLDivElement)
+
+    wrapper.unmount()
+    expect(document.body.firstChild, 'Container should be empty').toBeNull()
   })
 })
