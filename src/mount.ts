@@ -99,6 +99,9 @@ export function mount(
     }
 
     to.appendChild(el)
+    app.onUnmount(() => {
+      to?.removeChild(el)
+    })
   }
   const vm = app.mount(el)
   if (errorsOnMount.length) {
