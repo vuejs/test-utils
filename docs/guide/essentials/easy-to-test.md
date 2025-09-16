@@ -90,7 +90,7 @@ test('text updates on clicking', async () => {
 })
 ```
 
-Libraries such as [Vue Testing Library](https://github.com/testing-library/vue-testing-library/) are build upon these principles. If you are interested in this approach, make sure you check it out.
+Libraries such as [Vue Testing Library](https://github.com/testing-library/vue-testing-library/) are built upon these principles. If you are interested in this approach, make sure you check it out.
 
 ## Build smaller, simpler components
 
