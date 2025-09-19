@@ -9,7 +9,9 @@ import {
   ref,
   SetupContext,
   Prop,
-  VNodeChild
+  VNodeChild,
+  SlotsType,
+  VNode
 } from 'vue'
 import { Options, Vue } from 'vue-class-component'
 import { mount } from '../src'
@@ -340,3 +342,82 @@ expectError(
     }
   )
 )
+
+// slots
+const SetupComponentWithSlots = defineComponent<
+  {
+    hello: string
+  },
+  {
+    hallo: () => void
+  },
+  string,
+  SlotsType<{
+    foo: () => VNode[]
+    bar: () => VNode[]
+    baz: () => VNode[]
+  }>
+>((): any => {})
+
+// optional slots
+mount(SetupComponentWithSlots, {})
+
+mount(SetupComponentWithSlots, {
+  slots: {}
+})
+
+mount(SetupComponentWithSlots, {
+  slots: {
+    foo: 'foo'
+  }
+})
+
+mount(SetupComponentWithSlots, {
+  slots: {
+    foo: 'foo',
+    bar: 'bar'
+  }
+})
+
+mount(SetupComponentWithSlots, {
+  slots: {
+    foo: 'foo',
+    bar: 'bar',
+    baz: 'baz'
+  }
+})
+
+// extra slots
+mount(SetupComponentWithSlots, {
+  slots: {
+    // @ts-expect-error - This slot doesn't exist in the component and it should be reported.
+    extraSlot: 'nonExistentSlot'
+  }
+})
+
+mount(SetupComponentWithSlots, {
+  slots: {
+    foo: 'foo',
+    // @ts-expect-error - This slot doesn't exist in the component and it should be reported.
+    extraSlot: 'nonExistentSlot'
+  }
+})
+
+mount(SetupComponentWithSlots, {
+  slots: {
+    foo: 'foo',
+    bar: 'bar',
+    // @ts-expect-error - This slot doesn't exist in the component and it should be reported.
+    extraSlot: 'nonExistentSlot'
+  }
+})
+
+mount(SetupComponentWithSlots, {
+  slots: {
+    foo: 'foo',
+    bar: 'bar',
+    baz: 'baz',
+    // @ts-expect-error - This slot doesn't exist in the component and it should be reported.
+    extraSlot: 'nonExistentSlot'
+  }
+})
