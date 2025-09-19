@@ -24,7 +24,7 @@ export type ComponentMountingOptions<
   P extends ComponentProps<T> = ComponentProps<T>
 > = Omit<MountingOptions<P, ComponentData<T>>, 'slots'> & {
   slots?: {
-    [K in keyof ComponentSlots<T>]: WithArray<
+    [K in keyof ComponentSlots<T>]?: WithArray<
       | ShimSlotReturnType<ComponentSlots<T>[K]>
       | string
       | VNode
