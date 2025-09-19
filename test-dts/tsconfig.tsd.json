@@ -4,6 +4,7 @@
     "noEmit": false,
     "skipLibCheck": true,
     "experimentalDecorators": true,
+    "noUncheckedIndexedAccess": true,
     "strictNullChecks": false
   },
   "exclude": [
