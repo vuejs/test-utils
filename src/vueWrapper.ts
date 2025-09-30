@@ -31,7 +31,7 @@ function createVMProxy<T extends ComponentPublicInstance>(
         return Reflect.get(vm.$.exposeProxy, key, receiver);
       }
       else if (vm.$.exposed && key in vm.$.exposed) {
-        // first if the key is exposed
+        // second if the key is exposed
         return Reflect.get(proxyRefs(vm.$.exposed), key, receiver);
       } else if (key in setupState) {
         // third if the key is acccessible from the setupState
