@@ -66,3 +66,9 @@ Potential solutions:
 - You can create your own transition stub that can handle these hooks if necessary.
 - You can spy the warning in the test to silence it.
 :::
+
+If you do turn off auto stubbing, note that you might also need to mock `requestAnimationFrame` to ensure that the javascript hooks fire properly:
+
+```js
+vi.spyOn(window, 'requestAnimationFrame').mockImplementation(cb => cb());
+```
