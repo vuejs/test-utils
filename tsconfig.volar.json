@@ -1,5 +1,10 @@
 {
   "extends": "./tsconfig.json",
+  "exclude": [
+    // class components are not supported by vue-tsc v3.1+
+    "tests/components/ClassComponent.vue",
+    "tests/features/classComponent.spec.ts"
+  ],
   "compilerOptions": {
     "lib": ["DOM", "ES2020"],
     "skipLibCheck": true
