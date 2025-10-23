@@ -38,13 +38,18 @@ const todos = ref<TODO[]>([
   }
 ]);
 
-function createTodo() {
-  todos.value.push({
-    id: 2,
-    text: newTodo.value,
-    completed: false
-  });
-}
+const createTodo = () =>{
+  const listLength = todos.value.length;
+  const lastItem = todos.value[listLength - 1];
+  if(newTodo.value) {
+    const id = lastItem.id + 1;
+    todos.value.push({
+      id,
+      text: newTodo.value,
+      completed: false
+    });
+  }
+};
 
 const getClass = (completed: boolean) => [completed ? 'completed' : ''];
 </script>
