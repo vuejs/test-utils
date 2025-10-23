@@ -40,9 +40,11 @@ const todos = ref<TODO[]>([
 
 const createTodo = () =>{
   const listLength = todos.value.length;
-  const lastItem = todos.value[listLength - 1];
-  if(newTodo.value) {
-    const id = lastItem.id + 1;
+  const lastItem = todos.value[listLength - 1];// get last todo item
+  const todoExist = todos.value.find(res => res.text.toLowerCase() === newTodo.value.toLowerCase());//check is todo already exists
+
+  if(newTodo.value && !todoExist) {
+    const id = lastItem.id + 1;//increment the last item id by 1
     todos.value.push({
       id,
       text: newTodo.value,
