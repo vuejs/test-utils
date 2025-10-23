@@ -1,52 +1,50 @@
 <template>
-  <div>
-    <div
-      v-for="todo in todos"
-      :key="todo.id"
-      data-test="todo"
-      :class="[todo.completed ? 'completed' : '']"
+<div>
+  <div
+    v-for="todo in todos"
+    :key="todo.id"
+    data-test="todo"
+    :class="getClass(todo.completed)"
     >
-      {{ todo.text }}
-      <input
-        type="checkbox"
-        v-model="todo.completed"
-        data-test="todo-checkbox"
-      />
-    </div>
-
-    <form data-test="form" @submit.prevent="createTodo">
-      <input data-test="new-todo" v-model="newTodo" />
-    </form>
+    {{ todo.text }}
+    <input
+      type="checkbox"
+      v-model="todo.completed"
+      data-test="todo-checkbox"
+    />
   </div>
+
+  <form data-test="form" @submit.prevent="createTodo">
+    <input data-test="new-todo" v-model="newTodo" />
+  </form>
+</div>
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue'
+<script setup lang="ts">
+import { ref } from 'vue'
 
-export default defineComponent({
-  name: 'TodoApp',
+type TODO = {
+  id: number;
+  text: string;
+  completed: boolean;
+};
 
-  data() {
-    return {
-      newTodo: '',
-      todos: [
-        {
-          id: 1,
-          text: 'Learn Vue.js 3',
-          completed: false
-        }
-      ]
-    }
-  },
-
-  methods: {
-    createTodo() {
-      this.todos.push({
-        id: 2,
-        text: this.newTodo,
-        completed: false
-      })
-    }
+const newTodo = ref<string>('');
+const todos = ref<TODO[]>([
+  {
+    id: 1,
+    text: 'Learn Vue.js 3',
+    completed: false
   }
-})
+]);
+
+function createTodo() {
+  todos.value.push({
+    id: 2,
+    text: newTodo.value,
+    completed: false
+  });
+}
+
+const getClass = (completed: boolean) => [completed ? 'completed' : ''];
 </script>
