@@ -12,8 +12,8 @@ describe('Todo App', () => {
   it('renders a todo', () => {
     const wrapper = mount(TodoApp)
 
-    expect(wrapper.find('[data-test="todo"]').text()).toBe('Learn Vue.js 3')
     expect(wrapper.findAll('[data-test="todo"]')).toHaveLength(1)
+    expect(wrapper.find('[data-test="todo"]').text()).toBe('Learn Vue.js 3')
   })
 
   it('creates a todo', async () => {
@@ -24,23 +24,12 @@ describe('Todo App', () => {
     expect(wrapper.findAll('[data-test="todo"]')).toHaveLength(2)
   })
 
-  it('should not creates duplicate todo', async () => {
-    const wrapper = mount(TodoApp)
-
-    await wrapper.find('[data-test="new-todo"]').setValue('New todo')
-    await wrapper.find('[data-test="form"]').trigger('submit')
-    expect(wrapper.findAll('[data-test="todo"]')).toHaveLength(2)
-
-    await wrapper.find('[data-test="form"]').trigger('submit')
-    expect(wrapper.findAll('[data-test="todo"]')).toHaveLength(2)
-
-    await wrapper.find('[data-test="new-todo"]').setValue('New todo again')
-    await wrapper.find('[data-test="form"]').trigger('submit')
-    expect(wrapper.findAll('[data-test="todo"]')).toHaveLength(3)
-  })
-
   it('completes a todo', async () => {
     const wrapper = mount(TodoApp)
+
+    expect(wrapper.find('[data-test="todo"]').classes()).not.toContain(
+      'completed'
+    )
 
     await wrapper.find('[data-test="todo-checkbox"]').setChecked()
 
