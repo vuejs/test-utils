@@ -34,7 +34,7 @@
     "@rollup/plugin-replace": "6.0.2",
     "@rollup/plugin-typescript": "12.2.0",
     "@types/js-beautify": "1.14.3",
-    "@types/node": "22.18.12",
+    "@types/node": "24.9.1",
     "@vitejs/plugin-vue": "6.0.1",
     "@vitejs/plugin-vue-jsx": "5.1.1",
     "@vitest/coverage-v8": "4.0.1",
