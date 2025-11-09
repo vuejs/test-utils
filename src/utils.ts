@@ -1,5 +1,5 @@
-import { GlobalMountOptions, RefSelector, Stub, Stubs } from './types'
-import {
+import type { GlobalMountOptions, RefSelector, Stub, Stubs } from './types'
+import type {
   Component,
   ComponentOptions,
   ComponentPublicInstance,

@@ -1,9 +1,11 @@
-import domEvents, {
+import type {
   DomEvent,
   DomEventName,
   DomEventNameWithModifier,
+  Modifier
+} from './constants/dom-events'
+import domEvents, {
   KeyName,
-  Modifier,
   ignorableKeyModifiers,
   systemKeyModifiers,
   mouseKeyModifiers,

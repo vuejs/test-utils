@@ -1,5 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
-import { h, defineComponent, defineAsyncComponent, Directive } from 'vue'
+import type { Directive } from 'vue'
+import { h, defineComponent, defineAsyncComponent } from 'vue'
 import { config, flushPromises, mount, RouterLinkStub } from '../../src'
 import Hello from '../components/Hello.vue'
 import ComponentWithoutName from '../components/ComponentWithoutName.vue'

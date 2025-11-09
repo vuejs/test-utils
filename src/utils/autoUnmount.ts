@@ -1,4 +1,4 @@
-import { ComponentPublicInstance } from 'vue'
+import type { ComponentPublicInstance } from 'vue'
 import type { VueWrapper } from '../vueWrapper'
 
 let isEnabled = false

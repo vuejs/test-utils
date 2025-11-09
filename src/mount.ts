@@ -1,13 +1,13 @@
-import { ComponentPublicInstance, DefineComponent, VNode } from 'vue'
+import type { ComponentPublicInstance, DefineComponent, VNode } from 'vue'
 import type {
   ComponentExposed,
   ComponentProps,
   ComponentSlots
 } from 'vue-component-type-helpers'
 import { createInstance } from './createInstance'
-import { MountingOptions } from './types'
+import type { MountingOptions } from './types'
 import { trackInstance } from './utils/autoUnmount'
-import { VueWrapper } from './vueWrapper'
+import type { VueWrapper } from './vueWrapper'
 import { createVueWrapper } from './wrapperFactory'
 
 type ShimSlotReturnType<T> = T extends (...args: infer P) => any

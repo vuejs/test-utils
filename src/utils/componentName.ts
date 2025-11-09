@@ -1,4 +1,4 @@
-import { ComponentInternalInstance, VNodeTypes } from 'vue'
+import type { ComponentInternalInstance, VNodeTypes } from 'vue'
 import { isFunctionalComponent, isObjectComponent } from '../utils'
 import {
   isLegacyExtendedComponent,

@@ -1,7 +1,8 @@
 import { expectType } from './index'
 import { defineComponent } from 'vue'
-import { DOMWrapper, mount, VueWrapper } from '../src'
-import WrapperLike from '../src/interfaces/wrapperLike'
+import type { DOMWrapper, VueWrapper } from '../src'
+import { mount } from '../src'
+import type WrapperLike from '../src/interfaces/wrapperLike'
 
 const FuncComponent = () => 'hello'
 

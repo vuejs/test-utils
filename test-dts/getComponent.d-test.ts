@@ -1,7 +1,8 @@
 import { expectType } from './index'
-import { defineComponent, ComponentPublicInstance } from 'vue'
+import type { ComponentPublicInstance } from 'vue'
+import { defineComponent } from 'vue'
 import { mount } from '../src'
-import WrapperLike from '../src/interfaces/wrapperLike'
+import type WrapperLike from '../src/interfaces/wrapperLike'
 
 const ComponentToFind = defineComponent({
   props: {

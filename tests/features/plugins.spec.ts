@@ -7,8 +7,10 @@ import {
   it,
   vi
 } from 'vitest'
-import { ComponentPublicInstance, h } from 'vue'
-import { mount, config, VueWrapper } from '../../src'
+import type { ComponentPublicInstance } from 'vue'
+import { h } from 'vue'
+import type { VueWrapper } from '../../src'
+import { mount, config } from '../../src'
 
 declare module '../../src/vueWrapper' {
   interface VueWrapper {

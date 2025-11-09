@@ -1,13 +1,13 @@
-import { VNode } from 'vue'
+import type { VNode } from 'vue'
 import { config } from './config'
 import BaseWrapper from './baseWrapper'
-import WrapperLike from './interfaces/wrapperLike'
+import type WrapperLike from './interfaces/wrapperLike'
 import {
   createDOMWrapper,
   registerFactory,
   WrapperType
 } from './wrapperFactory'
-import { RefSelector } from './types'
+import type { RefSelector } from './types'
 import { isRefSelector } from './utils'
 import { createWrapperError } from './errorWrapper'
 

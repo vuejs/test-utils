@@ -1,4 +1,4 @@
-import { Directive } from 'vue'
+import type { Directive } from 'vue'
 import { isObjectComponent } from '../utils'
 import type { VTUVNodeTypeTransformer } from './util'
 

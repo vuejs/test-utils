@@ -1,4 +1,4 @@
-import { ComponentPublicInstance, App, VNode } from 'vue'
+import type { ComponentPublicInstance, App, VNode } from 'vue'
 import type { DOMWrapper as DOMWrapperType } from './domWrapper'
 import type { VueWrapper as VueWrapperType } from './vueWrapper'
 

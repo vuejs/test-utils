@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-empty-object-type */
-import {
+import type {
   Component,
   ComponentOptions,
   Directive,

@@ -1,3 +1,9 @@
+import type {
+  AppConfig,
+  ComponentOptions,
+  ConcreteComponent,
+  DefineComponent
+} from 'vue'
 import {
   h,
   createApp,
@@ -5,15 +11,11 @@ import {
   reactive,
   shallowReactive,
   ref,
-  AppConfig,
-  ComponentOptions,
-  ConcreteComponent,
-  DefineComponent,
   transformVNodeArgs,
   proxyRefs
 } from 'vue'
 
-import { MountingOptions, Slot } from './types'
+import type { MountingOptions, Slot } from './types'
 import {
   getComponentsFromStubs,
   getDirectivesFromStubs,
@@ -32,10 +34,8 @@ import {
   unwrapLegacyVueExtendComponent
 } from './utils/vueCompatSupport'
 import { createVNodeTransformer } from './vnodeTransformers/util'
-import {
-  createStubComponentsTransformer,
-  CreateStubComponentsTransformerConfig
-} from './vnodeTransformers/stubComponentsTransformer'
+import type { CreateStubComponentsTransformerConfig } from './vnodeTransformers/stubComponentsTransformer'
+import { createStubComponentsTransformer } from './vnodeTransformers/stubComponentsTransformer'
 import { createStubDirectivesTransformer } from './vnodeTransformers/stubDirectivesTransformer'
 import { isDeepRef } from './utils/isDeepRef'
 
