@@ -116,7 +116,7 @@
     "url": "git+https://github.com/vuejs/test-utils.git"
   },
   "homepage": "https://github.com/vuejs/test-utils",
-  "packageManager": "pnpm@10.21.0",
+  "packageManager": "pnpm@10.22.0",
   "pnpm": {
     "peerDependencyRules": {
       "ignoreMissing": [
