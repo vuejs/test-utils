@@ -1,17 +1,19 @@
 import { expectError, expectType } from './index'
-import {
+import type {
   ComponentOptions,
   DefineComponent,
-  defineComponent,
-  FunctionalComponent,
-  getCurrentInstance,
-  h,
-  ref,
   SetupContext,
   Prop,
   VNodeChild,
   SlotsType,
   VNode
+} from 'vue'
+import {
+  defineComponent,
+  FunctionalComponent,
+  getCurrentInstance,
+  h,
+  ref
 } from 'vue'
 import { Options, Vue } from 'vue-class-component'
 import { mount } from '../src'

@@ -3,12 +3,13 @@ import { VueWrapper } from './vueWrapper'
 import BaseWrapper from './baseWrapper'
 import { mount, shallowMount } from './mount'
 import { renderToString } from './renderToString'
-import { MountingOptions, Stubs } from './types'
+import type { MountingOptions, Stubs } from './types'
 import { RouterLinkStub } from './components/RouterLinkStub'
 import { createWrapperError } from './errorWrapper'
 import { config } from './config'
 import { flushPromises } from './utils/flushPromises'
 import { enableAutoUnmount, disableAutoUnmount } from './utils/autoUnmount'
+import type { ComponentMountingOptions } from './mount'
 
 export {
   mount,
@@ -22,9 +23,7 @@ export {
   BaseWrapper,
   config,
   flushPromises,
-  MountingOptions,
-  Stubs,
   createWrapperError
 }
 
-export type { ComponentMountingOptions } from './mount'
+export type { MountingOptions, Stubs, ComponentMountingOptions }

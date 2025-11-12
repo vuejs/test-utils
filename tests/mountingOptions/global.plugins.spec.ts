@@ -1,5 +1,6 @@
 import { describe, expect, test, it, vi } from 'vitest'
-import { h, App } from 'vue'
+import type { App } from 'vue'
+import { h } from 'vue'
 
 import { mount } from '../../src'
 import ScriptSetup from '../components/ScriptSetup.vue'

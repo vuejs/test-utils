@@ -1,5 +1,5 @@
 import { isNotNullOrUndefined } from '../utils'
-import { VNode, VNodeArrayChildren } from 'vue'
+import type { VNode, VNodeArrayChildren } from 'vue'
 import { ShapeFlags } from './vueShared'
 
 export function getRootNodes(vnode: VNode): Node[] {

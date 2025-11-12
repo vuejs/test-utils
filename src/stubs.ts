@@ -1,4 +1,4 @@
-import { Component } from 'vue'
+import type { Component } from 'vue'
 
 // Stubbing occurs when in vnode transformer we're swapping
 // component vnode type due to stubbing either component

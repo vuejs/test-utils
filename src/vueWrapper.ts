@@ -1,8 +1,9 @@
-import { nextTick, App, ComponentPublicInstance, VNode, proxyRefs } from 'vue'
+import type { App, ComponentPublicInstance, VNode } from 'vue'
+import { nextTick, proxyRefs } from 'vue'
 
 import { config } from './config'
 import domEvents from './constants/dom-events'
-import { VueElement, VueNode } from './types'
+import type { VueElement, VueNode } from './types'
 import { hasSetupState, mergeDeep } from './utils'
 import { getRootNodes } from './utils/getRootNodes'
 import { emitted, recordEvent, removeEventHistory } from './emit'

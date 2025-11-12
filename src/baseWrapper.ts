@@ -1,20 +1,20 @@
-import { VNode } from 'vue'
+import type { VNode } from 'vue'
 import { textContent } from './utils'
 import type { TriggerOptions } from './createDomEvent'
-import {
+import type {
   ComponentInternalInstance,
   ComponentOptions,
   ComponentPublicInstance,
   ComputedOptions,
   CreateComponentPublicInstance,
   FunctionalComponent,
-  MethodOptions,
-  nextTick
+  MethodOptions
 } from 'vue'
+import { nextTick } from 'vue'
 import { createDOMEvent } from './createDomEvent'
-import { DomEventNameWithModifier } from './constants/dom-events'
+import type { DomEventNameWithModifier } from './constants/dom-events'
 import type { VueWrapper } from './vueWrapper'
-import {
+import type {
   DefinedComponent,
   FindAllComponentsSelector,
   FindComponentSelector,
@@ -22,7 +22,7 @@ import {
   RefSelector,
   VueNode
 } from './types'
-import WrapperLike from './interfaces/wrapperLike'
+import type WrapperLike from './interfaces/wrapperLike'
 import { find, matches } from './utils/find'
 import { createWrapperError } from './errorWrapper'
 import { isElementVisible } from './utils/isElementVisible'
@@ -30,7 +30,8 @@ import { isElement } from './utils/isElement'
 import type { DOMWrapper } from './domWrapper'
 import { createDOMWrapper, createVueWrapper } from './wrapperFactory'
 import { stringifyNode } from './utils/stringifyNode'
-import beautify, { HTMLBeautifyOptions } from 'js-beautify'
+import type { HTMLBeautifyOptions } from 'js-beautify'
+import beautify from 'js-beautify'
 
 export default abstract class BaseWrapper<ElementType extends Node>
   implements WrapperLike

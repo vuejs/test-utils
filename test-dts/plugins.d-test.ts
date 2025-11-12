@@ -1,6 +1,7 @@
 import { expectError } from './index'
-import { ComponentPublicInstance } from 'vue'
-import { config, VueWrapper } from '../src'
+import type { ComponentPublicInstance } from 'vue'
+import type { VueWrapper } from '../src'
+import { config } from '../src'
 
 interface OptionsI {
   msg: string

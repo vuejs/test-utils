@@ -1,8 +1,8 @@
 import { renderToString as baseRenderToString } from '@vue/server-renderer'
-import { DefineComponent } from 'vue'
+import type { DefineComponent } from 'vue'
 import { createInstance } from './createInstance'
-import { ComponentMountingOptions } from './mount'
-import { RenderMountingOptions } from './types'
+import type { ComponentMountingOptions } from './mount'
+import type { RenderMountingOptions } from './types'
 
 export function renderToString<
   T,

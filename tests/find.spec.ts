@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import { defineComponent, h, nextTick, Fragment } from 'vue'
-import { mount, VueWrapper } from '../src'
+import type { VueWrapper } from '../src'
+import { mount } from '../src'
 import SuspenseComponent from './components/Suspense.vue'
 import ParentComponent from './components/ParentComponent.vue'
 import MultipleRootRender from './components/MultipleRootRender.vue'

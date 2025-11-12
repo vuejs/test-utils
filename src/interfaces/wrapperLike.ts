@@ -1,14 +1,14 @@
-import { DomEventNameWithModifier } from '../constants/dom-events'
-import { TriggerOptions } from '../createDomEvent'
-import {
+import type { DomEventNameWithModifier } from '../constants/dom-events'
+import type { TriggerOptions } from '../createDomEvent'
+import type {
   DefinedComponent,
   FindAllComponentsSelector,
   FindComponentSelector,
   NameSelector,
   RefSelector
 } from '../types'
-import { VueWrapper } from '../vueWrapper'
-import { ComponentPublicInstance, FunctionalComponent } from 'vue'
+import type { VueWrapper } from '../vueWrapper'
+import type { ComponentPublicInstance, FunctionalComponent } from 'vue'
 import type { DOMWrapper } from '../domWrapper'
 
 export default interface WrapperLike {
