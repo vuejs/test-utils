@@ -79,8 +79,8 @@ importers:
         specifier: 3.0.2
         version: 3.0.2(jsdom@27.2.0(postcss@8.5.6))
       lint-staged:
-        specifier: 16.2.6
-        version: 16.2.6
+        specifier: 16.2.7
+        version: 16.2.7
       prettier:
         specifier: 3.6.2
         version: 3.6.2
@@ -1436,8 +1436,8 @@ packages:
     resolution: {integrity: sha512-yPVavfyCcRhmorC7rWlkHn15b4wDVgVmBA7kV4QVBsF7kv/9TKJAbAXVTxvTnwP8HHKjRCJDClKbciiYS7p0DQ==}
     engines: {node: '>=16'}
 
-  commander@14.0.1:
-    resolution: {integrity: sha512-2JkV3gUZUVrbNA+1sjBOYLsMZ5cEEl8GTFP2a4AVz5hvasAMCQ1D2l2le/cX+pV4N6ZU17zjUahLpIXRrnWL8A==}
+  commander@14.0.2:
+    resolution: {integrity: sha512-TywoWNNRbhoD0BXs1P3ZEScW8W5iKrnbithIl0YH+uCmBd0QpPOA8yc82DS3BIE5Ma6FnBVUsJ7wVUDz4dvOWQ==}
     engines: {node: '>=20'}
 
   commondir@1.0.1:
@@ -1897,8 +1897,8 @@ packages:
     resolution: {integrity: sha512-+bT2uH4E5LGE7h/n3evcS/sQlJXCpIp6ym8OWJ5eV6+67Dsql/LaaT7qJBAt2rzfoa/5QBGBhxDix1dMt2kQKQ==}
     engines: {node: '>= 0.8.0'}
 
-  lint-staged@16.2.6:
-    resolution: {integrity: sha512-s1gphtDbV4bmW1eylXpVMk2u7is7YsrLl8hzrtvC70h4ByhcMLZFY01Fx05ZUDNuv1H8HO4E+e2zgejV1jVwNw==}
+  lint-staged@16.2.7:
+    resolution: {integrity: sha512-lDIj4RnYmK7/kXMya+qJsmkRFkGolciXjrsZ6PC25GdTfWOAWetR0ZbsNXRAj1EHHImRSalc+whZFg56F5DVow==}
     engines: {node: '>=20.17'}
     hasBin: true
 
@@ -3944,7 +3944,7 @@ snapshots:
 
   commander@11.1.0: {}
 
-  commander@14.0.1: {}
+  commander@14.0.2: {}
 
   commondir@1.0.1: {}
 
@@ -4445,9 +4445,9 @@ snapshots:
       prelude-ls: 1.2.1
       type-check: 0.4.0
 
-  lint-staged@16.2.6:
+  lint-staged@16.2.7:
     dependencies:
-      commander: 14.0.1
+      commander: 14.0.2
       listr2: 9.0.5
       micromatch: 4.0.8
       nano-spawn: 2.0.0
