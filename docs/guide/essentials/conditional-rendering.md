@@ -69,32 +69,6 @@ test('does not render an admin link', () => {
 
 Notice we are calling `exists()` on the value returned from `.find()`. `find()`, like `mount()`, also returns a `wrapper`. `mount()` has a few extra methods, because it's wrapping a Vue component, and `find()` only returns a regular DOM node, but many of the methods are shared between both. Some other methods include `classes()`, which gets the classes a DOM node has, and `trigger()` for simulating user interaction. You can find a list of methods supported [here](../../api/#Wrapper-methods).
 
-## Using `data`
-
-The final test is to assert that the admin link is rendered when `admin` is `true`. It's `false` by default, but we can override that using the second argument to `mount()`, the [`mounting options`](../../api/#mount).
-
-For `data`, we use the aptly named `data` option:
-
-```js
-test('renders an admin link', () => {
-  const wrapper = mount(Nav, {
-    data() {
-      return {
-        admin: true
-      }
-    }
-  })
-
-  // Again, by using `get()` we are implicitly asserting that
-  // the element exists.
-  expect(wrapper.get('#admin').text()).toEqual('Admin')
-})
-```
-
-If you have other properties in `data`, don't worry - Vue Test Utils will merge the two together. The `data` in the mounting options will take priority over any default values.
-
-To learn what other mounting options exist, see [`Passing Data`](../essentials/passing-data.md) or see [`mounting options`](../../api/#mount).
-
 ## Checking Elements visibility
 
 Sometimes you only want to hide/show an element while keeping it in the DOM. Vue offers `v-show` for scenarios as such. (You can check the differences between `v-if` and `v-show` [here](https://v3.vuejs.org/guide/conditional.html#v-if-vs-v-show)).

@@ -68,31 +68,6 @@ test('n\'affiche pas le lien admin', () => {
 
 Remarquez que nous appelons `exists()` sur la valeur retournée par `.find()`. `find()`, comme `mount()`, retourne également un `wrapper`. `mount()` a quelques méthodes supplémentaires, car il enveloppe un composant Vue, et `find()` ne retourne qu'un nœud DOM standard, mais de nombreuses méthodes sont partagées entre les deux. D'autres méthodes incluent `classes()` qui retournera les classes qu'un nœud DOM a, ou encore `trigger()`, qui simulera une interaction utilisateur. Vous pouvez trouver une liste des méthodes prises en charge [ici](../../api/#Methodes-de-Wrapper).
 
-## Utilisation de `data`
-
-Le dernier test consiste à vérifier que le lien admin est rendu lorsque `admin` est à `true`. Il est par défaut à `false`, mais nous pouvons le surcharger en utilisant le deuxième argument de `mount()`. Les options de cette fonction sont [`disponibles ici`](../../api/#mount-options).
-
-Pour `data`, nous utilisons l'option éponyme&nbsp;:
-
-```js
-test('affiche le lien admin', () => {
-  const wrapper = mount(Nav, {
-    data() {
-      return {
-        admin: true,
-      };
-    },
-  });
-
-  // Encore une fois, en utilisant `get()` nous vérifions implicitement que l'élément existe
-  expect(wrapper.get('#admin').text()).toEqual('Administration');
-});
-```
-
-Si vous avez d'autres propriétés dans `data`, ne vous inquiétez pas - Vue Test Utils fusionnera les deux ensemble. Le champ `data` dans les options de `mount()` aura la priorité sur toutes les valeurs par défaut.
-
-Pour découvrir quelles sont les autres options de `mount()`, consultez [`Passer des données aux Composants`](../essentials/passing-data.md) ou consultez les [`options de mount()`](../../api/#mount-options).
-
 ## Vérifier la visibilité des Éléments
 
 Parfois, vous ne voulez que masquer/afficher un élément tout en le conservant dans le DOM. Vue propose `v-show` pour des scénarios de ce genre. (Vous retrouverez les différences entre `v-if` et `v-show` [ici](https://v3.vuejs.org/guide/conditional.html#v-if-vs-v-show)).
