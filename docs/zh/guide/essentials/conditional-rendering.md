@@ -68,31 +68,6 @@ test('does not render an admin link', () => {
 
 请注意，我们在 `.find()` 返回的值上调用了 `exists()`。`find()` 和 `mount()` 一样，也会返回一个 `wrapper`。`mount()` 有一些额外的方法，因为它包装的是 Vue 组件，而 `find()` 只返回普通的 DOM 节点，但它们之间有许多共享的方法。其他方法还包括 `classes()`，用于获取 DOM 节点的 class 属性，以及用于模拟用户交互的 `trigger()`。你可以在[这里](../../api/#Wrapper-methods)找到支持的方法列表。
 
-## 使用 `data`
-
-最后一个测试是断言当 `admin` 为 `true` 时，会渲染 admin 链接。它的默认值是 `false`，但我们可以使用 `mount()` 的第二个参数，即[挂载选项](../../api/#mount)来覆盖它。
-
-对于 `data`，我们使用恰如其名的 `data` 选项：
-
-```js
-test('renders an admin link', () => {
-  const wrapper = mount(Nav, {
-    data() {
-      return {
-        admin: true
-      }
-    }
-  })
-
-  // 同样，使用 `get()` 时我们隐式地断言了元素存在。
-  expect(wrapper.get('#admin').text()).toEqual('Admin')
-})
-```
-
-如果你在 `data` 中还有其他属性，不用担心，Vue Test Utils 会将两者合并。挂载选项中的 `data` 会优先于任何默认值。
-
-要了解其他挂载选项，请参见[传递数据](../essentials/passing-data.md)或[挂载选项](../../api/#mount)。
-
 ## 检查元素可见性
 
 有时你可能只想隐藏/显示一个元素，同时将其保留在 DOM 中。Vue 为这种场景提供了 `v-show` 指令。(你可以在[这里](https://cn.vuejs.org/guide/essentials/conditional.html#v-if-vs-v-show)查阅 `v-if` 和 `v-show` 的区别。)

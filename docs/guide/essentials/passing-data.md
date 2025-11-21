@@ -44,7 +44,7 @@ const error = computed(() => {
   }
   return
 })
-<script>
+</script>
 
 <template>
   <div>
