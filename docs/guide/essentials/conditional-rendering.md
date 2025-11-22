@@ -119,5 +119,4 @@ test('does not show the user dropdown', () => {
 
 - Use `find()` along with `exists()` to verify whether an element is in the DOM.
 - Use `get()` if you expect the element to be in the DOM.
-- The `data` mounting option can be used to set default values on a component.
 - Use `get()` with `isVisible()` to verify the visibility of an element that is in the DOM

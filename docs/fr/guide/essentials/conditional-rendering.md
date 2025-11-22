@@ -38,13 +38,13 @@ Nous pouvons vérifier le contenu du lien de profil en utilisant `get()`&nbsp;:
 
 ```js
 test('affiche le lien du profil', () => {
-  const wrapper = mount(Nav);
+  const wrapper = mount(Nav)
 
   // Ici, nous vérifions implicitement que l'élément #profile existe.
-  const profileLink = wrapper.get('#profile');
+  const profileLink = wrapper.get('#profile')
 
-  expect(profileLink.text()).toEqual('Mon Profil');
-});
+  expect(profileLink.text()).toEqual('Mon Profil')
+})
 ```
 
 Si `get()` ne retourne pas un élément correspondant au sélecteur, il enverra une erreur et votre test échouera. `get()` retourne un `DOMWrapper` si un élément est trouvé. Un `DOMWrapper` est une fine enveloppe autour de l'élément DOM qui implémente l'[API Wrapper](/fr/api/#Methodes-de-Wrapper) - c'est pourquoi nous pouvons exécuter `profileLink.text()` et accéder au texte. Vous pouvez accéder à l'élément brut en utilisant la propriété `element`.
@@ -58,12 +58,12 @@ Il existe un autre type d'enveloppe - un `VueWrapper` - qui est retourné par [`
 Pour ce faire, nous utilisons plutôt `find()` et `exists()`. Le prochain test vérifie que si `admin` est `false` (ce qui est par défaut), le lien administrateur ne sera pas présent&nbsp;:
 
 ```js
-test('n\'affiche pas le lien admin', () => {
-  const wrapper = mount(Nav);
+test("n'affiche pas le lien admin", () => {
+  const wrapper = mount(Nav)
 
   // Utiliser `wrapper.get` renverrait une erreur et ferait échouer le test.
-  expect(wrapper.find('#admin').exists()).toBe(false);
-});
+  expect(wrapper.find('#admin').exists()).toBe(false)
+})
 ```
 
 Remarquez que nous appelons `exists()` sur la valeur retournée par `.find()`. `find()`, comme `mount()`, retourne également un `wrapper`. `mount()` a quelques méthodes supplémentaires, car il enveloppe un composant Vue, et `find()` ne retourne qu'un nœud DOM standard, mais de nombreuses méthodes sont partagées entre les deux. D'autres méthodes incluent `classes()` qui retournera les classes qu'un nœud DOM a, ou encore `trigger()`, qui simulera une interaction utilisateur. Vous pouvez trouver une liste des méthodes prises en charge [ici](../../api/#Methodes-de-Wrapper).
@@ -108,15 +108,14 @@ Les tests pour les scénarios utilisant `v-show` ressembleront à ceci&nbsp;:
 
 ```js
 test("n'affiche pas le menu déroulant de l'utilisateur", () => {
-  const wrapper = mount(Nav);
+  const wrapper = mount(Nav)
 
-  expect(wrapper.get('#user-dropdown').isVisible()).toBe(false);
-});
+  expect(wrapper.get('#user-dropdown').isVisible()).toBe(false)
+})
 ```
 
 ## Conclusion
 
 - Utilisez `find()` avec `exists()` pour vérifier si un élément est dans le DOM.
 - Utilisez `get()` si vous vous attendez à ce que l'élément soit dans le DOM.
-- L'option de `mount()` `data` peut être utilisée pour définir des valeurs par défaut sur un composant.
 - Utilisez `get()` avec `isVisible()` pour vérifier la visibilité d'un élément qui est dans le DOM.
