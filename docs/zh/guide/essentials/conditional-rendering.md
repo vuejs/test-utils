@@ -118,5 +118,4 @@ test('does not show the user dropdown', () => {
 
 - 使用 `find()` 结合 `exists()` 验证元素是否在于 DOM 中。
 - 如果你确认元素存在于 DOM 中，就使用 `get()`。
-- 可以使用 `data` 挂载选项设置组件的默认值。
 - 使用 `get()` 和 `isVisible()` 验证在 DOM 中元素的可见性。
