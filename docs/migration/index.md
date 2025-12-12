@@ -209,6 +209,38 @@ import { config } from '@vue/test-utils'
 config.global.renderStubDefaultSlot = true
 ```
 
+### `shallowMount` now always uses kebab-case for components stubs
+
+**Before**:
+
+```js
+import { shallowMount } from '@vue/test-utils'
+import App from '@/App.vue'
+
+describe('App.vue', () => {
+  it('finds the helloworld component', () => {
+    const wrapper = shallowMount(App, {})
+    const componentStub = wrapper.find('helloworld-stub');
+    expect(componentStub.html()).toBeTruthy();
+  })
+})
+```
+
+**After**:
+
+```js
+import { shallowMount } from '@vue/test-utils'
+import App from '@/App.vue'
+
+describe('App.vue', () => {
+  it('finds the helloworld component', () => {
+    const wrapper = shallowMount(App, {})
+    const componentStub = wrapper.find('hello-world-stub');
+    expect(componentStub.html()).toBeTruthy();
+  })
+})
+```
+
 ### `destroy` is now `unmount` to match Vue 3
 
 Vue 3 renamed the `vm.$destroy` to `vm.$unmount`. Vue Test Utils has followed suit; `wrapper.destroy()` is now `wrapper.unmount()`.
