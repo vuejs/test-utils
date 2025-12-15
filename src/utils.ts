@@ -133,7 +133,7 @@ export function isComponent(
 ): component is ConcreteComponent {
   return Boolean(
     component &&
-      (typeof component === 'object' || typeof component === 'function')
+    (typeof component === 'object' || typeof component === 'function')
   )
 }
 

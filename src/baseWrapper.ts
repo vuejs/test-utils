@@ -33,9 +33,9 @@ import { stringifyNode } from './utils/stringifyNode'
 import type { HTMLBeautifyOptions } from 'js-beautify'
 import beautify from 'js-beautify'
 
-export default abstract class BaseWrapper<ElementType extends Node>
-  implements WrapperLike
-{
+export default abstract class BaseWrapper<
+  ElementType extends Node
+> implements WrapperLike {
   protected readonly wrapperElement: VueNode<ElementType>
   protected abstract getRootNodes(): VueNode[]
 
