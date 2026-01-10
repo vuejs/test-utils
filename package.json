@@ -67,6 +67,7 @@
     "vuex": "4.1.0"
   },
   "peerDependencies": {
+    "@vue/compiler-dom": "3.x",
     "@vue/server-renderer": "3.x",
     "vue": "3.x"
   },
