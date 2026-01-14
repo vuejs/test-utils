@@ -44,7 +44,7 @@
     "@vue/server-renderer": "3.5.26",
     "eslint": "9.39.2",
     "eslint-config-prettier": "10.1.8",
-    "eslint-plugin-prettier": "5.5.4",
+    "eslint-plugin-prettier": "5.5.5",
     "husky": "9.1.7",
     "jsdom": "27.4.0",
     "jsdom-global": "3.0.2",
