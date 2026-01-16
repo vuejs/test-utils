@@ -1,8 +1,8 @@
 import type {
   ComponentInternalInstance,
   VNode,
-  VNodeChild,
   VNodeArrayChildren,
+  VNodeChild,
   VNodeNormalizedChildren,
   VNodeTypes
 } from 'vue'

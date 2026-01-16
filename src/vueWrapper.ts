@@ -10,9 +10,9 @@ import { emitted, recordEvent, removeEventHistory } from './emit'
 import BaseWrapper from './baseWrapper'
 import type { DOMWrapper } from './domWrapper'
 import {
+  WrapperType,
   createDOMWrapper,
-  registerFactory,
-  WrapperType
+  registerFactory
 } from './wrapperFactory'
 import { ShapeFlags } from './utils/vueShared'
 
@@ -257,15 +257,15 @@ export class VueWrapper<
     When using the object api, data lives in the data object, proxied through $data, HOWEVER
     the setupState object will also exist, and be frozen.
     */
-    // @ts-ignore
+    // @ts-expect-error
     if (this.componentVM.$.setupState.__isScriptSetup) {
       // data from <script setup>
-      // @ts-ignore
+      // @ts-expect-error
       mergeDeep(this.componentVM.$.setupState, data)
-      // @ts-ignore
+      // @ts-expect-error
     } else if (!Object.isFrozen(this.componentVM.$.setupState)) {
       // data from setup() function when using the object api
-      // @ts-ignore
+      // @ts-expect-error
       mergeDeep(proxyRefs(this.componentVM.$.setupState), data)
     } else {
       // data when using data: {...} in the object api

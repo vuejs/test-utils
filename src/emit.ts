@@ -1,7 +1,7 @@
 import type {
-  devtools,
+  ComponentInternalInstance,
   ComponentPublicInstance,
-  ComponentInternalInstance
+  devtools
 } from 'vue'
 import { setDevtoolsHook } from 'vue'
 import { getGlobalThis } from './utils'

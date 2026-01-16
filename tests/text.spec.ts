@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { defineComponent, h, Suspense } from 'vue'
+import { Suspense, defineComponent, h } from 'vue'
 
 import { mount } from '../src'
 

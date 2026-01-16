@@ -4,7 +4,7 @@
 
 <script lang="ts" setup>
 interface Props {
-  sym?: Symbol
+  sym?: symbol
 }
 
 const { sym = Symbol() } = defineProps<Props>()

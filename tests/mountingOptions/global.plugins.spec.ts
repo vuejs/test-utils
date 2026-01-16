@@ -1,4 +1,4 @@
-import { describe, expect, test, it, vi } from 'vitest'
+import { describe, expect, it, test, vi } from 'vitest'
 import type { App } from 'vue'
 import { h } from 'vue'
 

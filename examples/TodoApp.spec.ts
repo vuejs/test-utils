@@ -4,7 +4,7 @@
  * pnpm build. Then you can run this with `pnpm test examples`
  */
 import { mount } from '../dist/vue-test-utils.cjs.js'
-import { expect, describe, it } from 'vitest'
+import { describe, expect, it } from 'vitest'
 
 import TodoApp from './TodoApp.vue'
 

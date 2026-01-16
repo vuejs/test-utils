@@ -3,9 +3,9 @@ import { config } from './config'
 import BaseWrapper from './baseWrapper'
 import type WrapperLike from './interfaces/wrapperLike'
 import {
+  WrapperType,
   createDOMWrapper,
-  registerFactory,
-  WrapperType
+  registerFactory
 } from './wrapperFactory'
 import type { RefSelector } from './types'
 import { isRefSelector } from './utils'

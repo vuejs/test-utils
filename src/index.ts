@@ -8,7 +8,7 @@ import { RouterLinkStub } from './components/RouterLinkStub'
 import { createWrapperError } from './errorWrapper'
 import { config } from './config'
 import { flushPromises } from './utils/flushPromises'
-import { enableAutoUnmount, disableAutoUnmount } from './utils/autoUnmount'
+import { disableAutoUnmount, enableAutoUnmount } from './utils/autoUnmount'
 import type { ComponentMountingOptions } from './mount'
 
 export {
