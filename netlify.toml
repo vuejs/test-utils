@@ -1,11 +1,11 @@
 [[redirects]]
-  from="/v2"
-  to="/"
+from = "/v2"
+to = "/"
 
 [build]
-  publish = "docs/.vitepress/dist"
-  command = "pnpm docs:build"
+publish = "docs/.vitepress/dist"
+command = "pnpm docs:build"
 [build.environment]
-  NODE_VERSION = "18"
-  # Useful until https://github.com/nodejs/corepack/issues/612 is fixed
-  COREPACK_INTEGRITY_KEYS = "0"
+NODE_VERSION = "18"
+# Useful until https://github.com/nodejs/corepack/issues/612 is fixed
+COREPACK_INTEGRITY_KEYS = "0"

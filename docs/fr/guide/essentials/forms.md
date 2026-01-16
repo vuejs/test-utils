@@ -40,13 +40,13 @@ Pour modifier la valeur d'un `input` dans VTU, vous pouvez utiliser la méthode 
 
 ```js
 test('définit une valeur', async () => {
-  const wrapper = mount(Component);
-  const input = wrapper.find('input');
+  const wrapper = mount(Component)
+  const input = wrapper.find('input')
 
-  await input.setValue('mon@mail.com');
+  await input.setValue('mon@mail.com')
 
-  expect(input.element.value).toBe('mon@mail.com');
-});
+  expect(input.element.value).toBe('mon@mail.com')
+})
 ```
 
 Comme vous pouvez le constater, `setValue` définit la propriété `value` de l'`input` avec ce que nous lui passons.
@@ -65,15 +65,16 @@ Pour déclencher un évènement `click`, nous pouvons utiliser la méthode `trig
 
 ```js
 test('déclencher un click', async () => {
-  const wrapper = mount(Component);
+  const wrapper = mount(Component)
 
   // déclencher l'évènement
-  await wrapper.find('button').trigger('click');
+  await wrapper.find('button').trigger('click')
 
   // vérifier qu'une action a été faite, comme l'émission de l'évènement `submit`.
-  expect(wrapper.emitted()).toHaveProperty('submit');
-});
+  expect(wrapper.emitted()).toHaveProperty('submit')
+})
 ```
+
 > Si vous ne connaissez pas encore `emitted()`, ne vous inquiétez pas. Il est utilisé pour vérifier les événements émis par un composant. Vous pouvez en savoir plus dans [Tester les évènements](./event-handling).
 
 Nous déclenchons l'événement `click` afin que le composant exécute la méthode `submit`. Comme nous l'avons fait avec `setValue`, nous utilisons `await` pour nous assurer que l'action est reflétée par Vue.
@@ -83,18 +84,18 @@ Nous pouvons alors vérifier que certaines actions ont eu lieu. Dans ce cas, que
 Combinons maintenant ces deux éléments pour tester si notre formulaire simple émet les entrées de l'utilisateur.
 
 ```js
-test('émet la valeur de l\'input vers le composant parent', async () => {
-  const wrapper = mount(Component);
+test("émet la valeur de l'input vers le composant parent", async () => {
+  const wrapper = mount(Component)
 
   // définir la valeur
-  await wrapper.find('input').setValue('mon@mail.com');
+  await wrapper.find('input').setValue('mon@mail.com')
 
   // déclencher l'évènement
-  await wrapper.find('button').trigger('click');
+  await wrapper.find('button').trigger('click')
 
   // vérifier que l'évènement `submit` a bien été déclenché
-  expect(wrapper.emitted('submit')[0][0]).toBe('mon@mail.com');
-});
+  expect(wrapper.emitted('submit')[0][0]).toBe('mon@mail.com')
+})
 ```
 
 ## Exemples avancés
@@ -126,7 +127,6 @@ const submit = () => {
 }
 </script>
 
-
 <template>
   <form @submit.prevent="submit">
     <input type="email" v-model="form.email" />
@@ -153,18 +153,18 @@ Notre composant Vue est un peu plus long, a quelques types d'`input` supplément
 De la même manière que nous avons défini la valeur de l'`input` précédemment, nous pouvons la définir sur toutes les autres entrées du formulaire.
 
 ```js
-import { mount } from '@vue/test-utils';
-import FormComponent from './FormComponent.vue';
+import { mount } from '@vue/test-utils'
+import FormComponent from './FormComponent.vue'
 
 test('soumet le formulaire', async () => {
-  const wrapper = mount(FormComponent);
+  const wrapper = mount(FormComponent)
 
-  await wrapper.find('input[type=email]').setValue('mon@mail.com');
-  await wrapper.find('textarea').setValue('Lorem ipsum dolor sit amet');
-  await wrapper.find('select').setValue('moscou');
-  await wrapper.find('input[type=checkbox]').setValue();
-  await wrapper.find('input[type=radio][value=mensuelle]').setValue();
-});
+  await wrapper.find('input[type=email]').setValue('mon@mail.com')
+  await wrapper.find('textarea').setValue('Lorem ipsum dolor sit amet')
+  await wrapper.find('select').setValue('moscou')
+  await wrapper.find('input[type=checkbox]').setValue()
+  await wrapper.find('input[type=radio][value=mensuelle]').setValue()
+})
 ```
 
 Comme vous pouvez le constater, la méthode `setValue` est très polyvalente. Elle peut fonctionner avec tous les types d'`input` d'un formulaire.
@@ -187,28 +187,28 @@ Pour déclencher l'évènement `submit`, nous utilisons à nouveau la méthode `
 
 ```js {14,16-22}
 test('soumet le formulaire', async () => {
-  const wrapper = mount(FormComponent);
+  const wrapper = mount(FormComponent)
 
-  const email = 'mon@mail.com';
-  const description = 'Lorem ipsum dolor sit amet';
-  const city = 'moscou';
+  const email = 'mon@mail.com'
+  const description = 'Lorem ipsum dolor sit amet'
+  const city = 'moscou'
 
-  await wrapper.find('input[type=email]').setValue(email);
-  await wrapper.find('textarea').setValue(description);
-  await wrapper.find('select').setValue(city);
-  await wrapper.find('input[type=checkbox]').setValue();
-  await wrapper.find('input[type=radio][value=mensuelle]').setValue();
+  await wrapper.find('input[type=email]').setValue(email)
+  await wrapper.find('textarea').setValue(description)
+  await wrapper.find('select').setValue(city)
+  await wrapper.find('input[type=checkbox]').setValue()
+  await wrapper.find('input[type=radio][value=mensuelle]').setValue()
 
-  await wrapper.find('form').trigger('submit.prevent');
+  await wrapper.find('form').trigger('submit.prevent')
 
   expect(wrapper.emitted('submit')[0][0]).toStrictEqual({
     email,
     description,
     city,
     subscribe: true,
-    interval: 'mensuelle',
-  });
-});
+    interval: 'mensuelle'
+  })
+})
 ```
 
 Pour tester le modificateur d'événement, nous avons directement copié-collé notre chaîne d'événement `submit.prevent` dans `trigger`. `trigger` peut lire l'événement transmis et tous ses modificateurs et appliquer seulement ce qui est nécessaire.
@@ -235,20 +235,21 @@ Supposons que nous ayons une entrée qui gère lorsque l'utilisateur fait `cmd` 
 
 ```js
 test('gère des évènements complexes', async () => {
-  const wrapper = mount(Component);
+  const wrapper = mount(Component)
 
-  await wrapper.find(input).trigger('keydown.meta.c.exact.prevent');
+  await wrapper.find(input).trigger('keydown.meta.c.exact.prevent')
 
   // faites les vérifications ici
-});
+})
 ```
+
 Vue Test Utils lit l'événement et applique les propriétés appropriées à l'objet événement. Dans ce cas, cela correspondra à quelque chose comme ceci&nbsp;:
 
 ```js
 // {
-  // ... autres propriétés
-  // "key": "c",
-  // "metaKey": true
+// ... autres propriétés
+// "key": "c",
+// "metaKey": true
 // }
 ```
 
@@ -264,7 +265,7 @@ import { ref } from 'vue'
 const inputValue = ref('')
 const emit = defineEmits(['focus-lost'])
 
-const handleBlur = (event) => {
+const handleBlur = event => {
   if (event.relatedTarget.tagName === 'BUTTON') {
     emit('focus-lost')
   }
@@ -280,19 +281,19 @@ const handleBlur = (event) => {
 ```
 
 ```js
-import Form from './Form.vue';
+import Form from './Form.vue'
 
-test('émet un évènement seulement si l\'on perd le focus du bouton', () => {
-  const wrapper = mount(Form);
+test("émet un évènement seulement si l'on perd le focus du bouton", () => {
+  const wrapper = mount(Form)
 
-  const componentToGetFocus = wrapper.find('button');
+  const componentToGetFocus = wrapper.find('button')
 
   wrapper.find('input').trigger('blur', {
-    relatedTarget: componentToGetFocus.element,
-  });
+    relatedTarget: componentToGetFocus.element
+  })
 
-  expect(wrapper.emitted('focus-lost')).toBeTruthy();
-});
+  expect(wrapper.emitted('focus-lost')).toBeTruthy()
+})
 ```
 
 Ici, nous supposons que notre code vérifie à l'intérieur de l'objet `event` si `relatedTarget` est un bouton ou non. Nous pouvons simplement passer une référence de l'élément, en imitant ce qui se produirait si l'utilisateur clique sur un `button` après avoir tapé quelque chose dans l'`input`.
@@ -333,12 +334,12 @@ Comme ci-dessus, la plupart de `input` Vue ont un véritable `button` ou `input`
 
 ```js
 test('remplit le formulaire', async () => {
-  const wrapper = mount(CustomInput);
+  const wrapper = mount(CustomInput)
 
-  await wrapper.find('.text-input input').setValue('text');
+  await wrapper.find('.text-input input').setValue('text')
 
   // vous pouvez ici vérifier plusieurs choses comme la soumission du formulaire
-});
+})
 ```
 
 ### Tester des composants `input` complexes
@@ -374,15 +375,15 @@ Nous pouvons utiliser `findComponent` pour trouver l'instance du composant et d�
 
 ```js
 test('émet la valeur de textarea lors de la soumission', async () => {
-  const wrapper = mount(CustomTextarea);
-  const description = 'Un texte très long...';
+  const wrapper = mount(CustomTextarea)
+  const description = 'Un texte très long...'
 
-  await wrapper.findComponent({ ref: 'description' }).setValue(description);
+  await wrapper.findComponent({ ref: 'description' }).setValue(description)
 
-  wrapper.find('form').trigger('submit');
+  wrapper.find('form').trigger('submit')
 
-  expect(wrapper.emitted('submitted')[0][0]).toEqual(description);
-});
+  expect(wrapper.emitted('submitted')[0][0]).toEqual(description)
+})
 ```
 
 ## Conclusion

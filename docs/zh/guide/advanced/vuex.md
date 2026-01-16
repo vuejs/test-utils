@@ -151,7 +151,7 @@ test('increment mutation', () => {
 有时在特定的状态下获得 Vuex store 是对测试非常有帮助的。除了 `global.mocks`，我们还有一个技巧，就是创建一个 `createStore` 的包装函数，并接受一个参数来设置初始状态。在这个示例中，我们扩展 `increment` 以接受一个附加参数，该参数将被添加到 `state.count` 上。如果未提供该参数，我们只将 `state.count` 增加 1。
 
 ```js
-const createVuexStore = (initialState) =>
+const createVuexStore = initialState =>
   createStore({
     state: {
       count: 0,

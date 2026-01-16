@@ -40,7 +40,7 @@ describe('defineAsyncComponent', () => {
   it('works with options usage', async () => {
     const Async = defineAsyncComponent({
       loader: () =>
-        new Promise<any>((res) => {
+        new Promise<any>(res => {
           setTimeout(() => {
             res({
               template: '<div>Async Component</div>'

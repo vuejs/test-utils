@@ -14,25 +14,27 @@ Voici un composant simple qui passe d'un contenu à un autre avec une transition
 </template>
 
 <script>
-import { ref } from 'vue';
+import { ref } from 'vue'
 
 export default {
   setup() {
-    const show = ref(false);
+    const show = ref(false)
 
     return {
-      show,
-    };
-  },
-};
+      show
+    }
+  }
+}
 </script>
 
 <style lang="css">
-.fade-enter-active, .fade-leave-active {
+.fade-enter-active,
+.fade-leave-active {
   transition: opacity 0.5s ease;
 }
 
-.fade-enter-from, .fade-leave-to {
+.fade-enter-from,
+.fade-leave-to {
   opacity: 0;
 }
 </style>
@@ -41,17 +43,17 @@ export default {
 Comme Vue Test Utils substitue les transitions, vous pouvez tester le composant ci-dessus de la même manière que vous testez n'importe quel autre composant&nbsp;:
 
 ```js
-import Component from './Component.vue';
-import { mount } from '@vue/test-utils';
+import Component from './Component.vue'
+import { mount } from '@vue/test-utils'
 
 test('fonctionne avec les transitions', async () => {
-  const wrapper = mount(Component);
+  const wrapper = mount(Component)
 
-  expect(wrapper.find('Bonjour').exists()).toBe(false);
+  expect(wrapper.find('Bonjour').exists()).toBe(false)
 
-  await wrapper.find('button').trigger('click');
+  await wrapper.find('button').trigger('click')
 
   // Après avoit cliqué sur le bouton, l'élément `<p>` existe et est visible.
-  expect(wrapper.get('p').text()).toEqual('Bonjour');
-});
+  expect(wrapper.get('p').text()).toEqual('Bonjour')
+})
 ```

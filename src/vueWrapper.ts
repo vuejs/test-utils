@@ -174,7 +174,7 @@ export class VueWrapper<
   ): DOMWrapper<SVGElementTagNameMap[K]>[]
   findAll<T extends Element>(selector: string): DOMWrapper<T>[]
   findAll(selector: string): DOMWrapper<Element>[] {
-    return this.findAllDOMElements(selector).map((e) => createDOMWrapper(e))
+    return this.findAllDOMElements(selector).map(e => createDOMWrapper(e))
   }
 
   private attachNativeEventListener(): void {
@@ -299,7 +299,7 @@ export class VueWrapper<
     // Clear emitted events cache for this component instance
     removeEventHistory(this.vm)
 
-    this.cleanUpCallbacks.forEach((cb) => cb())
+    this.cleanUpCallbacks.forEach(cb => cb())
     this.cleanUpCallbacks = []
 
     this.__app.unmount()

@@ -8,27 +8,26 @@ const exposedState1 = 'exposedState1'
 const exposedState2 = 'exposedState2'
 
 const exposedState2Getter = () => {
-  return exposedState2;
+  return exposedState2
 }
 
 const exposedRef = ref('exposedRef')
 const exposedRefGetter = () => {
-  return exposedRef.value;
+  return exposedRef.value
 }
 
 const exposedMethod1 = () => {
-
-  return 'result of exposedMethod1';
+  return 'result of exposedMethod1'
 }
 
 const exposedMethod2 = () => {
-  return 'result of exposedMethod2';
+  return 'result of exposedMethod2'
 }
 /* ------ Common Test Case End ------ */
 
 const refNonExposed = ref('refNonExposed')
 const refNonExposedGetter = () => {
-  return refNonExposed.value;
+  return refNonExposed.value
 }
 
 const count = ref(0)
@@ -39,7 +38,6 @@ const inc = () => {
 const resetCount = () => {
   count.value = 0
 }
-
 
 defineExpose({
   /* ------ Common Test Case ------ */
@@ -58,7 +56,7 @@ defineExpose({
 
   count,
   resetCount,
-  refNonExposedGetter,
+  refNonExposedGetter
 })
 </script>
 

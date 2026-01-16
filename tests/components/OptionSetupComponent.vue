@@ -1,15 +1,15 @@
 <script>
 export default {
   setup() {
-    const description = "Options API with setup() function";
-    return { description };
+    const description = 'Options API with setup() function'
+    return { description }
   },
   data() {
     return {
-      message: "Hello world!",
-    };
-  },
-};
+      message: 'Hello world!'
+    }
+  }
+}
 </script>
 
 <template>

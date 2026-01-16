@@ -95,7 +95,7 @@ describe('Plugin#install', () => {
 
     it.each(plugins)(
       'Calling install with %p is handled gracefully',
-      (plugin) => {
+      plugin => {
         config.plugins.VueWrapper.install(plugin as any)
         expect(() => mountComponent()).not.toThrow()
       }

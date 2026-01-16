@@ -11,7 +11,5 @@ defineExpose(props)
 
 <template>
   <div>{{ count }} x {{ times }} = {{ result }}</div>
-  <button @click="times += 1">
-    x1
-  </button>
+  <button @click="times += 1">x1</button>
 </template>

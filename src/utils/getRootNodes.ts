@@ -30,7 +30,7 @@ export function getRootNodes(vnode: VNode): Node[] {
     ).flat() as VNode[]
 
     return children
-      .flatMap((vnode) => getRootNodes(vnode))
+      .flatMap(vnode => getRootNodes(vnode))
       .filter(isNotNullOrUndefined)
   }
   // Missing cases which do not need special handling:

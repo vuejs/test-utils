@@ -114,7 +114,7 @@ export function mount(
   // we add `hasOwnProperty` so Jest can spy on the proxied vm without throwing
   // note that this is not necessary with Jest v27+ or Vitest, but is kept for compatibility with older Jest versions
   if (!app.hasOwnProperty) {
-    appRef.hasOwnProperty = (property) => {
+    appRef.hasOwnProperty = property => {
       return Reflect.has(appRef, property)
     }
   }

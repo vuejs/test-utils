@@ -36,7 +36,7 @@ const Component = {
 We could use a real router, then navigate to the correct route for this component, then after clicking the button assert that the correct page is rendered... however, this is a lot of setup for a relatively simple test. At its core, the test we want to write is "if authenticated, redirect to X, otherwise redirect to Y". Let's see how we might accomplish this by mocking the routing using the `global.mocks` property:
 
 ```js
-import { mount } from '@vue/test-utils';
+import { mount } from '@vue/test-utils'
 
 test('allows authenticated user to edit a post', async () => {
   const mockRoute = {
@@ -152,16 +152,16 @@ const routes = [
     path: '/posts',
     component: Posts
   }
-];
+]
 
 const router = createRouter({
   history: createWebHistory(),
-  routes: routes,
+  routes: routes
 })
 
-export { routes };
+export { routes }
 
-export default router;
+export default router
 ```
 
 The best way to illustrate how to test an app using Vue Router is to let the warnings guide us. The following minimal test is enough to get us going:
@@ -190,11 +190,11 @@ The `<router-link>` and `<router-view>` component are not found. We need to inst
 ```js {12,13,14}
 import { mount } from '@vue/test-utils'
 import { createRouter, createWebHistory } from 'vue-router'
-import { routes } from "@/router" // This import should point to your routes file declared above
+import { routes } from '@/router' // This import should point to your routes file declared above
 
 const router = createRouter({
   history: createWebHistory(),
-  routes: routes,
+  routes: routes
 })
 
 test('routing', () => {
@@ -221,11 +221,11 @@ Vue Router provides an `isReady` function that tell us when router is ready. We 
 ```js {13,14}
 import { mount } from '@vue/test-utils'
 import { createRouter, createWebHistory } from 'vue-router'
-import { routes } from "@/router"
+import { routes } from '@/router'
 
 const router = createRouter({
   history: createWebHistory(),
-  routes: routes,
+  routes: routes
 })
 
 test('routing', async () => {
@@ -250,11 +250,11 @@ Now let's navigate to `/posts` and make sure the routing is working as expected:
 ```js {21,22}
 import { mount } from '@vue/test-utils'
 import { createRouter, createWebHistory } from 'vue-router'
-import { routes } from "@/router"
+import { routes } from '@/router'
 
 const router = createRouter({
   history: createWebHistory(),
-  routes: routes,
+  routes: routes
 })
 
 test('routing', async () => {
@@ -291,11 +291,11 @@ In this case, however, there is no _hasNavigated_ hook we can await on. One alte
 ```js {1,22}
 import { mount, flushPromises } from '@vue/test-utils'
 import { createRouter, createWebHistory } from 'vue-router'
-import { routes } from "@/router"
+import { routes } from '@/router'
 
 const router = createRouter({
   history: createWebHistory(),
-  routes: routes,
+  routes: routes
 })
 
 test('routing', async () => {
@@ -320,15 +320,15 @@ It _finally_ passes. Great! This is all very manual, however - and this is for a
 ```js {1,19}
 import { mount, flushPromises } from '@vue/test-utils'
 import { createRouter, createWebHistory } from 'vue-router'
-import { routes } from "@/router"
+import { routes } from '@/router'
 
-let router;
+let router
 beforeEach(async () => {
   router = createRouter({
     history: createWebHistory(),
-    routes: routes,
+    routes: routes
   })
-});
+})
 
 test('routing', async () => {
   router.push('/')
@@ -359,7 +359,7 @@ import { useRouter, useRoute } from 'vue-router'
 const Component = {
   template: `<button @click="redirect">Click to Edit</button>`,
   props: ['isAuthenticated'],
-  setup (props) {
+  setup(props) {
     const router = useRouter()
     const route = useRoute()
 
@@ -453,19 +453,19 @@ a good practice to instantiate a new router object for each test, instead of imp
 ```js
 import { mount } from '@vue/test-utils'
 import { createRouter, createWebHistory } from 'vue-router'
-import { routes } from "@/router"
+import { routes } from '@/router'
 
-let router;
+let router
 
 beforeEach(async () => {
   router = createRouter({
     history: createWebHistory(),
-    routes: routes,
+    routes: routes
   })
 
   router.push('/')
   await router.isReady()
-});
+})
 
 test('allows authenticated user to edit a post', async () => {
   const wrapper = mount(Component, {
@@ -473,7 +473,7 @@ test('allows authenticated user to edit a post', async () => {
       isAuthenticated: true
     },
     global: {
-      plugins: [router],
+      plugins: [router]
     }
   })
 

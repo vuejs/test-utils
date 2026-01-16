@@ -58,7 +58,7 @@ Below is a simple plugin to add a convenient alias to map `wrapper.element` to `
 // setup.js
 import { config } from '@vue/test-utils'
 
-const myAliasPlugin = (wrapper) => {
+const myAliasPlugin = wrapper => {
   return {
     $el: wrapper.element // simple aliases
   }
@@ -103,9 +103,9 @@ wrapper.findByTestId('name-input') // returns a VueWrapper or DOMWrapper
 Implementation of the plugin:
 
 ```js
-import { config, DOMWrapper} from '@vue/test-utils'
+import { config, DOMWrapper } from '@vue/test-utils'
 
-const DataTestIdPlugin = (wrapper) => {
+const DataTestIdPlugin = wrapper => {
   function findByTestId(selector) {
     const dataSelector = `[data-testid='${selector}']`
     const element = wrapper.element.querySelector(dataSelector)
@@ -125,8 +125,9 @@ config.plugins.VueWrapper.install(DataTestIdPlugin)
 The `config.plugins.createStubs` allows to overwrite the default stub creation provided by VTU.
 
 Some use cases are:
-* You want to add more logic into the stubs (for example named slots)
-* You want to use different stubs for multiple components (for example stub components from a library)
+
+- You want to add more logic into the stubs (for example named slots)
+- You want to use different stubs for multiple components (for example stub components from a library)
 
 ### Usage
 
@@ -139,6 +140,7 @@ config.plugins.createStubs = ({ name, component }) => {
 ```
 
 This function will be called everytime VTU generates a stub either from
+
 ```typescript
 const wrapper = mount(Component, {
   global: {
@@ -148,12 +150,15 @@ const wrapper = mount(Component, {
   }
 })
 ```
-or 
+
+or
+
 ```typescript
 const wrapper = shallowMount(Component)
 ```
 
 But will not be called, when you explicit set a stub
+
 ```typescript
 const wrapper = mount(Component, {
   global: {
@@ -167,12 +172,13 @@ const wrapper = mount(Component, {
 ## Using the plugin with TypeScript
 
 To use your custom wrapper plugin with [TypeScript](https://www.typescriptlang.org/) you have to declare your custom wrapper function. Therefore, add a file named `vue-test-utils.d.ts` with the following content:
+
 ```typescript
-import { DOMWrapper } from '@vue/test-utils';
+import { DOMWrapper } from '@vue/test-utils'
 
 declare module '@vue/test-utils' {
   interface VueWrapper {
-    findByTestId(testId: string): DOMWrapper[];
+    findByTestId(testId: string): DOMWrapper[]
   }
 }
 ```

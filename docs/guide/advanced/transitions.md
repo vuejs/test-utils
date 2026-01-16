@@ -28,11 +28,13 @@ export default {
 </script>
 
 <style lang="css">
-.fade-enter-active, .fade-leave-active {
+.fade-enter-active,
+.fade-leave-active {
   transition: opacity 0.5s ease;
 }
 
-.fade-enter-from, .fade-leave-to {
+.fade-enter-from,
+.fade-leave-to {
   opacity: 0;
 }
 </style>
@@ -62,13 +64,14 @@ The Vue Test Utils built-in transition stub is simple and doesn't cover all of V
 
 ::: tip
 Potential solutions:
+
 - You can turn off the auto stubbing by setting [global stubs transition](../../api/#global-stubs) to false
 - You can create your own transition stub that can handle these hooks if necessary.
 - You can spy the warning in the test to silence it.
-:::
+  :::
 
 If you do turn off auto stubbing, note that you might also need to mock `requestAnimationFrame` to ensure that the javascript hooks fire properly:
 
 ```js
-vi.spyOn(window, 'requestAnimationFrame').mockImplementation(cb => cb());
+vi.spyOn(window, 'requestAnimationFrame').mockImplementation(cb => cb())
 ```

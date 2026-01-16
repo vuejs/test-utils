@@ -14,30 +14,30 @@ Prenons en exemple un composant simple qui utilise le `hook` `onServerPrefetch`&
 
 ```ts
 function fakeFetch(text: string) {
-  return Promise.resolve(text);
+  return Promise.resolve(text)
 }
 
 const Component = defineComponent({
   template: '<div>{{ text }}</div>',
   setup() {
-    const text = ref<string | null>(null);
+    const text = ref<string | null>(null)
 
     onServerPrefetch(async () => {
-      text.value = await fakeFetch('onServerPrefetch');
-    });
+      text.value = await fakeFetch('onServerPrefetch')
+    })
 
-    return { text };
-  },
-});
+    return { text }
+  }
+})
 ```
 
 Vous pouvez écrire un test pour ce composant en utilisant `renderToString`&nbsp;:
 
 ```ts
-import { renderToString } from '@vue/test-utils';
+import { renderToString } from '@vue/test-utils'
 
 it('affiche la valeur retournée par onServerPrefetch', async () => {
-  const contents = await renderToString(Component);
-  expect(contents).toBe('<div>onServerPrefetch</div>');
-});
+  const contents = await renderToString(Component)
+  expect(contents).toBe('<div>onServerPrefetch</div>')
+})
 ```

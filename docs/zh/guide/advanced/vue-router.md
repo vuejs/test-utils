@@ -286,7 +286,7 @@ console.error node_modules/@vue/runtime-core/dist/runtime-core.cjs.js:211
 
 同样，由于 Vue Router 4 新的异步特性，我们需要在进行任何断言之前 `await` 路由完成。
 
-然而，在这种情况下，我们没有可以 await 的 *hasNavigated* 钩子。一种替代方法是使用从 Vue Test Utils 导出的 `flushPromises` 函数：
+然而，在这种情况下，我们没有可以 await 的 _hasNavigated_ 钩子。一种替代方法是使用从 Vue Test Utils 导出的 `flushPromises` 函数：
 
 ```js {1,22}
 import { mount, flushPromises } from '@vue/test-utils'

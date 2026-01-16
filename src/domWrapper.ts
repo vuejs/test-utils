@@ -27,7 +27,7 @@ export class DOMWrapper<NodeType extends Node> extends BaseWrapper<NodeType> {
 
   getRootNodes() {
     if (Array.isArray(this.subTree?.children)) {
-      return this.subTree.children.map((node) => (node as any)?.el)
+      return this.subTree.children.map(node => (node as any)?.el)
     }
     return [this.wrapperElement]
   }
@@ -70,9 +70,8 @@ export class DOMWrapper<NodeType extends Node> extends BaseWrapper<NodeType> {
     if (!(this.wrapperElement instanceof Element)) {
       return []
     }
-    return Array.from(
-      this.wrapperElement.querySelectorAll(selector),
-      (element) => createDOMWrapper(element)
+    return Array.from(this.wrapperElement.querySelectorAll(selector), element =>
+      createDOMWrapper(element)
     )
   }
 

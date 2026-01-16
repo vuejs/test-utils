@@ -40,7 +40,7 @@ export default defineComponent({
 
   setup() {
     const error = ref<string | null>(null)
-    onErrorCaptured((e) => {
+    onErrorCaptured(e => {
       const err = e as Error
       error.value = err.message
       return false

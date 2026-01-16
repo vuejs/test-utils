@@ -18,8 +18,8 @@ const Layout = {
         Merci de votre visite.
       </footer>
     </div>
-  `,
-};
+  `
+}
 ```
 
 Vous pourriez vouloir écrire un test pour vous assurer que le contenu du `slot` par défaut est bien affiché. VTU fournit l'option de `mount()`: `slots`.
@@ -28,12 +28,12 @@ Vous pourriez vouloir écrire un test pour vous assurer que le contenu du `slot`
 test('affiche le slot par défaut', () => {
   const wrapper = mount(Layout, {
     slots: {
-      default: 'Contenu principal',
-    },
-  });
+      default: 'Contenu principal'
+    }
+  })
 
-  expect(wrapper.html()).toContain('Contenu principal');
-});
+  expect(wrapper.html()).toContain('Contenu principal')
+})
 ```
 
 Le test passe&nbsp;! Dans cet exemple, nous transmettons du texte au `slot` par défaut. Si vous voulez être encore plus spécifique et vérifier que le contenu du `slot` par défaut est rendu à l'intérieur de `<main>`, vous pourriez changer la vérification&nbsp;:
@@ -42,12 +42,12 @@ Le test passe&nbsp;! Dans cet exemple, nous transmettons du texte au `slot` par 
 test('affiche le slot par défaut', () => {
   const wrapper = mount(Layout, {
     slots: {
-      default: 'Contenu principal',
-    },
-  });
+      default: 'Contenu principal'
+    }
+  })
 
-  expect(wrapper.find('main').text()).toContain('Contenu principal');
-});
+  expect(wrapper.find('main').text()).toContain('Contenu principal')
+})
 ```
 
 ## Slots Nommés
@@ -69,8 +69,8 @@ const Layout = {
         <slot name="footer" />
       </footer>
     </div>
-  `,
-};
+  `
+}
 ```
 
 VTU prend également en charge cela. Vous pouvez écrire un test comme ce qui suit. Notez que dans cet exemple, nous transmettons du HTML au lieu de simple texte aux `slots`.
@@ -81,14 +81,14 @@ test('affiche tous les slots', () => {
     slots: {
       header: '<div>Haut de page</div>',
       main: '<div>Contenu de la page</div>',
-      footer: '<div>Pied de page</div>',
-    },
-  });
+      footer: '<div>Pied de page</div>'
+    }
+  })
 
-  expect(wrapper.html()).toContain('<div>Haut de page</div>');
-  expect(wrapper.html()).toContain('<div>Contenu de la page</div>');
-  expect(wrapper.html()).toContain('<div>Pied de page</div>');
-});
+  expect(wrapper.html()).toContain('<div>Haut de page</div>')
+  expect(wrapper.html()).toContain('<div>Contenu de la page</div>')
+  expect(wrapper.html()).toContain('<div>Pied de page</div>')
+})
 ```
 
 ## Slots Multiples
@@ -99,16 +99,13 @@ Vous pouvez aussi passer un tableau de `slots`&nbsp;:
 test('affiche la page', () => {
   const wrapper = mount(Layout, {
     slots: {
-      default: [
-        '<div id="one">Un</div>',
-        '<div id="two">Deux</div>',
-      ],
-    },
-  });
+      default: ['<div id="one">Un</div>', '<div id="two">Deux</div>']
+    }
+  })
 
-  expect(wrapper.find('#one').exists()).toBe(true);
-  expect(wrapper.find('#two').exists()).toBe(true);
-});
+  expect(wrapper.find('#one').exists()).toBe(true)
+  expect(wrapper.find('#two').exists()).toBe(true)
+})
 ```
 
 ## Utilisation avancée
@@ -116,8 +113,8 @@ test('affiche la page', () => {
 Vous pouvez également passer une fonction de rendu, un objet avec un `template` ou même un composant importé à partir d'un fichier `vue` à la fonction `mount`, dans les options de `slots`&nbsp;:
 
 ```js
-import { h } from 'vue';
-import Header from './Header.vue';
+import { h } from 'vue'
+import Header from './Header.vue'
 
 test('affiche la page entière', () => {
   const wrapper = mount(Layout, {
@@ -125,21 +122,21 @@ test('affiche la page entière', () => {
       header: Header,
       main: h('div', 'Contenu principal'),
       sidebar: { template: '<div>Barre latérale</div>' },
-      footer: '<div>Pied de page</div>',
-    },
-  });
+      footer: '<div>Pied de page</div>'
+    }
+  })
 
-  expect(wrapper.html()).toContain('<div>Haut de page</div>');
-  expect(wrapper.html()).toContain('<div>Contenu principal</div>');
-  expect(wrapper.html()).toContain('<div>Pied de page</div>');
-});
+  expect(wrapper.html()).toContain('<div>Haut de page</div>')
+  expect(wrapper.html()).toContain('<div>Contenu principal</div>')
+  expect(wrapper.html()).toContain('<div>Pied de page</div>')
+})
 ```
 
 [Référez-vous à ces tests](https://github.com/vuejs/test-utils/blob/9d3c2a6526f3d8751d29b2f9112ad2a3332bbf52/tests/mountingOptions/slots.spec.ts#L124-L167) pour plus de cas d'utilisation.
 
 ## Slots à portée limitée (Scoped Slots)
 
-[Les slots à portée limitée](https://v3.vuejs.org/guide/component-slots.html#scoped-slots) et les liaisons de données (`bindings`) sont aussi supportés par VTU. 
+[Les slots à portée limitée](https://v3.vuejs.org/guide/component-slots.html#scoped-slots) et les liaisons de données (`bindings`) sont aussi supportés par VTU.
 
 ```js
 const ComponentWithSlots = {
@@ -150,10 +147,10 @@ const ComponentWithSlots = {
   `,
   data() {
     return {
-      msg: 'monde',
-    };
-  },
-};
+      msg: 'monde'
+    }
+  }
+}
 
 test('slot à portée limitée', () => {
   const wrapper = mount(ComponentWithSlots, {
@@ -162,11 +159,11 @@ test('slot à portée limitée', () => {
         Bonjour tout le {{ scope.msg }}
         </template>
       `
-    },
-  });
+    }
+  })
 
-  expect(wrapper.html()).toContain('Bonjour tout le monde');
-});
+  expect(wrapper.html()).toContain('Bonjour tout le monde')
+})
 ```
 
 Lorsqu'on utilise des `string templates` pour le contenu du `slot`, **si ce n'est pas explicitement défini à l'aide d'un tag `<template #scoped="scopeVar">`**, la portée du `slot` devient disponible sous forme d'un objet `params` lorsque le `slot` est monté.
@@ -177,10 +174,10 @@ test('slot à portée limitée', () => {
     slots: {
       scoped: `Bonjour tout le {{ params.msg }}` // aucun template n'a été fourni, le portée du slot est exposée en tant que "params".
     }
-  });
+  })
 
-  expect(wrapper.html()).toContain('Bonjour tout le monde');
-});
+  expect(wrapper.html()).toContain('Bonjour tout le monde')
+})
 ```
 
 ## Conclusion
