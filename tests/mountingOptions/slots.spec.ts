@@ -120,7 +120,7 @@ describe('slots', () => {
     it('allows passing a function that returns a render function', () => {
       const wrapper = mount(ComponentWithSlots, {
         slots: {
-          scoped: (params) => h('div', {}, JSON.stringify(params))
+          scoped: params => h('div', {}, JSON.stringify(params))
         }
       })
 
@@ -134,7 +134,7 @@ describe('slots', () => {
 
       mount(ComponentWithSlots, {
         slots: {
-          scoped: (params) => {
+          scoped: params => {
             assertParams = params
             // always return something
             return 'foo'

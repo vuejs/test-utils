@@ -1,3 +1,3 @@
 <template>
-  <ScriptSetup/>
+  <ScriptSetup />
 </template>

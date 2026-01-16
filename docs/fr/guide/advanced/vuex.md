@@ -37,15 +37,15 @@ const App = {
   `,
   computed: {
     count() {
-      return this.$store.state.count;
-    },
+      return this.$store.state.count
+    }
   },
   methods: {
     increment() {
-      this.$store.commit('increment');
-    },
-  },
-};
+      this.$store.commit('increment')
+    }
+  }
+}
 ```
 
 ## Tester un Vrai Store Vuex
@@ -53,8 +53,8 @@ const App = {
 Pour tester complètement que ce composant et le `store` Vuex fonctionnent, nous allons cliquer sur le `<button>` et vérifier que le compteur est augmenté. Dans vos applications Vue, généralement dans `main.js`, vous installez Vuex de cette façon&nbsp;:
 
 ```js
-const app = createApp(App);
-app.use(store);
+const app = createApp(App)
+app.use(store)
 ```
 
 C'est parce que Vuex est un plugin. Les plugins sont appliqués en appelant `app.use` et en passant le plugin.
@@ -62,32 +62,32 @@ C'est parce que Vuex est un plugin. Les plugins sont appliqués en appelant `app
 Vue Test Utils vous permet également d'installer des plugins, en utilisant l'option de `mount`&nbsp;: `global.plugins`.
 
 ```typescript
-import { createStore } from 'vuex';
+import { createStore } from 'vuex'
 
 const store = createStore({
   state() {
     return {
-      count: 0,
-    };
+      count: 0
+    }
   },
   mutations: {
     increment(state: any) {
-      state.count += 1;
-    },
-  },
-});
+      state.count += 1
+    }
+  }
+})
 
 test('vuex', async () => {
   const wrapper = mount(App, {
     global: {
-      plugins: [store],
-    },
-  });
+      plugins: [store]
+    }
+  })
 
-  await wrapper.find('button').trigger('click');
+  await wrapper.find('button').trigger('click')
 
-  expect(wrapper.html()).toContain('Compteur: 1');
-});
+  expect(wrapper.html()).toContain('Compteur: 1')
+})
 ```
 
 Après avoir installé le plugin, nous utilisons `trigger` pour cliquer sur le bouton et vérifier que `count` est incrémenté. Ce type de test, qui couvre l'interaction entre différents systèmes (dans ce cas, le composant et le `store`), est connu sous le nom de test d'intégration.
@@ -100,23 +100,23 @@ En revanche, un test unitaire peut isoler et tester le composant et le `store` s
 test('vuex utilise un store simulé', async () => {
   const $store = {
     state: {
-      count: 25,
+      count: 25
     },
-    commit: jest.fn(),
+    commit: jest.fn()
   }
 
   const wrapper = mount(App, {
     global: {
       mocks: {
-        $store,
-      },
-    },
-  });
+        $store
+      }
+    }
+  })
 
-  expect(wrapper.html()).toContain('Compteur: 25');
-  await wrapper.find('button').trigger('click');
-  expect($store.commit).toHaveBeenCalled();
-});
+  expect(wrapper.html()).toContain('Compteur: 25')
+  await wrapper.find('button').trigger('click')
+  expect($store.commit).toHaveBeenCalled()
+})
 ```
 
 Au lieu d'utiliser un vrai `store` Vuex et de l'installer via `global.plugins`, nous avons créé notre propre `store` factice, en implémentant uniquement les parties de Vuex utilisées dans le composant (dans ce cas, les fonctions `state` et `commit`).
@@ -131,19 +131,19 @@ Vous souhaiterez peut-être tester vos mutations ou actions Vuex de manière tot
 test('incrémente la mutation', () => {
   const store = createStore({
     state: {
-      count: 0,
+      count: 0
     },
     mutations: {
       increment(state) {
-        state.count += 1;
-      },
-    },
-  });
+        state.count += 1
+      }
+    }
+  })
 
-  store.commit('increment');
+  store.commit('increment')
 
-  expect(store.state.count).toBe(1);
-});
+  expect(store.state.count).toBe(1)
+})
 ```
 
 ## Prédéfinir le State de Vuex
@@ -151,30 +151,30 @@ test('incrémente la mutation', () => {
 Il peut parfois être utile d'avoir le `store` Vuex dans un état (`state`) spécifique pour un test. Une technique utile que vous pouvez utiliser, en plus de `global.mocks`, est de créer une fonction qui enveloppe `createStore` et prend un argument pour définir l'état initial. Dans cet exemple, nous étendons `increment` pour prendre un argument supplémentaire, qui sera ajouté à `state.count`. Si cela n'est pas fourni, nous incrémentons simplement `state.count` de 1.
 
 ```js
-const createVuexStore = (initialState) =>
+const createVuexStore = initialState =>
   createStore({
     state: {
       count: 0,
-      ...initialState,
+      ...initialState
     },
     mutations: {
       increment(state, value = 1) {
-        state.count += value;
-      },
-    },
-  });
+        state.count += value
+      }
+    }
+  })
 
 test('incrémente la mutation sans passer de valeur', () => {
-  const store = createVuexStore({ count: 20 });
-  store.commit('increment');
-  expect(store.state.count).toBe(21);
-});
+  const store = createVuexStore({ count: 20 })
+  store.commit('increment')
+  expect(store.state.count).toBe(21)
+})
 
 test('incrémente la mutation en passant une valeur', () => {
-  const store = createVuexStore({ count: -10 });
-  store.commit('increment', 15);
-  expect(store.state.count).toBe(5);
-});
+  const store = createVuexStore({ count: -10 })
+  store.commit('increment', 15)
+  expect(store.state.count).toBe(5)
+})
 ```
 
 En créant une fonction `createVuexStore` qui prend un état (`state`) initial, nous pouvons facilement définir l'état initial. Cela nous permet de tester tous les cas limites, tout en simplifiant nos tests.
@@ -190,24 +190,28 @@ Vuex est accessible via une fonction `useStore` lors de l'utilisation de l'API d
 Cela ressemble à ceci&nbsp;:
 
 ```js
-import { createStore } from 'vuex';
-import { createApp } from 'vue';
+import { createStore } from 'vuex'
+import { createApp } from 'vue'
 
 // création d'un symbole unique global pour la clef d'injection
-const key = Symbol();
+const key = Symbol()
 
 const App = {
-  setup () {
+  setup() {
     // on utilise la clef pour le store
-    const store = useStore(key);
-  },
-};
+    const store = useStore(key)
+  }
+}
 
-const store = createStore({ /* ... */ });
-const app = createApp({ /* ... */ });
+const store = createStore({
+  /* ... */
+})
+const app = createApp({
+  /* ... */
+})
 
 // il faudra spécifier la clef en second argument en appelant app.use(store)
-app.use(store, key);
+app.use(store, key)
 ```
 
 Pour éviter de répéter le passage du paramètre de clé chaque fois que `useStore` est utilisé, la documentation Vuex recommande d'extraire cette logique dans une fonction d'aide (`helper`) et de réutiliser cette fonction au lieu de la fonction `useStore` par défaut. [En savoir plus ici](https://next.vuex.vuejs.org/guide/typescript-support.html#typing-usestore-composition-function). La démarche fournissant un `store` à l'aide de Vue Test Utils dépend de la façon dont la fonction `useStore` est utilisée dans le composant.
@@ -219,19 +223,19 @@ Sans clé d'injection, les données du `store` peuvent être simplement injecté
 #### Un Exemple sans fournir de Clef à `useStore`
 
 ```js
-import { createStore } from 'vuex';
+import { createStore } from 'vuex'
 
 const store = createStore({
   // ...
-});
+})
 
 const wrapper = mount(App, {
   global: {
     provide: {
-      store: store,
-    },
-  },
-});
+      store: store
+    }
+  }
+})
 ```
 
 ### Tester des Composants utilisant `useStore` avec une Clef d'Injection
@@ -246,45 +250,49 @@ Vous pouvez soit utiliser `global.provide` avec la bonne clé pour injecter le `
 
 ```js
 // store.js
-export const key = Symbol();
+export const key = Symbol()
 ```
 
 ```js
 // app.spec.js
-import { createStore } from 'vuex';
-import { key } from './store';
+import { createStore } from 'vuex'
+import { key } from './store'
 
-const store = createStore({ /* ... */ });
+const store = createStore({
+  /* ... */
+})
 
 const wrapper = mount(App, {
   global: {
     provide: {
-      [key]: store,
-    },
-  },
-});
+      [key]: store
+    }
+  }
+})
 ```
 
 #### Fournir `useStore` avec Clef en utilisant `global.plugins`
 
 ```js
 // store.js
-export const key = Symbol();
+export const key = Symbol()
 ```
 
 ```js
 // app.spec.js
-import { createStore } from 'vuex';
-import { key } from './store';
+import { createStore } from 'vuex'
+import { key } from './store'
 
-const store = createStore({ /* ... */ });
+const store = createStore({
+  /* ... */
+})
 
 const wrapper = mount(App, {
   global: {
     // pour passer des options aux plugins, utilisez la syntaxe ci-dessous.
-    plugins: [[store, key]],
-  },
-});
+    plugins: [[store, key]]
+  }
+})
 ```
 
 ## Conclusion

@@ -52,10 +52,10 @@ export default abstract class BaseWrapper<
     if (elementRootNodes.length === 0) return []
 
     const result: Element[] = [
-      ...elementRootNodes.filter((node) => node.matches(selector))
+      ...elementRootNodes.filter(node => node.matches(selector))
     ]
 
-    elementRootNodes.forEach((rootNode) => {
+    elementRootNodes.forEach(rootNode => {
       result.push(...Array.from(rootNode.querySelectorAll(selector)))
     })
 
@@ -218,7 +218,7 @@ export default abstract class BaseWrapper<
 
     const results = find(currentComponent.subTree, selector)
 
-    return results.map((c) =>
+    return results.map(c =>
       c.proxy
         ? createVueWrapper(null, c.proxy)
         : createDOMWrapper(c.vnode.el as Element, c.subTree as VNode)
@@ -227,11 +227,11 @@ export default abstract class BaseWrapper<
   abstract setValue(value?: any): Promise<void>
 
   html(options?: { raw?: boolean }): string {
-    const stringNodes = this.getRootNodes().map((node) => stringifyNode(node))
+    const stringNodes = this.getRootNodes().map(node => stringifyNode(node))
     if (options?.raw) return stringNodes.join('')
 
     return stringNodes
-      .map((node) =>
+      .map(node =>
         beautify.html(node, {
           unformatted: ['code', 'pre', 'em', 'strong', 'span'],
           indent_inner_html: true,

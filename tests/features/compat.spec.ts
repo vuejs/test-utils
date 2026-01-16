@@ -10,7 +10,7 @@ const Vue = mockVue.default as typeof mockVue
 describe('@vue/compat build', () => {
   describe.each(['suppress-warning', false])(
     'when RENDER_FUNCTION compat is %p',
-    (RENDER_FUNCTION) => {
+    RENDER_FUNCTION => {
       beforeEach(() => {
         configureCompat({ MODE: 3, RENDER_FUNCTION })
       })

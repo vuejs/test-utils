@@ -12,7 +12,7 @@ import { config } from './config'
 function mergeStubs(target: Record<string, any>, source: GlobalMountOptions) {
   if (source.stubs) {
     if (Array.isArray(source.stubs)) {
-      source.stubs.forEach((x) => (target[x] = true))
+      source.stubs.forEach(x => (target[x] = true))
     } else {
       for (const [k, v] of Object.entries(source.stubs)) {
         target[k] = v
@@ -106,7 +106,7 @@ export const mergeDeep = (
         ? Object.getOwnPropertyNames(Object.getPrototypeOf(source) ?? {})
         : Object.getOwnPropertyNames(source)
     )
-    .forEach((key) => {
+    .forEach(key => {
       const targetValue = target[key]
       const sourceValue = source[key]
 

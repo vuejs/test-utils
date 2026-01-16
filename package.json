@@ -1,11 +1,25 @@
 {
   "name": "@vue/test-utils",
   "version": "2.4.6",
+  "homepage": "https://github.com/vuejs/test-utils",
   "license": "MIT",
+  "author": {
+    "name": "Lachlan Miller",
+    "email": "lachlan.miller.1990@outlook.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/vuejs/test-utils.git"
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "dist/index.d.ts"
+  ],
   "main": "dist/vue-test-utils.cjs.js",
-  "unpkg": "dist/vue-test-utils.browser.js",
-  "types": "dist/index.d.ts",
   "module": "dist/vue-test-utils.esm-bundler.mjs",
+  "types": "dist/index.d.ts",
+  "unpkg": "dist/vue-test-utils.browser.js",
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
@@ -17,11 +31,27 @@
     },
     "./package.json": "./package.json"
   },
-  "files": [
-    "dist",
-    "README.md",
-    "dist/index.d.ts"
-  ],
+  "scripts": {
+    "test": "vitest",
+    "test:coverage": "vitest --coverage",
+    "test:watch": "vitest --watch",
+    "test:build": "vitest --mode test-build",
+    "tsd": "tsc -p test-dts/tsconfig.tsd.json",
+    "tsc:docs": "vue-tsc -p docs/.vitepress/tsconfig.vitepress.json",
+    "build": "rollup -c rollup.config.ts --bundleConfigAsCjs",
+    "prepare": "rollup -c rollup.config.ts --bundleConfigAsCjs",
+    "lint": "eslint .",
+    "lint:fix": "pnpm run lint --fix",
+    "format": "oxfmt",
+    "format-check": "oxfmt --check",
+    "docs:dev": "vitepress dev docs",
+    "docs:build": "vitepress build docs",
+    "docs:translation:compare": "v-translation compare --status-file=docs/.vitepress/translation-status.json --path={docs/index.md,docs/api/index.md,docs/guide,docs/installation,docs/migration}",
+    "docs:translation:update": "v-translation update --status-file=docs/.vitepress/translation-status.json",
+    "docs:translation:status": "v-translation status --status-file=docs/.vitepress/translation-status.json",
+    "vue-tsc": "vue-tsc --noEmit -p tsconfig.volar.json",
+    "prepublishOnly": "pnpm run build"
+  },
   "dependencies": {
     "js-beautify": "^1.14.9",
     "vue-component-type-helpers": "^3.0.0"
@@ -43,13 +73,11 @@
     "@vue/compiler-sfc": "3.5.26",
     "@vue/server-renderer": "3.5.26",
     "eslint": "9.39.2",
-    "eslint-config-prettier": "10.1.8",
-    "eslint-plugin-prettier": "5.5.5",
     "husky": "9.1.7",
     "jsdom": "27.4.0",
     "jsdom-global": "3.0.2",
     "lint-staged": "16.2.7",
-    "prettier": "3.7.4",
+    "oxfmt": "^0.24.0",
     "reflect-metadata": "0.2.2",
     "rollup": "4.55.1",
     "tslib": "2.8.1",
@@ -76,29 +104,6 @@
       "optional": true
     }
   },
-  "author": {
-    "name": "Lachlan Miller",
-    "email": "lachlan.miller.1990@outlook.com"
-  },
-  "scripts": {
-    "test": "vitest",
-    "test:coverage": "vitest --coverage",
-    "test:watch": "vitest --watch",
-    "test:build": "vitest --mode test-build",
-    "tsd": "tsc -p test-dts/tsconfig.tsd.json",
-    "tsc:docs": "vue-tsc -p docs/.vitepress/tsconfig.vitepress.json",
-    "build": "rollup -c rollup.config.ts --bundleConfigAsCjs",
-    "prepare": "rollup -c rollup.config.ts --bundleConfigAsCjs",
-    "lint": "eslint .",
-    "lint:fix": "pnpm run lint --fix",
-    "docs:dev": "vitepress dev docs",
-    "docs:build": "vitepress build docs",
-    "docs:translation:compare": "v-translation compare --status-file=docs/.vitepress/translation-status.json --path={docs/index.md,docs/api/index.md,docs/guide,docs/installation,docs/migration}",
-    "docs:translation:update": "v-translation update --status-file=docs/.vitepress/translation-status.json",
-    "docs:translation:status": "v-translation status --status-file=docs/.vitepress/translation-status.json",
-    "vue-tsc": "vue-tsc --noEmit -p tsconfig.volar.json",
-    "prepublishOnly": "pnpm run build"
-  },
   "husky": {
     "hooks": {
       "pre-commit": "lint-staged"
@@ -106,17 +111,13 @@
   },
   "lint-staged": {
     "*.ts": [
-      "eslint --fix"
+      "eslint --fix",
+      "oxfmt --no-error-on-unmatched-pattern"
     ],
     "*.md": [
-      "prettier --write"
+      "oxfmt --no-error-on-unmatched-pattern"
     ]
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/vuejs/test-utils.git"
-  },
-  "homepage": "https://github.com/vuejs/test-utils",
   "packageManager": "pnpm@10.28.0",
   "pnpm": {
     "peerDependencyRules": {

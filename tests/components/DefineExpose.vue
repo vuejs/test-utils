@@ -16,27 +16,26 @@ export default defineComponent({
     const exposedState2 = 'exposedState2'
 
     const exposedState2Getter = () => {
-      return exposedState2;
+      return exposedState2
     }
 
     const exposedRef = ref('exposedRef')
     const exposedRefGetter = () => {
-      return exposedRef.value;
+      return exposedRef.value
     }
 
     const exposedMethod1 = () => {
-
-      return 'result of exposedMethod1';
+      return 'result of exposedMethod1'
     }
 
     const exposedMethod2 = () => {
-      return 'result of exposedMethod2';
+      return 'result of exposedMethod2'
     }
     /* ------ Common Test Case End ------ */
 
     const stateNonExposedAndNonReturned = 'stateNonExposedAndNonReturned'
     const stateNonExposedAndNonReturnedGetter = () => {
-      return stateNonExposedAndNonReturned;
+      return stateNonExposedAndNonReturned
     }
 
     const returnedState = ref('returnedState')
@@ -56,11 +55,11 @@ export default defineComponent({
       exposedMethod2Alias: exposedMethod2,
       /* ------ Common Test Case End ------ */
 
-      stateNonExposedAndNonReturnedGetter,
+      stateNonExposedAndNonReturnedGetter
     })
 
     return {
-      returnedState,
+      returnedState
     }
   }
 })

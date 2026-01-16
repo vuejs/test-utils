@@ -38,7 +38,7 @@ Let's take a look at what's available on `vm` by with `console.log(wrapper.vm)`:
 }
 ```
 
-We can see both `msg1` and `msg2`! Things like `methods` and `computed` properties will show up too, if they are defined. When writing a test, while it's generally recommended to assert against the DOM (using something like `wrapper.html()`), in some rare circumstances you might need access to the underlying Vue instance. 
+We can see both `msg1` and `msg2`! Things like `methods` and `computed` properties will show up too, if they are defined. When writing a test, while it's generally recommended to assert against the DOM (using something like `wrapper.html()`), in some rare circumstances you might need access to the underlying Vue instance.
 
 ## Usage with `getComponent` and `findComponent`
 
@@ -65,7 +65,7 @@ test('asserts correct props are passed', () => {
 })
 ```
 
-A more thorough way to test this would be asserting against the rendered content. Doing this means you asserts the correct prop is passed *and* rendered.
+A more thorough way to test this would be asserting against the rendered content. Doing this means you asserts the correct prop is passed _and_ rendered.
 
 :::warning WrapperLike type when using CSS selector
 When using `wrapper.findComponent('.foo')` for example then VTU will return the `WrapperLike` type. This is because functional components
@@ -76,6 +76,7 @@ wrapper.findComponent('.foo') // returns WrapperLike
 wrapper.findComponent<typeof FooComponent>('.foo') // returns VueWrapper
 wrapper.findComponent<DefineComponent>('.foo') // returns VueWrapper
 ```
+
 :::
 
 ## Conclusion

@@ -160,7 +160,7 @@ function createDOMEvent(
 
   // attach custom options to the event, like `relatedTarget` and so on.
   if (options) {
-    Object.keys(options).forEach((key) => {
+    Object.keys(options).forEach(key => {
       const propertyDescriptor = Object.getOwnPropertyDescriptor(
         eventPrototype,
         key

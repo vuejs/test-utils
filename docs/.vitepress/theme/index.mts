@@ -8,12 +8,11 @@ const i18nLabels = {
   zh: '该翻译已同步到了 ${date} 的版本，其对应的 commit hash 是 <code>${hash}</code>。'
 }
 
-
 export default {
   ...Theme,
   Layout() {
     return h(Theme.Layout, null, {
-      'doc-before': () => h(TranslationStatus, { status, i18nLabels }),
+      'doc-before': () => h(TranslationStatus, { status, i18nLabels })
     })
-  },
+  }
 }

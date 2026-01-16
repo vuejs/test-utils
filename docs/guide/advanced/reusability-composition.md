@@ -42,10 +42,9 @@ a simple test helper component. The following composable fetches the user data w
 ```typescript
 export function useUser(userId) {
   const user = ref()
-  
+
   function fetchUser(id) {
-    axios.get(`users/${id}`)
-      .then(response => (user.value = response.data))
+    axios.get(`users/${id}`).then(response => (user.value = response.data))
   }
 
   onMounted(() => fetchUser(userId))
@@ -70,7 +69,7 @@ test('fetch user on mount', async () => {
         required: true
       }
     },
-    setup (props) {
+    setup(props) {
       return {
         // Call the composable and expose all return values into our
         // component instance so we can access them with wrapper.vm
@@ -102,6 +101,7 @@ you only want to test a single composable.
 ### Testing `provide`
 
 Let's assume the following component you want to test:
+
 ```vue
 <template>
   <div>
@@ -115,13 +115,13 @@ provide('my-key', 'some-data')
 ```
 
 In this case you could either render an actual child component and test the correct usage of `provide` or you can create
-a simple test helper component and pass it into the default slot. 
+a simple test helper component and pass it into the default slot.
 
 ```typescript
 test('provides correct data', () => {
   const TestComponent = defineComponent({
     template: '<span id="provide-test">{{value}}</span>',
-    setup () {
+    setup() {
       const value = inject('my-key')
       return { value }
     }
@@ -160,7 +160,7 @@ And the test:
 test('provides correct data', () => {
   const TestComponent = defineComponent({
     template: '<span id="provide-test">{{value}}</span>',
-    setup () {
+    setup() {
       const value = inject('my-key')
       return { value }
     }
@@ -194,7 +194,7 @@ const value = inject('my-key')
 </script>
 ```
 
-The unit test could simply look like: 
+The unit test could simply look like:
 
 ```typescript
 test('renders correct data', () => {

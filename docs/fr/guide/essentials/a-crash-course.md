@@ -34,16 +34,16 @@ const todos = ref([
 Le premier test que nous allons écrire va vérifier qu'une tâche est affichée. Regardons d'abord le test, puis nous détaillerons chaque partie&nbsp;:
 
 ```js
-import { mount } from '@vue/test-utils';
-import TodoApp from './TodoApp.vue';
+import { mount } from '@vue/test-utils'
+import TodoApp from './TodoApp.vue'
 
 test('affiche une tâche', () => {
-  const wrapper = mount(TodoApp);
+  const wrapper = mount(TodoApp)
 
-  const todo = wrapper.get('[data-test="todo"]');
+  const todo = wrapper.get('[data-test="todo"]')
 
-  expect(todo.text()).toBe('Apprendre Vue.js 3');
-});
+  expect(todo.text()).toBe('Apprendre Vue.js 3')
+})
 ```
 
 Nous commençons par importer `mount` - c'est la principale manière de monter un composant dans VTU. Vous pouvez déclarer un test en utilisant la fonction `test` accompagné d'une courte description pour le test. Les fonctions `test` et `expect` sont disponibles de façon globale dans la plupart des gestionnaires de tests (cet exemple utilise [Jest](https://jestjs.io/fr/)). Si `test` et `expect` sont des concepts obscurs pour vous, la documentation de Jest a un [exemple plus simple](https://jestjs.io/docs/en/getting-started) de leur utilisation et de leur fonctionnement.
@@ -75,18 +75,18 @@ Avec ce changement, le test est passé. Félicitations&nbsp;! Vous avez écrit v
 La prochaine fonctionnalité que nous allons ajouter est la possibilité pour l'utilisateur de créer une nouvelle tâche. Pour ce faire, nous avons besoin d'un formulaire avec une entrée pour que l'utilisateur puisse taper du texte. Lorsque l'utilisateur soumet le formulaire, nous nous attendons à ce que la nouvelle tâche soit affichée. Regardons le test&nbsp;:
 
 ```js
-import { mount } from '@vue/test-utils';
-import TodoApp from './TodoApp.vue';
+import { mount } from '@vue/test-utils'
+import TodoApp from './TodoApp.vue'
 
 test('créé une tâche', () => {
-  const wrapper = mount(TodoApp);
-  expect(wrapper.findAll('[data-test="todo"]')).toHaveLength(1);
+  const wrapper = mount(TodoApp)
+  expect(wrapper.findAll('[data-test="todo"]')).toHaveLength(1)
 
-  wrapper.get('[data-test="new-todo"]').setValue('New todo');
-  wrapper.get('[data-test="form"]').trigger('submit');
+  wrapper.get('[data-test="new-todo"]').setValue('New todo')
+  wrapper.get('[data-test="form"]').trigger('submit')
 
-  expect(wrapper.findAll('[data-test="todo"]')).toHaveLength(2);
-});
+  expect(wrapper.findAll('[data-test="todo"]')).toHaveLength(2)
+})
 ```
 
 Comme d'habitude, nous commençons par utiliser `mount` pour monter l'élément. Nous vérifions également qu'une seule tâche est affichée - cela permet de clarifier que nous ajoutons une tâche supplémentaire, comme l'indique la dernière ligne du test.
@@ -151,13 +151,13 @@ import { mount } from '@vue/test-utils'
 import TodoApp from './TodoApp.vue'
 
 test('créé une tâche', async () => {
-  const wrapper = mount(TodoApp);
+  const wrapper = mount(TodoApp)
 
-  await wrapper.get('[data-test="new-todo"]').setValue('Nouvelle tâche');
-  await wrapper.get('[data-test="form"]').trigger('submit');
+  await wrapper.get('[data-test="new-todo"]').setValue('Nouvelle tâche')
+  await wrapper.get('[data-test="form"]').trigger('submit')
 
-  expect(wrapper.findAll('[data-test="todo"]')).toHaveLength(2);
-});
+  expect(wrapper.findAll('[data-test="todo"]')).toHaveLength(2)
+})
 ```
 
 Le test passe enfin&nbsp;!
@@ -167,16 +167,16 @@ Le test passe enfin&nbsp;!
 Maintenant que nous pouvons créer des tâches, donnons à l'utilisateur la possibilité de marquer une tâche comme terminée/incomplète avec une case à cocher. Comme précédemment, commençons par le test qui échoue&nbsp;:
 
 ```js
-import { mount } from '@vue/test-utils';
-import TodoApp from './TodoApp.vue';
+import { mount } from '@vue/test-utils'
+import TodoApp from './TodoApp.vue'
 
 test('marque une tâche comme terminée', async () => {
-  const wrapper = mount(TodoApp);
+  const wrapper = mount(TodoApp)
 
-  await wrapper.get('[data-test="todo-checkbox"]').setValue(true);
+  await wrapper.get('[data-test="todo-checkbox"]').setValue(true)
 
-  expect(wrapper.get('[data-test="todo"]').classes()).toContain('completed');
-});
+  expect(wrapper.get('[data-test="todo"]').classes()).toContain('completed')
+})
 ```
 
 Ce test est similaire aux deux précédents ; nous trouvons un élément et interagissons avec de la même manière (nous utilisons à nouveau `setValue`, car nous interagissons avec un élément `<input>`).
@@ -216,17 +216,17 @@ Félicitations&nbsp;! Vous avez écrit votre première suite de tests de composa
 Vous avez sûrement remarqué les nouvelles lignes dans les tests. Pour les comprendre, regardons de nouveau le deuxième test en détail&nbsp;:
 
 ```js
-import { mount } from '@vue/test-utils';
-import TodoApp from './TodoApp.vue';
+import { mount } from '@vue/test-utils'
+import TodoApp from './TodoApp.vue'
 
 test('créé une tâche', async () => {
-  const wrapper = mount(TodoApp);
+  const wrapper = mount(TodoApp)
 
-  await wrapper.get('[data-test="new-todo"]').setValue('Nouvelle todo');
-  await wrapper.get('[data-test="form"]').trigger('submit');
+  await wrapper.get('[data-test="new-todo"]').setValue('Nouvelle todo')
+  await wrapper.get('[data-test="form"]').trigger('submit')
 
-  expect(wrapper.findAll('[data-test="todo"]')).toHaveLength(2);
-});
+  expect(wrapper.findAll('[data-test="todo"]')).toHaveLength(2)
+})
 ```
 
 Le test est divisé en trois étapes distinctes, séparées par des sauts de ligne. Les trois étapes représentent les trois phases d'un test&nbsp;: **organiser**, **agir** et **vérifier**.

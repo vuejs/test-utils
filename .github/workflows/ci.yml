@@ -5,13 +5,12 @@ name: CI
 
 on:
   push:
-    branches: [ main ]
+    branches: [main]
   pull_request:
-    branches: [ main ]
+    branches: [main]
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
 
     strategy:
@@ -19,20 +18,21 @@ jobs:
         node: [20, 22, 24]
 
     steps:
-    - uses: actions/checkout@v6
-    - name: Install pnpm
-      uses: pnpm/action-setup@v4.2.0
-    - name: Use Node.js ${{ matrix.node }}
-      uses: actions/setup-node@v6
-      with:
-        node-version: ${{ matrix.node }}
-        cache: 'pnpm'
-    - run: pnpm install
-    - run: pnpm run lint
-    - run: pnpm run test:coverage
-      env:
-        CI: true
-    - run: pnpm run test:build
-    - run: pnpm run tsd
-    - run: pnpm run vue-tsc
-    - run: pnpm run tsc:docs
+      - uses: actions/checkout@v6
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4.2.0
+      - name: Use Node.js ${{ matrix.node }}
+        uses: actions/setup-node@v6
+        with:
+          node-version: ${{ matrix.node }}
+          cache: 'pnpm'
+      - run: pnpm install
+      - run: pnpm run lint
+      - run: pnpm run format-check
+      - run: pnpm run test:coverage
+        env:
+          CI: true
+      - run: pnpm run test:build
+      - run: pnpm run tsd
+      - run: pnpm run vue-tsc
+      - run: pnpm run tsc:docs

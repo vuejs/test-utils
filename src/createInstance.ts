@@ -139,7 +139,7 @@ export function createInstance(
       ): { [key: string]: Function } => {
         if (Array.isArray(slot)) {
           const normalized = slot.map(slotToFunction)
-          acc[name] = (args: unknown) => normalized.map((f) => f(args))
+          acc[name] = (args: unknown) => normalized.map(f => f(args))
           return acc
         }
 
@@ -157,7 +157,7 @@ export function createInstance(
       const objectComponent = component as ComponentOptions
       if (originalComponent.data) {
         const originalDataFn = originalComponent.data
-        objectComponent.data = (vm) => ({
+        objectComponent.data = vm => ({
           ...originalDataFn.call(vm, vm),
           ...providedData
         })

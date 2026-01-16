@@ -18,19 +18,22 @@ La méthode `install()` recevra une instance de `WrapperAPI` contenant à la foi
 
 ```js
 // fichier setup.js
-import { config } from '@vue/test-utils';
+import { config } from '@vue/test-utils'
 
 // plugin écrit en local, voir la section "Écrire un Plugin"
-import MonPlugin from './myPlugin';
+import MonPlugin from './myPlugin'
 
 // installer le plugin dans le VueWrapper
-config.plugins.VueWrapper.install(MyPlugin);
+config.plugins.VueWrapper.install(MyPlugin)
 ```
 
 Vous pouvez aussi passer quelques options&nbsp;:
 
 ```js
-config.plugins.VueWrapper.install(MonPlugin, { optionUne: true, optionDeux: "abc" });
+config.plugins.VueWrapper.install(MonPlugin, {
+  optionUne: true,
+  optionDeux: 'abc'
+})
 ```
 
 Votre plugin doit être installé qu'une seule fois. Si vous utilisez Jest, cela devrait être dans `setupFiles` ou `setupFilesAfterEnv` de votre configuration Jest.
@@ -49,25 +52,25 @@ Ci-dessous se trouve un plugin simple pour ajouter un `alias` pratique pour mapp
 
 ```js
 // setup.js
-import { config } from '@vue/test-utils';
+import { config } from '@vue/test-utils'
 
-const monPluginAlias = (wrapper) => {
+const monPluginAlias = wrapper => {
   return {
-    $el: wrapper.element, // simple alias
-  };
-};
+    $el: wrapper.element // simple alias
+  }
+}
 
 // Appellez `install` sur le type que vous voulez étendre avec votre plugin.
 // Vous pouvez écrire un plugin de n'importe quel type dans `config.plugins`.
-config.plugins.VueWrapper.install(monPluginAlias);
+config.plugins.VueWrapper.install(monPluginAlias)
 ```
 
 Et dans vos tests, vous pourrez utiliser votre plugin après `mount`.
 
 ```js
 // component.spec.js
-const wrapper = mount({ template: `<h1>🔌 Plugin</h1>` });
-console.log(wrapper.$el.innerHTML); // 🔌 Plugin
+const wrapper = mount({ template: `<h1>🔌 Plugin</h1>` })
+console.log(wrapper.$el.innerHTML) // 🔌 Plugin
 ```
 
 #### Data Test ID Plugin
@@ -89,32 +92,32 @@ Utilisation&nbsp;:
 `MonComposant.spec.js`:
 
 ```js
-const wrapper = mount(MonComposant);
-wrapper.findByTestId('name-input'); // retourne un VueWrapper ou DOMWrapper
+const wrapper = mount(MonComposant)
+wrapper.findByTestId('name-input') // retourne un VueWrapper ou DOMWrapper
 ```
 
 Implémentation du plugin&nbsp;:
 
 ```js
-import { config } from '@vue/test-utils';
+import { config } from '@vue/test-utils'
 
-const DataTestIdPlugin = (wrapper) => {
+const DataTestIdPlugin = wrapper => {
   function findByTestId(selector) {
-    const dataSelector = `[data-testid='${selector}']`;
-    const element = wrapper.element.querySelector(dataSelector);
+    const dataSelector = `[data-testid='${selector}']`
+    const element = wrapper.element.querySelector(dataSelector)
     if (element) {
-      return new DOMWrapper(element);
+      return new DOMWrapper(element)
     }
 
-    return createWrapperError('DOMWrapper');
+    return createWrapperError('DOMWrapper')
   }
 
   return {
-    findByTestId,
-  };
-};
+    findByTestId
+  }
+}
 
-config.plugins.VueWrapper.install(DataTestIdPlugin);
+config.plugins.VueWrapper.install(DataTestIdPlugin)
 ```
 
 ## Plugin de composants de substitution (Stub)
@@ -122,58 +125,62 @@ config.plugins.VueWrapper.install(DataTestIdPlugin);
 L'option `config.plugins.createStubs` permet de remplacer la création par défaut des composants (que nous appellerons `stubs`) fournie par VTU.
 
 Plusieurs cas d'utilisation&nbsp;:
-* Vous voulez ajouter plus de logique dans les `stubs` (par exemple des slots nommés).
-* Vous voulez utiliser des `stubs` différents pour plusieurs composants (par exemple des composants `stub` d'une bibliothèque).
+
+- Vous voulez ajouter plus de logique dans les `stubs` (par exemple des slots nommés).
+- Vous voulez utiliser des `stubs` différents pour plusieurs composants (par exemple des composants `stub` d'une bibliothèque).
 
 ### Utilisation
 
 ```javascript
 config.plugins.createStubs = ({ name, component }) => {
   return defineComponent({
-    render: () => h(`custom-${name}-stub`),
-  });
-};
+    render: () => h(`custom-${name}-stub`)
+  })
+}
 ```
 
 Cette fonction sera appelée chaque fois que VTU générera un `stub` soit à partir de …
+
 ```javascript
 const wrapper = mount(Component, {
   global: {
     stubs: {
-      ChildComponent: true,
-    },
-  },
-});
+      ChildComponent: true
+    }
+  }
+})
 ```
 
 … ou de …
 
 ```javascript
-const wrapper = shallowMount(Component);
+const wrapper = shallowMount(Component)
 ```
 
 Mais ne sera pas appelé si vous spécifiez explicitement un `stub`&nbsp;:
+
 ```javascript
 const wrapper = mount(Component, {
   global: {
     stubs: {
-      ChildComponent: { template: '<child-stub/>' },
-    },
-  },
-});
+      ChildComponent: { template: '<child-stub/>' }
+    }
+  }
+})
 ```
 
 ## Utilisation d'un Plugin avec TypeScript
 
 Pour utiliser votre plugin de wrapper personnalisé avec [TypeScript](https://www.typescriptlang.org/fr/), vous devez déclarer votre fonction de wrapper personnalisée. Par conséquent, ajoutez un fichier nommé `vue-test-utils.d.ts` avec le contenu suivant&nbsp;:
+
 ```typescript
-import { DOMWrapper } from '@vue/test-utils';
+import { DOMWrapper } from '@vue/test-utils'
 
 declare module '@vue/test-utils' {
   export class VueWrapper {
-    findByTestId(testId: string): DOMWrapper[];
-  };
-};
+    findByTestId(testId: string): DOMWrapper[]
+  }
+}
 ```
 
 ## Promouvoir votre Plugin

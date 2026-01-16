@@ -14,14 +14,14 @@ Ci-dessous un composant simple `Editor`&nbsp;:
 const Editor = {
   props: {
     label: String,
-    modelValue: String,
+    modelValue: String
   },
   emits: ['update:modelValue'],
   template: `<div>
     <label>{{label}}</label>
     <input :value="modelValue" @input="$emit('update:modelValue', $event.target.value)">
-  </div>`,
-};
+  </div>`
+}
 ```
 
 Ce composant se comportera comme un composant `input`&nbsp;:
@@ -29,15 +29,15 @@ Ce composant se comportera comme un composant `input`&nbsp;:
 ```js
 const App = {
   components: {
-    Editor,
+    Editor
   },
   template: `<editor v-model="text" label="test" />`,
-  data(){
+  data() {
     return {
-      text: 'test',
-    };
-  },
-};
+      text: 'test'
+    }
+  }
+}
 ```
 
 Maintenant que nous avons typé notre `input`, il modifiera la propriété `texte` dans notre composant.
@@ -49,13 +49,13 @@ test('modelValue est modifié', async () => {
   const wrapper = mount(Editor, {
     props: {
       modelValue: 'Texte initial',
-      'onUpdate:modelValue': (e) => wrapper.setProps({ modelValue: e }),
-    },
-  });
+      'onUpdate:modelValue': e => wrapper.setProps({ modelValue: e })
+    }
+  })
 
-  await wrapper.find('input').setValue('test');
-  expect(wrapper.props('modelValue')).toBe('test');
-});
+  await wrapper.find('input').setValue('test')
+  expect(wrapper.props('modelValue')).toBe('test')
+})
 ```
 
 # Plusieurs `v-model`
@@ -71,8 +71,8 @@ const MoneyEditor = {
     <input :value="modelValue" type="number" @input="$emit('update:modelValue', $event.target.value)"/>
   </div>`,
   props: ['currency', 'modelValue'],
-  emits: ['update:currency', 'update:modelValue'],
-};
+  emits: ['update:currency', 'update:modelValue']
+}
 ```
 
 Nous pouvons tester les deux comme ceci&nbsp;:
@@ -82,17 +82,17 @@ test('modelValue et currency sont modifiés', async () => {
   const wrapper = mount(MoneyEditor, {
     props: {
       modelValue: 'Texte inital',
-      'onUpdate:modelValue': (e) => wrapper.setProps({ modelValue: e }),
+      'onUpdate:modelValue': e => wrapper.setProps({ modelValue: e }),
       currency: '€',
-      'onUpdate:currency': (e) => wrapper.setProps({ currency: e }),
-    },
-  });
+      'onUpdate:currency': e => wrapper.setProps({ currency: e })
+    }
+  })
 
-  const [currencyInput, modelValueInput] = wrapper.findAll('input');
-  await modelValueInput.setValue('test');
-  await currencyInput.setValue('£');
+  const [currencyInput, modelValueInput] = wrapper.findAll('input')
+  await modelValueInput.setValue('test')
+  await currencyInput.setValue('£')
 
-  expect(wrapper.props('modelValue')).toBe('test');
-  expect(wrapper.props('currency')).toBe('£');
-});
+  expect(wrapper.props('modelValue')).toBe('test')
+  expect(wrapper.props('currency')).toBe('£')
+})
 ```

@@ -11,7 +11,7 @@ export function createStubDirectivesTransformer({
   directives = {}
 }: CreateDirectivesTransformerConfig): VTUVNodeTypeTransformer {
   if (Object.keys(directives).length === 0) {
-    return (type) => type
+    return type => type
   }
 
   return function directivesTransformer(type) {
@@ -19,7 +19,7 @@ export function createStubDirectivesTransformer({
       // We want to change component types as rarely as possible
       // So first we check if there are any directives we should stub
       const directivesToPatch = Object.keys(type.directives).filter(
-        (key) => key in directives
+        key => key in directives
       )
 
       if (!directivesToPatch.length) {
@@ -27,7 +27,7 @@ export function createStubDirectivesTransformer({
       }
 
       const replacementDirectives = Object.fromEntries(
-        directivesToPatch.map((name) => {
+        directivesToPatch.map(name => {
           const directive = directives[name]
 
           return [name, typeof directive === 'boolean' ? noop : directive]

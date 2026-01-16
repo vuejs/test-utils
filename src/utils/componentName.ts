@@ -10,7 +10,7 @@ const getComponentNameInSetup = (
   type: VNodeTypes
 ): string | undefined =>
   Object.keys(instance?.setupState || {}).find(
-    (key) =>
+    key =>
       Object.getOwnPropertyDescriptor(instance.setupState, key)?.value === type
   )
 

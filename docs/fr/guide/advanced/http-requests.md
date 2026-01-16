@@ -21,20 +21,20 @@ Commençons avec un scénario de base. Le composant `PostList` suivant rend une 
 </template>
 
 <script>
-import axios from 'axios';
+import axios from 'axios'
 
 export default {
   data() {
     return {
-      posts: null,
-    };
+      posts: null
+    }
   },
   methods: {
     async getPosts() {
-      this.posts = await axios.get('/api/posts');
-    },
-  },
-};
+      this.posts = await axios.get('/api/posts')
+    }
+  }
+}
 </script>
 ```
 
@@ -47,37 +47,37 @@ Dans un second temps, nous devons vérifier que le composant a effectué le bon 
 Enfin, nous devons nous assurer que le DOM a été mis à jour correctement et affiche les données. Nous le faisons en utilisant la fonction `flushPromises()` de `@vue/test-utils`.
 
 ```js
-import { mount, flushPromises } from '@vue/test-utils';
-import axios from 'axios';
-import PostList from './PostList.vue';
+import { mount, flushPromises } from '@vue/test-utils'
+import axios from 'axios'
+import PostList from './PostList.vue'
 
 const mockPostList = [
   { id: 1, title: 'Titre 1' },
-  { id: 2, title: 'Titre 2' },
-];
+  { id: 2, title: 'Titre 2' }
+]
 
 // Les lignes suivantes informe Jest de simuler tout appel avec `axios.get` et de retourner `mockPockList` à la place.
-jest.spyOn(axios, 'get').mockResolvedValue(mockPostList);
+jest.spyOn(axios, 'get').mockResolvedValue(mockPostList)
 
 test('récupère les articles en appuyant sur le bouton', async () => {
-  const wrapper = mount(PostList);
+  const wrapper = mount(PostList)
 
-  await wrapper.get('button').trigger('click');
+  await wrapper.get('button').trigger('click')
 
   // Vérifions que nous avons appelé `axios.get` le bon nombre de fois et avec les bons paramètres.
-  expect(axios.get).toHaveBeenCalledTimes(1);
-  expect(axios.get).toHaveBeenCalledWith('/api/posts');
+  expect(axios.get).toHaveBeenCalledTimes(1)
+  expect(axios.get).toHaveBeenCalledWith('/api/posts')
 
   // Attendons que le DOM soit à jour.
-  await flushPromises();
+  await flushPromises()
 
   // Enfin, vérifions que tout est bien affiché.
-  const posts = wrapper.findAll('[data-test="post"]');
+  const posts = wrapper.findAll('[data-test="post"]')
 
-  expect(posts).toHaveLength(2);
-  expect(posts[0].text()).toContain('Titre 1');
-  expect(posts[1].text()).toContain('Titre 2');
-});
+  expect(posts).toHaveLength(2)
+  expect(posts[0].text()).toContain('Titre 1')
+  expect(posts[1].text()).toContain('Titre 2')
+})
 ```
 
 Faites attention de bien ajouter le préfixe `mock` à la variable `mockPostList`. Sinon, vous obtiendrez l'erreur&nbsp;: "The module factory of `jest.mock()` is not allowed to reference any out-of-scope variables.". C'est spécifique à `jest` et vous pouvez en savoir plus sur ce comportement [dans leur documentation](https://jestjs.io/fr/docs/es6-class-mocks#calling-jestmock-with-the-module-factory-parameter).
@@ -107,25 +107,25 @@ De plus, désactivons également l'élément `<button>` pendant le chargement. N
 </template>
 
 <script>
-import axios from 'axios';
+import axios from 'axios'
 
 export default {
   data() {
     return {
       posts: null,
-      loading: null,
-    };
+      loading: null
+    }
   },
   methods: {
     async getPosts() {
-      this.loading = true;
+      this.loading = true
 
-      this.posts = await axios.get('/api/posts');
+      this.posts = await axios.get('/api/posts')
 
-      this.loading = null;
-    },
-  },
-};
+      this.loading = null
+    }
+  }
+}
 </script>
 ```
 
@@ -133,27 +133,27 @@ export default {
 
 ```js
 test('affiche le message de chargement pendant le téléchargement', async () => {
-  const wrapper = mount(PostList);
+  const wrapper = mount(PostList)
 
   // Remarquez que nous exécutons les vérifications suivantes avant de cliquer sur le bouton.
   // Ici, le composant doit être dans un état de "non chargement".
-  expect(wrapper.find('[role="alert"]').exists()).toBe(false);
-  expect(wrapper.get('button').attributes()).not.toHaveProperty('disabled');
+  expect(wrapper.find('[role="alert"]').exists()).toBe(false)
+  expect(wrapper.get('button').attributes()).not.toHaveProperty('disabled')
 
   // Déclenchons le chargement avec un click.
-  await wrapper.get('button').trigger('click');
+  await wrapper.get('button').trigger('click')
 
   // Nous vérifions l'état de chargement des éléments avant de `flushPromises`.
-  expect(wrapper.find('[role="alert"]').exists()).toBe(true);
-  expect(wrapper.get('button').attributes()).toHaveProperty('disabled');
+  expect(wrapper.find('[role="alert"]').exists()).toBe(true)
+  expect(wrapper.get('button').attributes()).toHaveProperty('disabled')
 
   // Comme précédemment, nous attendons que le DOM se mette à jour.
-  await flushPromises();
+  await flushPromises()
 
   // Après cela, nous revenons à l'état de "Non chargement".
-  expect(wrapper.find('[role="alert"]').exists()).toBe(false);
-  expect(wrapper.get('button').attributes()).not.toHaveProperty('disabled');
-});
+  expect(wrapper.find('[role="alert"]').exists()).toBe(false)
+  expect(wrapper.get('button').attributes()).not.toHaveProperty('disabled')
+})
 ```
 
 ## Requêtes HTTP de Vuex
