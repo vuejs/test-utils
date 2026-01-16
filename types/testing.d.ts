@@ -1,4 +1,4 @@
-import type { Router, RouteLocation } from 'vue-router'
+import type { RouteLocation, Router } from 'vue-router'
 
 declare module 'vue' {
   interface ComponentCustomProperties {

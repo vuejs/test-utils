@@ -5,14 +5,14 @@ import type {
   DefineComponent
 } from 'vue'
 import {
-  h,
   createApp,
   defineComponent,
+  h,
+  proxyRefs,
   reactive,
-  shallowReactive,
   ref,
-  transformVNodeArgs,
-  proxyRefs
+  shallowReactive,
+  transformVNodeArgs
 } from 'vue'
 
 import type { MountingOptions, Slot } from './types'
@@ -275,7 +275,7 @@ export function createInstance(
       any
     ][]) {
       // TODO should be switched to a ts-expect-error once Vue 3.5 is used
-      // @ts-ignore https://github.com/vuejs/test-utils/issues/2483
+      // @ts-expect-error https://github.com/vuejs/test-utils/issues/2483
       app.config[k] = isObject(app.config[k])
         ? Object.assign(app.config[k]!, v)
         : v
@@ -286,7 +286,7 @@ export function createInstance(
   if (global.provide) {
     for (const key of Reflect.ownKeys(global.provide)) {
       // TODO should be switched to a ts-expect-error
-      // @ts-ignore: https://github.com/microsoft/TypeScript/issues/1863
+      // @ts-expect-error: https://github.com/microsoft/TypeScript/issues/1863
       app.provide(key, global.provide[key])
     }
   }

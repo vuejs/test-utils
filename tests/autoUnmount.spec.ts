@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
-import { mount, enableAutoUnmount, disableAutoUnmount } from '../src'
+import { disableAutoUnmount, enableAutoUnmount, mount } from '../src'
 
 describe('enableAutoUnmount', () => {
   beforeEach(() => {

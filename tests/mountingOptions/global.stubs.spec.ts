@@ -1,7 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import type { Directive } from 'vue'
-import { h, defineComponent, defineAsyncComponent } from 'vue'
-import { config, flushPromises, mount, RouterLinkStub } from '../../src'
+import { defineAsyncComponent, defineComponent, h } from 'vue'
+import { RouterLinkStub, config, flushPromises, mount } from '../../src'
 import Hello from '../components/Hello.vue'
 import ComponentWithoutName from '../components/ComponentWithoutName.vue'
 import ComponentWithSlots from '../components/ComponentWithSlots.vue'
@@ -1149,7 +1149,7 @@ describe('mounting options: stubs', () => {
     it('stubs directive on root component with script setup', () => {
       const Component = {
         setup() {
-          // @ts-ignore-error (directive used by script setup)
+          // @ts-expect-error-error (directive used by script setup)
           const vMyDirective = MyDirective
         },
         template: '<div v-my-directive>text</div>',

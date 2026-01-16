@@ -21,7 +21,6 @@ describe('expose', () => {
     expect(vm.exposedState2Getter()).toBe('exposedState2')
 
     // exposed ref can be changed and will affect the original ref
-    // @ts-ignore upstream issue, see https://github.com/vuejs/core/issues/4397#issuecomment-957613874
     expect(vm.exposedRef).toBe('exposedRef')
     vm.exposedRef = 'newExposedRef'
     expect(vm.exposedRef).toBe('newExposedRef')
@@ -100,10 +99,10 @@ describe('expose', () => {
     await wrapper.find('button').trigger('click')
     expect(wrapper.html()).toContain('1')
     // can access `count` even if it is _not_ exposed
-    // @ts-ignore we need better types here, see https://github.com/vuejs/test-utils/issues/972
+    // @ts-expect-error we need better types here, see https://github.com/vuejs/test-utils/issues/972
     expect(wrapper.vm.count).toBe(1)
 
-    // @ts-ignore we need better types here, see https://github.com/vuejs/test-utils/issues/972
+    // @ts-expect-error we need better types here, see https://github.com/vuejs/test-utils/issues/972
     wrapper.vm.count = 2
     await nextTick()
     expect(wrapper.html()).toContain('2')
@@ -113,7 +112,7 @@ describe('expose', () => {
     const wrapper = mount(ScriptSetup)
 
     const spiedIncrement = vi
-      // @ts-ignore we need better types here, see https://github.com/vuejs/test-utils/issues/972
+      // @ts-expect-error we need better types here, see https://github.com/vuejs/test-utils/issues/972
       .spyOn(wrapper.vm, 'inc')
       .mockImplementation(() => {})
 

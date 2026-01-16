@@ -1,4 +1,4 @@
-import { ref, defineComponent, h, Transition } from 'vue'
+import { Transition, defineComponent, h, ref } from 'vue'
 
 export const WithTransition = defineComponent({
   name: 'WithTransition',

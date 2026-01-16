@@ -10,7 +10,7 @@ import {
 import type { ComponentPublicInstance } from 'vue'
 import { h } from 'vue'
 import type { VueWrapper } from '../../src'
-import { mount, config } from '../../src'
+import { config, mount } from '../../src'
 
 declare module '../../src/vueWrapper' {
   interface VueWrapper {
@@ -79,7 +79,7 @@ describe('Plugin#install', () => {
     })
 
     afterAll(() => {
-      // @ts-ignore
+      // @ts-expect-error
       console.error.mockRestore()
     })
 

@@ -1,7 +1,7 @@
 import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest'
 import type { AppConfig } from 'vue'
 import { defineAsyncComponent, defineComponent, h } from 'vue'
-import { mount, shallowMount, flushPromises } from '../../src'
+import { flushPromises, mount, shallowMount } from '../../src'
 import Hello from '../components/Hello.vue'
 
 const config: Partial<AppConfig> = {

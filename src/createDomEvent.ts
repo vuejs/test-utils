@@ -7,9 +7,9 @@ import type {
 import domEvents, {
   KeyName,
   ignorableKeyModifiers,
-  systemKeyModifiers,
+  keyCodesByKeyName,
   mouseKeyModifiers,
-  keyCodesByKeyName
+  systemKeyModifiers
 } from './constants/dom-events'
 
 interface TriggerOptions {

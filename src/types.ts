@@ -1,15 +1,15 @@
 /* eslint-disable @typescript-eslint/no-empty-object-type */
 import type {
+  AppConfig,
   Component,
+  ComponentInternalInstance,
   ComponentOptions,
   Directive,
-  Plugin,
-  AppConfig,
-  VNode,
-  VNodeProps,
   FunctionalComponent,
-  ComponentInternalInstance,
-  Ref
+  Plugin,
+  Ref,
+  VNode,
+  VNodeProps
 } from 'vue'
 
 export interface RefSelector {

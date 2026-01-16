@@ -2,15 +2,15 @@ import { expectError, expectType } from './index'
 import type {
   ComponentOptions,
   DefineComponent,
-  SetupContext,
   Prop,
-  VNodeChild,
+  SetupContext,
   SlotsType,
-  VNode
+  VNode,
+  VNodeChild
 } from 'vue'
 import {
-  defineComponent,
   FunctionalComponent,
+  defineComponent,
   getCurrentInstance,
   h,
   ref
