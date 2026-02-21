@@ -343,4 +343,25 @@ describe('setValue', () => {
       })
     })
   })
+
+  describe('on contenteditable elements', () => {
+    it('sets element innerHTML', async () => {
+      const richContent = '<h1>Rich title</h1><p>Rich description</p>'
+      const onInput = vi.fn()
+      const onChange = vi.fn()
+      const Comp = defineComponent({
+        setup() {
+          return () => h('div', { contenteditable: 'true', onInput, onChange })
+        }
+      })
+
+      const wrapper = mount(Comp)
+      const editable = wrapper.find<HTMLDivElement>('div')
+      await editable.setValue(richContent)
+
+      expect(editable.element.innerHTML).toBe(richContent)
+      expect(onInput).toHaveBeenCalledTimes(1)
+      expect(onChange).toHaveBeenCalledTimes(1)
+    })
+  })
 })
