@@ -67,18 +67,18 @@
     "@vitejs/plugin-vue": "6.0.4",
     "@vitejs/plugin-vue-jsx": "5.1.4",
     "@vitest/coverage-v8": "4.0.18",
-    "@vue/compat": "3.5.28",
-    "@vue/compiler-dom": "3.5.28",
-    "@vue/compiler-sfc": "3.5.28",
-    "@vue/server-renderer": "3.5.28",
+    "@vue/compat": "3.5.29",
+    "@vue/compiler-dom": "3.5.29",
+    "@vue/compiler-sfc": "3.5.29",
+    "@vue/server-renderer": "3.5.29",
     "husky": "9.1.7",
     "jsdom": "28.1.0",
     "jsdom-global": "3.0.2",
     "lint-staged": "16.2.7",
     "oxfmt": "0.35.0",
-    "oxlint": "1.48.0",
+    "oxlint": "1.50.0",
     "reflect-metadata": "0.2.2",
-    "rollup": "4.57.1",
+    "rollup": "4.59.0",
     "tslib": "2.8.1",
     "typescript": "5.9.3",
     "unplugin-vue-components": "31.0.0",
@@ -86,10 +86,10 @@
     "vitepress": "1.6.4",
     "vitepress-translation-helper": "0.2.2",
     "vitest": "4.0.18",
-    "vue": "3.5.28",
+    "vue": "3.5.29",
     "vue-class-component": "8.0.0-rc.1",
-    "vue-router": "5.0.2",
-    "vue-tsc": "3.2.4",
+    "vue-router": "5.0.3",
+    "vue-tsc": "3.2.5",
     "vuex": "4.1.0"
   },
   "peerDependencies": {
@@ -116,7 +116,7 @@
       "oxfmt --no-error-on-unmatched-pattern"
     ]
   },
-  "packageManager": "pnpm@10.30.0",
+  "packageManager": "pnpm@10.30.2",
   "pnpm": {
     "peerDependencyRules": {
       "ignoreMissing": [
