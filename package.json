@@ -76,7 +76,7 @@
     "jsdom-global": "3.0.2",
     "lint-staged": "16.3.3",
     "oxfmt": "0.38.0",
-    "oxlint": "1.52.0",
+    "oxlint": "1.53.0",
     "reflect-metadata": "0.2.2",
     "rollup": "4.59.0",
     "tslib": "2.8.1",
