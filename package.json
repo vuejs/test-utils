@@ -72,7 +72,7 @@
     "@vue/compiler-sfc": "3.5.30",
     "@vue/server-renderer": "3.5.30",
     "husky": "9.1.7",
-    "jsdom": "28.1.0",
+    "jsdom": "29.0.0",
     "jsdom-global": "3.0.2",
     "lint-staged": "16.3.3",
     "oxfmt": "0.40.0",
