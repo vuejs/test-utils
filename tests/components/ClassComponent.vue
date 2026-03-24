@@ -14,6 +14,7 @@ import { Options, Vue } from 'vue-class-component'
     msg: String
   }
 })
+
 export default class ClassComponent extends Vue {
   dataText: string = ''
   msg!: string // declared for type-checking
