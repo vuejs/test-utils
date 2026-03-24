@@ -105,11 +105,15 @@ In this scenario, the element is not visible but always rendered. `get()` or `fi
 
 For any of these cases, `isVisible()` returns `false`.
 
+::: warning
+`isVisible()` only works correctly if the wrapper is attached to the DOM via `attachTo`. This is especially relevant when using **happy-dom** as your test environment. Without `attachTo`, CSS-driven visibility (such as `v-show`) may not be detected properly. See the [API docs for `isVisible()`](https://test-utils.vuejs.org/api/#isVisible) for a full example.
+:::
+
 Testing scenarios using `v-show` will look like:
 
 ```js
 test('does not show the user dropdown', () => {
-  const wrapper = mount(Nav)
+  const wrapper = mount(Nav, { attachTo: document.body })
 
   expect(wrapper.get('#user-dropdown').isVisible()).toBe(false)
 })
