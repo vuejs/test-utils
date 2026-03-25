@@ -15,25 +15,25 @@ const FetchDataFromApi = {
     <div>{{ result }}</div>
   `,
   async mounted() {
-    const res = await axios.get('/api/info');
-    this.result = res.data;
+    const res = await axios.get('/api/info')
+    this.result = res.data
   },
   data() {
     return {
-      result: '',
-    };
-  },
-};
+      result: ''
+    }
+  }
+}
 
 const App = {
   components: {
-    FetchDataFromApi,
+    FetchDataFromApi
   },
   template: `
     <h1>Bienvenue dans Vue.js 3</h1>
     <fetch-data-from-api />
-  `,
-};
+  `
+}
 ```
 
 Nous ne voulons pas effectuer l'appel API dans ce test en particulier, nous désirons simplement vérifier que le message est affiché. Dans ce cas, nous pourrions utiliser les `stubs`, qui apparaissent dans l'option de `mount`&nbsp;: `global`.
@@ -44,17 +44,17 @@ test('substitue le composant avec un template personnalisé', () => {
     global: {
       stubs: {
         FetchDataFromApi: {
-          template: '<span />',
-        },
-      },
-    },
-  });
+          template: '<span />'
+        }
+      }
+    }
+  })
 
-  console.log(wrapper.html());
+  console.log(wrapper.html())
   // <h1>Bienvenue dans Vue.js 3</h1><span></span>
 
-  expect(wrapper.html()).toContain('Bienvenue dans Vue.js 3');
-});
+  expect(wrapper.html()).toContain('Bienvenue dans Vue.js 3')
+})
 ```
 
 Remarquez comment le template affiche `<span></span>` à la place de `<fetch-data-from-api />`&nbsp;? Nous l'avons substitué par un `stub` - dans ce cas, nous avons fourni notre propre implémentation en passant un `template`.
@@ -66,19 +66,19 @@ test('subtitue le composant', () => {
   const wrapper = mount(App, {
     global: {
       stubs: {
-        FetchDataFromApi: true,
-      },
-    },
-  });
+        FetchDataFromApi: true
+      }
+    }
+  })
 
-  console.log(wrapper.html());
+  console.log(wrapper.html())
   /*
     <h1>Bienvenue dans Vue.js 3</h1>
     <fetch-data-from-api-stub></fetch-data-from-api-stub>
   */
 
-  expect(wrapper.html()).toContain('Bienvenue dans Vue.js 3');
-});
+  expect(wrapper.html()).toContain('Bienvenue dans Vue.js 3')
+})
 ```
 
 Cela remplacera tous les composants `<FetchDataFromApi />` dans l'ensemble de l'arbre de rendu, peu importe le niveau où ils apparaissent. C'est pourquoi il se trouve dans les options de `mount`&nbsp;: `global`.
@@ -89,7 +89,7 @@ Pour substituer, vous pouvez utiliser la clé dans `components` ou le nom de vot
 
 ## Substituer tous les composants enfants
 
-Parfois, vous pourriez vouloir substituer *tous* les composants enfants. Par exemple, vous pourriez avoir un composant comme ceci&nbsp;:
+Parfois, vous pourriez vouloir substituer _tous_ les composants enfants. Par exemple, vous pourriez avoir un composant comme ceci&nbsp;:
 
 ```js
 const ComplexComponent = {
@@ -99,8 +99,8 @@ const ComplexComponent = {
     <ComplexA />
     <ComplexB />
     <ComplexC />
-  `,
-};
+  `
+}
 ```
 
 Imaginez que chacun des `<Complex>` fasse quelque chose de compliqué, et que vous soyez seulement intéressé par le test de rendu du bon message de `<h1>`. Vous pourriez faire quelque chose comme suit&nbsp;:
@@ -111,10 +111,10 @@ const wrapper = mount(ComplexComponent, {
     stubs: {
       ComplexA: true,
       ComplexB: true,
-      ComplexC: true,
-    },
-  },
-});
+      ComplexC: true
+    }
+  }
+})
 ```
 
 Mais c'est beaucoup de code répétitif. VTU a une option `mount`&nbsp;: `shallow` qui substituera automatiquement tous les composants enfants&nbsp;:
@@ -122,17 +122,17 @@ Mais c'est beaucoup de code répétitif. VTU a une option `mount`&nbsp;: `shallo
 ```js {3}
 test('substitue tous les composants enfants', () => {
   const wrapper = mount(ComplexComponent, {
-    shallow: true,
-  });
+    shallow: true
+  })
 
-  console.log(wrapper.html());
+  console.log(wrapper.html())
   /*
     <h1>Bienvenue dans Vue.js 3</h1>
     <complex-a-stub></complex-a-stub>
     <complex-b-stub></complex-b-stub>
     <complex-c-stub></complex-c-stub>
   */
-});
+})
 ```
 
 ::: tip
@@ -141,12 +141,12 @@ Si vous avez utilisé VTU V1, cela vous rappelle sûrement `shallowMount`. Cette
 
 ## Substituer tous les composants enfants avec des exceptions
 
-Parfois, vous voulez remplacer *tous* les composants personnalisés, sauf un en particulier. Voyons un exemple&nbsp;:
+Parfois, vous voulez remplacer _tous_ les composants personnalisés, sauf un en particulier. Voyons un exemple&nbsp;:
 
 ```js
 const ComplexA = {
-  template: '<h2>Salutation d\'un composant réel !</h2>',
-};
+  template: "<h2>Salutation d'un composant réel !</h2>"
+}
 
 const ComplexComponent = {
   components: { ComplexA, ComplexB, ComplexC },
@@ -155,29 +155,29 @@ const ComplexComponent = {
     <ComplexA />
     <ComplexB />
     <ComplexC />
-  `,
-};
+  `
+}
 ```
 
 En utilisant l'option de `mount`&nbsp;: `shallow`, nous substituons automatiquement tous les composants enfants. Si nous voulons explicitement empêcher la substitution d'un composant spécifique, nous pouvons fournir son nom dans `stubs` avec une valeur définie sur `false`.
 
 ```js {3}
-test('l\'option shallow permet de subsituter tous les composants enfants sauf ceux dans stubs', () => {
+test("l'option shallow permet de subsituter tous les composants enfants sauf ceux dans stubs", () => {
   const wrapper = mount(ComplexComponent, {
     shallow: true,
     global: {
-      stubs: { ComplexA: false },
-    },
-  });
+      stubs: { ComplexA: false }
+    }
+  })
 
-  console.log(wrapper.html());
+  console.log(wrapper.html())
   /*
     <h1>Bienvenue dans Vue.js 3</h1>
     <h2>Salutation d'un composant réel !</h2>
     <complex-b-stub></complex-b-stub>
     <complex-c-stub></complex-c-stub>
   */
-});
+})
 ```
 
 ## Substituer un Composant Asynchrone
@@ -188,16 +188,16 @@ Si vous voulez substituer un composant asynchrone, il existe deux comportements 
 // AsyncComponent.js
 export default defineComponent({
   name: 'AsyncComponent',
-  template: '<span>AsyncComponent</span>',
-});
+  template: '<span>AsyncComponent</span>'
+})
 
 // App.js
 const App = defineComponent({
   components: {
-    MonComposant: defineAsyncComponent(() => import('./AsyncComponent')),
+    MonComposant: defineAsyncComponent(() => import('./AsyncComponent'))
   },
-  template: '<MonComposant/>',
-});
+  template: '<MonComposant/>'
+})
 ```
 
 Le premier comportement consiste à utiliser la clé définie dans votre composant qui charge le composant asynchrone. Dans cet exemple, nous avons utilisé la clé "MonComposant".
@@ -209,13 +209,13 @@ test('substitue le composant asynchrone sans résolution', () => {
   const wrapper = mount(App, {
     global: {
       stubs: {
-        MonComposant: true,
-      },
-    },
-  });
+        MonComposant: true
+      }
+    }
+  })
 
-  expect(wrapper.html()).toBe('<mon-composant-stub></mon-composant-stub>');
-});
+  expect(wrapper.html()).toBe('<mon-composant-stub></mon-composant-stub>')
+})
 ```
 
 Le second comportement consiste à utiliser le nom du composant asynchrone. Dans cet exemple, nous avons utilisé le nom "AsyncComponent".
@@ -229,15 +229,15 @@ test('substitue le composant asynchrone avec résolution', async () => {
   const wrapper = mount(App, {
     global: {
       stubs: {
-        AsyncComponent: true,
-      },
-    },
-  });
+        AsyncComponent: true
+      }
+    }
+  })
 
-  await flushPromises();
+  await flushPromises()
 
-  expect(wrapper.html()).toBe('<async-component-stub></async-component-stub>');
-});
+  expect(wrapper.html()).toBe('<async-component-stub></async-component-stub>')
+})
 ```
 
 ## Substituer une directive
@@ -251,10 +251,10 @@ Dans cet exemple, nous avons un autre `<App>` qui affiche un message dans une in
 
 const App = {
   directives: {
-    Tooltip,
+    Tooltip
   },
-  template: '<h1 v-tooltip title="Welcome tooltip">Bienvenue dans Vue.js 3</h1>',
-};
+  template: '<h1 v-tooltip title="Welcome tooltip">Bienvenue dans Vue.js 3</h1>'
+}
 ```
 
 Nous ne voulons pas que le code de la directive `Tooltip` soit exécuté dans ce test, nous souhaitons simplement vérifier que le message est affiché. Dans ce cas, nous pourrions utiliser les `stubs`, qui apparaissent dans l'option de `mount`&nbsp;: `global` en passant `vTooltip`.
@@ -264,16 +264,16 @@ test('substitue le composant avec un template personnalisé', () => {
   const wrapper = mount(App, {
     global: {
       stubs: {
-        vTooltip: true,
-      },
-    },
-  });
+        vTooltip: true
+      }
+    }
+  })
 
-  console.log(wrapper.html());
+  console.log(wrapper.html())
   // <h1>Bienvenue dans Vue.js 3</h1>
 
-  expect(wrapper.html()).toContain('Bienvenue dans Vue.js 3');
-});
+  expect(wrapper.html()).toContain('Bienvenue dans Vue.js 3')
+})
 ```
 
 ::: tip
@@ -322,8 +322,8 @@ const CustomButton = {
     <button>
       <slot />
     </button>
-  `,
-};
+  `
+}
 ```
 
 Et vous pourriez l'utiliser comme ceci&nbsp;:
@@ -337,8 +337,8 @@ const App = {
       <div v-if="authenticated">Se déconnecter</div>
       <div v-else>Se connecter</div>
     </custom-button>
-  `,
-};
+  `
+}
 ```
 
 Si vous utilisez `shallow`, le slot ne sera pas affiché, car la fonction d'affichage dans `<custom-button />` est remplacée. Cela signifie que vous ne pourrez pas vérifier que le texte correct soit affiché&nbsp;!
@@ -346,26 +346,26 @@ Si vous utilisez `shallow`, le slot ne sera pas affiché, car la fonction d'affi
 Pour ce cas d'utilisation, vous pouvez utiliser `config.renderStubDefaultSlot`, qui affichera le contenu du slot par défaut, même lors de l'utilisation de `shallow`&nbsp;:
 
 ```js {1,4,8}
-import { config, mount } from '@vue/test-utils';
+import { config, mount } from '@vue/test-utils'
 
 beforeAll(() => {
-  config.global.renderStubDefaultSlot = true;
-});
+  config.global.renderStubDefaultSlot = true
+})
 
 afterAll(() => {
-  config.global.renderStubDefaultSlot = false;
-});
+  config.global.renderStubDefaultSlot = false
+})
 
 test('monte avec des substituts', () => {
   const wrapper = mount(AnotherApp, {
     props: {
-      authenticated: true,
+      authenticated: true
     },
-    shallow: true,
-  });
+    shallow: true
+  })
 
-  expect(wrapper.html()).toContain('Se déconnecter');
-});
+  expect(wrapper.html()).toContain('Se déconnecter')
+})
 ```
 
 Comme ce comportement est global, et non basé test par test, vous devez vous souvenir de l'activer et le désactiver avant et après chaque test.

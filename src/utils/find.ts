@@ -1,13 +1,13 @@
-import {
+import type {
   ComponentInternalInstance,
   VNode,
-  VNodeChild,
   VNodeArrayChildren,
+  VNodeChild,
   VNodeNormalizedChildren,
   VNodeTypes
 } from 'vue'
 import { getOriginalComponentFromStub } from '../stubs'
-import { FindAllComponentsSelector } from '../types'
+import type { FindAllComponentsSelector } from '../types'
 import { isComponent } from '../utils'
 import { matchName } from './matchName'
 import { unwrapLegacyVueExtendComponent } from './vueCompatSupport'

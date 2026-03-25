@@ -22,14 +22,14 @@ Voici le composant `Navbar.vue`&nbsp;:
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
-import SignUp from './Signup.vue';
+import { defineComponent } from 'vue'
+import SignUp from './Signup.vue'
 
 export default defineComponent({
   components: {
-    SignUp,
-  },
-});
+    SignUp
+  }
+})
 </script>
 ```
 
@@ -51,22 +51,22 @@ export default {
   emits: ['signup'],
   data() {
     return {
-      username: '',
-    };
+      username: ''
+    }
   },
   computed: {
     error() {
-      return this.username.length < 8;
-    },
+      return this.username.length < 8
+    }
   },
   methods: {
     submit() {
       if (!this.error) {
-        this.$emit('signup', this.username);
+        this.$emit('signup', this.username)
       }
-    },
-  },
-};
+    }
+  }
+}
 </script>
 ```
 
@@ -75,38 +75,38 @@ export default {
 Commençons avec un test simple&nbsp;:
 
 ```ts
-import { mount } from '@vue/test-utils';
-import Navbar from './Navbar.vue';
-import Signup from './Signup.vue';
+import { mount } from '@vue/test-utils'
+import Navbar from './Navbar.vue'
+import Signup from './Signup.vue'
 
 test('émet un évènement signup quand le formulaire est soumit', async () => {
-  const wrapper = mount(Navbar);
+  const wrapper = mount(Navbar)
   // ... Suite du test
-});
+})
 ```
 
 Exécuter ce test vous donnera un avertissement (`warning`)&nbsp;: `[Vue warn]: Failed to locate Teleport target with selector "#modal"`. Créons-le&nbsp;:
 
 ```ts {5-15}
-import { mount } from '@vue/test-utils';
-import Navbar from './Navbar.vue';
-import Signup from './Signup.vue';
+import { mount } from '@vue/test-utils'
+import Navbar from './Navbar.vue'
+import Signup from './Signup.vue'
 
 beforeEach(() => {
   // nous crééons la cible de teleport
-  const el = document.createElement('div');
-  el.id = 'modal';
-  document.body.appendChild(el);
-});
+  const el = document.createElement('div')
+  el.id = 'modal'
+  document.body.appendChild(el)
+})
 
 afterEach(() => {
   // nous nettoyons un peu
-  document.body.innerHTML = '';
-});
+  document.body.innerHTML = ''
+})
 
 test('teleport', async () => {
-  const wrapper = mount(Navbar);
-});
+  const wrapper = mount(Navbar)
+})
 ```
 
 Nous utilisons Jest pour cet exemple, qui ne réinitialise pas le DOM à chaque test. C'est pourquoi il est bon de nettoyer après chaque test avec `afterEach`.
@@ -127,17 +127,17 @@ Bien que le HTML réel soit téléporté à l'extérieur, il semble que le DOM v
 ```ts {12}
 beforeEach(() => {
   // ...
-});
+})
 
 afterEach(() => {
   // ...
-});
+})
 
 test('teleport', async () => {
-  const wrapper = mount(Navbar);
+  const wrapper = mount(Navbar)
 
-  wrapper.getComponent(Signup); // le composant est bien récupéré ici !
-});
+  wrapper.getComponent(Signup) // le composant est bien récupéré ici !
+})
 ```
 
 `getComponent` retourne un `VueWrapper`. Maintenant, vous pouvez utiliser des méthodes telles que `get`, `find` et `trigger`.
@@ -146,14 +146,14 @@ Finissons le test&nbsp;:
 
 ```ts {4-8}
 test('teleport', async () => {
-  const wrapper = mount(Navbar);
+  const wrapper = mount(Navbar)
 
-  const signup = wrapper.getComponent(Signup);
-  await signup.get('input').setValue('nom_d_utilisateur_valide');
-  await signup.get('form').trigger('submit.prevent');
+  const signup = wrapper.getComponent(Signup)
+  await signup.get('input').setValue('nom_d_utilisateur_valide')
+  await signup.get('form').trigger('submit.prevent')
 
-  expect(signup.emitted().signup[0]).toEqual(['nom_d_utilisateur_valide']);
-});
+  expect(signup.emitted().signup[0]).toEqual(['nom_d_utilisateur_valide'])
+})
 ```
 
 Cela fonctionne&nbsp;!
@@ -161,34 +161,35 @@ Cela fonctionne&nbsp;!
 Le test complet&nbsp;:
 
 ```ts
-import { mount } from '@vue/test-utils';
-import Navbar from './Navbar.vue';
-import Signup from './Signup.vue';
+import { mount } from '@vue/test-utils'
+import Navbar from './Navbar.vue'
+import Signup from './Signup.vue'
 
 beforeEach(() => {
   // nous crééons la cible de teleport
-  const el = document.createElement('div');
-  el.id = 'modal';
-  document.body.appendChild(el);
-});
+  const el = document.createElement('div')
+  el.id = 'modal'
+  document.body.appendChild(el)
+})
 
 afterEach(() => {
   // nous nettoyons un peu
-  document.body.innerHTML = '';
-});
+  document.body.innerHTML = ''
+})
 
 test('teleport', async () => {
-  const wrapper = mount(Navbar);
+  const wrapper = mount(Navbar)
 
-  const signup = wrapper.getComponent(Signup);
-  await signup.get('input').setValue('nom_d_utilisateur_valide');
-  await signup.get('form').trigger('submit.prevent');
+  const signup = wrapper.getComponent(Signup)
+  await signup.get('input').setValue('nom_d_utilisateur_valide')
+  await signup.get('form').trigger('submit.prevent')
 
-  expect(signup.emitted().signup[0]).toEqual(['nom_d_utilisateur_valide']);
-});
+  expect(signup.emitted().signup[0]).toEqual(['nom_d_utilisateur_valide'])
+})
 ```
 
 Vous pouvez remplacer teleport par un stub en utilisant `teleport: true`:
+
 ```ts
 import { mount } from '@vue/test-utils'
 import Navbar from './Navbar.vue'

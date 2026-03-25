@@ -1,4 +1,4 @@
-import { defineComponent, h, computed } from 'vue'
+import { computed, defineComponent, h } from 'vue'
 
 // match return type of router.resolve: RouteLocation & { href: string }
 const defaultRoute = {

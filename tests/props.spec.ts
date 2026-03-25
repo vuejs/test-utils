@@ -1,5 +1,6 @@
 import { describe, expect, it, vi } from 'vitest'
-import { mount, shallowMount, VueWrapper } from '../src'
+import type { VueWrapper } from '../src'
+import { mount, shallowMount } from '../src'
 import WithProps from './components/WithProps.vue'
 import PropWithSymbol from './components/PropWithSymbol.vue'
 import Hello from './components/Hello.vue'

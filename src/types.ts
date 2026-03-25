@@ -1,15 +1,15 @@
 /* eslint-disable @typescript-eslint/no-empty-object-type */
-import {
+import type {
+  AppConfig,
   Component,
+  ComponentInternalInstance,
   ComponentOptions,
   Directive,
-  Plugin,
-  AppConfig,
-  VNode,
-  VNodeProps,
   FunctionalComponent,
-  ComponentInternalInstance,
-  Ref
+  Plugin,
+  Ref,
+  VNode,
+  VNodeProps
 } from 'vue'
 
 export interface RefSelector {
@@ -86,8 +86,10 @@ interface BaseMountingOptions<Props, Data = {}> {
 /**
  * Mounting options for `mount` and `shallowMount`
  */
-export interface MountingOptions<Props, Data = {}>
-  extends BaseMountingOptions<Props, Data> {
+export interface MountingOptions<Props, Data = {}> extends BaseMountingOptions<
+  Props,
+  Data
+> {
   /**
    * Specify where to mount the component.
    * Can be a valid CSS selector, or an Element connected to the document.
@@ -99,8 +101,10 @@ export interface MountingOptions<Props, Data = {}>
 /**
  * Mounting options for `renderToString`
  */
-export interface RenderMountingOptions<Props, Data = {}>
-  extends BaseMountingOptions<Props, Data> {
+export interface RenderMountingOptions<
+  Props,
+  Data = {}
+> extends BaseMountingOptions<Props, Data> {
   /**
    * Attach to is not available in SSR mode
    */

@@ -1,9 +1,9 @@
-import {
-  setDevtoolsHook,
-  devtools,
+import type {
+  ComponentInternalInstance,
   ComponentPublicInstance,
-  ComponentInternalInstance
+  devtools
 } from 'vue'
+import { setDevtoolsHook } from 'vue'
 import { getGlobalThis } from './utils'
 
 type Events<T = unknown> = Record<number, Record<string, T[]>>

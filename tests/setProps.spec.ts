@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { defineComponent, h, computed } from 'vue'
+import { computed, defineComponent, h } from 'vue'
 
 import { mount } from '../src'
 import Title from './components/FunctionComponent'

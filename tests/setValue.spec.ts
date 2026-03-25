@@ -93,7 +93,7 @@ describe('setValue', () => {
       await select.setValue(['selectA', 'selectC'])
 
       const selectedOptions = Array.from(select.element.selectedOptions).map(
-        (o) => o.value
+        o => o.value
       )
       expect(selectedOptions).toEqual(['selectA', 'selectC'])
       expect(wrapper.vm.multiselectVal).toEqual(['selectA', 'selectC'])
@@ -109,7 +109,7 @@ describe('setValue', () => {
       await select.setValue(['selectB'])
 
       const selectedOptions = Array.from(select.element.selectedOptions).map(
-        (o) => o.value
+        o => o.value
       )
       expect(selectedOptions).toEqual(['selectB'])
       expect(wrapper.vm.multiselectVal).toEqual(['selectB'])

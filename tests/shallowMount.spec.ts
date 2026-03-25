@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import { defineAsyncComponent, defineComponent } from 'vue'
-import { mount, shallowMount, VueWrapper } from '../src'
+import type { VueWrapper } from '../src'
+import { mount, shallowMount } from '../src'
 import ComponentWithChildren from './components/ComponentWithChildren.vue'
 import ScriptSetupWithChildren from './components/ScriptSetupWithChildren.vue'
 import DynamicComponentWithComputedProperty from './components/DynamicComponentWithComputedProperty.vue'

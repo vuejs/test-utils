@@ -1,7 +1,8 @@
 import { describe, expect, it, vi } from 'vitest'
 import { mount } from '../src'
 import Hello from './components/Hello.vue'
-import { DefineComponent, defineComponent, h } from 'vue'
+import type { DefineComponent } from 'vue'
+import { defineComponent, h } from 'vue'
 
 const compC = defineComponent({
   name: 'ComponentC',

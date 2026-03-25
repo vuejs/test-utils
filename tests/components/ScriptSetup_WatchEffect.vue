@@ -9,7 +9,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watchEffect, inject } from 'vue'
+import { inject, ref, watchEffect } from 'vue'
 
 const type = inject('someType')
 const hasContent = ref(false)

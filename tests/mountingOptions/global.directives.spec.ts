@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { Directive } from 'vue'
+import type { Directive } from 'vue'
 import { mount } from '../../src'
 
 const MyDirective: Directive = {

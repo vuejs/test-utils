@@ -16,7 +16,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, Ref } from 'vue'
+import { type Ref, computed } from 'vue'
 
 type Props = {
   count: Ref<number>

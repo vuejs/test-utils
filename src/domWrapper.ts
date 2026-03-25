@@ -1,13 +1,13 @@
-import { VNode } from 'vue'
+import type { VNode } from 'vue'
 import { config } from './config'
 import BaseWrapper from './baseWrapper'
-import WrapperLike from './interfaces/wrapperLike'
+import type WrapperLike from './interfaces/wrapperLike'
 import {
+  WrapperType,
   createDOMWrapper,
-  registerFactory,
-  WrapperType
+  registerFactory
 } from './wrapperFactory'
-import { RefSelector } from './types'
+import type { RefSelector } from './types'
 import { isRefSelector } from './utils'
 import { createWrapperError } from './errorWrapper'
 
@@ -27,7 +27,7 @@ export class DOMWrapper<NodeType extends Node> extends BaseWrapper<NodeType> {
 
   getRootNodes() {
     if (Array.isArray(this.subTree?.children)) {
-      return this.subTree.children.map((node) => (node as any)?.el)
+      return this.subTree.children.map(node => (node as any)?.el)
     }
     return [this.wrapperElement]
   }
@@ -70,9 +70,8 @@ export class DOMWrapper<NodeType extends Node> extends BaseWrapper<NodeType> {
     if (!(this.wrapperElement instanceof Element)) {
       return []
     }
-    return Array.from(
-      this.wrapperElement.querySelectorAll(selector),
-      (element) => createDOMWrapper(element)
+    return Array.from(this.wrapperElement.querySelectorAll(selector), element =>
+      createDOMWrapper(element)
     )
   }
 

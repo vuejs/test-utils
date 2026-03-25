@@ -27,6 +27,9 @@ export default defineConfig({
     pool: 'threads',
     setupFiles: [path.resolve(__dirname, './setup.js')],
     include: ['tests/**/*.spec.ts'],
+    coverage: {
+      include: ['src/**']
+    },
     server: {
       deps: {
         inline: ['vue', '@vue/compat']

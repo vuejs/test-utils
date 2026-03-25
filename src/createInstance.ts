@@ -1,19 +1,21 @@
-import {
-  h,
-  createApp,
-  defineComponent,
-  reactive,
-  shallowReactive,
-  ref,
+import type {
   AppConfig,
   ComponentOptions,
   ConcreteComponent,
-  DefineComponent,
-  transformVNodeArgs,
-  proxyRefs
+  DefineComponent
+} from 'vue'
+import {
+  createApp,
+  defineComponent,
+  h,
+  proxyRefs,
+  reactive,
+  ref,
+  shallowReactive,
+  transformVNodeArgs
 } from 'vue'
 
-import { MountingOptions, Slot } from './types'
+import type { MountingOptions, Slot } from './types'
 import {
   getComponentsFromStubs,
   getDirectivesFromStubs,
@@ -32,10 +34,8 @@ import {
   unwrapLegacyVueExtendComponent
 } from './utils/vueCompatSupport'
 import { createVNodeTransformer } from './vnodeTransformers/util'
-import {
-  createStubComponentsTransformer,
-  CreateStubComponentsTransformerConfig
-} from './vnodeTransformers/stubComponentsTransformer'
+import type { CreateStubComponentsTransformerConfig } from './vnodeTransformers/stubComponentsTransformer'
+import { createStubComponentsTransformer } from './vnodeTransformers/stubComponentsTransformer'
 import { createStubDirectivesTransformer } from './vnodeTransformers/stubDirectivesTransformer'
 import { isDeepRef } from './utils/isDeepRef'
 
@@ -139,7 +139,7 @@ export function createInstance(
       ): { [key: string]: Function } => {
         if (Array.isArray(slot)) {
           const normalized = slot.map(slotToFunction)
-          acc[name] = (args: unknown) => normalized.map((f) => f(args))
+          acc[name] = (args: unknown) => normalized.map(f => f(args))
           return acc
         }
 
@@ -157,7 +157,7 @@ export function createInstance(
       const objectComponent = component as ComponentOptions
       if (originalComponent.data) {
         const originalDataFn = originalComponent.data
-        objectComponent.data = (vm) => ({
+        objectComponent.data = vm => ({
           ...originalDataFn.call(vm, vm),
           ...providedData
         })
@@ -275,7 +275,7 @@ export function createInstance(
       any
     ][]) {
       // TODO should be switched to a ts-expect-error once Vue 3.5 is used
-      // @ts-ignore https://github.com/vuejs/test-utils/issues/2483
+      // @ts-expect-error https://github.com/vuejs/test-utils/issues/2483
       app.config[k] = isObject(app.config[k])
         ? Object.assign(app.config[k]!, v)
         : v
@@ -286,7 +286,7 @@ export function createInstance(
   if (global.provide) {
     for (const key of Reflect.ownKeys(global.provide)) {
       // TODO should be switched to a ts-expect-error
-      // @ts-ignore: https://github.com/microsoft/TypeScript/issues/1863
+      // @ts-expect-error: https://github.com/microsoft/TypeScript/issues/1863
       app.provide(key, global.provide[key])
     }
   }

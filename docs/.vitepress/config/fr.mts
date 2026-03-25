@@ -2,7 +2,8 @@ import type { DefaultTheme, LocaleSpecificConfig } from 'vitepress'
 
 export const META_URL = ''
 export const META_TITLE = 'Vue Test Utils'
-export const META_DESCRIPTION = 'La librairie officielle de tests unitaires pour Vue.js 3'
+export const META_DESCRIPTION =
+  'La librairie officielle de tests unitaires pour Vue.js 3'
 
 export const frConfig: LocaleSpecificConfig<DefaultTheme.Config> = {
   description: META_DESCRIPTION,
@@ -12,13 +13,13 @@ export const frConfig: LocaleSpecificConfig<DefaultTheme.Config> = {
     ['meta', { property: 'og:description', content: META_DESCRIPTION }],
     ['meta', { property: 'twitter:url', content: META_URL }],
     ['meta', { property: 'twitter:title', content: META_TITLE }],
-    ['meta', { property: 'twitter:description', content: META_DESCRIPTION }],
+    ['meta', { property: 'twitter:description', content: META_DESCRIPTION }]
   ],
 
   themeConfig: {
     editLink: {
       pattern: 'https://github.com/vuejs/test-utils/edit/main/docs/:path',
-      text: 'Suggest changes to this page',
+      text: 'Suggest changes to this page'
     },
 
     nav: [
@@ -45,7 +46,10 @@ export const frConfig: LocaleSpecificConfig<DefaultTheme.Config> = {
           text: 'Les Bases',
           items: [
             { text: 'Pour commencer', link: '/fr/guide/' },
-            { text: 'Cours rapide', link: '/fr/guide/essentials/a-crash-course' },
+            {
+              text: 'Cours rapide',
+              link: '/fr/guide/essentials/a-crash-course'
+            },
             {
               text: 'Rendu conditionnel',
               link: '/fr/guide/essentials/conditional-rendering'
@@ -54,7 +58,10 @@ export const frConfig: LocaleSpecificConfig<DefaultTheme.Config> = {
               text: 'Tester les évènements émis',
               link: '/fr/guide/essentials/event-handling'
             },
-            { text: 'Tester les formulaires', link: '/fr/guide/essentials/forms' },
+            {
+              text: 'Tester les formulaires',
+              link: '/fr/guide/essentials/forms'
+            },
             {
               text: 'Passer des données aux Composants',
               link: '/fr/guide/essentials/passing-data'
@@ -88,13 +95,19 @@ export const frConfig: LocaleSpecificConfig<DefaultTheme.Config> = {
             },
             { text: 'Tester v-model', link: '/fr/guide/advanced/v-model' },
             { text: 'Tester Vuex', link: '/fr/guide/advanced/vuex' },
-            { text: 'Tester Vue Router', link: '/fr/guide/advanced/vue-router' },
+            {
+              text: 'Tester Vue Router',
+              link: '/fr/guide/advanced/vue-router'
+            },
             { text: 'Tester Teleport', link: '/fr/guide/advanced/teleport' },
             {
               text: 'Composants de Substitution (Stubs) et Montage Partiel',
               link: '/fr/guide/advanced/stubs-shallow-mount'
             },
-            { text: 'Tester le Rendu côté Serveur (SSR)', link: '/fr/guide/advanced/ssr' }
+            {
+              text: 'Tester le Rendu côté Serveur (SSR)',
+              link: '/fr/guide/advanced/ssr'
+            }
           ]
         },
         {

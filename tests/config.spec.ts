@@ -1,10 +1,14 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
-import { defineComponent, ComponentPublicInstance, h, inject } from 'vue'
-import type { App, ComponentCustomProperties } from 'vue'
+import { defineComponent, h, inject } from 'vue'
+import type {
+  App,
+  ComponentCustomProperties,
+  ComponentPublicInstance
+} from 'vue'
 import { config, mount } from '../src'
 import Hello from './components/Hello.vue'
 import ComponentWithSlots from './components/ComponentWithSlots.vue'
-import { Router } from 'vue-router'
+import type { Router } from 'vue-router'
 
 describe('config', () => {
   beforeEach(() => {

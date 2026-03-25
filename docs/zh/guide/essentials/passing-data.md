@@ -40,11 +40,11 @@ const password = ref('')
 
 const error = computed(() => {
   if (password.value.length < props.minLength) {
-    return `Password must be at least ${props.minLength} characters.`
+    return `密码必须至少包含 ${props.minLength} 个字符。`
   }
   return
 })
-<script>
+</script>
 
 <template>
   <div>
@@ -69,7 +69,7 @@ test('renders an error if length is too short', () => {
     }
   })
 
-  expect(wrapper.html()).toContain('密码必须至少包含 10 个字符')
+  expect(wrapper.html()).toContain('密码必须至少包含 10 个字符。')
 })
 ```
 

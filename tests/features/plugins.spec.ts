@@ -7,8 +7,10 @@ import {
   it,
   vi
 } from 'vitest'
-import { ComponentPublicInstance, h } from 'vue'
-import { mount, config, VueWrapper } from '../../src'
+import type { ComponentPublicInstance } from 'vue'
+import { h } from 'vue'
+import type { VueWrapper } from '../../src'
+import { config, mount } from '../../src'
 
 declare module '../../src/vueWrapper' {
   interface VueWrapper {
@@ -77,7 +79,7 @@ describe('Plugin#install', () => {
     })
 
     afterAll(() => {
-      // @ts-ignore
+      // @ts-expect-error
       console.error.mockRestore()
     })
 
@@ -93,7 +95,7 @@ describe('Plugin#install', () => {
 
     it.each(plugins)(
       'Calling install with %p is handled gracefully',
-      (plugin) => {
+      plugin => {
         config.plugins.VueWrapper.install(plugin as any)
         expect(() => mountComponent()).not.toThrow()
       }

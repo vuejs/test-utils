@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from 'vitest'
-import { mount, RouterLinkStub } from '../../src'
+import { RouterLinkStub, mount } from '../../src'
 import { defineComponent } from 'vue'
 import ScriptSetupWithI18n from '../components/ScriptSetupWithI18n.vue'
 import ComponentWithI18n from '../components/ComponentWithI18n.vue'

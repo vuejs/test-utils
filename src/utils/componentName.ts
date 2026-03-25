@@ -1,4 +1,4 @@
-import { ComponentInternalInstance, VNodeTypes } from 'vue'
+import type { ComponentInternalInstance, VNodeTypes } from 'vue'
 import { isFunctionalComponent, isObjectComponent } from '../utils'
 import {
   isLegacyExtendedComponent,
@@ -10,7 +10,7 @@ const getComponentNameInSetup = (
   type: VNodeTypes
 ): string | undefined =>
   Object.keys(instance?.setupState || {}).find(
-    (key) =>
+    key =>
       Object.getOwnPropertyDescriptor(instance.setupState, key)?.value === type
   )
 
