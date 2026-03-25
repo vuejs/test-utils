@@ -104,11 +104,15 @@ const shouldShowDropdown = ref(false)
 
 在以上任一情况下，`isVisible()` 都会返回 false。
 
+::: warning
+`isVisible()` 只有在通过 `attachTo` 将 wrapper 挂载到 DOM 时才能正常工作。这在使用 **happy-dom** 作为测试环境时尤为重要。若不使用 `attachTo`，由 CSS 控制的可见性（如 `v-show`）可能无法被正确检测。请参阅 `isVisible()` 的 API 文档 获取完整示例。
+:::
+
 使用 `v-show` 进行测试的场景如下：
 
 ```js
 test('does not show the user dropdown', () => {
-  const wrapper = mount(Nav)
+  const wrapper = mount(Nav, { attachTo: document.body })
 
   expect(wrapper.get('#user-dropdown').isVisible()).toBe(false)
 })

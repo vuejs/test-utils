@@ -104,11 +104,15 @@ Lorsque vous utilisez `v-show`, vous pouvez vérifier la visibilité d'un élém
 
 Si l'un de ces critères est rempli, `isVisible()` retournera `false`.
 
+::: warning
+`isVisible()` ne fonctionne correctement que si le wrapper est attaché au DOM via la `attachTo`. Ceci est d'autant plus important lors de l'utilisation de **happy-dom** comme environnement de test. Sans `attachTo`, la visibilité dirigée par le CSS (tel que `v-show`) peut ne pas être détectée correctement. Pour plus de détails, consulter la [documentation d'API de `isVisible()`](https://test-utils.vuejs.org/api/#isVisible).
+:::
+
 Les tests pour les scénarios utilisant `v-show` ressembleront à ceci&nbsp;:
 
 ```js
 test("n'affiche pas le menu déroulant de l'utilisateur", () => {
-  const wrapper = mount(Nav)
+  const wrapper = mount(Nav, { attachTo: document.body })
 
   expect(wrapper.get('#user-dropdown').isVisible()).toBe(false)
 })
