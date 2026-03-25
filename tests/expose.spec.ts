@@ -156,4 +156,88 @@ describe('expose', () => {
     expect(spiedIncrement).toHaveBeenCalled()
     expect(wrapper.html()).toContain('-1')
   })
+
+  describe('when exposeProxy is null', () => {
+    const nullifyExposeProxy = (vm: any) => {
+      vm.$.exposeProxy = null
+    }
+
+    it('access vm on simple components with custom `expose`', async () => {
+      const wrapper = mount(DefineExpose)
+      const vm = wrapper.vm
+
+      nullifyExposeProxy(vm)
+      commonTests(vm)
+
+      // returned state shuold be accessible
+      expect(vm.returnedState).toBe('returnedState')
+
+      // non-exposed and non-returned state should not be accessible
+      expect(
+        (vm as unknown as { stateNonExposedAndNonReturned: undefined })
+          .stateNonExposedAndNonReturned
+      ).toBe(undefined)
+    })
+
+    it('access vm on simple components with custom `expose` and a setup returning a render function', async () => {
+      const wrapper = mount(DefineExposeWithRenderFunction)
+      const vm = wrapper.vm
+
+      nullifyExposeProxy(vm)
+      commonTests(vm)
+
+      // can't access `refUseByRenderFnButNotExposed` as it is not exposed
+      // and we are in a component with a setup returning a render function
+      expect(
+        (vm as unknown as { refUseByRenderFnButNotExposed: undefined })
+          .refUseByRenderFnButNotExposed
+      ).toBeUndefined()
+    })
+
+    it('access vm with <script setup> and defineExpose()', async () => {
+      const wrapper = mount(ScriptSetupExpose)
+      const vm = wrapper.vm as unknown as {
+        inc: () => void
+        resetCount: () => void
+        count: number
+        refNonExposed: string
+        refNonExposedGetter: () => string
+      }
+
+      nullifyExposeProxy(vm)
+      commonTests(vm)
+
+      await wrapper.find('button').trigger('click')
+      expect(wrapper.html()).toContain('1')
+
+      // can access state/method/ref as it is exposed via `defineExpose()`
+      expect(vm.count).toBe(1)
+      vm.resetCount()
+      expect(vm.count).toBe(0)
+
+      // non-exposed state/method/ref should be accessible
+      vm.inc()
+      expect(vm.count).toBe(1)
+      expect(vm.refNonExposed).toBe('refNonExposed')
+      vm.refNonExposed = 'newRefNonExposed'
+      expect(vm.refNonExposedGetter()).toBe('newRefNonExposed')
+    })
+
+    it('access vm with <script setup> even without defineExpose()', async () => {
+      const wrapper = mount(ScriptSetup)
+
+      nullifyExposeProxy(wrapper.vm)
+
+      await wrapper.find('button').trigger('click')
+      expect(wrapper.html()).toContain('1')
+      // can access `count` even if it is _not_ exposed
+      // @ts-ignore we need better types here, see https://github.com/vuejs/test-utils/issues/972
+      expect(wrapper.vm.count).toBe(1)
+
+      // @ts-ignore we need better types here, see https://github.com/vuejs/test-utils/issues/972
+      wrapper.vm.count = 2
+      await nextTick()
+      expect(wrapper.html()).toContain('2')
+    })
+  })
 })
