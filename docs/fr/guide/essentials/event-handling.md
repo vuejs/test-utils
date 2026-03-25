@@ -36,13 +36,13 @@ Pour ce faire, nous allons nous appuyer sur la méthode `emitted()`. Elle **renv
 
 ```js
 test('émet un évènement lorsque le bouton est cliqué', () => {
-  const wrapper = mount(Counter);
+  const wrapper = mount(Counter)
 
-  wrapper.find('button').trigger('click');
-  wrapper.find('button').trigger('click');
+  wrapper.find('button').trigger('click')
+  wrapper.find('button').trigger('click')
 
-  expect(wrapper.emitted()).toHaveProperty('increment');
-});
+  expect(wrapper.emitted()).toHaveProperty('increment')
+})
 ```
 
 > Si vous n'avez pas vu `trigger()` auparavant, ne vous inquiétez pas. Il est utilisé pour simuler une interaction utilisateur. Vous pouvez en apprendre plus dans [Tester les formulaires](./forms).
@@ -59,33 +59,33 @@ La prochaine étape consiste à vérifier que l'événement contient la valeur d
 
 ```js {8}
 test('émet un évènement avec le compteur quand le bouton est cliqué', () => {
-  const wrapper = mount(Counter);
+  const wrapper = mount(Counter)
 
-  wrapper.find('button').trigger('click');
-  wrapper.find('button').trigger('click');
+  wrapper.find('button').trigger('click')
+  wrapper.find('button').trigger('click')
 
   // `emitted()` accepte un argument. La fonction retourne un tableau contenant toutes les occurences de `this.$emit('increment')`.
-  const incrementEvent = wrapper.emitted('increment');
+  const incrementEvent = wrapper.emitted('increment')
 
   // Nous avons cliqué deux fois, le tableau `increment` devrait donc contenir 2 valeurs.
-  expect(incrementEvent).toHaveLength(2);
+  expect(incrementEvent).toHaveLength(2)
 
   // Affirme le résultat du premier click.
   // Remarquez que la valeur est un tableau.
-  expect(incrementEvent[0]).toEqual([1]);
+  expect(incrementEvent[0]).toEqual([1])
 
   // Ensuite, le résultat du second évènement.
-  expect(incrementEvent[1]).toEqual([2]);
-});
+  expect(incrementEvent[1]).toEqual([2])
+})
 ```
 
 Récapitulons et détaillons le retour de la fonction `emmitted()`. Chaque clé contient les différentes valeurs émises lors du test.
 
 ```js
 // console.log(wrapper.emitted('increment'));
-[
+;[
   [1], // première fois qu'il est appelé, `count` est égal à 1
-  [2], // deuxième fois qu'il est appelé, `count` est égal à 2
+  [2] // deuxième fois qu'il est appelé, `count` est égal à 2
 ]
 ```
 
@@ -106,7 +106,7 @@ const handleClick = () => {
   count.value += 1
   emit('increment', {
     count: count.value,
-    isEven: count.value % 2 === 0,
+    isEven: count.value % 2 === 0
   })
 }
 </script>
@@ -120,29 +120,29 @@ Comme nous l'avons fait auparavant, nous devons déclencher l'événement `click
 
 ```js
 test('émet un évènement avec le compteur quand le boutton est cliqué', () => {
-  const wrapper = mount(Counter);
+  const wrapper = mount(Counter)
 
-  wrapper.find('button').trigger('click');
-  wrapper.find('button').trigger('click');
+  wrapper.find('button').trigger('click')
+  wrapper.find('button').trigger('click')
 
   // Nous avons cliqué deux fois, donc le tableau `increment` devrait avoir 2 valeurs.
-  expect(wrapper.emitted('increment')).toHaveLength(2);
+  expect(wrapper.emitted('increment')).toHaveLength(2)
 
   // Ensuite, nous pouvons nous assurer que chaque élément de `wrapper.emitted('increment')` contient un tableau avec l'objet attendu.
   expect(wrapper.emitted('increment')[0]).toEqual([
     {
       count: 1,
-      isEven: false,
-    },
-  ]);
+      isEven: false
+    }
+  ])
 
   expect(wrapper.emitted('increment')[1]).toEqual([
     {
       count: 2,
-      isEven: true,
-    },
-  ]);
-});
+      isEven: true
+    }
+  ])
+})
 ```
 
 En testant des types complexes tels que des objets, cela ne diffère pas des tests de types primaires tels que des nombres ou des chaînes de caractères.

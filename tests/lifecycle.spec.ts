@@ -2,11 +2,11 @@ import { describe, expect, it, vi } from 'vitest'
 import {
   defineComponent,
   h,
-  onMounted,
   nextTick,
   onBeforeMount,
-  onUnmounted,
-  onBeforeUnmount
+  onBeforeUnmount,
+  onMounted,
+  onUnmounted
 } from 'vue'
 
 import { mount } from '../src'

@@ -136,10 +136,11 @@ test('Async component', async () => {
   })
 
   const wrapper = mount(TestComponent)
-  await flushPromises();
+  await flushPromises()
   // ...
 })
 ```
+
 Note: To access your `Async` components' underlying `vm` instance, use the return value of `wrapper.findComponent(Async)`. Since a new component is defined and mounted in this scenario, the wrapper returned by `mount(TestComponent)` contains its' own (empty) `vm`.
 
 ## Conclusion

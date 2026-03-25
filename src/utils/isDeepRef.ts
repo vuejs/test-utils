@@ -18,7 +18,7 @@ const deeplyCheckForRef = <T>(
   if (!isObject(r)) return false
   if (visitedObjects.has(r)) return false
   visitedObjects.set(r, true)
-  return Object.values(r).some((val) => deeplyCheckForRef(val, visitedObjects))
+  return Object.values(r).some(val => deeplyCheckForRef(val, visitedObjects))
 }
 
 /**

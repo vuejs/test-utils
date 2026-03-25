@@ -11,13 +11,13 @@ Elle fournit des conseils globaux qui peuvent être utiles dans des scénarios c
 Pensez en termes d'entrées et de sorties du point de vue d'un utilisateur. Grossièrement, voici tout ce que vous devriez prendre en compte lors de l'écriture d'un test pour un composant Vue&nbsp;:
 
 | **Entrées**     | Exemples                                                          |
-|-----------------|-------------------------------------------------------------------|
+| --------------- | ----------------------------------------------------------------- |
 | Interactions    | Cliquer, taper du texte... toute interaction "humaine".           |
 | Propriétés      | Les arguments qu'un composant reçoit.                             |
 | Flux de données | Données entrantes provenant d'appels API, souscriptions diverses… |
 
 | **Sorties**        | Exemples                                            |
-|--------------------|-----------------------------------------------------|
+| ------------------ | --------------------------------------------------- |
 | Éléments du DOM    | Tout node affiché dans le document et _observable_. |
 | Évènements         | Évènements émis (en utilisant `$emit`).             |
 | Effets collatéraux | Comme un `console.log` ou des appels API.           |
@@ -51,19 +51,19 @@ const increment = () => {
 Nous pourrions écrire le test suivant&nbsp;:
 
 ```js
-import { mount } from '@vue/test-utils';
-import Counter from './Counter.vue';
+import { mount } from '@vue/test-utils'
+import Counter from './Counter.vue'
 
 test('le texte du compteur change', async () => {
-  const wrapper = mount(Counter);
-  const paragraph = wrapper.find('.paragraph');
+  const wrapper = mount(Counter)
+  const paragraph = wrapper.find('.paragraph')
 
-  expect(paragraph.text()).toBe('Nombre de clicks: 0');
+  expect(paragraph.text()).toBe('Nombre de clicks: 0')
 
-  await wrapper.setData({ count: 2 });
+  await wrapper.setData({ count: 2 })
 
-  expect(paragraph.text()).toBe('Nombre de clicks: 2');
-});
+  expect(paragraph.text()).toBe('Nombre de clicks: 2')
+})
 ```
 
 Remarquez que nous mettons à jour ici ses données internes, et nous nous appuyons également sur des détails (du point de vue de l'utilisateur) tels que les classes CSS.
@@ -75,19 +75,19 @@ Notez que la modification des données ou du nom de la classe CSS ferait échoue
 Au lieu de cela, le test suivant essaie plutôt de se conformer aux entrées et sorties énumérées ci-dessus&nbsp;:
 
 ```js
-import { mount } from '@vue/test-utils';
+import { mount } from '@vue/test-utils'
 
 test('le texte du compteur change', async () => {
-  const wrapper = mount(Counter);
+  const wrapper = mount(Counter)
 
-  expect(wrapper.text()).toContain('Nombre de clicks: 0');
+  expect(wrapper.text()).toContain('Nombre de clicks: 0')
 
-  const button = wrapper.find('button');
-  await button.trigger('click');
-  await button.trigger('click');
+  const button = wrapper.find('button')
+  await button.trigger('click')
+  await button.trigger('click')
 
-  expect(wrapper.text()).toContain('Nombre de clicks: 2');
-});
+  expect(wrapper.text()).toContain('Nombre de clicks: 2')
+})
 ```
 
 Des librairies telles que [Vue Testing Library](https://github.com/testing-library/vue-testing-library/) sont construites sur ces principes. Si vous êtes intéressé par cette approche, vous devriez y jeter un œil.
@@ -114,7 +114,7 @@ Ce que nous vous suggérons ici est d'extraire cette méthode et de l'importer a
 
 Cela a en outre l'avantage de rendre le composant plus facile à comprendre, car la logique complexe est encapsulée dans un autre fichier.
 
-De plus, si la méthode complexe est difficile à mettre en place ou lente, vous voudrez peut-être la simuler (*mocker*) pour simplifier et accélérer les tests. Les exemples sur [faire des requêtes HTTP](../advanced/http-requests.md) sont un bon exemple - axios étant une bibliothèque assez complexe&nbsp;!
+De plus, si la méthode complexe est difficile à mettre en place ou lente, vous voudrez peut-être la simuler (_mocker_) pour simplifier et accélérer les tests. Les exemples sur [faire des requêtes HTTP](../advanced/http-requests.md) sont un bon exemple - axios étant une bibliothèque assez complexe&nbsp;!
 
 ## Écrire les tests avant d'écrire le composant
 

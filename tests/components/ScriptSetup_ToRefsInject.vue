@@ -7,7 +7,7 @@
 </template>
 
 <script setup lang="ts">
-import { toRefs, ref, inject } from 'vue'
+import { inject, ref, toRefs } from 'vue'
 
 const props = defineProps<{
   title: string

@@ -7,11 +7,6 @@
     "noUncheckedIndexedAccess": true,
     "strictNullChecks": false
   },
-  "exclude": [
-    "../src",
-  ],
-  "include": [
-    "../dist",
-    "../test-dts"
-  ]
+  "exclude": ["../src"],
+  "include": ["../dist", "../test-dts"]
 }

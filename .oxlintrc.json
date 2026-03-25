@@ -1,0 +1,62 @@
+{
+  "$schema": "./node_modules/oxlint/configuration_schema.json",
+  "plugins": ["typescript", "vitest"],
+  "env": {
+    "builtin": true,
+    "browser": true
+  },
+  "ignorePatterns": ["**/dist/", "**/coverage/", "docs/.vitepress/"],
+  "rules": {
+    "no-debugger": "error",
+    "no-console": [
+      "error",
+      {
+        "allow": ["warn", "error", "info"]
+      }
+    ],
+    "no-restricted-imports": [
+      "error",
+      {
+        "patterns": ["src/*"]
+      }
+    ],
+    "oxc/no-const-enum": "error",
+    "oxc/no-rest-spread-properties": "error",
+    "oxc/no-async-await": "error",
+    "oxc/no-optional-chaining": "error",
+    "sort-imports": [
+      "error",
+      {
+        "ignoreDeclarationSort": true
+      }
+    ],
+    "typescript/prefer-ts-expect-error": "error",
+    "typescript/consistent-type-imports": [
+      "error",
+      {
+        "fixStyle": "inline-type-imports",
+        "disallowTypeAnnotations": false
+      }
+    ],
+    "typescript/no-import-type-side-effects": "error",
+    "typescript/no-explicit-any": "off",
+    "typescript/no-unused-vars": "off",
+    "typescript/ban-ts-comment": "off"
+  },
+  "overrides": [
+    {
+      "files": ["tests/**/*.{spec.ts,vue}"],
+      "rules": {
+        "no-console": "off",
+        "typescript/no-explicit-any": "off",
+        "vitest/warn-todo": "off"
+      }
+    },
+    {
+      "files": ["rollup.config.ts", "vitest.config.ts"],
+      "rules": {
+        "no-console": "off"
+      }
+    }
+  ]
+}

@@ -75,6 +75,7 @@ wrapper.findComponent('.foo') // 返回 WrapperLike
 wrapper.findComponent<typeof FooComponent>('.foo') // 返回 VueWrapper
 wrapper.findComponent<DefineComponent>('.foo') // 返回 VueWrapper
 ```
+
 :::
 
 ## 结论

@@ -51,7 +51,7 @@ Vue Test Utils 插件只是一个单纯的函数，该函数接收挂载的 `Vue
 // setup.js
 import { config } from '@vue/test-utils'
 
-const myAliasPlugin = (wrapper) => {
+const myAliasPlugin = wrapper => {
   return {
     $el: wrapper.element // 简单的别名
   }
@@ -98,7 +98,7 @@ wrapper.findByTestId('name-input') // 返回一个 VueWrapper 或 DOMWrapper
 ```js
 import { config, DOMWrapper } from '@vue/test-utils'
 
-const DataTestIdPlugin = (wrapper) => {
+const DataTestIdPlugin = wrapper => {
   function findByTestId(selector) {
     const dataSelector = `[data-testid='${selector}']`
     const element = wrapper.element.querySelector(dataSelector)
@@ -119,8 +119,8 @@ config.plugins.VueWrapper.install(DataTestIdPlugin)
 
 一些使用场景包括：
 
-* 你想在测试替身中添加更多逻辑 (例如具名插槽)
-* 你想为多个组件使用不同的测试替身 (例如一个库中的测试替身组件)
+- 你想在测试替身中添加更多逻辑 (例如具名插槽)
+- 你想为多个组件使用不同的测试替身 (例如一个库中的测试替身组件)
 
 ### 用法
 

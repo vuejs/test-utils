@@ -2,7 +2,8 @@ import { describe, expect, it, vi } from 'vitest'
 import { defineComponent, h, ref } from 'vue'
 
 import { mount } from '../src'
-import { keyCodesByKeyName, KeyName } from '../src/createDomEvent'
+import type { KeyName } from '../src/createDomEvent'
+import { keyCodesByKeyName } from '../src/createDomEvent'
 
 describe('trigger', () => {
   describe('on click', () => {

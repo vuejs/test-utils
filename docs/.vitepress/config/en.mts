@@ -12,13 +12,13 @@ export const enConfig: LocaleSpecificConfig<DefaultTheme.Config> = {
     ['meta', { property: 'og:description', content: META_DESCRIPTION }],
     ['meta', { property: 'twitter:url', content: META_URL }],
     ['meta', { property: 'twitter:title', content: META_TITLE }],
-    ['meta', { property: 'twitter:description', content: META_DESCRIPTION }],
+    ['meta', { property: 'twitter:description', content: META_DESCRIPTION }]
   ],
 
   themeConfig: {
     editLink: {
       pattern: 'https://github.com/vuejs/test-utils/edit/main/docs/:path',
-      text: 'Suggest changes to this page',
+      text: 'Suggest changes to this page'
     },
 
     nav: [
@@ -41,7 +41,10 @@ export const enConfig: LocaleSpecificConfig<DefaultTheme.Config> = {
           text: 'Essentials',
           items: [
             { text: 'Getting Started', link: '/guide/' },
-            { text: 'A Crash Course', link: '/guide/essentials/a-crash-course' },
+            {
+              text: 'A Crash Course',
+              link: '/guide/essentials/a-crash-course'
+            },
             {
               text: 'Conditional Rendering',
               link: '/guide/essentials/conditional-rendering'
@@ -90,7 +93,10 @@ export const enConfig: LocaleSpecificConfig<DefaultTheme.Config> = {
               text: 'Stubs and Shallow Mount',
               link: '/guide/advanced/stubs-shallow-mount'
             },
-            { text: 'Testing Server-side Rendering', link: '/guide/advanced/ssr' }
+            {
+              text: 'Testing Server-side Rendering',
+              link: '/guide/advanced/ssr'
+            }
           ]
         },
         {

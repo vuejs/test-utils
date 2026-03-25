@@ -32,19 +32,19 @@ Voici un tableau pour ceux qui viennent de VTU 1, comparant les deux API. Certai
 ### Mounting Options
 
 | option           | status | notes                                                                                 |
-|------------------|--------|---------------------------------------------------------------------------------------|
-| data             | ✅      |
-| slots            | ✅      |
-| mocks            | ✅      | situé dans `global`                                                                   |
-| propsData        | ✅      | s'appelle maintenant `props`                                                          |
-| provide          | ✅      | situé dans `global`                                                                   |
-| mixins           | ✅      | (nouveau !) situé dans `global`                                                       |
-| plugins          | ✅      | (nouveau !) situé dans `global`                                                       |
-| component        | ✅      | (nouveau !) situé dans `global`                                                       |
-| directives       | ✅      | (nouveau !) situé dans `global`                                                       |
-| stubs            | ✅      |
-| attachToDocument | ✅      | renommé en `attachTo`. Voir [here](https://github.com/vuejs/vue-test-utils/pull/1492) |
-| attrs            | ✅      | 
+| ---------------- | ------ | ------------------------------------------------------------------------------------- |
+| data             | ✅     |
+| slots            | ✅     |
+| mocks            | ✅     | situé dans `global`                                                                   |
+| propsData        | ✅     | s'appelle maintenant `props`                                                          |
+| provide          | ✅     | situé dans `global`                                                                   |
+| mixins           | ✅     | (nouveau !) situé dans `global`                                                       |
+| plugins          | ✅     | (nouveau !) situé dans `global`                                                       |
+| component        | ✅     | (nouveau !) situé dans `global`                                                       |
+| directives       | ✅     | (nouveau !) situé dans `global`                                                       |
+| stubs            | ✅     |
+| attachToDocument | ✅     | renommé en `attachTo`. Voir [here](https://github.com/vuejs/vue-test-utils/pull/1492) |
+| attrs            | ✅     |
 | scopedSlots      | ⚰️     | `scopedSlots` sont fusionnés dans `slots` dans Vue 3                                  |
 | context          | ⚰️     | différent depuis Vue 2, n'a plus d'utilité.                                           |
 | localVue         | ⚰️     | n'est plus obligatoire - Vue 3 il n'y a plus d'instance globale à muter.              |
@@ -54,24 +54,24 @@ Voici un tableau pour ceux qui viennent de VTU 1, comparant les deux API. Certai
 ### Wrapper API (mount)
 
 | method         | status | notes                                                                                                                               |
-|----------------|--------|-------------------------------------------------------------------------------------------------------------------------------------|
-| attributes     | ✅      |
-| classes        | ✅      |
-| exists         | ✅      |
-| find           | ✅      | seulement la syntaxe `querySelector` est supportée. `find(Comp)` discuté [ici](https://github.com/vuejs/vue-test-utils/issues/1498) |
-| emitted        | ✅      |
-| findAll        | ✅      | voir ci-dessus. `.vm` est différent de celui de Vue 2. Nous étudions les options.                                                   |
-| get            | ✅      |
-| html           | ✅      |
-| setValue       | ✅      | fonctionne avec les `select`, `checkbox`, `radio button`, `input`, `textarea`. Retourne `nextTick`.                                 |
-| text           | ✅      |
-| trigger        | ✅      | retourne `nextTick`. Vous pouvez écrire `await wrapper.find('button').trigger('click')`                                             |
-| setProps       | ✅      |
-| props          | ✅      |
-| setData        | ✅      |
-| destroy        | ✅      | renommé en `unmount` pour correspondre au cycle de vie Vue 3.                                                                       |
-| props          | ✅      |
-| isVisible      | ✅      |
+| -------------- | ------ | ----------------------------------------------------------------------------------------------------------------------------------- |
+| attributes     | ✅     |
+| classes        | ✅     |
+| exists         | ✅     |
+| find           | ✅     | seulement la syntaxe `querySelector` est supportée. `find(Comp)` discuté [ici](https://github.com/vuejs/vue-test-utils/issues/1498) |
+| emitted        | ✅     |
+| findAll        | ✅     | voir ci-dessus. `.vm` est différent de celui de Vue 2. Nous étudions les options.                                                   |
+| get            | ✅     |
+| html           | ✅     |
+| setValue       | ✅     | fonctionne avec les `select`, `checkbox`, `radio button`, `input`, `textarea`. Retourne `nextTick`.                                 |
+| text           | ✅     |
+| trigger        | ✅     | retourne `nextTick`. Vous pouvez écrire `await wrapper.find('button').trigger('click')`                                             |
+| setProps       | ✅     |
+| props          | ✅     |
+| setData        | ✅     |
+| destroy        | ✅     | renommé en `unmount` pour correspondre au cycle de vie Vue 3.                                                                       |
+| props          | ✅     |
+| isVisible      | ✅     |
 | contains       | ⚰️     | utilisez `find`                                                                                                                     |
 | emittedByOrder | ⚰️     | utilisez `emitted`                                                                                                                  |
 | setSelected    | ⚰️     | fait maintenant parti de `setValue`                                                                                                 |

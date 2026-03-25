@@ -30,7 +30,7 @@ Nous voulons réutiliser ce composant dans tous nos projets, chacun ayant des ex
 
 Nous allons afficher une erreur si `password` est inférieur à `minLength`. Nous pouvons le faire en créant une `computed` nommée `error` et en la rendant de manière conditionnelle à l'aide de `v-if`&nbsp;:
 
-```js
+```vue
 <!-- Password.vue -->
 <script setup>
 import { ref, computed } from 'vue'
@@ -44,7 +44,7 @@ const error = computed(() => {
   }
   return
 })
-<script>
+</script>
 
 <template>
   <div>

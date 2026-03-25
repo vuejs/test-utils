@@ -1,11 +1,25 @@
 {
   "name": "@vue/test-utils",
   "version": "2.4.6",
+  "homepage": "https://github.com/vuejs/test-utils",
   "license": "MIT",
+  "author": {
+    "name": "Lachlan Miller",
+    "email": "lachlan.miller.1990@outlook.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/vuejs/test-utils.git"
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "dist/index.d.ts"
+  ],
   "main": "dist/vue-test-utils.cjs.js",
-  "unpkg": "dist/vue-test-utils.browser.js",
-  "types": "dist/index.d.ts",
   "module": "dist/vue-test-utils.esm-bundler.mjs",
+  "types": "dist/index.d.ts",
+  "unpkg": "dist/vue-test-utils.browser.js",
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
@@ -17,68 +31,6 @@
     },
     "./package.json": "./package.json"
   },
-  "files": [
-    "dist",
-    "README.md",
-    "dist/index.d.ts"
-  ],
-  "dependencies": {
-    "js-beautify": "^1.14.9",
-    "vue-component-type-helpers": "^3.0.0"
-  },
-  "devDependencies": {
-    "@eslint/js": "9.36.0",
-    "@rollup/plugin-commonjs": "28.0.6",
-    "@rollup/plugin-json": "6.1.0",
-    "@rollup/plugin-node-resolve": "16.0.1",
-    "@rollup/plugin-replace": "6.0.2",
-    "@rollup/plugin-typescript": "12.1.4",
-    "@types/js-beautify": "1.14.3",
-    "@types/node": "22.18.6",
-    "@vitejs/plugin-vue": "6.0.1",
-    "@vitejs/plugin-vue-jsx": "5.1.1",
-    "@vitest/coverage-v8": "3.2.4",
-    "@vue/compat": "3.5.21",
-    "@vue/compiler-dom": "3.5.21",
-    "@vue/compiler-sfc": "3.5.21",
-    "@vue/server-renderer": "3.5.21",
-    "eslint": "9.36.0",
-    "eslint-config-prettier": "10.1.8",
-    "eslint-plugin-prettier": "5.5.4",
-    "husky": "9.1.7",
-    "jsdom": "27.0.0",
-    "jsdom-global": "3.0.2",
-    "lint-staged": "16.2.0",
-    "prettier": "3.6.2",
-    "reflect-metadata": "0.2.2",
-    "rollup": "4.52.2",
-    "tslib": "2.8.1",
-    "typescript": "5.9.2",
-    "typescript-eslint": "8.44.1",
-    "unplugin-vue-components": "29.1.0",
-    "vite": "7.1.7",
-    "vitepress": "1.6.4",
-    "vitepress-translation-helper": "0.2.2",
-    "vitest": "3.2.4",
-    "vue": "3.5.21",
-    "vue-class-component": "8.0.0-rc.1",
-    "vue-router": "4.5.1",
-    "vue-tsc": "3.0.8",
-    "vuex": "4.1.0"
-  },
-  "peerDependencies": {
-    "@vue/server-renderer": "3.x",
-    "vue": "3.x"
-  },
-  "peerDependenciesMeta": {
-    "@vue/server-renderer": {
-      "optional": true
-    }
-  },
-  "author": {
-    "name": "Lachlan Miller",
-    "email": "lachlan.miller.1990@outlook.com"
-  },
   "scripts": {
     "test": "vitest",
     "test:coverage": "vitest --coverage",
@@ -88,8 +40,10 @@
     "tsc:docs": "vue-tsc -p docs/.vitepress/tsconfig.vitepress.json",
     "build": "rollup -c rollup.config.ts --bundleConfigAsCjs",
     "prepare": "rollup -c rollup.config.ts --bundleConfigAsCjs",
-    "lint": "eslint .",
-    "lint:fix": "pnpm run lint --fix",
+    "lint": "oxlint",
+    "lint:fix": "oxlint --fix",
+    "format": "oxfmt",
+    "format-check": "oxfmt --check",
     "docs:dev": "vitepress dev docs",
     "docs:build": "vitepress build docs",
     "docs:translation:compare": "v-translation compare --status-file=docs/.vitepress/translation-status.json --path={docs/index.md,docs/api/index.md,docs/guide,docs/installation,docs/migration}",
@@ -98,6 +52,56 @@
     "vue-tsc": "vue-tsc --noEmit -p tsconfig.volar.json",
     "prepublishOnly": "pnpm run build"
   },
+  "dependencies": {
+    "js-beautify": "^1.14.9",
+    "vue-component-type-helpers": "^3.0.0"
+  },
+  "devDependencies": {
+    "@rollup/plugin-commonjs": "29.0.2",
+    "@rollup/plugin-json": "6.1.0",
+    "@rollup/plugin-node-resolve": "16.0.3",
+    "@rollup/plugin-replace": "6.0.3",
+    "@rollup/plugin-typescript": "12.3.0",
+    "@types/js-beautify": "1.14.3",
+    "@types/node": "24.12.0",
+    "@vitejs/plugin-vue": "6.0.5",
+    "@vitejs/plugin-vue-jsx": "5.1.5",
+    "@vitest/coverage-v8": "4.1.0",
+    "@vue/compat": "3.5.30",
+    "@vue/compiler-dom": "3.5.30",
+    "@vue/compiler-sfc": "3.5.30",
+    "@vue/server-renderer": "3.5.30",
+    "husky": "9.1.7",
+    "jsdom": "29.0.0",
+    "jsdom-global": "3.0.2",
+    "lint-staged": "16.3.3",
+    "oxfmt": "0.40.0",
+    "oxlint": "1.55.0",
+    "reflect-metadata": "0.2.2",
+    "rollup": "4.59.0",
+    "tslib": "2.8.1",
+    "typescript": "5.9.3",
+    "unplugin-vue-components": "31.0.0",
+    "vite": "8.0.0",
+    "vitepress": "1.6.4",
+    "vitepress-translation-helper": "0.2.2",
+    "vitest": "4.1.0",
+    "vue": "3.5.30",
+    "vue-class-component": "8.0.0-rc.1",
+    "vue-router": "5.0.3",
+    "vue-tsc": "3.2.5",
+    "vuex": "4.1.0"
+  },
+  "peerDependencies": {
+    "@vue/compiler-dom": "3.x",
+    "@vue/server-renderer": "3.x",
+    "vue": "3.x"
+  },
+  "peerDependenciesMeta": {
+    "@vue/server-renderer": {
+      "optional": true
+    }
+  },
   "husky": {
     "hooks": {
       "pre-commit": "lint-staged"
@@ -105,18 +109,14 @@
   },
   "lint-staged": {
     "*.ts": [
-      "eslint --fix"
+      "oxlint --fix",
+      "oxfmt --no-error-on-unmatched-pattern"
     ],
     "*.md": [
-      "prettier --write"
+      "oxfmt --no-error-on-unmatched-pattern"
     ]
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/vuejs/test-utils.git"
-  },
-  "homepage": "https://github.com/vuejs/test-utils",
-  "packageManager": "pnpm@10.17.1",
+  "packageManager": "pnpm@10.32.1",
   "pnpm": {
     "peerDependencyRules": {
       "ignoreMissing": [

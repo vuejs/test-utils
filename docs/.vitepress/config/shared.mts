@@ -36,12 +36,12 @@ export const sharedConfig = defineConfig({
   markdown: {
     theme: {
       dark: 'one-dark-pro',
-      light: 'github-light',
+      light: 'github-light'
     },
 
     anchor: {
-      slugify,
-    },
+      slugify
+    }
   },
 
   head: [
@@ -49,24 +49,24 @@ export const sharedConfig = defineConfig({
 
     [
       'meta',
-      { name: 'wwads-cn-verify', content: '7e7757b1e12abcb736ab9a754ffb617a' },
+      { name: 'wwads-cn-verify', content: '7e7757b1e12abcb736ab9a754ffb617a' }
     ],
 
     [
       'meta',
       {
         property: 'og:type',
-        content: 'website',
-      },
+        content: 'website'
+      }
     ],
 
     [
       'meta',
       {
         property: 'twitter:card',
-        content: 'summary_large_image',
-      },
-    ],
+        content: 'summary_large_image'
+      }
+    ]
     // [
     //   'meta',
     //   {
@@ -83,22 +83,22 @@ export const sharedConfig = defineConfig({
     socialLinks: [
       {
         icon: 'github',
-        link: 'https://github.com/vuejs/test-utils/',
+        link: 'https://github.com/vuejs/test-utils/'
       },
       {
         icon: 'discord',
-        link: 'https://chat.vuejs.org',
-      },
+        link: 'https://chat.vuejs.org'
+      }
     ],
 
     footer: {
       copyright: 'Copyright © 2014-present Evan You',
-      message: 'Released under the MIT License.',
+      message: 'Released under the MIT License.'
     },
 
     editLink: {
       pattern: 'https://github.com/vuejs/test-utils/edit/main/docs/:path',
-      text: 'Suggest changes',
+      text: 'Suggest changes'
     },
 
     algolia: {
@@ -108,6 +108,6 @@ export const sharedConfig = defineConfig({
       searchParameters: {
         facetFilters: ['tags:next']
       }
-    },
-  },
+    }
+  }
 })

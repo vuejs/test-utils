@@ -1,6 +1,7 @@
 import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest'
-import { defineAsyncComponent, defineComponent, h, AppConfig } from 'vue'
-import { mount, shallowMount, flushPromises } from '../../src'
+import type { AppConfig } from 'vue'
+import { defineAsyncComponent, defineComponent, h } from 'vue'
+import { flushPromises, mount, shallowMount } from '../../src'
 import Hello from '../components/Hello.vue'
 
 const config: Partial<AppConfig> = {
@@ -39,7 +40,7 @@ describe('defineAsyncComponent', () => {
   it('works with options usage', async () => {
     const Async = defineAsyncComponent({
       loader: () =>
-        new Promise<any>((res) => {
+        new Promise<any>(res => {
           setTimeout(() => {
             res({
               template: '<div>Async Component</div>'

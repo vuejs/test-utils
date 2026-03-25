@@ -1,7 +1,7 @@
-import { GlobalMountOptions, Stub } from './types'
-import { VueWrapper } from './vueWrapper'
-import { DOMWrapper } from './domWrapper'
-import { CustomCreateStub } from './vnodeTransformers/stubComponentsTransformer'
+import type { GlobalMountOptions, Stub } from './types'
+import type { VueWrapper } from './vueWrapper'
+import type { DOMWrapper } from './domWrapper'
+import type { CustomCreateStub } from './vnodeTransformers/stubComponentsTransformer'
 
 export interface GlobalConfigOptions {
   global: Required<Omit<GlobalMountOptions, 'stubs'>> & {

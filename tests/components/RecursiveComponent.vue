@@ -2,13 +2,8 @@
   <div>
     <h2>{{ name }}</h2>
     <Hello />
-    <template
-      v-for="item in items"
-      :key="item"
-    >
-      <RecursiveComponent
-        :name="item"
-      />
+    <template v-for="item in items" :key="item">
+      <RecursiveComponent :name="item" />
     </template>
   </div>
 </template>

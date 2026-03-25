@@ -1,23 +1,21 @@
+import type { VTUVNodeTypeTransformer } from './util'
+import { isKeepAlive, isRootComponent, isTeleport } from './util'
+import type {
+  Component,
+  ComponentObjectPropsOptions,
+  ComponentOptions,
+  ComponentPropsOptions,
+  ConcreteComponent,
+  KeepAlive,
+  Teleport,
+  VNodeTypes
+} from 'vue'
 import {
-  isKeepAlive,
-  isRootComponent,
-  isTeleport,
-  VTUVNodeTypeTransformer
-} from './util'
-import {
+  BaseTransition,
   Transition,
   TransitionGroup,
-  BaseTransition,
-  Teleport,
-  KeepAlive,
-  h,
   defineComponent,
-  VNodeTypes,
-  ConcreteComponent,
-  ComponentPropsOptions,
-  ComponentObjectPropsOptions,
-  Component,
-  ComponentOptions
+  h
 } from 'vue'
 import { hyphenate } from '../utils/vueShared'
 import { matchName } from '../utils/matchName'

@@ -1,6 +1,8 @@
 import { beforeEach, describe, expect, it } from 'vitest'
-import { DOMWrapper, mount, VueWrapper } from '../src'
-import { h, Slots } from 'vue'
+import type { VueWrapper } from '../src'
+import { DOMWrapper, mount } from '../src'
+import type { Slots } from 'vue'
+import { h } from 'vue'
 import Hello from './components/Hello.vue'
 
 describe('functionalComponents', () => {

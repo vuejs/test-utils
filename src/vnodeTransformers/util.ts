@@ -1,6 +1,6 @@
 import { isComponent } from '../utils'
 import { registerStub } from '../stubs'
-import { Component, ConcreteComponent, transformVNodeArgs } from 'vue'
+import type { Component, ConcreteComponent, transformVNodeArgs } from 'vue'
 
 type VNodeArgsTransformerFn = NonNullable<
   Parameters<typeof transformVNodeArgs>[0]

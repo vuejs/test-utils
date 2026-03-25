@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref } from 'vue'
 
 const props = defineProps<{ count: number }>()
-const internalCount = ref(props.count);
+const internalCount = ref(props.count)
 const inc = () => {
   internalCount.value++
 }

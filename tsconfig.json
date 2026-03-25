@@ -3,11 +3,7 @@
     "target": "es2016",
     "outDir": "dist",
     "module": "esnext",
-    "lib": [
-      "DOM",
-      "ES2015",
-      "ES2017"
-    ],
+    "lib": ["DOM", "ES2015", "ES2017"],
     "strict": true,
     "jsx": "preserve",
     "jsxImportSource": "vue",
@@ -18,14 +14,8 @@
     "noUnusedLocals": true,
     "baseUrl": ".",
     "paths": {
-      "vue": [
-        "node_modules/vue/dist/vue.esm.js"
-      ]
+      "vue": ["node_modules/vue/dist/vue.esm.js"]
     }
   },
-  "include": [
-    "tests",
-    "src",
-    "types"
-  ]
+  "include": ["tests", "src", "types"]
 }

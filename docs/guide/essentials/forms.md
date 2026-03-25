@@ -127,7 +127,6 @@ const submit = () => {
 }
 </script>
 
-
 <template>
   <form @submit.prevent="submit">
     <input type="email" v-model="form.email" />
@@ -266,7 +265,7 @@ import { ref } from 'vue'
 const inputValue = ref('')
 const emit = defineEmits(['focus-lost'])
 
-const handleBlur = (event) => {
+const handleBlur = event => {
   if (event.relatedTarget.tagName === 'BUTTON') {
     emit('focus-lost')
   }

@@ -18,27 +18,27 @@ const Counter = {
   `,
   data() {
     return {
-      count: 0,
-    };
+      count: 0
+    }
   },
   methods: {
     handleClick() {
-      this.count += 1;
-    },
-  },
-};
+      this.count += 1
+    }
+  }
+}
 ```
 
 Écrivons un test pour vérifier que `count` s'incrémente&nbsp;:
 
 ```js
 test('incrémente de 1', () => {
-  const wrapper = mount(Counter);
+  const wrapper = mount(Counter)
 
-  wrapper.find('button').trigger('click');
+  wrapper.find('button').trigger('click')
 
-  expect(wrapper.html()).toContain('Compteur: 1');
-});
+  expect(wrapper.html()).toContain('Compteur: 1')
+})
 ```
 
 Bizarrement, le test échoue&nbsp;! La raison est simple&nbsp;: bien que `count` soit incrémenté, Vue ne mettra pas à jour le DOM jusqu'au prochain `tick` du cycle d'événement. Pour cette raison, la vérification (`expect()...`) sera appelée avant que Vue ne mette à jour le DOM.
@@ -50,16 +50,16 @@ Si vous voulez en savoir plus sur ce comportement de base de JavaScript, jetez u
 Comment pouvons-nous régler cela&nbsp;? Vue fournit en réalité un moyen d'attendre jusqu'à ce que le DOM soit mis à jour&nbsp;: `nextTick`.
 
 ```js {1,7}
-import { nextTick } from 'vue';
+import { nextTick } from 'vue'
 
 test('incrémente de 1', async () => {
-  const wrapper = mount(Counter);
+  const wrapper = mount(Counter)
 
-  wrapper.find('button').trigger('click');
-  await nextTick();
+  wrapper.find('button').trigger('click')
+  await nextTick()
 
-  expect(wrapper.html()).toContain('Compteur: 1');
-});
+  expect(wrapper.html()).toContain('Compteur: 1')
+})
 ```
 
 Maintenant, le test réussira, car nous veillons à ce que le prochain `tick` ait été exécuté et que le DOM ait été mis à jour avant la vérification.
@@ -68,12 +68,12 @@ Comme `await nextTick()` est courant, Vue Test Utils fournit un raccourci. Les m
 
 ```js {4}
 test('incrémente de 1', async () => {
-  const wrapper = mount(Counter);
+  const wrapper = mount(Counter)
 
-  await wrapper.find('button').trigger('click');
+  await wrapper.find('button').trigger('click')
 
-  expect(wrapper.html()).toContain('Compteur: 1');
-});
+  expect(wrapper.html()).toContain('Compteur: 1')
+})
 ```
 
 ## Résoudre d'autres Comportements Asynchrones
@@ -83,7 +83,7 @@ test('incrémente de 1', async () => {
 Un exemple courant est une fonction qui retourne une `Promise`. Peut-être avez-vous déjà simulé votre client HTTP `axios` en utilisant `jest.mock`&nbsp;:
 
 ```js
-jest.spyOn(axios, 'get').mockResolvedValue({ data: 'de la donnée simulée !' });
+jest.spyOn(axios, 'get').mockResolvedValue({ data: 'de la donnée simulée !' })
 ```
 
 Dans ce cas, Vue n'a aucune idée si la `Promise` est résolue ou non, donc l'appel à `nextTick` ne fonctionnera pas - votre vérification peut s'exécuter avant qu'elle ne soit résolue. Pour des scénarios de ce genre, Vue Test Utils propose [`flushPromises`](../../api/#flushPromises), qui cause l'exécution immédiate de toutes les `Promise` en attente de résolution.
@@ -91,19 +91,19 @@ Dans ce cas, Vue n'a aucune idée si la `Promise` est résolue ou non, donc l'ap
 Regardons un exemple&nbsp;:
 
 ```js {1,12}
-import { flushPromises } from '@vue/test-utils';
-import axios from 'axios';
+import { flushPromises } from '@vue/test-utils'
+import axios from 'axios'
 
-jest.spyOn(axios, 'get').mockResolvedValue({ data: 'de la donnée simulée !' });
+jest.spyOn(axios, 'get').mockResolvedValue({ data: 'de la donnée simulée !' })
 
-test('utilise une méthode pour simuler la méthode d\'axios et flushPromises', async () => {
+test("utilise une méthode pour simuler la méthode d'axios et flushPromises", async () => {
   // le composant appelle la méthode de `axios` lorsque le composant est créé.
-  const wrapper = mount(AxiosComponent);
+  const wrapper = mount(AxiosComponent)
 
   await flushPromises() // la `Promise` de la méthode Axios est résolue immédiatement.
 
   // après cette ligne, la requête axios est résolue avec la donnée simulée.
-});
+})
 ```
 
 :::tip
@@ -120,8 +120,8 @@ Par exemple, prenons ce composant `Async`:
 const Async = defineComponent({
   async setup() {
     // await quelque chose
-  },
-});
+  }
+})
 ```
 
 … doit être testé comme suit&nbsp;:
@@ -131,11 +131,11 @@ test('Composant async', () => {
   const TestComponent = defineComponent({
     components: { Async },
     template: '<Suspense><Async/></Suspense>'
-  });
+  })
 
-  const wrapper = mount(TestComponent);
+  const wrapper = mount(TestComponent)
   // ...
-});
+})
 ```
 
 ## Conclusion

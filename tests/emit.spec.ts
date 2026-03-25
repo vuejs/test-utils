@@ -1,11 +1,6 @@
 import { describe, expect, it } from 'vitest'
-import {
-  defineComponent,
-  FunctionalComponent,
-  getCurrentInstance,
-  h,
-  SetupContext
-} from 'vue'
+import type { FunctionalComponent, SetupContext } from 'vue'
+import { defineComponent, getCurrentInstance, h } from 'vue'
 import { Vue } from 'vue-class-component'
 import EmitsEventSFC from './components/EmitsEventSFC.vue'
 import EmitsEventScriptSetup from './components/EmitsEventScriptSetup.vue'

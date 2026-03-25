@@ -151,7 +151,7 @@ test('increment mutation', () => {
 Sometimes it can be useful to have the Vuex store in a specific state for a test. One useful technique you can use, other than `global.mocks`, is to create a function that wraps `createStore` and takes an argument to seed the initial state. In this example we extend `increment` to take an additional argument, which will be added on to the `state.count`. If that is not provided, we just increment `state.count` by 1.
 
 ```js
-const createVuexStore = (initialState) =>
+const createVuexStore = initialState =>
   createStore({
     state: {
       count: 0,
@@ -197,14 +197,18 @@ import { createApp } from 'vue'
 const key = Symbol()
 
 const App = {
-  setup () {
+  setup() {
     // use unique key to access store
     const store = useStore(key)
   }
 }
 
-const store = createStore({ /* ... */ })
-const app = createApp({ /* ... */ })
+const store = createStore({
+  /* ... */
+})
+const app = createApp({
+  /* ... */
+})
 
 // specify key as second argument when calling app.use(store)
 app.use(store, key)
@@ -214,7 +218,7 @@ To avoid repeating the key parameter passing whenever `useStore` is used, the Vu
 
 ### Testing Components that Utilize `useStore` without an Injection Key
 
-Without an injection key, the store data can just be injected into the component via the global `provide` mounting option. The name of the injected store must be the same as the one in the component, e.g. "store". 
+Without an injection key, the store data can just be injected into the component via the global `provide` mounting option. The name of the injected store must be the same as the one in the component, e.g. "store".
 
 #### Example for providing the unkeyed `useStore`
 
@@ -229,8 +233,8 @@ const wrapper = mount(App, {
   global: {
     provide: {
       store: store
-    },
-  },
+    }
+  }
 })
 ```
 
@@ -254,14 +258,16 @@ export const key = Symbol()
 import { createStore } from 'vuex'
 import { key } from './store'
 
-const store = createStore({ /* ... */ })
+const store = createStore({
+  /* ... */
+})
 
 const wrapper = mount(App, {
   global: {
     provide: {
       [key]: store
-    },
-  },
+    }
+  }
 })
 ```
 
@@ -277,17 +283,17 @@ export const key = Symbol()
 import { createStore } from 'vuex'
 import { key } from './store'
 
-const store = createStore({ /* ... */ })
+const store = createStore({
+  /* ... */
+})
 
 const wrapper = mount(App, {
   global: {
     // to pass options to plugins, use the array syntax.
     plugins: [[store, key]]
-  },
+  }
 })
 ```
-
-
 
 ## Conclusion
 

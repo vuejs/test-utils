@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
-import { defineComponent, h, ref, Teleport } from 'vue'
+import { Teleport, defineComponent, h, ref } from 'vue'
 import { mount } from '../../src'
 import WithTeleportPropsComp from '../components/WithTeleportPropsComp.vue'
 import WithTeleportEmitsComp from '../components/WithTeleportEmitsComp.vue'
