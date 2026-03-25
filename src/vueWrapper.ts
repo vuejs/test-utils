@@ -1,4 +1,11 @@
-import { nextTick, App, ComponentPublicInstance, VNode, proxyRefs } from 'vue'
+import {
+  nextTick,
+  App,
+  ComponentPublicInstance,
+  VNode,
+  proxyRefs,
+  unref
+} from 'vue'
 
 import { config } from './config'
 import domEvents from './constants/dom-events'
@@ -28,11 +35,10 @@ function createVMProxy<T extends ComponentPublicInstance>(
     get(vm, key, receiver) {
       if (vm.$.exposeProxy && key in vm.$.exposeProxy) {
         // first if the key is exposed in exposeProxy
-        return Reflect.get(vm.$.exposeProxy, key, receiver);
-      }
-      else if (vm.$.exposed && key in vm.$.exposed) {
+        return Reflect.get(vm.$.exposeProxy, key, receiver)
+      } else if (vm.$.exposed && key in vm.$.exposed) {
         // second if the key is exposed
-        return Reflect.get(proxyRefs(vm.$.exposed), key, receiver);
+        return unref(Reflect.get(vm.$.exposed, key, receiver))
       } else if (key in setupState) {
         // third if the key is acccessible from the setupState
         return Reflect.get(setupState, key, receiver)
