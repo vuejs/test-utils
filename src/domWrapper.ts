@@ -135,6 +135,14 @@ export class DOMWrapper<NodeType extends Node> extends BaseWrapper<NodeType> {
       this.trigger('input')
       // trigger `change` for `v-model.lazy`
       return this.trigger('change')
+    } else if (tagName === 'DIV' && this.attributes().contenteditable) {
+      // for contenteditable elements, we set the innerHTML
+      // and trigger input and change events
+      // the value will be coerced to a string
+      // and object types will be stringified (either default [object Object] or custom toString)])
+      element.innerHTML = value
+      this.trigger('input')
+      return this.trigger('change')
     } else {
       throw Error(`wrapper.setValue() cannot be called on ${tagName}`)
     }
