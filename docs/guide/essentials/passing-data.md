@@ -8,18 +8,19 @@ In this section, we explore the `data` and `props` mounting options, as well as 
 
 We will demonstrate the above features by building a `<Password>` component. This component verifies a password meets certain criteria, such as length and complexity. We will start with the following and add features, as well as tests to make sure the features are working correctly:
 
-```vue
-<!-- Password.vue -->
-<script setup>
-import { ref } from 'vue'
-const password = ref('')
-</script>
-
-<template>
-  <div>
-    <input v-model="password" />
-  </div>
-</template>
+```js
+const Password = {
+  template: `
+    <div>
+      <input v-model="password">
+    </div>
+  `,
+  data() {
+    return {
+      password: ''
+    }
+  }
+}
 ```
 
 The first requirement we will add is a minimum length.
@@ -30,28 +31,33 @@ We want to reuse this component in all our projects, each of which may have diff
 
 We will show an error if `password` is less than `minLength`. We can do this by creating an `error` computed property, and conditionally rendering it using `v-if`:
 
-```vue
-<!-- Password.vue -->
-<script setup>
-import { ref } from 'vue'
-
-const props = defineProps(['minLength'])
-const password = ref('')
-
-const error = computed(() => {
-  if (password.value.length < props.minLength) {
-    return `Password must be at least ${props.minLength} characters.`
+```js
+const Password = {
+  template: `
+    <div>
+      <input v-model="password">
+      <div v-if="error">{{ error }}</div>
+    </div>
+  `,
+  props: {
+    minLength: {
+      type: Number
+    }
+  },
+  data() {
+    return {
+      password: ''
+    }
+  },
+  computed: {
+    error() {
+      if (this.password.length < this.minLength) {
+        return `Password must be at least ${this.minLength} characters.`
+      }
+      return
+    }
   }
-  return
-})
-</script>
-
-<template>
-  <div>
-    <input v-model="password" />
-    <div v-if="error">{{ error }}</div>
-  </div>
-</template>
+}
 ```
 
 To test this, we need to set the `minLength`, as well as a `password` that is less than that number. We can do this using the `data` and `props` mounting options. Finally, we will assert the correct error message is rendered:
@@ -74,6 +80,8 @@ test('renders an error if length is too short', () => {
 ```
 
 Writing a test for a `maxLength` rule is left as an exercise for the reader! Another way to write this would be using `setValue` to update the input with a password that is too short. You can learn more in [Forms](./forms).
+
+> **Note:** The `data` mounting option only works with components using the Options API. If your component uses `<script setup>` (Composition API), use `setValue` or `trigger` to set the component state instead. See [Forms](./forms) for more details.
 
 ## Using `setProps`
 
