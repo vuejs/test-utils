@@ -14,12 +14,20 @@ yarn add --dev @vue/test-utils
 
 ## Utilisation
 
-Vue Test Utils est un outil indépendant de tout framework - vous pouvez l'utiliser avec le gestionnaire de tests de votre choix. La manière la plus simple pour l'essayer est d'utiliser [Jest](https://jestjs.io/), un gestionnaire de tests populaire.
+Vue Test Utils est un outil indépendant de tout framework - vous pouvez l'utiliser avec le gestionnaire de tests de votre choix.
 
-Pour charger les fichiers `.vue` avec Jest, vous aurez besoin de `vue-jest`. `vue-jest` v5 est celui qui prend en charge Vue 3. Il est encore en version alpha, tout comme le reste de l'écosystème Vue.js 3, alors si vous rencontrez un bug, veuillez le signaler [ici](https://github.com/vuejs/vue-jest/) et préciser que vous utilisez `vue-jest` v5.
+### Vitest (Recommandé)
 
-Vous pouvez l'installer avec `vue-jest@next`. Ensuite, vous devez le configurer avec l'option [transform](https://jestjs.io/docs/fr/configuration#transform-objectstring-pathtotransformer--pathtotransformer-object) de Jest.
+[Vitest](https://vitest.dev/) est le gestionnaire de tests recommandé pour les projets Vue. Il est construit sur Vite, prend en charge les fichiers `.vue` nativement et offre une expérience de test rapide et moderne avec le support natif des modules ESM.
 
-Si vous ne voulez pas le configurer vous-même, vous pouvez obtenir un dépôt minimal avec tout paramétré [ici](https://github.com/lmiller1990/vtu-next-demo).
+```shell
+npm install --save-dev vitest
+```
+
+Aucune configuration de transformation supplémentaire n'est nécessaire lorsque vous utilisez Vitest avec un projet basé sur Vite. Consultez le [guide de démarrage de Vitest](https://vitest.dev/guide/) pour plus de détails.
+
+### Jest
+
+Vous pouvez également utiliser [Jest](https://jestjs.io/) avec Vue Test Utils. Pour charger les fichiers `.vue` avec Jest, vous aurez besoin de `vue-jest`. Vous pouvez l'installer avec `vue-jest@next` et le configurer avec l'option [transform](https://jestjs.io/docs/fr/configuration#transform-objectstring-pathtotransformer--pathtotransformer-object) de Jest.
 
 Continuez à lire pour en savoir plus sur Vue Test Utils.
