@@ -14,12 +14,20 @@ yarn add --dev @vue/test-utils
 
 ## Usage
 
-Vue Test Utils is framework agnostic - you can use it with whichever test runner you like. The easiest way to try it out is using [Jest](https://jestjs.io/), a popular test runner.
+Vue Test Utils is framework agnostic - you can use it with whichever test runner you like.
 
-To load `.vue` files with Jest, you will need `vue-jest`. `vue-jest` v5 is the one that supports Vue 3. It is still in alpha, much like the rest of the Vue.js 3 ecosystem, so if you find a bug please report it [here](https://github.com/vuejs/vue-jest/) and specify you are using `vue-jest` v5.
+### Vitest (Recommended)
 
-You can install it with `vue-jest@next`. Then you need to configure it with Jest's [transform](https://jestjs.io/docs/en/configuration#transform-objectstring-pathtotransformer--pathtotransformer-object) option.
+[Vitest](https://vitest.dev/) is the recommended test runner for Vue projects. It is built on Vite, supports `.vue` files out of the box, and provides a fast, modern testing experience with native ESM support.
 
-If you don't want to configure it yourself, you can get a minimal repository with everything set up [here](https://github.com/lmiller1990/vtu-next-demo).
+```shell
+npm install --save-dev vitest
+```
+
+No additional transform configuration is needed when using Vitest with a Vite-based project. See the [Vitest getting started guide](https://vitest.dev/guide/) for more details.
+
+### Jest
+
+You can also use [Jest](https://jestjs.io/) with Vue Test Utils. To load `.vue` files with Jest, you will need `vue-jest`. You can install it with `vue-jest@next` and configure it with Jest's [transform](https://jestjs.io/docs/en/configuration#transform-objectstring-pathtotransformer--pathtotransformer-object) option.
 
 Continue reading to learn more about Vue Test Utils.
