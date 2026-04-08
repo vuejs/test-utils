@@ -1,7 +1,10 @@
 {
   "extends": "../tsconfig.json",
   "compilerOptions": {
-    "noEmit": false,
+    "rootDir": "..",
+    "noEmit": true,
+    "lib": ["DOM", "ES2019"],
+    "types": ["node"],
     "skipLibCheck": true,
     "experimentalDecorators": true,
     "noUncheckedIndexedAccess": true,
