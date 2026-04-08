@@ -72,7 +72,7 @@ function createEntry(options) {
       include: ['src/**/*.ts', 'types/**/*.d.ts'],
       compilerOptions: {
         declaration: format === 'es',
-        target: 'es5', // not sure what this should be?
+        target: 'es2015',
         module: format === 'cjs' ? 'es2015' : 'esnext'
       }
     })
