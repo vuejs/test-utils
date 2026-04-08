@@ -1,20 +1,22 @@
 {
   "compilerOptions": {
     "target": "es2016",
+    "rootDir": ".",
     "outDir": "dist",
     "module": "esnext",
-    "lib": ["DOM", "ES2015", "ES2017"],
+    "lib": ["DOM", "ES2019"],
     "strict": true,
     "jsx": "preserve",
     "jsxImportSource": "vue",
-    "moduleResolution": "node",
+    "moduleResolution": "bundler",
     "esModuleInterop": true,
     "experimentalDecorators": true,
     "allowSyntheticDefaultImports": true,
     "noUnusedLocals": true,
-    "baseUrl": ".",
+    "types": ["node"],
     "paths": {
-      "vue": ["node_modules/vue/dist/vue.esm.js"]
+      "vue": ["./node_modules/vue/dist/vue.esm.js"],
+      "vuex": ["./node_modules/vuex/types/index.d.ts"]
     }
   },
   "include": ["tests", "src", "types"]
