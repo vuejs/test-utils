@@ -1718,6 +1718,19 @@ test('setValue on multi select', async () => {
 You should use `await` when you call `setValue` to ensure that Vue updates the DOM before you make an assertion.
 :::
 
+::: warning Object values on `<select>`
+`setValue` compares against the `<option>` element's `value` string, which is
+always a string even when the template binds an object to `v-model`. Passing
+the object itself will not match any option. Select the option by index
+instead and trigger a `change` event:
+
+```js
+const select = wrapper.find('select')
+;(select.element as HTMLSelectElement).selectedIndex = 1
+await select.trigger('change')
+```
+:::
+
 ### text
 
 Returns the text content of an element.
