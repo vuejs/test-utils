@@ -1711,6 +1711,18 @@ test('setValue on multi select', async () => {
 在调用 `setValue` 时，你应该使用 `await`，以确保 Vue 在你进行断言之前更新 DOM。
 :::
 
+::: warning `<select>` 上的对象值
+`setValue` 会将传入的值与 `<option>` 元素的 `value` 字符串进行比较，即使
+模板将对象绑定到 `v-model`，该值也始终是字符串。直接传入对象不会匹配
+任何选项。请改为通过索引选择选项，然后触发 `change` 事件：
+
+```js
+const select = wrapper.find('select')
+;(select.element as HTMLSelectElement).selectedIndex = 1
+await select.trigger('change')
+```
+:::
+
 ### text
 
 返回元素的文本内容。
