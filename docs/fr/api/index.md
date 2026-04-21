@@ -1710,6 +1710,20 @@ test('setValue sur une liste déroulante à choix multiples', async () => {
 Vous devriez utiliser `await` lorsque vous appelez `setValue` pour vous assurer que Vue met à jour le DOM avant de faire une vérification.
 :::
 
+::: warning Valeurs objets sur `<select>`
+`setValue` compare la valeur passée à la chaîne `value` de l'élément
+`<option>`, qui reste une chaîne même lorsque le template lie un objet à
+`v-model`. Passer l'objet lui-même ne correspondra à aucune option.
+Sélectionnez plutôt l'option par son index puis déclenchez un événement
+`change` :
+
+```js
+const select = wrapper.find('select')
+;(select.element as HTMLSelectElement).selectedIndex = 1
+await select.trigger('change')
+```
+:::
+
 ### text
 
 Retourne le texte contenu dans un élément.
