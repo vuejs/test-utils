@@ -9,22 +9,21 @@
     // group vitest packages update
     {
       groupName: 'vitest',
-      matchPackagePrefixes: ['@vitest/', 'vitest']
+      matchPackageNames: ['@vitest/{/,}**', 'vitest{/,}**']
     },
     // group vite packages update
     {
       groupName: 'vite',
-      matchPackagePrefixes: ['@vitejs/', 'vite'],
-      excludePackagePrefixes: ['vitest']
+      matchPackageNames: ['@vitejs/{/,}**', 'vite{/,}**', '!vitest{/,}**']
     },
     // group all minor dependencies, once a week
     {
-      matchPackagePatterns: ['*'],
       matchUpdateTypes: ['minor', 'patch'],
       matchCurrentVersion: '>=1',
       groupName: 'all non-major dependencies',
       groupSlug: 'all-minor-patch',
-      schedule: ['after 1am on Wednesday']
+      schedule: ['after 1am on Wednesday'],
+      matchPackageNames: ['*']
     }
   ]
 }
