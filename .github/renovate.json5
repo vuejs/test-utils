@@ -1,9 +1,7 @@
 {
   $schema: 'https://docs.renovatebot.com/renovate-schema.json',
   // only 1 PR at the same time (to avoid cascading rebase)
-  extends: [
-    'config:js-lib',
-  ],
+  extends: ['config:js-lib'],
   prConcurrentLimit: 1,
   // auto-merge if build is OK
   automerge: true,
@@ -11,35 +9,21 @@
     // group vitest packages update
     {
       groupName: 'vitest',
-      matchPackageNames: [
-        '@vitest/{/,}**',
-        'vitest{/,}**',
-      ],
+      matchPackageNames: ['@vitest/{/,}**', 'vitest{/,}**']
     },
     // group vite packages update
     {
       groupName: 'vite',
-      matchPackageNames: [
-        '@vitejs/{/,}**',
-        'vite{/,}**',
-        '!vitest{/,}**',
-      ],
+      matchPackageNames: ['@vitejs/{/,}**', 'vite{/,}**', '!vitest{/,}**']
     },
     // group all minor dependencies, once a week
     {
-      matchUpdateTypes: [
-        'minor',
-        'patch',
-      ],
+      matchUpdateTypes: ['minor', 'patch'],
       matchCurrentVersion: '>=1',
       groupName: 'all non-major dependencies',
       groupSlug: 'all-minor-patch',
-      schedule: [
-        'after 1am on Wednesday',
-      ],
-      matchPackageNames: [
-        '*',
-      ],
-    },
-  ],
+      schedule: ['after 1am on Wednesday'],
+      matchPackageNames: ['*']
+    }
+  ]
 }
