@@ -1,7 +1,7 @@
 {
   $schema: 'https://docs.renovatebot.com/renovate-schema.json',
-  // only 1 PR at the same time (to avoid cascading rebase)
   extends: ['config:js-lib'],
+  // only 1 PR at the same time (to avoid cascading rebase)
   prConcurrentLimit: 1,
   // auto-merge if build is OK
   automerge: true,
