@@ -18,11 +18,11 @@
   ],
   "main": "dist/vue-test-utils.cjs.js",
   "module": "dist/vue-test-utils.esm-bundler.mjs",
-  "types": "dist/index.d.ts",
+  "types": "dist/src/index.d.ts",
   "unpkg": "dist/vue-test-utils.browser.js",
   "exports": {
     ".": {
-      "types": "./dist/index.d.ts",
+      "types": "./dist/src/index.d.ts",
       "node": "./dist/vue-test-utils.cjs.js",
       "import": "./dist/vue-test-utils.esm-bundler.mjs",
       "require": "./dist/vue-test-utils.cjs.js",
