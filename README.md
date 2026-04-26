@@ -25,6 +25,30 @@ See the [docs](https://test-utils.vuejs.org/).
 
 Get started by running `pnpm install`. You can run the tests with `pnpm test`. That's it!
 
+## Releasing
+
+Releases are published to npm from GitHub Actions using npm trusted publishing.
+Publishing with npm tokens is disabled, so a release requires:
+
+- write access to the `vuejs/test-utils` repository
+- the release commit to be on `main`
+- `package.json` to contain the version being released
+- approval from a maintainer with access to the `npm-publish` GitHub environment
+
+To cut a release, push a version tag from `main`:
+
+```sh
+git checkout main
+git pull
+git tag v2.x.y
+git push origin v2.x.y
+```
+
+Pushing a `v*` tag starts the release workflow.
+The workflow builds the package, pauses for approval in the `npm-publish` environment,
+then publishes `@vue/test-utils` to npm after approval.
+The person who pushed the tag cannot self-approve the publish step.
+
 ## Contributing Docs
 
 All the documentation files can be found in `docs`. It contains the English markdown files while translation(s) are stored in their corresponding `<lang>` sub-folder(s):
