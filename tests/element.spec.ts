@@ -90,6 +90,22 @@ describe('element', () => {
     expect(wrapper.findComponent(Func).text()).toBe('foobar')
   })
 
+  it('text() reads DOM content for single-root components with empty vnode children', () => {
+    const Child = defineComponent({
+      render: () => h('button')
+    })
+    const Parent = defineComponent({
+      components: { Child },
+      template: '<Child/>'
+    })
+
+    const wrapper = mount(Parent)
+    const child = wrapper.findComponent(Child)
+    child.element.textContent = 'foobar'
+
+    expect(child.text()).toBe('foobar')
+  })
+
   it('returns correct element for root slot', () => {
     const Parent = defineComponent({
       components: { ReturnSlot },
