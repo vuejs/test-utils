@@ -77,7 +77,7 @@
     "lint-staged": "16.4.0",
     "oxfmt": "0.47.0",
     "oxlint": "1.62.0",
-    "pkg-pr-new": "0.0.68",
+    "pkg-pr-new": "0.0.69",
     "reflect-metadata": "0.2.2",
     "rollup": "4.60.2",
     "tslib": "2.8.1",
