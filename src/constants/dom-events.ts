@@ -305,16 +305,6 @@ const domEvents = {
     bubbles: true,
     cancelable: true
   },
-  DOMAttrModified: {
-    eventInterface: 'MutationEvent',
-    bubbles: true,
-    cancelable: true
-  },
-  DOMCharacterDataModified: {
-    eventInterface: 'MutationEvent',
-    bubbles: true,
-    cancelable: true
-  },
   DOMContentLoaded: {
     eventInterface: 'Event',
     bubbles: true,
@@ -335,34 +325,12 @@ const domEvents = {
     bubbles: true,
     cancelable: true
   },
-  DOMNodeInserted: {
-    eventInterface: 'MutationEvent',
-    bubbles: true,
-    cancelable: true
-  },
-  DOMNodeInsertedIntoDocument: {
-    eventInterface: 'MutationEvent',
-    bubbles: true,
-    cancelable: true
-  },
-  DOMNodeRemoved: {
-    eventInterface: 'MutationEvent',
-    bubbles: true,
-    cancelable: true
-  },
-  DOMNodeRemovedFromDocument: {
-    eventInterface: 'MutationEvent',
-    bubbles: true,
-    cancelable: true
-  },
-  /**
-   * @deprecated
-   */
-  DOMSubtreeModified: {
-    eventInterface: 'MutationEvent',
-    bubbles: true,
-    cancelable: false
-  },
+  // Mutation Events (DOMAttrModified, DOMCharacterDataModified, DOMNodeInserted,
+  // DOMNodeInsertedIntoDocument, DOMNodeRemoved, DOMNodeRemovedFromDocument,
+  // DOMSubtreeModified) were removed from the dispatch table because Chrome 127
+  // removed support for these legacy MutationEvents. Listening for them in the
+  // browser now logs a deprecation warning. Use MutationObserver instead.
+  // See https://chromestatus.com/feature/5083947249172480 and #2449.
   downloading: {
     eventInterface: 'Event',
     bubbles: false,
