@@ -334,4 +334,42 @@ describe('setData', () => {
     expect(wrapper.html()).toContain('item3')
     expect(wrapper.html()).toContain('item4')
   })
+
+  it('updates data() property on a mixed-API component that also has setup()', async () => {
+    const Component = defineComponent({
+      template: `<span>{{ activeStep }}</span>`,
+      setup() {
+        return { setupValue: ref('from setup') }
+      },
+      data() {
+        return { activeStep: 'A' }
+      }
+    })
+
+    const wrapper = mount(Component)
+
+    expect(wrapper.text()).toBe('A')
+
+    await wrapper.setData({ activeStep: 'B' })
+
+    expect(wrapper.text()).toBe('B')
+  })
+
+  it('updates both data() and setup() properties on a mixed-API component', async () => {
+    const Component = defineComponent({
+      template: `<span>{{ activeStep }} {{ setupValue }}</span>`,
+      setup() {
+        return { setupValue: ref('from setup') }
+      },
+      data() {
+        return { activeStep: 'A' }
+      }
+    })
+
+    const wrapper = mount(Component)
+
+    await wrapper.setData({ activeStep: 'B', setupValue: 'updated setup' })
+
+    expect(wrapper.text()).toBe('B updated setup')
+  })
 })
