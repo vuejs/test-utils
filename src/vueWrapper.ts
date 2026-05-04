@@ -247,16 +247,18 @@ export class VueWrapper<
     return domWrapper.isVisible()
   }
 
+  /*
+   * Depending on how the component was defined, data can live in different places.
+   * Vue sets some default placeholder in all the locations however, so we cannot
+   * just check if the data object exists or not.
+   *
+   * - <script setup>: data lives in setupState, marked with __isScriptSetup
+   * - setup() function: data lives in setupState, not marked with __isScriptSetup
+   * - Options API data(): data lives in $data, proxied through $data; setupState exists but is frozen
+   * - Mixed API (setup() + data()): setupState is unfrozen (has setup() returns) AND $data exists.
+   *   Each key must be routed individually — keys present in $data go there, the rest go to setupState.
+   */
   setData(data: Record<string, unknown>): Promise<void> {
-    /*
-    Depending on how the component was defined, data can live in different places 
-    Vue sets some default placeholder in all the locations however, so we cannot just check
-    if the data object exists or not.
-    When using <script setup>, data lives in the setupState object, which is then marked with __isScriptSetup
-    When using the setup() function, data lives in the setupState object, but is not marked with __isScriptSetup
-    When using the object api, data lives in the data object, proxied through $data, HOWEVER
-    the setupState object will also exist, and be frozen.
-    */
     // @ts-expect-error
     if (this.componentVM.$.setupState.__isScriptSetup) {
       // data from <script setup>
@@ -264,9 +266,16 @@ export class VueWrapper<
       mergeDeep(this.componentVM.$.setupState, data)
       // @ts-expect-error
     } else if (!Object.isFrozen(this.componentVM.$.setupState)) {
-      // data from setup() function when using the object api
-      // @ts-expect-error
-      mergeDeep(proxyRefs(this.componentVM.$.setupState), data)
+      // data from setup() function — may also have data() properties in mixed-API components,
+      // so route each key to wherever it actually lives
+      for (const [key, value] of Object.entries(data)) {
+        if (key in (this.componentVM.$data as Record<string, unknown>)) {
+          mergeDeep(this.componentVM.$data, { [key]: value })
+        } else {
+          // @ts-expect-error
+          mergeDeep(proxyRefs(this.componentVM.$.setupState), { [key]: value })
+        }
+      }
     } else {
       // data when using data: {...} in the object api
       mergeDeep(this.componentVM.$data, data)
