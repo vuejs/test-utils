@@ -117,6 +117,50 @@ describe('isVisible', () => {
     expect(wrapper.html()).not.toContain('Item: 2')
   })
 
+  describe('details element', () => {
+    const Comp = defineComponent({
+      props: {
+        open: { type: Boolean, default: false }
+      },
+      template: `
+        <details :open="open">
+          <summary>Toggle</summary>
+          <p class="content">Content</p>
+        </details>
+      `
+    })
+
+    it('details, summary and content are visible when open', () => {
+      const wrapper = mount(Comp, { props: { open: true } })
+
+      expect(wrapper.get('details').isVisible()).toBe(true)
+      expect(wrapper.get('summary').isVisible()).toBe(true)
+      expect(wrapper.get('p.content').isVisible()).toBe(true)
+    })
+
+    it('details and summary stay visible when closed, content is hidden', () => {
+      const wrapper = mount(Comp, { props: { open: false } })
+
+      expect(wrapper.get('details').isVisible()).toBe(true)
+      expect(wrapper.get('summary').isVisible()).toBe(true)
+      expect(wrapper.get('p.content').isVisible()).toBe(false)
+    })
+
+    it('non-summary descendants of a closed details are hidden even when nested', () => {
+      const Nested = defineComponent({
+        template: `
+          <details>
+            <summary>Toggle</summary>
+            <div><span class="deep">Deep</span></div>
+          </details>
+        `
+      })
+      const wrapper = mount(Nested)
+
+      expect(wrapper.get('span.deep').isVisible()).toBe(false)
+    })
+  })
+
   it('should take css into account', async () => {
     const style = document.createElement('style')
     style.type = 'text/css'

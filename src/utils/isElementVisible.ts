@@ -19,18 +19,34 @@ function isStyleVisible<T extends Element>(element: T) {
   )
 }
 
-function isAttributeVisible<T extends Element>(element: T) {
-  return (
-    !element.hasAttribute('hidden') &&
-    (element.nodeName === 'DETAILS' ? element.hasAttribute('open') : true)
-  )
+function isAttributeVisible<T extends Element>(
+  element: T,
+  childElement?: Element
+) {
+  if (element.hasAttribute('hidden')) return false
+
+  // A closed <details> renders only its <summary>: the <details> itself is
+  // visible, the <summary> is visible, but other descendants are not.
+  if (
+    element.nodeName === 'DETAILS' &&
+    !element.hasAttribute('open') &&
+    childElement &&
+    childElement.nodeName !== 'SUMMARY'
+  ) {
+    return false
+  }
+
+  return true
 }
 
-export function isElementVisible<T extends Element>(element: T): boolean {
+export function isElementVisible<T extends Element>(
+  element: T,
+  childElement?: Element
+): boolean {
   return (
     element.nodeName !== '#comment' &&
     isStyleVisible(element) &&
-    isAttributeVisible(element) &&
-    (!element.parentElement || isElementVisible(element.parentElement))
+    isAttributeVisible(element, childElement) &&
+    (!element.parentElement || isElementVisible(element.parentElement, element))
   )
 }
