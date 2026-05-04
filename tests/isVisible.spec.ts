@@ -234,9 +234,44 @@ describe('isVisible', () => {
         })
 
         const wrapper = mount(DetailContent)
+        expect(wrapper.find('details').isVisible()).toBe(true)
         expect(wrapper.find('summary').isVisible()).toBe(true)
         expect(wrapper.find('div').isVisible()).toBe(false)
 
+      })
+      it('should consider a summary as hidden when an ancestor is hidden', () => {
+        const HiddenAncestorSummary = defineComponent({
+          template: `
+            <div style="display: none;">
+              <details>
+                <summary>Summary</summary>
+              </details>
+            </div>
+          `
+        })
+
+        const wrapper = mount(HiddenAncestorSummary)
+        expect(wrapper.find('summary').isVisible()).toBe(false)
+      })
+      it('should consider a summary as hidden when nested inside closed details content', () => {
+        const NestedSummaryInClosedDetails = defineComponent({
+          template: `
+            <details>
+              <summary>Main summary</summary>
+              <div>
+                <details>
+                  <summary>Nested summary</summary>
+                </details>
+              </div>
+            </details>
+          `
+        })
+
+        const wrapper = mount(NestedSummaryInClosedDetails)
+        const summaries = wrapper.findAll('summary')
+
+        expect(summaries[0].isVisible()).toBe(true)
+        expect(summaries[1].isVisible()).toBe(false)
       })
     })
   })

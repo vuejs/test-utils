@@ -20,16 +20,31 @@ function isStyleVisible<T extends Element>(element: T) {
 }
 
 function isAttributeVisible<T extends Element>(element: T) {
-  if (
-    element.nodeName === 'SUMMARY' &&
-    element.closest('details')
-  ) {
-    return true
+  if (element instanceof HTMLInputElement && element.type === 'hidden') {
+    return false
   }
-  return (
-    !element.hasAttribute('hidden') &&
-    (element.nodeName === 'DETAILS' ? element.hasAttribute('open') : true)
-  )
+
+  if (element instanceof HTMLElement && element.hidden) {
+    return false
+  }
+
+  return true
+}
+
+function isHiddenByClosedDetails<T extends Element>(element: T) {
+  let parent = element.parentElement
+
+  while (parent) {
+    if (parent.nodeName === 'DETAILS' && !(parent as HTMLDetailsElement).open) {
+      if (!(element.nodeName === 'SUMMARY' && element.parentElement === parent)) {
+        return true
+      }
+    }
+
+    parent = parent.parentElement
+  }
+
+  return false
 }
 
 export function isElementVisible<T extends Element>(element: T): boolean {
@@ -37,6 +52,7 @@ export function isElementVisible<T extends Element>(element: T): boolean {
     element.nodeName !== '#comment' &&
     isStyleVisible(element) &&
     isAttributeVisible(element) &&
-    (element.nodeName === 'SUMMARY' || !element.parentElement || isElementVisible(element.parentElement))
+    !isHiddenByClosedDetails(element) &&
+    (!element.parentElement || isElementVisible(element.parentElement))
   )
 }
