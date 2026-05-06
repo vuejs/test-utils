@@ -26,4 +26,9 @@ export {
   createWrapperError
 }
 
-export type { GlobalMountOptions, MountingOptions, Stubs, ComponentMountingOptions }
+export type {
+  GlobalMountOptions,
+  MountingOptions,
+  Stubs,
+  ComponentMountingOptions
+}
