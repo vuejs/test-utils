@@ -180,7 +180,7 @@ test('completes a todo', async () => {
 })
 ```
 
-This test is similar to the previous two; we find an element and interact with it in same way (we use `setValue` again, since we are interacting with a `<input>`).
+This test is similar to the previous two; we find an element and interact with it in the same way (we use `setValue` again, since we are interacting with a `<input>`).
 
 Lastly, we make an assertion. We will be applying a `completed` class to completed todos - we can then use this to add some styling to visually indicate the status of a todo.
 
