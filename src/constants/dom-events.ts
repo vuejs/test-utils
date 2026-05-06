@@ -91,6 +91,26 @@ export const keyCodesByKeyName = {
   delete: 46
 } as const
 
+// Maps each supported key modifier to the W3C UI Events `KeyboardEvent.code`
+// string. Keep keys aligned with `keyCodesByKeyName`.
+export const codesByKeyName = {
+  backspace: 'Backspace',
+  tab: 'Tab',
+  enter: 'Enter',
+  esc: 'Escape',
+  space: 'Space',
+  pageup: 'PageUp',
+  pagedown: 'PageDown',
+  end: 'End',
+  home: 'Home',
+  left: 'ArrowLeft',
+  up: 'ArrowUp',
+  right: 'ArrowRight',
+  down: 'ArrowDown',
+  insert: 'Insert',
+  delete: 'Delete'
+} as const
+
 export type KeyName = keyof typeof keyCodesByKeyName
 export type Modifier =
   | (typeof systemKeyModifiers)[number]
