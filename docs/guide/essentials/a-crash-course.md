@@ -51,7 +51,7 @@ We start off by importing `mount` - this is the main way to render a component i
 
 Next, we call `mount` and pass the component as the first argument - this is something almost every test you write will do. By convention, we assign the result to a variable called `wrapper`, since `mount` provides a simple "wrapper" around the app with some convenient methods for testing.
 
-Finally, we use another global function common to many tests runner - Jest included - `expect`. The idea is we are asserting, or _expecting_, the actual output to match what we think it should be. In this case, we are finding an element with the selector `data-test="todo"` - in the DOM, this will look like `<div data-test="todo">...</div>`. We then call the `text` method to get the content, which we expect to be `'Learn Vue.js 3'`.
+Finally, we use another global function common to many test runners - Jest included - `expect`. The idea is we are asserting, or _expecting_, the actual output to match what we think it should be. In this case, we are finding an element with the selector `data-test="todo"` - in the DOM, this will look like `<div data-test="todo">...</div>`. We then call the `text` method to get the content, which we expect to be `'Learn Vue.js 3'`.
 
 > Using `data-test` selectors is not required, but it can make your tests less brittle. Classes and ids tend to change or move around as an application grows - by using `data-test`, it's clear to other developers which elements are used in tests, and should not be changed.
 
@@ -145,7 +145,7 @@ expect(received).toHaveLength(expected)
     Received array:  [{"element": <div data-test="todo">Learn Vue.js 3</div>}]
 ```
 
-The number of todos has not increased. The problem is that Jest executes tests in a synchronous manner, ending the test as soon as the final function is called. Vue, however, updates the DOM asynchronously. We need to mark the test `async`, and call `await` on any methods that might cause the DOM to change. `trigger` is one such methods, and so is `setValue` - we can simply prepend `await` and the test should work as expected:
+The number of todos has not increased. The problem is that Jest executes tests in a synchronous manner, ending the test as soon as the final function is called. Vue, however, updates the DOM asynchronously. We need to mark the test `async`, and call `await` on any methods that might cause the DOM to change. `trigger` is one such method, and so is `setValue` - we can simply prepend `await` and the test should work as expected:
 
 ```js
 import { mount } from '@vue/test-utils'
@@ -238,7 +238,7 @@ In the _act_ phase, we act out the scenario, simulating how a user would interac
 
 In the _assert_ phase, we make assertions about how we expect the current state of the component to be.
 
-Almost all test will follow these three phases. You don't need to separate them with new lines like this guide does, but it is good to keep these three phases in mind as you write your tests.
+Almost all tests will follow these three phases. You don't need to separate them with new lines like this guide does, but it is good to keep these three phases in mind as you write your tests.
 
 ## Conclusion
 
