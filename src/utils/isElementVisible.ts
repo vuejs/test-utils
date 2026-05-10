@@ -36,7 +36,9 @@ function isHiddenByClosedDetails<T extends Element>(element: T) {
 
   while (parent) {
     if (parent.nodeName === 'DETAILS' && !(parent as HTMLDetailsElement).open) {
-      if (!(element.nodeName === 'SUMMARY' && element.parentElement === parent)) {
+      if (
+        !(element.nodeName === 'SUMMARY' && element.parentElement === parent)
+      ) {
         return true
       }
     }

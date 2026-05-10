@@ -228,7 +228,7 @@ describe('isVisible', () => {
         })
         expect(wrapper.isVisible()).toBe(false)
       })
-      it ('DetailContent should be visible when summary is visible', () => {
+      it('DetailContent should be visible when summary is visible', () => {
         const DetailContent = defineComponent({
           template: `<details><summary>Summary</summary><div>Content</div></details>`
         })
@@ -237,7 +237,6 @@ describe('isVisible', () => {
         expect(wrapper.find('details').isVisible()).toBe(true)
         expect(wrapper.find('summary').isVisible()).toBe(true)
         expect(wrapper.find('div').isVisible()).toBe(false)
-
       })
       it('should consider a summary as hidden when an ancestor is hidden', () => {
         const HiddenAncestorSummary = defineComponent({
