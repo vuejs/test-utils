@@ -3,7 +3,7 @@ import { defineComponent, h, ref } from 'vue'
 
 import { mount } from '../src'
 import type { KeyName } from '../src/createDomEvent'
-import { keyCodesByKeyName } from '../src/createDomEvent'
+import { codesByKeyName, keyCodesByKeyName } from '../src/createDomEvent'
 
 describe('trigger', () => {
   describe('on click', () => {
@@ -258,6 +258,26 @@ describe('trigger', () => {
         const currentCall = calls[calls.length - 1][0]
 
         expect(currentCall.keyCode).toBe(keyCode)
+      }
+    })
+
+    it('causes keydown handler to fire with the spec-compliant `code` string when wrapper.trigger("keydown.${keyName}") is fired', async () => {
+      const keydownHandler = vi.fn()
+
+      const Component = {
+        template: '<input @keydown="keydownHandler" />',
+        methods: { keydownHandler }
+      }
+      const wrapper = mount(Component, {})
+
+      for (const keyName in codesByKeyName) {
+        const code = codesByKeyName[keyName as KeyName]
+        await wrapper.trigger(`keydown.${keyName}`)
+
+        const calls = keydownHandler.mock.calls
+        const currentCall = calls[calls.length - 1][0]
+
+        expect(currentCall.code).toBe(code)
       }
     })
   })

@@ -6,6 +6,7 @@ import type {
 } from './constants/dom-events'
 import domEvents, {
   KeyName,
+  codesByKeyName,
   ignorableKeyModifiers,
   keyCodesByKeyName,
   mouseKeyModifiers,
@@ -113,7 +114,7 @@ function getEventProperties(eventParams: EventParams) {
     cancelable: meta.cancelable,
     // Any derived options should go here
     keyCode,
-    code: options.code || keyCode,
+    code: options.code || codesByKeyName[keyModifiers[0]] || keyCode,
     // if we have a `key`, use it, otherwise dont set anything (allows user to pass custom key)
     ...(keyModifiers[0] ? { key: keyModifiers[0] } : {})
   }
@@ -176,4 +177,10 @@ function createDOMEvent(
   return event
 }
 
-export { TriggerOptions, createDOMEvent, keyCodesByKeyName, KeyName }
+export {
+  TriggerOptions,
+  createDOMEvent,
+  codesByKeyName,
+  keyCodesByKeyName,
+  KeyName
+}
