@@ -75,7 +75,7 @@
     "jsdom": "29.1.1",
     "jsdom-global": "3.0.2",
     "lint-staged": "17.0.2",
-    "oxfmt": "0.48.0",
+    "oxfmt": "0.49.0",
     "oxlint": "1.63.0",
     "pkg-pr-new": "0.0.71",
     "reflect-metadata": "0.2.2",
