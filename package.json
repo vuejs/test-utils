@@ -89,7 +89,7 @@
     "vitest": "4.1.6",
     "vue": "3.5.34",
     "vue-class-component": "8.0.0-rc.1",
-    "vue-router": "5.0.6",
+    "vue-router": "5.0.7",
     "vue-tsc": "3.2.8",
     "vuex": "4.1.0"
   },
