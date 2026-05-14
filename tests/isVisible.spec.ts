@@ -228,6 +228,31 @@ describe('isVisible', () => {
         })
         expect(wrapper.isVisible()).toBe(false)
       })
+    })
+
+    describe('details and summary elements', () => {
+      it('DetailContent should be invisible when display:none is applied by class', () => {
+        const style = document.createElement('style')
+        document.head.appendChild(style)
+        style.sheet!.insertRule('.hidden { display: none; }')
+
+        const wrapper = mount({
+          template: '<div id="my-div" class="hidden"><details><summary>Summary</summary></details></div>'
+        })
+
+        expect(wrapper.get('#my-div').isVisible()).toBe(false)
+        expect(wrapper.find('summary').isVisible()).toBe(false)
+        expect(wrapper.find('details').isVisible()).toBe(false)
+      })
+      it('DetailContent should be invisible when display:none is applied by style attribute', () => {
+        const wrapper = mount({
+          template: '<div id="my-div" style="display: none;"><details><summary>Summary</summary></details></div>'
+        })
+
+        expect(wrapper.get('#my-div').isVisible()).toBe(false)
+        expect(wrapper.find('summary').isVisible()).toBe(false)
+        expect(wrapper.find('details').isVisible()).toBe(false)
+      })
       it('DetailContent should be visible when summary is visible', () => {
         const DetailContent = defineComponent({
           template: `<details><summary>Summary</summary><div>Content</div></details>`
@@ -238,19 +263,12 @@ describe('isVisible', () => {
         expect(wrapper.find('summary').isVisible()).toBe(true)
         expect(wrapper.find('div').isVisible()).toBe(false)
       })
-      it('should consider a summary as hidden when an ancestor is hidden', () => {
-        const HiddenAncestorSummary = defineComponent({
-          template: `
-            <div style="display: none;">
-              <details>
-                <summary>Summary</summary>
-              </details>
-            </div>
-          `
+      it ('DetailContent shouild be visible when summarys child is visible', () => {
+        const childContent = defineComponent({
+          template: `<details><summary><span>Summary</span></summary></details>`
         })
-
-        const wrapper = mount(HiddenAncestorSummary)
-        expect(wrapper.find('summary').isVisible()).toBe(false)
+        const wrapper = mount(childContent)
+        expect(wrapper.find('summary span').isVisible()).toBe(true);
       })
       it('should consider a summary as hidden when nested inside closed details content', () => {
         const NestedSummaryInClosedDetails = defineComponent({
@@ -265,8 +283,45 @@ describe('isVisible', () => {
             </details>
           `
         })
-
         const wrapper = mount(NestedSummaryInClosedDetails)
+        const summaries = wrapper.findAll('summary')
+
+        expect(summaries[0].isVisible()).toBe(true)
+        expect(summaries[1].isVisible()).toBe(false)
+      })
+      it('should consider a summary as visible when nested inside open details content', () => {
+        const NestedSummaryInOpenDetails = defineComponent({
+          template: `
+            <details open>
+              <summary>Main summary</summary>
+              <div>
+                <details open>
+                  <summary>Nested summary</summary>
+                </details>
+              </div>
+            </details>
+          `
+        })
+        const wrapper = mount(NestedSummaryInOpenDetails)
+        const summaries = wrapper.findAll('summary')
+
+        expect(summaries[0].isVisible()).toBe(true)
+        expect(summaries[1].isVisible()).toBe(true)
+      })
+      it('should consider a 1st summary as visible and 2nd as hidden when nested inside closed details content which is applied display: none', () => {
+        const NestedSummaryInOpenDetails = defineComponent({
+          template: `
+            <details>
+              <summary>Main summary</summary>
+              <div style="display: none;">
+                <details>
+                  <summary>Nested summary</summary>
+                </details>
+              </div>
+            </details>
+          `
+        })
+        const wrapper = mount(NestedSummaryInOpenDetails)
         const summaries = wrapper.findAll('summary')
 
         expect(summaries[0].isVisible()).toBe(true)
