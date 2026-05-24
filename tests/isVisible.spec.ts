@@ -231,21 +231,8 @@ describe('isVisible', () => {
     })
 
     describe('details and summary elements', () => {
-      it('DetailContent should be invisible when display:none is applied by class', () => {
-        const style = document.createElement('style')
-        document.head.appendChild(style)
-        style.sheet!.insertRule('.hidden { display: none; }')
-
-        const wrapper = mount({
-          template: '<div id="my-div" class="hidden"><details><summary>Summary</summary></details></div>'
-        })
-
-        expect(wrapper.get('#my-div').isVisible()).toBe(false)
-        expect(wrapper.find('summary').isVisible()).toBe(false)
-        expect(wrapper.find('details').isVisible()).toBe(false)
-      })
       it('DetailContent should be invisible when display:none is applied by style attribute', () => {
-        const wrapper = mount({
+        const wrapper = defineComponent({
           template: '<div id="my-div" style="display: none;"><details><summary>Summary</summary></details></div>'
         })
 

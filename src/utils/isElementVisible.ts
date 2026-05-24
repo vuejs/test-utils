@@ -20,14 +20,15 @@ function isStyleVisible<T extends Element>(element: T) {
 }
 
 /**
- * checks if an element is visible by checking its attributes and its parents' attributes.
+ * checks if an element is visible by checking its hidden attribute and parent visibility.
  * @param element 
  * @returns boolean
  */
 function isElementVisibleByAttribute<T extends Element>(element: T) {
-  if (element instanceof HTMLInputElement && (element.type === 'hidden' || element.hidden)) {
+  if (element instanceof HTMLElement && element.hidden) {
     return false
   }
+
   return true
 }
 
