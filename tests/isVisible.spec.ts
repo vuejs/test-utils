@@ -232,10 +232,11 @@ describe('isVisible', () => {
 
     describe('details and summary elements', () => {
       it('DetailContent should be invisible when display:none is applied by style attribute', () => {
-        const wrapper = defineComponent({
+        const DetailContent = defineComponent({
           template: '<div id="my-div" style="display: none;"><details><summary>Summary</summary></details></div>'
         })
 
+        const wrapper = mount(DetailContent)
         expect(wrapper.get('#my-div').isVisible()).toBe(false)
         expect(wrapper.find('summary').isVisible()).toBe(false)
         expect(wrapper.find('details').isVisible()).toBe(false)
