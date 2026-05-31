@@ -21,7 +21,7 @@ function isStyleVisible<T extends Element>(element: T) {
 
 /**
  * checks if an element is visible by checking its hidden attribute and parent visibility.
- * @param element 
+ * @param element
  * @returns boolean
  */
 function isElementVisibleByAttribute<T extends Element>(element: T) {
@@ -34,7 +34,7 @@ function isElementVisibleByAttribute<T extends Element>(element: T) {
 
 /**
  * checks if an element is hidden by a closed details element.
- * @param element 
+ * @param element
  * @returns boolean
  */
 function isHiddenByClosedDetails<T extends Element>(element: T) {
@@ -43,7 +43,7 @@ function isHiddenByClosedDetails<T extends Element>(element: T) {
 
   while (parent) {
     if (parent.nodeName === 'DETAILS' && !(parent as HTMLDetailsElement).open) {
-      // If no <summary> ancestor exists, or the <summary> is not a direct child of this <details>, 
+      // If no <summary> ancestor exists, or the <summary> is not a direct child of this <details>,
       // then the content is hidden
       if (!summary || summary.parentElement !== parent) {
         return true

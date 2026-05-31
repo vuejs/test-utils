@@ -232,10 +232,12 @@ describe('isVisible', () => {
 
     describe('details and summary elements', () => {
       it('DetailContent should be invisible when display:none is applied by style attribute', () => {
-        const wrapper = defineComponent({
-          template: '<div id="my-div" style="display: none;"><details><summary>Summary</summary></details></div>'
+        const DetailContent = defineComponent({
+          template:
+            '<div id="my-div" style="display: none;"><details><summary>Summary</summary></details></div>'
         })
 
+        const wrapper = mount(DetailContent)
         expect(wrapper.get('#my-div').isVisible()).toBe(false)
         expect(wrapper.find('summary').isVisible()).toBe(false)
         expect(wrapper.find('details').isVisible()).toBe(false)
@@ -250,12 +252,12 @@ describe('isVisible', () => {
         expect(wrapper.find('summary').isVisible()).toBe(true)
         expect(wrapper.find('div').isVisible()).toBe(false)
       })
-      it ('DetailContent shouild be visible when summarys child is visible', () => {
+      it('DetailContent shouild be visible when summarys child is visible', () => {
         const childContent = defineComponent({
           template: `<details><summary><span>Summary</span></summary></details>`
         })
         const wrapper = mount(childContent)
-        expect(wrapper.find('summary span').isVisible()).toBe(true);
+        expect(wrapper.find('summary span').isVisible()).toBe(true)
       })
       it('should consider a summary as hidden when nested inside closed details content', () => {
         const NestedSummaryInClosedDetails = defineComponent({
