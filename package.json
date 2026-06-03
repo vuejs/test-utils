@@ -57,7 +57,7 @@
     "vue-component-type-helpers": "^3.0.0"
   },
   "devDependencies": {
-    "@rollup/plugin-commonjs": "29.0.2",
+    "@rollup/plugin-commonjs": "29.0.3",
     "@rollup/plugin-json": "6.1.0",
     "@rollup/plugin-node-resolve": "16.0.3",
     "@rollup/plugin-replace": "6.0.3",
@@ -67,16 +67,16 @@
     "@vitejs/plugin-vue": "6.0.7",
     "@vitejs/plugin-vue-jsx": "5.1.5",
     "@vitest/coverage-v8": "4.1.7",
-    "@vue/compat": "3.5.34",
-    "@vue/compiler-dom": "3.5.34",
-    "@vue/compiler-sfc": "3.5.34",
-    "@vue/server-renderer": "3.5.34",
+    "@vue/compat": "3.5.35",
+    "@vue/compiler-dom": "3.5.35",
+    "@vue/compiler-sfc": "3.5.35",
+    "@vue/server-renderer": "3.5.35",
     "husky": "9.1.7",
     "jsdom": "29.1.1",
     "jsdom-global": "3.0.2",
-    "lint-staged": "17.0.5",
+    "lint-staged": "17.0.6",
     "oxfmt": "0.52.0",
-    "oxlint": "1.66.0",
+    "oxlint": "1.67.0",
     "pkg-pr-new": "0.0.75",
     "reflect-metadata": "0.2.2",
     "rollup": "4.60.4",
@@ -87,10 +87,10 @@
     "vitepress": "1.6.4",
     "vitepress-translation-helper": "0.2.2",
     "vitest": "4.1.7",
-    "vue": "3.5.34",
+    "vue": "3.5.35",
     "vue-class-component": "8.0.0-rc.1",
-    "vue-router": "5.0.7",
-    "vue-tsc": "3.3.1",
+    "vue-router": "5.1.0",
+    "vue-tsc": "3.3.3",
     "vuex": "4.1.0"
   },
   "peerDependencies": {
@@ -117,5 +117,5 @@
       "oxfmt --no-error-on-unmatched-pattern"
     ]
   },
-  "packageManager": "pnpm@11.3.0"
+  "packageManager": "pnpm@11.5.0"
 }
