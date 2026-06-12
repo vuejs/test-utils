@@ -1529,7 +1529,7 @@ As a rule of thumb, test against the effects of a passed prop (a DOM update, an 
 
 ### setData
 
-Updates component internal data.
+Updates component internal data, whether defined in options API `data` or composition API `setup`.
 
 **Signature:**
 
@@ -1541,22 +1541,23 @@ setData(data: Record<string, any>): Promise<void>
 
 `setData` does not allow setting new properties that are not defined in the component.
 
-::: warning
-Also, notice that `setData` does not modify composition API `setup()` data.
-:::
-
 `Component.vue`:
 
 ```vue
 <template>
-  <div>Count: {{ count }}</div>
+  <div>Size: {{ size }} {{ unit }}</div>
 </template>
 
 <script>
 export default {
+  setup() {
+    return {
+      size: ref(0)
+    }
+  },
   data() {
     return {
-      count: 0
+      unit: 'cm'
     }
   }
 }
@@ -1571,11 +1572,11 @@ import Component from './Component.vue'
 
 test('setData', async () => {
   const wrapper = mount(Component)
-  expect(wrapper.html()).toContain('Count: 0')
+  expect(wrapper.html()).toContain('Size: 0 cm')
 
-  await wrapper.setData({ count: 1 })
+  await wrapper.setData({ size: 1, unit: 'mm' })
 
-  expect(wrapper.html()).toContain('Count: 1')
+  expect(wrapper.html()).toContain('Size: 1 mm')
 })
 ```
 
