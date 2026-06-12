@@ -1523,7 +1523,7 @@ En règle générale, testez les effets d'une `prop` transmise (une mise à jour
 
 ### setData
 
-Met à jour les données internes d'un composant.
+Met à jour les données internes d'un composant, qu'elles soient définies dans l'API d'options `data` ou dans l'API de composition `setup`.
 
 **Signature&nbsp;:**
 
@@ -1535,23 +1535,26 @@ setData(data: Record<string, any>): Promise<void>
 
 `setData` ne permet pas de définir de nouvelles propriétés qui ne sont pas définies dans le composant.
 
-De plus, notez que `setData` ne modifie pas les données de la fonction l'API de Composition&nbsp;: `setup()`.
-
 `Component.vue`:
 
 ```vue
 <template>
-  <div>Compteur: {{ count }}</div>
+  <div>Taille: {{ size }} {{ unit }}</div>
 </template>
 
 <script>
 export default {
+  setup() {
+    return {
+      size: ref(0)
+    }
+  },
   data() {
     return {
-      count: 0,
-    };
-  },
-};
+      unit: 'cm'
+    }
+  }
+}
 </script>
 ```
 
@@ -1563,11 +1566,11 @@ import Component from './Component.vue';
 
 test('setData', async () => {
   const wrapper = mount(Component);
-  expect(wrapper.html()).toContain('Compteur: 0');
+  expect(wrapper.html()).toContain('Taille: 0 cm')
 
-  await wrapper.setData({ count: 1 });
+  await wrapper.setData({ size: 1, unit: 'mm' })
 
-  expect(wrapper.html()).toContain('Compteur: 1');
+  expect(wrapper.html()).toContain('Taille: 1 mm')
 });
 ```
 

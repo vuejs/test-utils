@@ -1522,7 +1522,7 @@ test('props', () => {
 
 ### setData
 
-更新组件内部数据。
+更新组件内部数，无论是在选项 API `data` 中定义还是在组合 API `setup` 中定义。
 
 **签名：**
 
@@ -1534,22 +1534,23 @@ setData(data: Record<string, any>): Promise<void>
 
 `setData` 不允许设置组件中未定义的新属性。
 
-::: warning
-请注意，`setData` 不会修改组合式 API 中 setup() 的数据。
-:::
-
 `Component.vue`:
 
 ```vue
 <template>
-  <div>Count: {{ count }}</div>
+  <div>Size: {{ size }} {{ unit }}</div>
 </template>
 
 <script>
 export default {
+  setup() {
+    return {
+      size: ref(0)
+    }
+  },
   data() {
     return {
-      count: 0
+      unit: 'cm'
     }
   }
 }
@@ -1564,11 +1565,11 @@ import Component from './Component.vue'
 
 test('setData', async () => {
   const wrapper = mount(Component)
-  expect(wrapper.html()).toContain('Count: 0')
+  expect(wrapper.html()).toContain('Size: 0 cm')
 
-  await wrapper.setData({ count: 1 })
+  await wrapper.setData({ size: 1, unit: 'mm' })
 
-  expect(wrapper.html()).toContain('Count: 1')
+  expect(wrapper.html()).toContain('Size: 1 mm')
 })
 ```
 
