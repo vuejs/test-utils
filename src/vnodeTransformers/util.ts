@@ -29,6 +29,21 @@ export interface RootComponents {
   // If component is functional then contains the original component otherwise empty
   functional?: Component
 }
+// `transformVNodeArgs` is a global, last-call-wins Vue API, so when several
+// wrappers are mounted the active transformer only knows about the most
+// recently mounted root component. Track every mounted root component globally
+// so that re-rendering an earlier wrapper (e.g. via `setProps`) doesn't stub
+// its root just because another wrapper was mounted afterwards.
+// See https://github.com/vuejs/test-utils/issues/2675
+const mountedRootComponents = new WeakSet<object>()
+const registerRootComponent = (type?: Component): void => {
+  // WeakSet keys must be objects/functions; component definitions always are,
+  // but `Component` also allows a string name which we simply ignore.
+  if (type && typeof type !== 'string') {
+    mountedRootComponents.add(type)
+  }
+}
+
 export const isRootComponent = (
   rootComponents: RootComponents,
   type: VNodeTransformerInputComponentType,
@@ -37,7 +52,9 @@ export const isRootComponent = (
   !!(
     !instance ||
     // Don't stub mounted component on root level
-    (rootComponents.component === type && !instance?.parent) ||
+    ((rootComponents.component === type ||
+      mountedRootComponents.has(type as object)) &&
+      !instance?.parent) ||
     // Don't stub component with compat wrapper
     (rootComponents.functional && rootComponents.functional === type)
   )
@@ -53,6 +70,9 @@ export const createVNodeTransformer = ({
     VNodeTransformerInputComponentType,
     VNodeTransformerInputComponentType
   > = new WeakMap()
+
+  registerRootComponent(rootComponents.component)
+  registerRootComponent(rootComponents.functional)
 
   return (args: VNodeTransformerArgsType, instance: InstanceArgsType) => {
     const [originalType, props, children, ...restVNodeArgs] = args

@@ -100,6 +100,26 @@ describe('shallowMount', () => {
     expect(wrapper.find('h2').text()).toBe('3')
   })
 
+  // https://github.com/vuejs/test-utils/issues/2675
+  it('keeps re-rendering a root component after another wrapper is mounted', async () => {
+    const ComponentA = defineComponent({
+      props: { msg: { type: String, default: '' } },
+      template: '<div>{{ msg }}</div>'
+    })
+    const ComponentB = defineComponent({ template: '<div>B</div>' })
+
+    const wrapper = shallowMount(ComponentA, { props: { msg: 'initial' } })
+
+    // Mounting another wrapper installs a new global vnode transformer; the
+    // first wrapper's root must still re-render on setProps rather than being
+    // stubbed.
+    shallowMount(ComponentB)
+
+    await wrapper.setProps({ msg: 'updated' })
+
+    expect(wrapper.text()).toBe('updated')
+  })
+
   it('correctly renders slot content', () => {
     const ComponentWithSlot = defineComponent({
       template: '<div><slot></slot></div>'
