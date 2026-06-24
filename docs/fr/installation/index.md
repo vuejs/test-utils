@@ -10,6 +10,10 @@ npm install --save-dev @vue/test-utils
 yarn add --dev @vue/test-utils
 ```
 
+```shell [deno]
+deno install --dev @vue/test-utils
+```
+
 :::
 
 ## Utilisation
