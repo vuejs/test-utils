@@ -381,4 +381,59 @@ describe('emitted', () => {
     wrapper1.unmount()
     wrapper2.unmount()
   })
+
+  it('clears emitted event history of child components on unmount', async () => {
+    const Child = defineComponent({
+      name: 'Child',
+      emits: ['foo'],
+      setup(_, { emit }) {
+        emit('foo', 'bar')
+        return () => h('div', 'child')
+      }
+    })
+    const Parent = defineComponent({
+      name: 'Parent',
+      render: () => h(Child)
+    })
+
+    const wrapper = mount(Parent)
+    const child = wrapper.findComponent(Child)
+    expect(child.emitted('foo')).toHaveLength(1)
+
+    wrapper.unmount()
+
+    // the child's history must be removed too, not only the root's
+    expect(child.emitted('foo')).toBeUndefined()
+  })
+
+  it('clears history of a child removed before the root is unmounted', async () => {
+    const Child = defineComponent({
+      name: 'Child',
+      emits: ['foo'],
+      setup(_, { emit }) {
+        emit('foo', 'bar')
+        return () => h('div', 'child')
+      }
+    })
+    const Parent = defineComponent({
+      name: 'Parent',
+      props: { show: { type: Boolean, default: true } },
+      setup(props) {
+        return () => (props.show ? h(Child) : h('div', 'empty'))
+      }
+    })
+
+    const wrapper = mount(Parent)
+    const child = wrapper.findComponent(Child)
+    expect(child.emitted('foo')).toHaveLength(1)
+
+    // remove the child before the root unmounts (v-if style). Its uid is now unreachable from the root's render tree, but its history is still stored.
+    await wrapper.setProps({ show: false })
+    expect(wrapper.findComponent(Child).exists()).toBe(false)
+    expect(child.emitted('foo')).toHaveLength(1)
+
+    wrapper.unmount()
+
+    expect(child.emitted('foo')).toBeUndefined()
+  })
 })
