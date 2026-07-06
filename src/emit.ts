@@ -13,6 +13,7 @@ const enum DevtoolsHooks {
 }
 
 const events: Events = {}
+const recordedUidsByRoot = new Map<number, Set<number>>()
 
 export function emitted<T = unknown>(
   vm: ComponentPublicInstance,
@@ -75,6 +76,13 @@ export const recordEvent = (
   while (typeof wrapperVm?.type === 'function') wrapperVm = wrapperVm.parent!
 
   const cid = wrapperVm.uid
+  const rootCid = wrapperVm.root.uid
+
+  if (!recordedUidsByRoot.has(rootCid)) {
+    recordedUidsByRoot.set(rootCid, new Set())
+  }
+  recordedUidsByRoot.get(rootCid)!.add(cid)
+
   if (!(cid in events)) {
     events[cid] = {}
   }
@@ -87,6 +95,12 @@ export const recordEvent = (
 }
 
 export const removeEventHistory = (vm: ComponentPublicInstance): void => {
-  const cid = vm.$.uid
-  delete events[cid]
+  const rootCid = vm.$.root.uid
+  const uids = recordedUidsByRoot.get(rootCid)
+  if (!uids) return
+
+  for (const uid of uids) {
+    delete events[uid]
+  }
+  recordedUidsByRoot.delete(rootCid)
 }
