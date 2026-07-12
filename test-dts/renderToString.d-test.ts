@@ -1,6 +1,5 @@
 import { expectError, expectType } from './index'
 import { defineComponent } from 'vue'
-import { Options, Vue } from 'vue-class-component'
 import { renderToString } from '../src'
 
 const AppWithDefine = defineComponent({
@@ -87,24 +86,6 @@ const AppWithoutProps = {
 html = renderToString(AppWithoutProps, {
   props: { b: 'Hello' }
 })
-
-// class component
-@Options({
-  props: {
-    msg: String
-  }
-})
-class ClassComponent extends Vue {
-  dataText = ''
-  get computedMsg(): string {
-    return `Message: ${(this.$props as any).msg}`
-  }
-
-  changeMessage(text: string): void {
-    this.dataText = 'Updated'
-  }
-}
-expectType<Promise<string>>(renderToString(ClassComponent))
 
 // No `attachTo` mounting option
 expectError(

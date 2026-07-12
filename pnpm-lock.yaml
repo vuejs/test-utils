@@ -78,9 +78,6 @@ importers:
       pkg-pr-new:
         specifier: 0.0.75
         version: 0.0.75
-      reflect-metadata:
-        specifier: 0.2.2
-        version: 0.2.2
       rollup:
         specifier: 4.62.2
         version: 4.62.2
@@ -108,9 +105,6 @@ importers:
       vue:
         specifier: 3.5.39
         version: 3.5.39(typescript@6.0.3)
-      vue-class-component:
-        specifier: 8.0.0-rc.1
-        version: 8.0.0-rc.1(vue@3.5.39(typescript@6.0.3))
       vue-router:
         specifier: 5.1.0
         version: 5.1.0(@vue/compiler-sfc@3.5.39)(vite@8.0.16(@types/node@24.13.2)(yaml@2.9.0))(vue@3.5.39(typescript@6.0.3))
@@ -2125,9 +2119,6 @@ packages:
     resolution: {integrity: sha512-9u/XQ1pvrQtYyMpZe7DXKv2p5CNvyVwzUB6uhLAnQwHMSgKMBR62lc7AHljaeteeHXn11XTAaLLUVZYVZyuRBQ==}
     engines: {node: '>= 20.19.0'}
 
-  reflect-metadata@0.2.2:
-    resolution: {integrity: sha512-urBwgfrvVP/eAyXx4hluJivBKzuEbSQs9rKWCrCkbSxNv8mxPcUZKeuoF3Uy4mJl3Lwprp6yy5/39VWigZ4K6Q==}
-
   regex-recursion@5.1.1:
     resolution: {integrity: sha512-ae7SBCbzVNrIjgSbh7wMznPcQel1DNlDtzensnFxpiNpXt1U2ju/bHugH422r+4LAVS1FpW1YCwilmnNsjum9w==}
 
@@ -2502,11 +2493,6 @@ packages:
 
   vscode-uri@3.0.8:
     resolution: {integrity: sha512-AyFQ0EVmsOZOlAnxoFOGOq1SQDWAB7C6aqMGS23svWAllfOaxbuFvcT8D1i8z3Gyn8fraVeZNNmN6e9bxxXkKw==}
-
-  vue-class-component@8.0.0-rc.1:
-    resolution: {integrity: sha512-w1nMzsT/UdbDAXKqhwTmSoyuJzUXKrxLE77PCFVuC6syr8acdFDAq116xgvZh9UCuV0h+rlCtxXolr3Hi3HyPQ==}
-    peerDependencies:
-      vue: ^3.0.0
 
   vue-component-type-helpers@3.0.1:
     resolution: {integrity: sha512-j23mCB5iEbGsyIhnVdXdWUOg+UdwmVxpKnYYf2j+4ppCt5VSFXKjwu9YFt0QYxUaf5G99PuHsVfRScjHCRSsGQ==}
@@ -4469,8 +4455,6 @@ snapshots:
 
   readdirp@5.0.0: {}
 
-  reflect-metadata@0.2.2: {}
-
   regex-recursion@5.1.1:
     dependencies:
       regex: 5.1.1
@@ -4859,10 +4843,6 @@ snapshots:
       - msw
 
   vscode-uri@3.0.8: {}
-
-  vue-class-component@8.0.0-rc.1(vue@3.5.39(typescript@6.0.3)):
-    dependencies:
-      vue: 3.5.39(typescript@6.0.3)
 
   vue-component-type-helpers@3.0.1: {}
 

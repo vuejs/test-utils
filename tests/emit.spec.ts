@@ -1,7 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import type { FunctionalComponent, SetupContext } from 'vue'
 import { defineComponent, getCurrentInstance, h } from 'vue'
-import { Vue } from 'vue-class-component'
 import EmitsEventSFC from './components/EmitsEventSFC.vue'
 import EmitsEventScriptSetup from './components/EmitsEventScriptSetup.vue'
 
@@ -225,24 +224,6 @@ describe('emitted', () => {
         level: 1
       }
     })
-
-    wrapper.find('h1').trigger('click')
-    expect(wrapper.emitted('hello')).toHaveLength(1)
-    expect((wrapper.emitted('hello') as unknown[])[0]).toEqual(['foo', 'bar'])
-  })
-
-  it('captures events emitted by class-style components', () => {
-    // Define the component in class-style
-    class Component extends Vue {
-      bar = 'bar'
-      render() {
-        return h(`h1`, {
-          onClick: () => this.$emit('hello', 'foo', this.bar)
-        })
-      }
-    }
-
-    const wrapper = mount(Component, {})
 
     wrapper.find('h1').trigger('click')
     expect(wrapper.emitted('hello')).toHaveLength(1)
