@@ -1,21 +1,6 @@
 import { expectError, expectType } from './index'
-import type {
-  ComponentOptions,
-  DefineComponent,
-  Prop,
-  SetupContext,
-  SlotsType,
-  VNode,
-  VNodeChild
-} from 'vue'
-import {
-  FunctionalComponent,
-  defineComponent,
-  getCurrentInstance,
-  h,
-  ref
-} from 'vue'
-import { Options, Vue } from 'vue-class-component'
+import type { DefineComponent, SlotsType, VNode } from 'vue'
+import { FunctionalComponent, defineComponent } from 'vue'
 import { mount } from '../src'
 
 const AppWithDefine = defineComponent({
@@ -199,110 +184,6 @@ mount(defineComponent(FunctionalComponent))
 
 mount(FunctionalComponentEmit)
 mount(defineComponent(FunctionalComponentEmit))
-
-// class component
-
-@Options({
-  props: {
-    msg: String
-  }
-})
-class ClassComponent extends Vue {
-  dataText = ''
-  get computedMsg(): string {
-    return `Message: ${(this.$props as any).msg}`
-  }
-
-  changeMessage(text: string): void {
-    this.dataText = 'Updated'
-  }
-}
-
-// @ts-expect-error changeMessage expects an argument
-expectError(mount(ClassComponent, {}).vm.changeMessage())
-mount(ClassComponent, {}).vm.changeMessage('')
-
-// region custom class component implement
-// eslint-disable-next-line @typescript-eslint/no-empty-object-type
-class CustomClassComponent<Props extends {} = {}> {
-  static defaultProps?: Record<string, Prop<any>> | string[]
-  private static __vccValue?: ComponentOptions
-  static get __vccOpts(): ComponentOptions {
-    if (this.__vccValue) return this.__vccValue
-    // eslint-disable-next-line @typescript-eslint/no-this-alias
-    const CompConstructor = this
-    return (this.__vccValue = {
-      name: CompConstructor.name,
-      props: CompConstructor.defaultProps,
-      setup(props, ctx) {
-        const instance = new CompConstructor()
-        return instance.render.bind(instance)
-      }
-    })
-  }
-  constructor() {
-    const instance = getCurrentInstance()!
-    this.props = instance.props as Props
-    // @ts-expect-error no explicit setupContext on instance
-    this.context = instance.setupContext as SetupContext
-  }
-
-  props: Props
-  get $props() {
-    return this.props
-  }
-  context: SetupContext
-  render(): VNodeChild {}
-}
-class NoPropCustomClassComponent extends CustomClassComponent {
-  count = ref(0)
-  changeCount(count: number) {
-    this.count.value = count
-  }
-  render() {
-    return h('div', `hello world ${this.count.value}`)
-  }
-}
-
-// @ts-expect-error changeCount expects an argument
-expectError(mount(NoPropCustomClassComponent, {}).vm.changeCount())
-mount(NoPropCustomClassComponent, {}).vm.changeCount(2)
-
-interface CustomClassComponentProps {
-  size: 'small' | 'large'
-  age?: number
-}
-
-class WithPropCustomClassComponent extends CustomClassComponent<CustomClassComponentProps> {
-  static defaultProps: (keyof CustomClassComponentProps)[] = ['size', 'age']
-  count = ref(0)
-  changeCount(count: number) {
-    this.count.value = count
-  }
-  render() {
-    return h('div', `hello world ${this.count.value}${this.props.size}`)
-  }
-}
-
-expectError(
-  mount(
-    WithPropCustomClassComponent as typeof WithPropCustomClassComponent &
-      (new () => { $props: CustomClassComponentProps }),
-    {
-      // @ts-expect-error should has props error
-      props: {}
-    }
-  )
-)
-mount(
-  WithPropCustomClassComponent as typeof WithPropCustomClassComponent &
-    (new () => { $props: CustomClassComponentProps }),
-  {
-    props: { size: 'small' }
-  }
-)
-
-// endregion
 
 // default props
 const Foo = defineComponent({

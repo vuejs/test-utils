@@ -124,10 +124,6 @@ export const mergeDeep = (
   return target
 }
 
-export function isClassComponent(component: unknown) {
-  return typeof component === 'function' && '__vccOpts' in component
-}
-
 export function isComponent(
   component: unknown
 ): component is ConcreteComponent {
@@ -140,7 +136,7 @@ export function isComponent(
 export function isFunctionalComponent(
   component: unknown
 ): component is FunctionalComponent<any> {
-  return typeof component === 'function' && !isClassComponent(component)
+  return typeof component === 'function'
 }
 
 export function isObjectComponent(

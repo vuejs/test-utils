@@ -172,9 +172,7 @@ export function createInstance(
         objectComponent.data = () => ({ ...providedData })
       }
     } else {
-      throw new Error(
-        'data() option is not supported on functional and class components'
-      )
+      throw new Error('data() option is not supported on functional components')
     }
   }
 

@@ -1,5 +1,4 @@
 import { describe, expect, it } from 'vitest'
-import { Vue } from 'vue-class-component'
 import { defineComponent, h } from 'vue'
 
 import { mount } from '../../src'
@@ -66,25 +65,6 @@ describe('mounting options: data', () => {
       mount(() => '<div />', {
         data: () => ({ foo: 1 })
       })
-    ).toThrowError(
-      'data() option is not supported on functional and class components'
-    )
-  })
-
-  it('throws when used on class component', () => {
-    class MyComp extends Vue {
-      message = 'from component'
-      render() {
-        return h('div', this.message)
-      }
-    }
-
-    expect(() =>
-      mount(MyComp, {
-        data: () => ({ foo: 1 })
-      })
-    ).toThrowError(
-      'data() option is not supported on functional and class components'
-    )
+    ).toThrowError('data() option is not supported on functional components')
   })
 })
