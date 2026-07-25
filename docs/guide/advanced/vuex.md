@@ -203,12 +203,8 @@ const App = {
   }
 }
 
-const store = createStore({
-  /* ... */
-})
-const app = createApp({
-  /* ... */
-})
+const store = createStore({/* ... */})
+const app = createApp({/* ... */})
 
 // specify key as second argument when calling app.use(store)
 app.use(store, key)
@@ -258,9 +254,7 @@ export const key = Symbol()
 import { createStore } from 'vuex'
 import { key } from './store'
 
-const store = createStore({
-  /* ... */
-})
+const store = createStore({/* ... */})
 
 const wrapper = mount(App, {
   global: {
@@ -283,9 +277,7 @@ export const key = Symbol()
 import { createStore } from 'vuex'
 import { key } from './store'
 
-const store = createStore({
-  /* ... */
-})
+const store = createStore({/* ... */})
 
 const wrapper = mount(App, {
   global: {
