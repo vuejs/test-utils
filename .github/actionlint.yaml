@@ -6,7 +6,7 @@ self-hosted-runner:
 # ShellCheck rules disabled inside run: blocks.
 # Each `run:` block is checked through ShellCheck; suppress noisy rules here.
 paths:
-  ".github/workflows/**/*.{yml,yaml}":
+  '.github/workflows/**/*.{yml,yaml}':
     ignore:
       - 'shellcheck reported issue in this script: SC1091:.+'  # Can't follow non-constant source
       - 'shellcheck reported issue in this script: SC2086:.+'  # Double-quote to prevent globbing/word splitting
