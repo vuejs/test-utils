@@ -43,6 +43,10 @@ Some plugins automatically call `config.plugins.VueWrapper.install()` when
 they're imported. This is common if they're extending multiple interfaces at
 once. Follow the instructions of the plugin you're installing.
 
+Some Plugins may work in global configuration instead as explained [here](https://test-utils.vuejs.org/api/#config-global).
+
+Plugins can also be installed at a specific test by using `global` option for `mount` function as explained [here](https://test-utils.vuejs.org/api/#global-plugins).
+
 Check out [awesome-vue](https://github.com/vuejs/awesome-vue#test) for a collection of community-contributed plugins and libraries.
 
 ### Writing a Plugin
