@@ -75,7 +75,7 @@
     "jsdom": "30.0.1",
     "jsdom-global": "3.0.2",
     "lint-staged": "17.3.0",
-    "oxfmt": "0.61.0",
+    "oxfmt": "0.62.0",
     "oxlint": "1.76.0",
     "pkg-pr-new": "0.0.86",
     "rollup": "4.62.4",
