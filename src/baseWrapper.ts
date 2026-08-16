@@ -33,6 +33,31 @@ import { stringifyNode } from './utils/stringifyNode'
 import type { HTMLBeautifyOptions } from 'js-beautify'
 import beautify from 'js-beautify'
 
+function isKeyboardClickActivation(
+  element: Node,
+  event: Event & TriggerOptions
+) {
+  if (
+    !isElement(element) ||
+    !(element instanceof HTMLButtonElement) ||
+    event.type !== 'keydown'
+  ) {
+    return false
+  }
+
+  const key = typeof event.key === 'string' ? event.key.toLowerCase() : ''
+
+  return (
+    key === 'enter' ||
+    key === ' ' ||
+    key === 'space' ||
+    event.code === 'Enter' ||
+    event.code === 'Space' ||
+    event.keyCode === 13 ||
+    event.keyCode === 32
+  )
+}
+
 export default abstract class BaseWrapper<
   ElementType extends Node
 > implements WrapperLike {
@@ -387,7 +412,13 @@ export default abstract class BaseWrapper<
       // we workaround this issue by manually setting _vts to Date.now() + 1
       // thus making sure the event handler is invoked
       event._vts = Date.now() + 1
-      this.element.dispatchEvent(event)
+      const eventNotCanceled = this.element.dispatchEvent(event)
+
+      if (eventNotCanceled && isKeyboardClickActivation(this.element, event)) {
+        const clickEvent = createDOMEvent('click')
+        clickEvent._vts = Date.now() + 1
+        this.element.dispatchEvent(clickEvent)
+      }
     }
 
     return nextTick()

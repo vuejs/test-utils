@@ -280,6 +280,33 @@ describe('trigger', () => {
         expect(currentCall.code).toBe(code)
       }
     })
+
+    it('triggers click activation for enter and space on buttons', async () => {
+      const clickHandler = vi.fn<() => void>()
+      const Component = {
+        template: '<button @click="clickHandler" />',
+        methods: { clickHandler }
+      }
+      const wrapper = mount(Component)
+
+      await wrapper.trigger('keydown.enter')
+      await wrapper.trigger('keydown.space')
+
+      expect(clickHandler).toHaveBeenCalledTimes(2)
+    })
+
+    it('does not trigger click activation when button keydown is prevented', async () => {
+      const clickHandler = vi.fn<() => void>()
+      const Component = {
+        template: '<button @keydown.prevent @click="clickHandler" />',
+        methods: { clickHandler }
+      }
+      const wrapper = mount(Component)
+
+      await wrapper.trigger('keydown.enter')
+
+      expect(clickHandler).not.toHaveBeenCalled()
+    })
   })
 
   describe('on disabled elements', () => {
