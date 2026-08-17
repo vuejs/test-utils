@@ -1,5 +1,5 @@
 import type { App, ComponentPublicInstance, VNode } from 'vue'
-import { nextTick, proxyRefs } from 'vue'
+import { nextTick, proxyRefs, unref } from 'vue'
 
 import { config } from './config'
 import domEvents from './constants/dom-events'
@@ -27,19 +27,26 @@ function createVMProxy<T extends ComponentPublicInstance>(
 ): T {
   return new Proxy(vm, {
     get(vm, key, receiver) {
-      if (vm.$.exposed && vm.$.exposeProxy && key in vm.$.exposeProxy) {
-        // first if the key is exposed
+      if (vm.$.exposeProxy && key in vm.$.exposeProxy) {
+        // first if the key is exposed in exposeProxy
         return Reflect.get(vm.$.exposeProxy, key, receiver)
+      } else if (vm.$.exposed && key in vm.$.exposed) {
+        // Vue only creates exposeProxy lazily (template ref or directive),
+        // so a component can expose an API while exposeProxy is still null.
+        // See https://github.com/vuejs/test-utils/issues/2591
+        return unref(Reflect.get(vm.$.exposed, key, receiver))
       } else if (key in setupState) {
-        // second if the key is acccessible from the setupState
+        // third if the key is acccessible from the setupState
         return Reflect.get(setupState, key, receiver)
       } else if (key in vm.$.appContext.config.globalProperties) {
-        // third if the key is a global property
+        // fourth if the key is a global property
         return Reflect.get(
           vm.$.appContext.config.globalProperties,
           key,
           receiver
         )
+      } else if (key in vm) {
+        return Reflect.get(vm, key)
       } else {
         // vm.$.ctx is the internal context of the vm
         // with all variables, methods and props
@@ -108,9 +115,13 @@ export class VueWrapper<
     // if we return it as `vm`
     // This does not work for functional components though (as they have no vm)
     // or for components with a setup that returns a render function (as they have an empty proxy)
-    // in both cases, we return `vm` directly instead
+    // in both cases, we return `vm` directly instead — unless the component
+    // used expose()/defineExpose(), so findComponent() can still read those
+    // properties when Vue has not created exposeProxy (issue #2591)
     if (hasSetupState(vm)) {
       this.componentVM = createVMProxy<T>(vm, vm.$.setupState)
+    } else if (vm?.$?.exposed) {
+      this.componentVM = createVMProxy<T>(vm, {})
     } else {
       this.componentVM = vm
     }
