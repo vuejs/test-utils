@@ -1,5 +1,6 @@
 import type { DomEventNameWithModifier } from '../constants/dom-events'
 import type { TriggerOptions } from '../createDomEvent'
+import type { VNode } from 'vue'
 import type {
   DefinedComponent,
   FindAllComponentsSelector,
@@ -36,6 +37,9 @@ export default interface WrapperLike {
   findComponent<T extends DefinedComponent>(
     selector: T | Exclude<FindComponentSelector, FunctionalComponent<any>>
   ): VueWrapper<InstanceType<T>>
+  // Generic SFCs emitted by vue-tsc have a generic call signature instead of
+  // the construct signature used by DefinedComponent.
+  findComponent<T extends <U>(...args: any[]) => VNode>(selector: T): VueWrapper
   findComponent<T extends FunctionalComponent<any>>(
     selector: T | string
   ): DOMWrapper<Element>

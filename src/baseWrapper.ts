@@ -133,6 +133,9 @@ export default abstract class BaseWrapper<
       ? CreateComponentPublicInstance<Props, RawBindings, D, C, M>
       : VueWrapper<CreateComponentPublicInstance>
   >
+  // Generic SFCs emitted by vue-tsc have a generic call signature instead of
+  // the construct signature used by DefinedComponent.
+  findComponent<T extends <U>(...args: any[]) => VNode>(selector: T): VueWrapper
   // searching for component created via defineComponent results in VueWrapper of proper type
   findComponent<T extends DefinedComponent>(
     selector: T | Exclude<FindComponentSelector, FunctionalComponent<any>>
