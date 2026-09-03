@@ -134,8 +134,17 @@ export default abstract class BaseWrapper<
       : VueWrapper<CreateComponentPublicInstance>
   >
   // Generic SFCs emitted by vue-tsc have a generic call signature instead of
-  // the construct signature used by DefinedComponent.
-  findComponent<T extends <U>(...args: any[]) => VNode>(selector: T): VueWrapper
+  // the construct signature used by DefinedComponent. The discriminator is the
+  // `__ctx` property on the return type that vue-tsc adds and ordinary generic
+  // functional components do not have; if absent, fall back to the DOMWrapper
+  // path below so that `.vm` does not type-check.
+  findComponent<T extends (...args: any[]) => VNode>(
+    selector: T
+  ): unknown extends ReturnType<T>
+    ? DOMWrapper<Node>
+    : '__ctx' extends keyof ReturnType<T>
+      ? VueWrapper
+      : DOMWrapper<Node>
   // searching for component created via defineComponent results in VueWrapper of proper type
   findComponent<T extends DefinedComponent>(
     selector: T | Exclude<FindComponentSelector, FunctionalComponent<any>>
@@ -198,6 +207,16 @@ export default abstract class BaseWrapper<
   findAllComponents<T extends DefinedComponent>(
     selector: T | Exclude<FindAllComponentsSelector, FunctionalComponent<any>>
   ): VueWrapper<InstanceType<T>>[]
+  // See findComponent above: vue-tsc generic SFCs are discriminated by `__ctx` in
+  // the return type. A plain generic functional component falls through to the
+  // FunctionalComponent overloads below.
+  findAllComponents<T extends (...args: any[]) => VNode>(
+    selector: T
+  ): unknown extends ReturnType<T>
+    ? DOMWrapper<Node>[]
+    : '__ctx' extends keyof ReturnType<T>
+      ? VueWrapper[]
+      : DOMWrapper<Node>[]
   findAllComponents<T extends FunctionalComponent<any>>(
     selector: T
   ): DOMWrapper<Node>[]
@@ -305,6 +324,16 @@ export default abstract class BaseWrapper<
   getComponent<T extends DefinedComponent>(
     selector: T | Exclude<FindComponentSelector, FunctionalComponent<any>>
   ): Omit<VueWrapper<InstanceType<T>>, 'exists'>
+  // vue-tsc generic SFCs share the same `__ctx` discriminator as findComponent.
+  // A plain generic functional component must keep resolving to DOMWrapper so that
+  // accessing `.vm` does not type-check at runtime.
+  getComponent<T extends (...args: any[]) => VNode>(
+    selector: T
+  ): unknown extends ReturnType<T>
+    ? Omit<DOMWrapper<Element>, 'exists'>
+    : '__ctx' extends keyof ReturnType<T>
+      ? Omit<VueWrapper, 'exists'>
+      : Omit<DOMWrapper<Element>, 'exists'>
   // searching for functional component results in DOMWrapper
   getComponent<T extends FunctionalComponent<any>>(
     selector: T | string
