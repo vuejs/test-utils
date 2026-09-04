@@ -65,23 +65,33 @@ class Pluggable<Instance = DOMWrapper<Node>> {
   }
 }
 
-export const config: GlobalConfigOptions = {
-  global: {
-    stubs: {
-      transition: true,
-      'transition-group': true
+const configKey = Symbol.for('@vue/test-utils:config:v2')
+
+function createConfig(): GlobalConfigOptions {
+  return {
+    global: {
+      stubs: {
+        transition: true,
+        'transition-group': true
+      },
+      provide: {},
+      components: {},
+      config: {},
+      directives: {},
+      mixins: [],
+      mocks: {},
+      plugins: [],
+      renderStubDefaultSlot: false
     },
-    provide: {},
-    components: {},
-    config: {},
-    directives: {},
-    mixins: [],
-    mocks: {},
-    plugins: [],
-    renderStubDefaultSlot: false
-  },
-  plugins: {
-    VueWrapper: new Pluggable(),
-    DOMWrapper: new Pluggable()
+    plugins: {
+      VueWrapper: new Pluggable(),
+      DOMWrapper: new Pluggable()
+    }
   }
 }
+
+const sharedState = globalThis as Record<PropertyKey, unknown>
+
+export const config: GlobalConfigOptions =
+  (sharedState[configKey] as GlobalConfigOptions | undefined) ??
+  (sharedState[configKey] = createConfig())
