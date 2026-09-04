@@ -5,7 +5,7 @@ import type {
   ComponentCustomProperties,
   ComponentPublicInstance
 } from 'vue'
-import { config, mount } from '../src'
+import { type VueWrapper, config, mount } from '../src'
 import Hello from './components/Hello.vue'
 import ComponentWithSlots from './components/ComponentWithSlots.vue'
 import type { Router } from 'vue-router'
@@ -25,6 +25,30 @@ describe('config', () => {
     }
 
     vi.clearAllMocks()
+  })
+
+  it('is shared across module evaluations', async () => {
+    const marker = {}
+    const originalMocks = config.global.mocks
+    const originalPlugins = [...config.plugins.VueWrapper.installedPlugins]
+
+    try {
+      config.global.mocks = { marker }
+      config.plugins.VueWrapper.install(() => ({ marker }))
+
+      vi.resetModules()
+      const { config: reloadedConfig } = await import('../src/config')
+      const wrapper = {} as VueWrapper
+
+      reloadedConfig.plugins.VueWrapper.extend(wrapper)
+
+      expect(reloadedConfig).toBe(config)
+      expect(reloadedConfig.global.mocks.marker).toBe(marker)
+      expect(wrapper).toHaveProperty('marker', marker)
+    } finally {
+      config.global.mocks = originalMocks
+      config.plugins.VueWrapper.installedPlugins = originalPlugins
+    }
   })
 
   describe('config merger', () => {
