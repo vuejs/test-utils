@@ -65,6 +65,9 @@ class Pluggable<Instance = DOMWrapper<Node>> {
   }
 }
 
+// Different builds of Vue Test Utils can be loaded in the same JavaScript
+// realm. Store config under a versioned global symbol so those builds share
+// state without sharing it across incompatible major versions.
 const configKey = Symbol.for('@vue/test-utils:config:v2')
 
 function createConfig(): GlobalConfigOptions {
