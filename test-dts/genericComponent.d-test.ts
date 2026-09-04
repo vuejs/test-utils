@@ -5,16 +5,13 @@ import { mount } from '../src'
 import type { DOMWrapper, VueWrapper } from '../src'
 import type WrapperLike from '../src/interfaces/wrapperLike'
 
-// `vue-tsc` emits a generic SFC as a function with a generic call signature whose
-// return type is `VNode & { __ctx?: ... }`. The `__ctx` property is the
-// discriminator between vue-tsc generic SFCs and ordinary generic functional
-// components (which return bare `VNode`).
-declare const VueTscGenericSfc: <T extends string | number>(
-  __VLS_props: any,
-  __VLS_ctx?: any,
-  __VLS_expose?: any,
-  __VLS_setup?: Promise<any>
-) => VNode & { __ctx?: any }
+// Real generic SFC. `vue-tsc` emits a generic call signature whose return
+// type carries a `__ctx` property; that is the discriminator the overload
+// in `src/baseWrapper.ts` keys on to pick `VueWrapper` over `DOMWrapper`.
+// Resolved by `vue-tsc` via the `tsd` script (see package.json) so the type
+// below is the actual shape vue-tsc would emit for a user component, not
+// a hand-written mock.
+import GenericSfc from './GenericSfc.vue'
 
 // A plain generic functional component returns bare `VNode` (no `__ctx`).
 declare const GenericFunctional: <T>(props: { items: T[] }) => VNode
@@ -22,8 +19,8 @@ declare const GenericFunctional: <T>(props: { items: T[] }) => VNode
 const wrapper = mount(defineComponent({ template: '' }))
 
 // ---- findComponent ----
-// Vue-tsc generic SFC should resolve to VueWrapper, not DOMWrapper.
-const sfcFound = wrapper.findComponent(VueTscGenericSfc)
+// vue-tsc generic SFC should resolve to VueWrapper, not DOMWrapper.
+const sfcFound = wrapper.findComponent(GenericSfc)
 expectType<VueWrapper>(sfcFound)
 // `.vm` is a VueWrapper-only API; it must type-check on the vue-tsc SFC result.
 expectType<unknown>(sfcFound.vm)
@@ -38,7 +35,7 @@ void (
 )
 
 // ---- getComponent ----
-const sfcGot = wrapper.getComponent(VueTscGenericSfc)
+const sfcGot = wrapper.getComponent(GenericSfc)
 expectType<Omit<VueWrapper, 'exists'>>(sfcGot)
 void (
   // @ts-expect-error -- `exists` is stripped on getComponent.
@@ -54,7 +51,7 @@ void (
 )
 
 // ---- findAllComponents ----
-const sfcAll = wrapper.findAllComponents(VueTscGenericSfc)
+const sfcAll = wrapper.findAllComponents(GenericSfc)
 expectType<VueWrapper[]>(sfcAll)
 expectType<unknown | undefined>(sfcAll[0]?.vm)
 
