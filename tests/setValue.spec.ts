@@ -295,17 +295,33 @@ describe('setValue', () => {
       template: '<div>{{ foo }} {{ bar }}</div>'
     })
 
+    const NestedInputComponentChild = defineComponent({
+      props: ['modelValue', 'onUpdate:modelValue'],
+      template: '<div>{{ modelValue }}</div>'
+    })
+    const NestedInputComponent = defineComponent({
+      props: ['modelValue', 'onUpdate:modelValue'],
+      template: '<NestedInputComponentChild v-model="modelValue" />',
+      components: { NestedInputComponentChild }
+    })
+
     const Component = defineComponent({
-      template:
-        '<PlainInputComponent v-model="plain" /><MultiInputComponent v-model:foo="foo" v-model:bar="bar" />',
+      template: `<PlainInputComponent v-model="plain" />
+         <MultiInputComponent v-model:foo="foo" v-model:bar="bar" />
+         <NestedInputComponent v-model="nested" />`,
       data() {
         return {
           plain: null,
           foo: null,
-          bar: null
+          bar: null,
+          nested: null
         }
       },
-      components: { PlainInputComponent, MultiInputComponent }
+      components: {
+        PlainInputComponent,
+        MultiInputComponent,
+        NestedInputComponent
+      }
     })
 
     describe('mount', () => {
@@ -323,6 +339,14 @@ describe('setValue', () => {
         await multiInput.setValue('barValue', 'bar')
         expect(multiInput.text()).toContain('fooValue')
         expect(multiInput.text()).toContain('barValue')
+      })
+
+      it('triggers a normal `v-model` on nested Vue Components', async () => {
+        const wrapper = mount(Component)
+        const nested = wrapper.findComponent(NestedInputComponent)
+        const child = nested.findComponent(NestedInputComponentChild)
+        await child.setValue('nested-value')
+        expect(nested.text()).toContain('nested-value')
       })
     })
     describe('shallowMount', () => {
