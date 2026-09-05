@@ -367,6 +367,36 @@ describe('mounting options: stubs', () => {
     expect(wrapper.html()).toBe('<foo-bar-stub></foo-bar-stub>')
   })
 
+  it('stubs a globally registered component by its registration name', () => {
+    const LibraryComponent = defineComponent({
+      name: 'LibraryInternalName',
+      template: '<span>real library component</span>'
+    })
+
+    const Plugin = {
+      install(app: any) {
+        app.component('GlobalAlias', LibraryComponent)
+      }
+    }
+
+    const Component = defineComponent({
+      template: '<div><GlobalAlias /></div>'
+    })
+
+    const wrapper = mount(Component, {
+      global: {
+        plugins: [Plugin],
+        stubs: {
+          GlobalAlias: true
+        }
+      }
+    })
+
+    expect(wrapper.html()).toBe(
+      '<div>\n' + '  <global-alias-stub></global-alias-stub>\n' + '</div>'
+    )
+  })
+
   it('stubs components within script setup', () => {
     const wrapper = mount(ScriptSetupWithChildren as any, {
       global: {
