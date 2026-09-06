@@ -65,4 +65,18 @@ describe('attributes', () => {
       disabled: ''
     })
   })
+
+  it('returns namespaced attributes with their prefix', () => {
+    const component = {
+      template: '<svg><use xlink:href="#icon" href="#fallback" /></svg>'
+    }
+    const wrapper = mount(component)
+    const use = wrapper.find('use')
+
+    expect(use.attributes()).toEqual({
+      'xlink:href': '#icon',
+      href: '#fallback'
+    })
+    expect(use.attributes('xlink:href')).toEqual('#icon')
+  })
 })

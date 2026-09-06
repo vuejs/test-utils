@@ -284,7 +284,10 @@ export default abstract class BaseWrapper<
     if (isElement(this.element)) {
       const attributes = Array.from(this.element.attributes)
       for (const attribute of attributes) {
-        attributeMap[attribute.localName] = attribute.value
+        // `name` keeps the namespace prefix (e.g. `xlink:href`), `localName`
+        // drops it, which loses the attribute or lets a same-named plain
+        // attribute overwrite it
+        attributeMap[attribute.name] = attribute.value
       }
     }
 
