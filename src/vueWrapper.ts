@@ -4,6 +4,7 @@ import { nextTick, proxyRefs, unref } from 'vue'
 import { config } from './config'
 import domEvents from './constants/dom-events'
 import type { VueElement, VueNode } from './types'
+import type { EmittedArgs, EmittedEventName } from './types'
 import { hasSetupState, mergeDeep } from './utils'
 import { getRootNodes } from './utils/getRootNodes'
 import { emitted, recordEvent, removeEventHistory } from './emit'
@@ -245,11 +246,12 @@ export class VueWrapper<
     return selector ? props[selector] : props
   }
 
-  emitted<T = unknown>(): Record<string, T[]>
-  emitted<T = unknown[]>(eventName: string): undefined | T[]
-  emitted<T = unknown>(
+  emitted<N extends EmittedEventName<T>>(eventName: N): undefined | EmittedArgs<T, N>[]
+  emitted<T2 = unknown>(): Record<string, T2[]>
+  emitted<T2 = unknown[]>(eventName: string): undefined | T2[]
+  emitted<T2 = unknown>(
     eventName?: string
-  ): undefined | T[] | Record<string, T[]> {
+  ): undefined | T2[] | Record<string, T2[]> {
     return emitted(this.vm, eventName)
   }
 

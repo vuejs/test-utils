@@ -4,6 +4,7 @@ import type {
   Component,
   ComponentInternalInstance,
   ComponentOptions,
+  ComponentPublicInstance,
   Directive,
   FunctionalComponent,
   Plugin,
@@ -173,7 +174,43 @@ export type VueNode<T extends Node = Node> = T & {
 
 export type VueElement = VueNode<Element>
 
+
 export type DefinedComponent = new (...args: any[]) => any
+
+/** A callable event handler prop, as generated for a declared `emits` entry. */
+type EmitHandler = (...args: any[]) => any
+
+/**
+ * Event names a component declares via its `emits` option, derived from the
+ * `onXxx` handler props Vue generates for them. Components that declare
+ * nothing resolve to `string` — the runtime accepts any event name.
+ */
+export type EmittedEventName<T extends ComponentPublicInstance> = Uncapitalize<
+  Exclude<
+    Extract<keyof T['$props'], `on${Capitalize<string>}`>,
+    `onVnode${string}`
+  > extends `on${infer Name}`
+    ? Name
+    : never
+>
+
+/**
+ * Argument tuple of one emitted event, taken from its `onXxx` handler prop.
+ * Falls back to `unknown[]` for events without a typed payload.
+ */
+export type EmittedArgs<
+  T extends ComponentPublicInstance,
+  N extends string
+> = T['$props'] extends Record<string, unknown>
+  ? T['$props'][`on${Capitalize<N>}`] extends infer Handler
+    ? Handler extends EmitHandler
+      ? Parameters<Handler>
+      : NonNullable<Handler> extends EmitHandler
+        ? Parameters<NonNullable<Handler>>
+        : unknown[]
+    : unknown[]
+  : unknown[]
+
 
 /**
  * T is a DeepRef if:
