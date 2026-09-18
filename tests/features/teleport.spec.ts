@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
-import { Teleport, defineComponent, h, ref } from 'vue'
-import { mount } from '../../src'
+import { Teleport, defineComponent, h, onMounted, onUnmounted, ref } from 'vue'
+import { TeleportStub, mount } from '../../src'
 import WithTeleportPropsComp from '../components/WithTeleportPropsComp.vue'
 import WithTeleportEmitsComp from '../components/WithTeleportEmitsComp.vue'
 import WithProps from '../components/WithProps.vue'
@@ -181,5 +181,45 @@ describe('teleport', () => {
     await wrapper.find('button').trigger('click')
 
     expect(wrapper.find('#count').text()).toBe('2')
+  })
+
+  // https://github.com/vuejs/test-utils/issues/2628
+  it('keeps children mounted across re-renders when using TeleportStub', async () => {
+    const lifecycleEvents: string[] = []
+    const Child = defineComponent({
+      setup() {
+        onMounted(() => lifecycleEvents.push('mounted'))
+        onUnmounted(() => lifecycleEvents.push('unmounted'))
+        return () => h('div', 'child content')
+      }
+    })
+    const Comp = defineComponent({
+      components: { Child },
+      props: { count: { type: Number, required: true } },
+      template: `
+        <div>
+          <span id="count">{{ count }}</span>
+          <teleport to="body"><Child /></teleport>
+        </div>`
+    })
+
+    const wrapper = mount(Comp, {
+      props: { count: 1 },
+      global: {
+        stubs: {
+          Teleport: TeleportStub
+        }
+      }
+    })
+
+    expect(lifecycleEvents).toEqual(['mounted'])
+    expect(wrapper.text()).toContain('child content')
+
+    await wrapper.setProps({ count: 2 })
+
+    expect(wrapper.find('#count').text()).toBe('2')
+    expect(wrapper.text()).toContain('child content')
+    // the child stays mounted: no unmount/remount cycle on re-render
+    expect(lifecycleEvents).toEqual(['mounted'])
   })
 })
