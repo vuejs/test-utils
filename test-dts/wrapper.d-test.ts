@@ -87,6 +87,41 @@ expectType<{ count: number }>(incrementEvent![0])
 const allEvents = wrapper.emitted()
 expectType<Record<string, unknown[]>>(allEvents)
 
+// inferred event names and payload types from the component's emits option
+const EmittedComp = defineComponent({
+  emits: {
+    change: (v: string) => true,
+    select: (id: number, label: string) => true,
+    plain: null
+  },
+  template: ''
+})
+const emittedWrapper = mount(EmittedComp)
+
+const changeEvent = emittedWrapper.emitted('change')
+expectType<[string][] | undefined>(changeEvent)
+expectType<[string]>(changeEvent![0])
+
+const selectEvent = emittedWrapper.emitted('select')
+expectType<[number, string][] | undefined>(selectEvent)
+expectType<[number, string]>(selectEvent![0])
+
+const plainEvent = emittedWrapper.emitted('plain')
+expectType<any[][] | undefined>(plainEvent)
+
+// an undeclared event name keeps the untyped shape
+const unknownEvent = emittedWrapper.emitted('undeclared')
+expectType<unknown[][] | undefined>(unknownEvent)
+
+// array-form emits: names infer, payloads stay untyped
+const ArrayEmitsComp = defineComponent({
+  emits: ['alpha', 'beta'],
+  template: ''
+})
+const arrayEmitsWrapper = mount(ArrayEmitsComp)
+const alphaEvent = arrayEmitsWrapper.emitted('alpha')
+expectType<any[][] | undefined>(alphaEvent)
+
 // get
 // HTML element selector
 let input = wrapper.get('input')
