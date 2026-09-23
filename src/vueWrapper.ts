@@ -246,7 +246,9 @@ export class VueWrapper<
     return selector ? props[selector] : props
   }
 
-  emitted<N extends EmittedEventName<T>>(eventName: N): undefined | EmittedArgs<T, N>[]
+  emitted<N extends EmittedEventName<T>>(
+    eventName: N
+  ): undefined | EmittedArgs<T, N>[]
   emitted<T2 = unknown>(): Record<string, T2[]>
   emitted<T2 = unknown[]>(eventName: string): undefined | T2[]
   emitted<T2 = unknown>(
