@@ -110,7 +110,11 @@ describe('mountingOptions.props', () => {
         }
       },
       render() {
-        return h('div', {}, `reactive: ${isReactive(this.reactiveObject)}, raw: ${isReactive(this.rawObject)}`)
+        return h(
+          'div',
+          {},
+          `reactive: ${isReactive(this.reactiveObject)}, raw: ${isReactive(this.rawObject)}`
+        )
       }
     })
 
