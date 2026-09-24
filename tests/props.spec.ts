@@ -4,7 +4,7 @@ import { mount, shallowMount } from '../src'
 import WithProps from './components/WithProps.vue'
 import PropWithSymbol from './components/PropWithSymbol.vue'
 import Hello from './components/Hello.vue'
-import { defineComponent, h, isRef, ref } from 'vue'
+import { defineComponent, h, isRef, reactive, ref } from 'vue'
 import Title from './components/FunctionComponent'
 import Issue1476 from './components/Issue1476.vue'
 
@@ -191,7 +191,7 @@ describe('props', () => {
     // https://github.com/vuejs/test-utils/issues/1476
     const wrapper = mount(Issue1476, {
       props: {
-        availableFields: [{ name: 'Animals' }, { name: 'Cities' }]
+        availableFields: reactive([{ name: 'Animals' }, { name: 'Cities' }])
       }
     })
 

@@ -9,7 +9,6 @@ import {
   defineComponent,
   h,
   proxyRefs,
-  reactive,
   ref,
   shallowReactive,
   transformVNodeArgs
@@ -180,7 +179,7 @@ export function createInstance(
   // we define props as reactive so that way when we update them with `setProps`
   // Vue's reactivity system will cause a rerender.
   const refs = shallowReactive<Record<string, unknown>>({})
-  const props = reactive<Record<string, unknown>>({})
+  const props = shallowReactive<Record<string, unknown>>({})
 
   Object.entries({
     ...options?.attrs,
