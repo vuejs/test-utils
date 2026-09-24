@@ -1,5 +1,5 @@
 import { describe, expect, test, vi } from 'vitest'
-import { defineComponent, h } from 'vue'
+import { type PropType, defineComponent, h, isReactive, reactive } from 'vue'
 import { mount } from '../../src'
 import Title from '../components/FunctionComponent'
 
@@ -95,5 +95,36 @@ describe('mountingOptions.props', () => {
       }
     })
     expect(wrapper.text()).toBe('Hello')
+  })
+
+  test('preserves reactivity of non-primitive props', () => {
+    const Component = defineComponent({
+      props: {
+        reactiveObject: {
+          type: Object as PropType<{}>,
+          required: true
+        },
+        rawObject: {
+          type: Object as PropType<{}>,
+          required: true
+        }
+      },
+      render() {
+        return h(
+          'div',
+          {},
+          `reactive: ${isReactive(this.reactiveObject)}, raw: ${isReactive(this.rawObject)}`
+        )
+      }
+    })
+
+    const wrapper = mount(Component, {
+      props: {
+        reactiveObject: reactive({}),
+        rawObject: {}
+      }
+    })
+
+    expect(wrapper.text()).toBe('reactive: true, raw: false')
   })
 })

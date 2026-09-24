@@ -9,7 +9,6 @@ import {
   defineComponent,
   h,
   proxyRefs,
-  reactive,
   ref,
   shallowReactive,
   transformVNodeArgs
@@ -37,7 +36,6 @@ import { createVNodeTransformer } from './vnodeTransformers/util'
 import type { CreateStubComponentsTransformerConfig } from './vnodeTransformers/stubComponentsTransformer'
 import { createStubComponentsTransformer } from './vnodeTransformers/stubComponentsTransformer'
 import { createStubDirectivesTransformer } from './vnodeTransformers/stubDirectivesTransformer'
-import { isDeepRef } from './utils/isDeepRef'
 
 const MOUNT_OPTIONS: ReadonlyArray<keyof MountingOptions<any>> = [
   'attachTo',
@@ -179,20 +177,11 @@ export function createInstance(
   const MOUNT_COMPONENT_REF = 'VTU_COMPONENT'
   // we define props as reactive so that way when we update them with `setProps`
   // Vue's reactivity system will cause a rerender.
-  const refs = shallowReactive<Record<string, unknown>>({})
-  const props = reactive<Record<string, unknown>>({})
-
-  Object.entries({
+  const props = shallowReactive<Record<string, unknown>>({
     ...options?.attrs,
     ...options?.propsData,
     ...options?.props,
     ref: MOUNT_COMPONENT_REF
-  }).forEach(([k, v]) => {
-    if (isDeepRef(v)) {
-      refs[k] = v
-    } else {
-      props[k] = v
-    }
   })
 
   const global = mergeGlobalProperties(options?.global)
@@ -210,7 +199,7 @@ export function createInstance(
       }
     },
     render() {
-      return h(component as ComponentOptions, { ...props, ...refs }, slots)
+      return h(component as ComponentOptions, props, slots)
     }
   })
 
