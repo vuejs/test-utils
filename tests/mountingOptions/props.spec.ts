@@ -1,5 +1,5 @@
 import { describe, expect, test, vi } from 'vitest'
-import { defineComponent, h, isReactive, PropType, reactive } from 'vue'
+import { type PropType, defineComponent, h, isReactive, reactive } from 'vue'
 import { mount } from '../../src'
 import Title from '../components/FunctionComponent'
 
