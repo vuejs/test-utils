@@ -28,6 +28,14 @@ export const getComponentRegisteredName = (
     }
   }
 
+  // try to infer the name based on global resolution
+  const globalRegistry = instance.appContext.components
+  for (const key in globalRegistry) {
+    if (globalRegistry[key] === type) {
+      return key
+    }
+  }
+
   // try to retrieve name imported in script setup
   return getComponentNameInSetup(instance.parent, type) || null
 }
