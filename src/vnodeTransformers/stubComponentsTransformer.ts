@@ -84,6 +84,18 @@ const createDefaultStub = (
         renderStubDefaultSlot: true
       })
     }
+
+    // A custom component was provided as the stub value, e.g.
+    // `stubs: { Teleport: TeleportStub }`. Return it as-is instead of a
+    // copy: built-ins like Teleport bypass the transformation cache, so a
+    // stable type reference is what keeps Vue from unmounting and
+    // remounting the stubbed subtree on every re-render. registerStub
+    // keeps `findComponent(customStub)` working.
+    const customStub = stubs[pascalTag] ?? stubs[kebabTag]
+    if (isComponent(customStub)) {
+      registerStub({ source: type, stub: customStub })
+      return customStub
+    }
   }
 }
 

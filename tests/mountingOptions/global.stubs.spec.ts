@@ -1,7 +1,13 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import type { Directive } from 'vue'
 import { defineAsyncComponent, defineComponent, h } from 'vue'
-import { RouterLinkStub, config, flushPromises, mount } from '../../src'
+import {
+  RouterLinkStub,
+  TeleportStub,
+  config,
+  flushPromises,
+  mount
+} from '../../src'
 import Hello from '../components/Hello.vue'
 import ComponentWithoutName from '../components/ComponentWithoutName.vue'
 import ComponentWithSlots from '../components/ComponentWithSlots.vue'
@@ -648,6 +654,47 @@ describe('mounting options: stubs', () => {
           '  <div id="content-global-stubs-teleport"></div>\n' +
           '</teleport-stub>'
       )
+    })
+
+    it('renders teleport content in place with the TeleportStub component', () => {
+      const Comp = {
+        template: `<teleport to="body"><div id="content-teleport-stub" /></teleport>`
+      }
+      const wrapper = mount(Comp, {
+        global: {
+          stubs: {
+            Teleport: TeleportStub
+          }
+        }
+      })
+
+      // no teleport target is needed: the content renders in place
+      expect(wrapper.find('#content-teleport-stub').exists()).toBe(true)
+      expect(wrapper.findComponent(TeleportStub).exists()).toBe(true)
+      expect(wrapper.html()).not.toContain('<teleport-stub')
+    })
+
+    it('honors a custom component as a teleport stub', () => {
+      const CustomTeleportStub = defineComponent({
+        name: 'CustomTeleportStub',
+        setup(_, { slots }) {
+          return () =>
+            h('div', { id: 'custom-teleport-stub' }, slots.default?.({}))
+        }
+      })
+      const Comp = {
+        template: `<teleport to="body"><div id="content-custom-teleport-stub" /></teleport>`
+      }
+      const wrapper = mount(Comp, {
+        global: {
+          stubs: {
+            Teleport: CustomTeleportStub
+          }
+        }
+      })
+
+      expect(wrapper.find('#custom-teleport-stub').exists()).toBe(true)
+      expect(wrapper.find('#content-custom-teleport-stub').exists()).toBe(true)
     })
   })
 
