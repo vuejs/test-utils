@@ -2,6 +2,7 @@
 import { expectType } from './index'
 import { defineComponent } from 'vue'
 import { mount } from '../src'
+import EmitsSfc from './EmitsSfc.vue'
 
 const AppWithDefine = defineComponent({
   template: ''
@@ -121,6 +122,19 @@ const ArrayEmitsComp = defineComponent({
 const arrayEmitsWrapper = mount(ArrayEmitsComp)
 const alphaEvent = arrayEmitsWrapper.emitted('alpha')
 expectType<any[][] | undefined>(alphaEvent)
+
+// payloads are inferred alongside defineProps/defineModel in <script setup>
+const sfcWrapper = mount(EmitsSfc, { props: { title: '', count: 0 } })
+expectType<[number, string][] | undefined>(sfcWrapper.emitted('select'))
+expectType<[number][] | undefined>(sfcWrapper.emitted('update:count'))
+
+// and for defineComponent with a setup function
+const FnEmitsComp = defineComponent(
+  (props: { msg: string }) => () => props.msg,
+  { props: ['msg'], emits: { change: (n: number) => true } }
+)
+const fnEmitsWrapper = mount(FnEmitsComp, { props: { msg: '' } })
+expectType<[number][] | undefined>(fnEmitsWrapper.emitted('change'))
 
 // get
 // HTML element selector
