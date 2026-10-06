@@ -211,7 +211,7 @@ export function createInstance(
   attachEmitListener()
 
   // global mocks mixin
-  if (global?.mocks) {
+  if (Object.keys(global?.mocks ?? {}).length > 0) {
     const mixin: ComponentOptions = {
       beforeCreate() {
         // we need to differentiate components that are or not not `script setup`
