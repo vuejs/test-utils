@@ -66,6 +66,35 @@ const DEFAULT_STUBS = {
   'transition-group': (type: any) => type === TransitionGroup
 }
 
+// Default stubs are cached per tag: a fresh stub component on every render makes
+// `isSameVNodeType` fail and Vue unmounts and remounts the whole stubbed subtree on
+// each re-render (https://github.com/vuejs/test-utils/issues/2956). The transformer
+// passes the children as a function, so re-renders still pick up fresh children.
+const defaultStubCache = new Map<string, Component>()
+
+// Copies of user-provided stub components, keyed by (source component, stub definition)
+const customStubCache = new WeakMap<
+  object,
+  WeakMap<object, ConcreteComponent>
+>()
+
+const getCustomStubCopy = (
+  source: object,
+  stub: object
+): ConcreteComponent | undefined => customStubCache.get(source)?.get(stub)
+const setCustomStubCopy = (
+  source: object,
+  stub: object,
+  copy: ConcreteComponent
+): void => {
+  let byStub = customStubCache.get(source)
+  if (!byStub) {
+    byStub = new WeakMap()
+    customStubCache.set(source, byStub)
+  }
+  byStub.set(stub, copy)
+}
+
 const createDefaultStub = (
   kebabTag: string,
   predicate: (type: any) => boolean,
@@ -78,11 +107,15 @@ const createDefaultStub = (
     if (pascalTag in stubs && stubs[pascalTag] === false) return type
 
     if (stubs[kebabTag] === true || stubs[pascalTag] === true) {
-      return createStub({
+      const cached = defaultStubCache.get(kebabTag)
+      if (cached) return cached
+      const stub = createStub({
         name: kebabTag,
         type,
         renderStubDefaultSlot: true
       })
+      defaultStubCache.set(kebabTag, stub)
+      return stub
     }
   }
 }
@@ -213,10 +246,24 @@ export function createStubComponentsTransformer({
       // to find our component by stub definition, so we register it manually
       registerStub({ source: type, stub })
 
-      const specializedStubComponent: ConcreteComponent = stubFn
-        ? (...args) => stubFn(...args)
-        : { ...unwrappedStub }
-      specializedStubComponent.props = unwrappedStub.props
+      // The copy is cached per source component: a fresh component object on every
+      // render makes `isSameVNodeType` fail and Vue unmounts and remounts the stubbed
+      // subtree on each re-render (https://github.com/vuejs/test-utils/issues/2956).
+      // Keyed by the stub, not the source, so two components sharing one stub
+      // definition still get distinct copies and remain separately findable
+      // (the registerStub registry maps a stub back to one source).
+      const cacheKey = stub as object
+      let specializedStubComponent = getCustomStubCopy(type as object, cacheKey)
+      if (!specializedStubComponent) {
+        specializedStubComponent = stubFn
+          ? (...args: unknown[]) =>
+              (stubFn as (...a: unknown[]) => unknown)(
+                ...args
+              ) as unknown as ConcreteComponent
+          : ({ ...unwrappedStub } as ConcreteComponent)
+        specializedStubComponent.props = unwrappedStub.props
+        setCustomStubCopy(type as object, cacheKey, specializedStubComponent)
+      }
 
       return specializedStubComponent
     }
