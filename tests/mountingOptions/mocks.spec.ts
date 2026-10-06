@@ -5,6 +5,31 @@ import ScriptSetupWithI18n from '../components/ScriptSetupWithI18n.vue'
 import ComponentWithI18n from '../components/ComponentWithI18n.vue'
 
 describe('mocks', () => {
+  it.each([undefined, {}])(
+    'does not register a mixin when mocks are %s',
+    mocks => {
+      const wrapper = mount(
+        { template: '<div>hello</div>' },
+        { global: { mocks } }
+      )
+
+      expect(wrapper.vm.$.appContext.mixins).toHaveLength(0)
+      expect(wrapper.text()).toBe('hello')
+      wrapper.unmount()
+    }
+  )
+
+  it('registers a mixin for a mock with a falsy value', () => {
+    const wrapper = mount(
+      { template: '<div>{{ $value }}</div>' },
+      { global: { mocks: { $value: false } } }
+    )
+
+    expect(wrapper.vm.$.appContext.mixins).toHaveLength(1)
+    expect(wrapper.text()).toBe('false')
+    wrapper.unmount()
+  })
+
   it('mocks a vuex store', async () => {
     const Foo = {
       template: `
