@@ -197,16 +197,14 @@ export type EmittedEventName<T extends ComponentPublicInstance> = Uncapitalize<
  * Argument tuple of one emitted event, taken from its `onXxx` handler prop.
  * Falls back to `unknown[]` for events without a typed payload.
  */
-export type EmittedArgs<T extends ComponentPublicInstance, N extends string> =
-  T['$props'] extends Record<string, unknown>
-    ? T['$props'][`on${Capitalize<N>}`] extends infer Handler
-      ? Handler extends EmitHandler
-        ? Parameters<Handler>
-        : NonNullable<Handler> extends EmitHandler
-          ? Parameters<NonNullable<Handler>>
-          : unknown[]
-      : unknown[]
+export type EmittedArgs<
+  T extends ComponentPublicInstance,
+  N extends string
+> = T['$props'] extends { [K in `on${Capitalize<N>}`]?: infer Handler }
+  ? NonNullable<Handler> extends EmitHandler
+    ? Parameters<NonNullable<Handler>>
     : unknown[]
+  : unknown[]
 
 /**
  * T is a DeepRef if:
