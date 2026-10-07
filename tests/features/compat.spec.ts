@@ -135,6 +135,28 @@ describe('@vue/compat build', () => {
     expect(wrapper.html()).toBe('<div>stubbed</div>')
   })
 
+  // https://github.com/vuejs/test-utils/issues/2333
+  it('keeps props from legacy mixins and extends in stubs', () => {
+    configureCompat({ MODE: 3, GLOBAL_EXTEND: 'suppress-warning' })
+
+    const Foo = {
+      extends: Vue.extend({ props: { foo: String } }),
+      mixins: [Vue.extend({ props: { bar: String } })],
+      template: '<div />'
+    }
+    const Component = {
+      components: { Foo },
+      template: '<Foo foo="foo" bar="bar" />'
+    }
+
+    const wrapper = mount(Component, { shallow: true })
+
+    expect(wrapper.findComponent(Foo).props()).toEqual({
+      foo: 'foo',
+      bar: 'bar'
+    })
+  })
+
   it('correctly uses stubs when stub is legacy component', () => {
     configureCompat({
       MODE: 3,

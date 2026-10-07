@@ -75,6 +75,50 @@ describe('shallowMount', () => {
     )
   })
 
+  // https://github.com/vuejs/test-utils/issues/2333
+  it('keeps props declared in mixins and extends of a stubbed component', () => {
+    const Child = defineComponent({
+      extends: { props: { foo: String } },
+      mixins: [{ props: ['bar'] }, { props: { baz: Number } }],
+      props: { qux: Boolean },
+      template: '<div />'
+    })
+    const Parent = defineComponent({
+      components: { Child },
+      template: '<Child foo="foo" bar="bar" :baz="1" qux />'
+    })
+
+    const wrapper = shallowMount(Parent)
+
+    expect(wrapper.findComponent(Child).props()).toEqual({
+      foo: 'foo',
+      bar: 'bar',
+      baz: 1,
+      qux: true
+    })
+    expect(wrapper.html()).toBe(
+      '<child-stub foo="foo" bar="bar" baz="1" qux="true"></child-stub>'
+    )
+  })
+
+  it('resolves stub props from mixins and extends with Vue precedence', () => {
+    const Child = defineComponent({
+      extends: { props: { 'foo-bar': { default: 'extends' } } },
+      mixins: [{ props: { fooBar: { default: 'mixin' } } }],
+      props: { 'foo-bar': { default: 'own' } },
+      template: '<div>{{ fooBar }}</div>'
+    })
+    const Parent = defineComponent({
+      components: { Child },
+      template: '<Child />'
+    })
+
+    expect(mount(Parent).html()).toBe('<div>own</div>')
+    expect(shallowMount(Parent).html()).toBe(
+      '<child-stub foobar="own"></child-stub>'
+    )
+  })
+
   it('stub instance of same component', async () => {
     const wrapper = mount(RecursiveComponent, {
       shallow: true,
