@@ -30,21 +30,8 @@ export function emitted<T = unknown>(
 }
 
 export const attachEmitListener = () => {
-  const target = getGlobalThis()
-  // override emit to capture events when devtools is defined
-  if (target.__VUE_DEVTOOLS_GLOBAL_HOOK__) {
-    const _emit = target.__VUE_DEVTOOLS_GLOBAL_HOOK__.emit
-    target.__VUE_DEVTOOLS_GLOBAL_HOOK__.emit = (
-      eventType: any,
-      ...payload: any[]
-    ) => {
-      _emit.call(target.__VUE_DEVTOOLS_GLOBAL_HOOK__, eventType, ...payload)
-      captureDevtoolsVueComponentEmitEvent(eventType, payload)
-    }
-  } else {
-    // use devtools to capture this "emit"
-    setDevtoolsHook(createDevTools(), {})
-  }
+  // use devtools to capture this "emit"
+  setDevtoolsHook(createDevTools(), {})
 }
 
 function captureDevtoolsVueComponentEmitEvent(
@@ -57,11 +44,21 @@ function captureDevtoolsVueComponentEmitEvent(
   }
 }
 
-// devtools hook only catches Vue component custom events
+// devtools hook only catches Vue component custom events,
+// and forwards to the global devtools hook if there is one
 function createDevTools(): any {
   return {
     emit(eventType, ...payload) {
       captureDevtoolsVueComponentEmitEvent(eventType, payload)
+      getGlobalThis().__VUE_DEVTOOLS_GLOBAL_HOOK__?.emit?.(
+        eventType,
+        ...payload
+      )
+    },
+    cleanupBuffer(component) {
+      const hook = getGlobalThis().__VUE_DEVTOOLS_GLOBAL_HOOK__
+      // Vue only emits `component:removed` to hooks implementing cleanupBuffer
+      return hook?.cleanupBuffer ? hook.cleanupBuffer(component) : true
     }
   } as Partial<typeof devtools>
 }
