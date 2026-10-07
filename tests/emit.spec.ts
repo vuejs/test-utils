@@ -1,6 +1,6 @@
-import { describe, expect, it } from 'vitest'
+import { afterEach, describe, expect, it, vi } from 'vitest'
 import type { FunctionalComponent, SetupContext } from 'vue'
-import { defineComponent, getCurrentInstance, h } from 'vue'
+import { defineComponent, getCurrentInstance, h, setDevtoolsHook } from 'vue'
 import EmitsEventSFC from './components/EmitsEventSFC.vue'
 import EmitsEventScriptSetup from './components/EmitsEventScriptSetup.vue'
 
@@ -416,5 +416,76 @@ describe('emitted', () => {
     wrapper.unmount()
 
     expect(child.emitted('foo')).toBeUndefined()
+  })
+
+  describe('with a devtools hook', () => {
+    afterEach(() => {
+      vi.unstubAllGlobals()
+    })
+
+    const Emitter = defineComponent({
+      emits: ['hello'],
+      render: () => h('div')
+    })
+    const createHook = () => ({
+      emit: vi.fn<(event: string, ...payload: unknown[]) => void>(),
+      cleanupBuffer: () => false
+    })
+
+    it('captures an event once after several mounts', () => {
+      const hook = createHook()
+      vi.stubGlobal('__VUE_DEVTOOLS_GLOBAL_HOOK__', hook)
+      // what Vue does when the renderer is created with the hook present
+      setDevtoolsHook(hook as any, {})
+
+      mount(Emitter)
+      mount(Emitter)
+      const wrapper = mount(Emitter)
+      wrapper.vm.$emit('hello', 'world')
+
+      expect(wrapper.emitted('hello')).toEqual([['world']])
+      wrapper.unmount()
+      // the devtools hook still receives every event
+      const events = hook.emit.mock.calls.map(([event]) => event)
+      expect(events.filter(e => e === 'component:emit')).toHaveLength(1)
+      expect(events).toContain('component:removed')
+    })
+
+    it('captures events when the hook is replaced', () => {
+      // Vue keeps the hook it got when the renderer was created
+      const first = createHook()
+      vi.stubGlobal('__VUE_DEVTOOLS_GLOBAL_HOOK__', first)
+      setDevtoolsHook(first as any, {})
+      const second = createHook()
+      vi.stubGlobal('__VUE_DEVTOOLS_GLOBAL_HOOK__', second)
+
+      const wrapper = mount(Emitter)
+      wrapper.vm.$emit('hello', 'world')
+
+      expect(wrapper.emitted('hello')).toEqual([['world']])
+      expect(second.emit).toHaveBeenCalledWith(
+        'component:emit',
+        expect.anything(),
+        wrapper.vm.$,
+        'hello',
+        ['world']
+      )
+    })
+
+    it('forwards events like Vue to partial hooks', () => {
+      const hook = { emit: vi.fn<(event: string) => void>() }
+      vi.stubGlobal('__VUE_DEVTOOLS_GLOBAL_HOOK__', hook)
+      mount(Emitter).unmount()
+      // Vue does not emit `component:removed` without cleanupBuffer
+      const events = hook.emit.mock.calls.map(([event]) => event)
+      expect(events).toContain('component:added')
+      expect(events).not.toContain('component:removed')
+
+      vi.stubGlobal('__VUE_DEVTOOLS_GLOBAL_HOOK__', {})
+      const wrapper = mount(Emitter)
+      wrapper.vm.$emit('hello', 'world')
+
+      expect(wrapper.emitted('hello')).toEqual([['world']])
+    })
   })
 })
