@@ -88,6 +88,42 @@ describe('mountingOptions.props', () => {
     expect(onCustomEvent).toHaveBeenCalledTimes(3)
   })
 
+  test('accepts props typed as a union', () => {
+    const Component = defineComponent({
+      props: {
+        value: {
+          type: [String, Number],
+          required: true
+        }
+      },
+      render() {
+        return h('div', {}, `Value is ${this.value}`)
+      }
+    })
+    const cases: Array<{ value: string } | { value: number }> = [
+      { value: 'one' },
+      { value: 2 }
+    ]
+
+    for (const props of cases) {
+      const wrapper = mount(Component, { props })
+      expect(wrapper.text()).toBe(`Value is ${props.value}`)
+    }
+  })
+
+  test('accepts null props when no prop is required', () => {
+    const Component = defineComponent({
+      props: {
+        message: String
+      },
+      render() {
+        return h('div', {}, `Message is ${this.message}`)
+      }
+    })
+    const wrapper = mount(Component, { props: null })
+    expect(wrapper.text()).toBe('Message is undefined')
+  })
+
   test('props with functional component', async () => {
     const wrapper = mount(Title, {
       props: {

@@ -1,5 +1,5 @@
 import { expectError, expectType } from './index'
-import type { DefineComponent, SlotsType, VNode } from 'vue'
+import type { DefineComponent, PropType, SlotsType, VNode } from 'vue'
 import { FunctionalComponent, defineComponent } from 'vue'
 import { mount } from '../src'
 
@@ -225,6 +225,33 @@ expectError(
     }
   )
 )
+
+// props typed as a union
+const AppWithUnionProp = defineComponent({
+  props: {
+    foo: {
+      type: [String, Object] as PropType<string | { bar: string }>,
+      required: true
+    }
+  },
+  template: ''
+})
+
+declare const unionProps: { foo: string } | { foo: { bar: string } }
+expectType<string | { bar: string }>(
+  mount(AppWithUnionProp, { props: unionProps }).vm.foo
+)
+
+declare const unionPropsWithExtra:
+  | { foo: string; extra: number }
+  | { foo: { bar: string }; extra: number }
+expectType<number>(
+  mount(AppWithUnionProp, { props: unionPropsWithExtra }).vm.extra
+)
+
+declare const wrongUnionProps: { foo: string } | { foo: number }
+// @ts-expect-error one member of the union has a wrong prop type
+mount(AppWithUnionProp, { props: wrongUnionProps })
 
 // slots
 const SetupComponentWithSlots = defineComponent<
