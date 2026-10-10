@@ -17,7 +17,7 @@ import {
   defineComponent,
   h
 } from 'vue'
-import { hyphenate } from '../utils/vueShared'
+import { camelize, hyphenate } from '../utils/vueShared'
 import { matchName } from '../utils/matchName'
 import { isComponent, isFunctionalComponent } from '../utils'
 import { unwrapLegacyVueExtendComponent } from '../utils/vueCompatSupport'
@@ -53,6 +53,27 @@ const normalizeStubProps = (props: ComponentPropsOptions) => {
     }
     return { ...acc, [key]: value }
   }, {})
+}
+
+// Collect props from `extends` and `mixins` too, with the same precedence as Vue
+const resolveStubProps = (
+  options: ComponentOptions,
+  resolved: Record<string, unknown> = {}
+): ComponentPropsOptions => {
+  if (options.extends) {
+    resolveStubProps(unwrapLegacyVueExtendComponent(options.extends), resolved)
+  }
+  options.mixins?.forEach((mixin: ComponentOptions) =>
+    resolveStubProps(unwrapLegacyVueExtendComponent(mixin), resolved)
+  )
+  if (Array.isArray(options.props)) {
+    options.props.forEach(key => (resolved[camelize(key)] = null))
+  } else {
+    for (const key in options.props) {
+      resolved[camelize(key)] = options.props[key]
+    }
+  }
+  return resolved as ComponentPropsOptions
 }
 
 const clearAndUpper = (text: string) => text.replace(/-/, '').toUpperCase()
@@ -101,7 +122,7 @@ export const createStub = ({
 
   const stub = defineComponent({
     name: name || anonName,
-    props: (componentOptions as ConcreteComponent).props || {},
+    props: resolveStubProps(componentOptions as ComponentOptions),
     // fix #1550 - respect old-style v-model for shallow mounted components with @vue/compat
     // @ts-expect-error
     model: componentOptions.model,
