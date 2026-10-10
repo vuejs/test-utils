@@ -48,7 +48,8 @@ export function mount<
   P extends ComponentProps<C> = ComponentProps<C>
 >(
   originalComponent: T,
-  options?: ComponentMountingOptions<C, P>
+  // the bare `P` lets TypeScript infer a union of props objects as a whole
+  options?: ComponentMountingOptions<C, P> & { props?: P | null }
 ): VueWrapper<
   ComponentProps<C> & ComponentData<C> & ComponentExposed<C>,
   ComponentPublicInstance<
