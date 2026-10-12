@@ -77,7 +77,7 @@
     "lint-staged": "17.6.0",
     "oxfmt": "0.72.0",
     "oxlint": "1.86.0",
-    "pkg-pr-new": "0.0.88",
+    "pkg-pr-new": "0.0.91",
     "rollup": "4.64.0",
     "tslib": "2.8.1",
     "typescript": "6.0.3",
