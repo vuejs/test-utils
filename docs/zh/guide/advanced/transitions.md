@@ -68,4 +68,4 @@ Vue Test Utils 内置的 transition 组件的测试替身比较简单，并不�
 - 你可以通过将[全局 transition 测试替身](../../api/#global-stubs) 设置为 false 来停止自从创建测试替身。
 - 如果需要，你可以自行创建 transition 的测试替身，以处理这些钩子。
 - 你可以在测试中捕获警告以消除它。
-  :::
+:::

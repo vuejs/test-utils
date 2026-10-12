@@ -68,7 +68,7 @@ Potential solutions:
 - You can turn off the auto stubbing by setting [global stubs transition](../../api/#global-stubs) to false
 - You can create your own transition stub that can handle these hooks if necessary.
 - You can spy the warning in the test to silence it.
-  :::
+:::
 
 If you do turn off auto stubbing, note that you might also need to mock `requestAnimationFrame` to ensure that the javascript hooks fire properly:
 
