@@ -297,6 +297,39 @@ describe('props', () => {
     expect(wrapper.html()).toBe('<comp-stub fn="[Function]"></comp-stub>')
   })
 
+  it('stub props without primitive conversion when shallow mounting', () => {
+    const Comp = defineComponent({
+      name: 'Comp',
+      template: `<div>Test</div>`,
+      props: ['obj']
+    })
+
+    const wrapper = shallowMount({
+      render() {
+        return h(Comp, { obj: Object.create(null) })
+      }
+    })
+
+    expect(wrapper.html()).toBe('<comp-stub obj="[object Object]"></comp-stub>')
+  })
+
+  it('stub component instance props when shallow mounting', () => {
+    const Comp = defineComponent({
+      name: 'Comp',
+      template: `<div>Test</div>`,
+      props: ['parent']
+    })
+
+    const wrapper = shallowMount({
+      template: `<Comp :parent="this" />`,
+      components: { Comp }
+    })
+
+    expect(wrapper.html()).toBe(
+      '<comp-stub parent="[object Object]"></comp-stub>'
+    )
+  })
+
   // https://github.com/vuejs/test-utils/issues/2411
   it('should not warn on stringify props in stubs', () => {
     const spy = vi.spyOn(console, 'warn').mockReturnValue()

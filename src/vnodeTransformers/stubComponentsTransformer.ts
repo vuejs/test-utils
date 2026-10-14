@@ -51,6 +51,15 @@ const normalizeStubProps = (props: ComponentPropsOptions) => {
     if (typeof value === 'function') {
       return { ...acc, [key]: ['[Function]'] }
     }
+    if (value !== null && typeof value === 'object') {
+      // objects like component instances or `Object.create(null)`
+      // can't be converted to a string by `setAttribute`
+      try {
+        String(value)
+      } catch (e) {
+        return { ...acc, [key]: Object.prototype.toString.call(value) }
+      }
+    }
     return { ...acc, [key]: value }
   }, {})
 }
