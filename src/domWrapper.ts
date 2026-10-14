@@ -7,9 +7,11 @@ import {
   createDOMWrapper,
   registerFactory
 } from './wrapperFactory'
-import type { RefSelector } from './types'
+import type { RefSelector, VueElement } from './types'
 import { isRefSelector } from './utils'
 import { createWrapperError } from './errorWrapper'
+import { getRootNodes } from './utils/getRootNodes'
+import { isElement } from './utils/isElement'
 
 export class DOMWrapper<NodeType extends Node> extends BaseWrapper<NodeType> {
   protected readonly subTree: VNode | null | undefined = null
@@ -25,17 +27,36 @@ export class DOMWrapper<NodeType extends Node> extends BaseWrapper<NodeType> {
     config.plugins.DOMWrapper.extend(this)
   }
 
+  private get hasFragmentRoot(): boolean {
+    return (
+      this.subTree?.type === Fragment && Array.isArray(this.subTree?.children)
+    )
+  }
+
+  // the anchor has no component reference, walk up from a root element
+  private getFragmentComponent() {
+    const rootElement = getRootNodes(this.subTree!).find(isElement) as
+      | VueElement
+      | undefined
+    let component = rootElement?.__vueParentComponent
+    while (component && component.subTree.el !== this.element) {
+      component = component.parent ?? undefined
+    }
+    return component
+  }
+
   getRootNodes() {
-    if (
-      this.subTree?.type === Fragment &&
-      Array.isArray(this.subTree?.children)
-    ) {
-      return this.subTree.children.map(node => (node as any)?.el)
+    if (this.hasFragmentRoot) {
+      // the wrapped element is only the fragment anchor, collect nested roots
+      return getRootNodes(this.getFragmentComponent()?.subTree ?? this.subTree!)
     }
     return [this.wrapperElement]
   }
 
   getCurrentComponent() {
+    if (this.hasFragmentRoot) {
+      return this.getFragmentComponent()
+    }
     let component = this.element.__vueParentComponent
     while (component?.parent?.vnode.el === this.element) {
       component = component.parent
@@ -70,6 +91,9 @@ export class DOMWrapper<NodeType extends Node> extends BaseWrapper<NodeType> {
   ): DOMWrapper<SVGElementTagNameMap[K]>[]
   findAll<T extends Element>(selector: string): DOMWrapper<T>[]
   findAll(selector: string): DOMWrapper<Element>[] {
+    if (this.hasFragmentRoot) {
+      return this.findAllDOMElements(selector).map(e => createDOMWrapper(e))
+    }
     if (!(this.wrapperElement instanceof Element)) {
       return []
     }
@@ -80,6 +104,8 @@ export class DOMWrapper<NodeType extends Node> extends BaseWrapper<NodeType> {
 
   findAllComponents(selector: any): any {
     const results = super.findAllComponents(selector)
+    // the current component is the functional one, so results are already scoped
+    if (this.hasFragmentRoot) return results
     return results.filter((r: WrapperLike) => this.element.contains(r.element))
   }
 

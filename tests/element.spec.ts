@@ -1,5 +1,11 @@
 import { describe, expect, it, vi } from 'vitest'
-import { defineComponent, h } from 'vue'
+import {
+  type FunctionalComponent,
+  defineComponent,
+  h,
+  nextTick,
+  ref
+} from 'vue'
 
 import { mount } from '../src'
 
@@ -88,6 +94,73 @@ describe('element', () => {
       '<div>foo</div>\n<div>bar</div>'
     )
     expect(wrapper.findComponent(Func).text()).toBe('foobar')
+  })
+
+  it('returns correct output for functional component with nested array roots', () => {
+    const Func: FunctionalComponent = (_, { slots }) => [
+      h('h1', {}, 'title'),
+      slots.default?.()
+    ]
+
+    const Parent = defineComponent({
+      components: { Func },
+      template: '<div><Func><span>foo</span><span>bar</span></Func></div>'
+    })
+    const func = mount(Parent).findComponent(Func)
+
+    expect(func.html()).toBe(
+      '<h1>title</h1>\n<span>foo</span>\n<span>bar</span>'
+    )
+    expect(func.text()).toBe('titlefoobar')
+  })
+
+  it('finds elements inside functional component with multiple roots', () => {
+    const Func = () => [
+      h('div', { class: 'foo' }, [h('span', {}, 'nested')]),
+      h('div', { class: 'bar' }, 'bar')
+    ]
+
+    const Parent = defineComponent({
+      components: { Func },
+      template: '<div><Func/><div class="outside" /></div>'
+    })
+    const func = mount(Parent).findComponent(Func)
+
+    expect(func.get('span').text()).toBe('nested')
+    expect(func.findAll('div')).toHaveLength(2)
+    expect(func.find('.outside').exists()).toBe(false)
+  })
+
+  it('finds components inside functional component with multiple roots', () => {
+    const Child = defineComponent({ name: 'Child', render: () => h('i') })
+    const MultiRoot = defineComponent({ render: () => [h('b'), h('b')] })
+    const Func = () => [h(Child), h(MultiRoot)]
+
+    const Parent = defineComponent({
+      components: { Func, Child },
+      template: '<div><Func/><Child/></div>'
+    })
+    const func = mount(Parent).findComponent(Func)
+
+    expect(func.findAllComponents(Child)).toHaveLength(1)
+    expect(func.findComponent(MultiRoot).exists()).toBe(true)
+  })
+
+  it('finds components inside functional component with multiple roots after re-render', async () => {
+    const Child = defineComponent({ name: 'Child', render: () => h('i') })
+    const Func: FunctionalComponent<{ count: number }> = props =>
+      Array.from({ length: props.count }, (_, i) => h(Child, { key: i }))
+    const count = ref(1)
+    const Parent = defineComponent({
+      render: () => h('div', [h(Func, { count: count.value })])
+    })
+    const func = mount(Parent).findComponent(Func)
+
+    count.value = 2
+    await nextTick()
+
+    expect(func.findAllComponents(Child)).toHaveLength(2)
+    expect(func.findAll('i')).toHaveLength(2)
   })
 
   it('text() reads DOM content for single-root components with empty vnode children', () => {
