@@ -63,6 +63,13 @@ const functionalComponentWithEmitsByType = wrapper.findComponent(
 )
 expectType<DOMWrapper<Node>>(functionalComponentWithEmitsByType)
 
+// find by type - selector typed as `any`, e.g. a component from an untyped
+// module or a `.vue` import resolved without Vue language support
+const AnyComponent: any = ComponentToFind
+const componentByAny = wrapper.findComponent(AnyComponent)
+expectType<VueWrapper<any>>(componentByAny)
+expectType<any>(componentByAny.vm)
+
 // find by string
 const componentByString = wrapper.findComponent('.foo')
 expectType<WrapperLike>(componentByString)
