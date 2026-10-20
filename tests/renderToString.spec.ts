@@ -83,4 +83,16 @@ describe('renderToString', () => {
 
     spy.mockRestore()
   })
+
+  it('applies a global mock named after an internal instance field', async () => {
+    const Component = defineComponent({
+      template: '<div>{{ $u.title }}</div>'
+    })
+
+    const contents = await renderToString(Component, {
+      global: { mocks: { $u: { title: 'mocked' } } }
+    })
+
+    expect(contents).toBe('<div>mocked</div>')
+  })
 })
