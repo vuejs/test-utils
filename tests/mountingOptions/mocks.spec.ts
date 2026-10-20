@@ -151,4 +151,43 @@ describe('mocks', () => {
     expect(wrapper.text()).toContain('hello')
     expect(wrapper.text()).toContain('mocked')
   })
+
+  it('mocks a global property named after an internal instance field', () => {
+    // `$u` (uView) matches the internal `u` field of the component instance
+    const Foo = defineComponent({
+      template: '<div>{{ $u.title }} {{ title }}</div>',
+      data() {
+        return { title: (this as any).$u.title }
+      }
+    })
+
+    const wrapper = mount(Foo, {
+      global: {
+        mocks: { $u: { title: 'mocked' } }
+      }
+    })
+
+    expect(wrapper.text()).toBe('mocked mocked')
+  })
+
+  it('overrides a global property named after an internal instance field', () => {
+    const Foo = defineComponent({
+      template: '<div>{{ $u.title }}</div>'
+    })
+
+    const wrapper = mount(Foo, {
+      global: {
+        plugins: [
+          {
+            install(app) {
+              app.config.globalProperties.$u = { title: 'real' }
+            }
+          }
+        ],
+        mocks: { $u: { title: 'mocked' } }
+      }
+    })
+
+    expect(wrapper.text()).toBe('mocked')
+  })
 })

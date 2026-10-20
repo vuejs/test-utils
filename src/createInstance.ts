@@ -246,7 +246,18 @@ export function createInstance(
           for (const [k, v] of Object.entries(
             global.mocks as { [key: string]: any }
           )) {
-            ;(this as any)[k] = v
+            // the proxy rejects `$x` when `x` is an internal instance field
+            // (e.g. `$u` from uView), so we define these directly on the context
+            if (k[0] === '$' && k.slice(1) in this.$) {
+              Object.defineProperty((this.$ as any).ctx, k, {
+                configurable: true,
+                enumerable: true,
+                writable: true,
+                value: v
+              })
+            } else {
+              ;(this as any)[k] = v
+            }
           }
         }
       }
