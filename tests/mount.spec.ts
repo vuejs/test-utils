@@ -118,4 +118,25 @@ describe('mount: general tests', () => {
     wrapper.unmount()
     expect(document.body.firstChild, 'Container should be empty').toBeNull()
   })
+
+  // app.onUnmount only exists since Vue 3.5
+  it('supports attachTo without app.onUnmount', () => {
+    const wrapper = mount(Hello, {
+      props: { msg: 'Hello world' },
+      attachTo: document.body,
+      global: {
+        plugins: [
+          {
+            install(app: any) {
+              app.onUnmount = undefined
+            }
+          }
+        ]
+      }
+    })
+    expect(document.body.firstChild).toBeInstanceOf(HTMLDivElement)
+
+    wrapper.unmount()
+    expect(document.body.firstChild).toBeNull()
+  })
 })
