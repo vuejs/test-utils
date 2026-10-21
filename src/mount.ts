@@ -100,16 +100,23 @@ export function mount(
     }
 
     to.appendChild(el)
-    // wrap app.unmount, as app.onUnmount is only available since Vue 3.5
-    const unmount = app.unmount
-    app.unmount = () => {
-      try {
-        unmount()
-      } finally {
-        // The wrapper may already have been manually unmounted before auto-unmount
-        // runs, so the container can already be removed from its parent.
-        if (el.parentNode === to) {
-          to.removeChild(el)
+    const removeContainer = () => {
+      // The wrapper may already have been manually unmounted before auto-unmount
+      // runs, so the container can already be removed from its parent.
+      if (el.parentNode === to) {
+        to.removeChild(el)
+      }
+    }
+    if (app.onUnmount) {
+      app.onUnmount(removeContainer)
+    } else {
+      // app.onUnmount is only available since Vue 3.5
+      const unmount = app.unmount
+      app.unmount = () => {
+        try {
+          unmount()
+        } finally {
+          removeContainer()
         }
       }
     }
