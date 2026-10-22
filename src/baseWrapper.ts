@@ -191,11 +191,17 @@ export default abstract class BaseWrapper<
       matches(currentComponent.vnode, selector) &&
       this.element.contains(currentComponent.vnode.el as Node)
     ) {
+      const rootComponent = currentComponent.subTree.component
+      // a functional root component has no proxy, wrap it like findAllComponents does
+      if (rootComponent && !rootComponent.proxy) {
+        return createDOMWrapper(
+          rootComponent.vnode.el as Element,
+          rootComponent.subTree
+        )
+      }
       return createVueWrapper(
         null,
-        currentComponent.subTree.component
-          ? currentComponent.subTree.component.proxy!
-          : currentComponent.proxy!
+        rootComponent ? rootComponent.proxy! : currentComponent.proxy!
       )
     }
 

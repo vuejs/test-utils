@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { defineComponent, h, nextTick } from 'vue'
-import { mount } from '../src'
+import { DOMWrapper, mount } from '../src'
 import Hello from './components/Hello.vue'
 import ComponentWithoutName from './components/ComponentWithoutName.vue'
 import ScriptSetupWithChildren from './components/ScriptSetupWithChildren.vue'
@@ -425,6 +425,36 @@ describe('findComponent', () => {
       }
     })
     expect(wrapper.findComponent(Func).exists()).toBe(true)
+  })
+
+  it('finds a functional root component by dom selector', () => {
+    const Func = (_: unknown, { slots }: any) =>
+      h('div', { class: 'card' }, slots.default?.())
+    const Comp = defineComponent({
+      components: { Func },
+      template: '<Func><span>content</span></Func>'
+    })
+    const wrapper = mount(Comp)
+    expect(wrapper.findComponent('.card')).toBeInstanceOf(DOMWrapper)
+    expect(wrapper.findComponent('.card').text()).toBe('content')
+    expect(wrapper.getComponent('.card').text()).toBe('content')
+    expect(mount(Func).findComponent('.card').exists()).toBe(true)
+
+    const Outer = defineComponent({
+      components: { Comp },
+      template: '<section><Comp /></section>'
+    })
+    expect(mount(Outer).find('.card').findComponent('.card').exists()).toBe(
+      true
+    )
+  })
+
+  it('finds the root element of a transition by dom selector', () => {
+    const Comp = defineComponent({
+      template: '<transition><div class="panel">content</div></transition>'
+    })
+    const wrapper = mount(Comp, { global: { stubs: { transition: false } } })
+    expect(wrapper.findComponent('.panel').text()).toBe('content')
   })
 
   describe('chaining from dom wrapper', () => {
