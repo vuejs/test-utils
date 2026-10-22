@@ -197,6 +197,80 @@ describe('setData', () => {
     expect(wrapper.vm.value!.toISOString()).toBe('2022-08-11T12:15:54.000Z')
   })
 
+  it('should keep Map and Set objects on setData', async () => {
+    const wrapper = mount(
+      defineComponent({
+        template: '<div>{{ selected.size }} {{ labels.size }}</div>',
+        data() {
+          return {
+            selected: new Set([1]),
+            labels: new Map([[1, 'one']])
+          }
+        }
+      })
+    )
+
+    await wrapper.setData({
+      selected: new Set([2, 3]),
+      labels: new Map([
+        [2, 'two'],
+        [3, 'three']
+      ])
+    })
+
+    expect(wrapper.vm.selected).toBeInstanceOf(Set)
+    expect([...wrapper.vm.selected]).toEqual([2, 3])
+    expect(wrapper.vm.labels).toBeInstanceOf(Map)
+    expect([...wrapper.vm.labels]).toEqual([
+      [2, 'two'],
+      [3, 'three']
+    ])
+    expect(wrapper.text()).toBe('2 2')
+  })
+
+  it('should keep WeakMap and WeakSet objects on setData', async () => {
+    const key = {}
+    const wrapper = mount(
+      defineComponent({
+        template: '<div />',
+        data() {
+          return {
+            cache: new WeakMap<object, number>(),
+            seen: new WeakSet<object>()
+          }
+        }
+      })
+    )
+
+    await wrapper.setData({
+      cache: new WeakMap([[key, 1]]),
+      seen: new WeakSet([key])
+    })
+
+    expect(wrapper.vm.cache.get(key)).toBe(1)
+    expect(wrapper.vm.seen.has(key)).toBe(true)
+  })
+
+  it('should keep Set objects on setData for data returned from setup()', async () => {
+    const wrapper = mount({
+      template: '<div>{{ selected.size }}</div>',
+      setup() {
+        return {
+          selected: ref(new Set([1])),
+          tags: ref<Set<string> | null>(null)
+        }
+      }
+    })
+
+    await wrapper.setData({ selected: new Set([2, 3]), tags: new Set(['a']) })
+
+    expect(wrapper.vm.selected).toBeInstanceOf(Set)
+    expect([...wrapper.vm.selected]).toEqual([2, 3])
+    expect(wrapper.vm.tags).toBeInstanceOf(Set)
+    expect([...wrapper.vm.tags!]).toEqual(['a'])
+    expect(wrapper.text()).toBe('2')
+  })
+
   it('should retain prototype methods for constructed objects when calling setData', async () => {
     const expectedResult = 'success!'
     class TestClass {
