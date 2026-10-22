@@ -91,6 +91,14 @@ function isClass(obj: unknown) {
   return isCtorClass || isPrototypeCtorClass
 }
 
+// Map, Set, WeakMap and WeakSet keep their entries outside their own
+// properties, so merging them key by key would leave an empty object
+const isCollection = (obj: unknown) =>
+  obj instanceof Map ||
+  obj instanceof Set ||
+  obj instanceof WeakMap ||
+  obj instanceof WeakSet
+
 // https://stackoverflow.com/a/48218209
 export const mergeDeep = (
   target: Record<string, unknown>,
@@ -112,7 +120,7 @@ export const mergeDeep = (
 
       if (Array.isArray(targetValue) && Array.isArray(sourceValue)) {
         target[key] = sourceValue
-      } else if (sourceValue instanceof Date) {
+      } else if (sourceValue instanceof Date || isCollection(sourceValue)) {
         target[key] = sourceValue
       } else if (isObject(targetValue) && isObject(sourceValue)) {
         target[key] = mergeDeep(Object.assign({}, targetValue), sourceValue)
