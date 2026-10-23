@@ -1171,6 +1171,40 @@ describe('mounting options: stubs', () => {
       expect(wrapper.html()).toBe('<div class="DirectiveAdded">text</div>')
     })
 
+    it('stubs directive registered with a camelCase name', () => {
+      const Component = {
+        template: '<div v-my-directive>text</div>',
+        directives: { myDirective: MyDirective }
+      }
+
+      const wrapper = mount(Component, {
+        global: {
+          stubs: {
+            vMyDirective: MyDirectiveStub
+          }
+        }
+      })
+
+      expect(wrapper.html()).toBe('<div class="DirectiveStubAdded">text</div>')
+    })
+
+    it('stubs directive registered with a kebab-case name', () => {
+      const Component = {
+        template: '<div v-my-directive>text</div>',
+        directives: { 'my-directive': MyDirective }
+      }
+
+      const wrapper = mount(Component, {
+        global: {
+          stubs: {
+            vMyDirective: true
+          }
+        }
+      })
+
+      expect(wrapper.html()).toBe('<div>text</div>')
+    })
+
     it('stubs directive on child component', () => {
       const Component = {
         template: '<div v-my-directive>text</div>',
