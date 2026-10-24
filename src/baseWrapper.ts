@@ -180,7 +180,7 @@ export default abstract class BaseWrapper<
         result = result.length ? result[0] : undefined
       }
 
-      if (result && !(result instanceof HTMLElement)) {
+      if (result && !(result instanceof Node)) {
         return createVueWrapper(null, result as ComponentPublicInstance)
       } else {
         return createWrapperError('VueWrapper')
