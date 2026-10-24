@@ -61,6 +61,15 @@ describe('findComponent', () => {
     expect(wrapper.findComponent({ ref: 'hello' }).exists()).toBe(false)
   })
 
+  it('does not find svg element by ref', () => {
+    const ComponentWithRefOnSvgElement = defineComponent({
+      template: '<svg ref="hello"><circle /></svg>'
+    })
+    const wrapper = mount(ComponentWithRefOnSvgElement)
+
+    expect(wrapper.findComponent({ ref: 'hello' }).exists()).toBe(false)
+  })
+
   it('finds component by dom selector', () => {
     const wrapper = mount(compA)
     // find by DOM selector
