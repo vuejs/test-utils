@@ -1,6 +1,12 @@
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import type { FunctionalComponent, SetupContext } from 'vue'
-import { defineComponent, getCurrentInstance, h, setDevtoolsHook } from 'vue'
+import {
+  defineComponent,
+  getCurrentInstance,
+  h,
+  onBeforeUnmount,
+  setDevtoolsHook
+} from 'vue'
 import EmitsEventSFC from './components/EmitsEventSFC.vue'
 import EmitsEventScriptSetup from './components/EmitsEventScriptSetup.vue'
 
@@ -416,6 +422,44 @@ describe('emitted', () => {
     wrapper.unmount()
 
     expect(child.emitted('foo')).toBeUndefined()
+  })
+
+  it('clears events emitted during unmount', async () => {
+    const Component = defineComponent({
+      emits: ['leave'],
+      setup(_, { emit }) {
+        onBeforeUnmount(() => emit('leave', 'bye'))
+        return () => h('div', 'hello')
+      }
+    })
+
+    const wrapper = mount(Component)
+    wrapper.unmount()
+
+    expect(wrapper.emitted('leave')).toBeUndefined()
+    expect(wrapper.emitted()).toEqual({})
+  })
+
+  it('clears events emitted by child components during unmount', async () => {
+    const Child = defineComponent({
+      name: 'Child',
+      emits: ['leave'],
+      setup(_, { emit }) {
+        onBeforeUnmount(() => emit('leave', 'bye'))
+        return () => h('div', 'child')
+      }
+    })
+    const Parent = defineComponent({
+      name: 'Parent',
+      render: () => h(Child)
+    })
+
+    const wrapper = mount(Parent)
+    const child = wrapper.findComponent(Child)
+
+    wrapper.unmount()
+
+    expect(child.emitted('leave')).toBeUndefined()
   })
 
   describe('with a devtools hook', () => {
