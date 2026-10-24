@@ -320,13 +320,16 @@ export class VueWrapper<
         `wrapper.unmount() can only be called by the root wrapper`
       )
     }
-    // Clear emitted events cache for this component instance
-    removeEventHistory(this.vm)
-
     this.cleanUpCallbacks.forEach(cb => cb())
     this.cleanUpCallbacks = []
 
-    this.__app.unmount()
+    try {
+      this.__app.unmount()
+    } finally {
+      // the emit recorder is still active while unmounting, so clear the
+      // history afterwards to also drop events emitted by unmount hooks
+      removeEventHistory(this.vm)
+    }
   }
 }
 
