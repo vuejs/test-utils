@@ -71,6 +71,18 @@ export const createVNodeTransformer = ({
     VNodeTransformerInputComponentType
   > = new WeakMap()
 
+  // Types the transformers left untouched, keyed by the instance that rendered
+  // them. Deciding whether a type gets stubbed requires resolving its name,
+  // which scans the rendering instance's component registry and its
+  // `setupState` -- costly under `<script setup>`, where every binding lands in
+  // `setupState`. That result only depends on the rendering instance, so the
+  // negative one is cached too instead of being recomputed on every re-render.
+  // See https://github.com/vuejs/test-utils/issues/2986
+  const untransformedCache: WeakMap<
+    NonNullable<InstanceArgsType>,
+    WeakSet<VNodeTransformerInputComponentType & object>
+  > = new WeakMap()
+
   registerRootComponent(rootComponents.component)
   registerRootComponent(rootComponents.functional)
 
@@ -94,6 +106,10 @@ export const createVNodeTransformer = ({
       return [cachedTransformation, props, children, ...restVNodeArgs]
     }
 
+    if (instance && untransformedCache.get(instance)?.has(componentType)) {
+      return [originalType, props, children, ...restVNodeArgs]
+    }
+
     const transformedType = transformers.reduce(
       (type, transformer) => transformer(type, instance),
       componentType
@@ -108,6 +124,13 @@ export const createVNodeTransformer = ({
       if (isTeleport(originalType) || isKeepAlive(originalType)) {
         return [transformedType, props, () => children, ...restVNodeArgs]
       }
+    } else if (instance) {
+      let untransformed = untransformedCache.get(instance)
+      if (!untransformed) {
+        untransformed = new WeakSet()
+        untransformedCache.set(instance, untransformed)
+      }
+      untransformed.add(componentType)
     }
     return [transformedType, props, children, ...restVNodeArgs]
   }
