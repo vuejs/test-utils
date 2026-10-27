@@ -2048,3 +2048,27 @@ expect(wrapper.findComponent(RouterLinkStub).props().to).toBe('/some/path')
 **使用插槽：**
 
 `RouterLinkStub` 组件支持插槽内容，并将为其插槽属性返回非常基本的值。如果你需要更具体的插槽属性值进行测试，考虑使用[真实路由](../guide/advanced/vue-router.html#using-a-real-router)，这样你可以使用真实的 `router-link` 组件。或者，你可以通过复制 test-utils 包中的实现来定义自己的 `RouterLinkStub` 组件。
+
+### TeleportStub
+
+一个将其默认插槽内容原地渲染、而不会传送到目标元素的组件。
+
+当你希望 Teleport 替身的行为更接近真实组件时可以使用它。与默认的 teleport 替身不同，渲染在 `TeleportStub` 内部的子组件在父组件重新渲染时不会被卸载再重新挂载。
+
+**用法：**
+
+```js
+import { mount, TeleportStub } from '@vue/test-utils'
+
+const wrapper = mount(Component, {
+  global: {
+    stubs: {
+      Teleport: TeleportStub
+    }
+  }
+})
+
+expect(wrapper.findComponent(TeleportStub).exists()).toBe(true)
+```
+
+任何其他组件都可以以同样的方式用作内建替身值，例如 `stubs: { Teleport: MyTeleportStub }`。
