@@ -2058,3 +2058,27 @@ expect(wrapper.findComponent(RouterLinkStub).props().to).toBe('/some/path')
 **Usage with slot:**
 
 The `RouterLinkStub` component supports slot content and will return very basic values for its slot props. If you need more specific slot prop values for your tests, consider using a [real router](../guide/advanced/vue-router.html#using-a-real-router) so you can use a real `router-link` component. Alternatively, you can define your own `RouterLinkStub` component by copying the implementation from the test-utils package.
+
+### TeleportStub
+
+A component that renders its default slot content in place, without teleporting it to a target element.
+
+Use it to opt in to a Teleport replacement that behaves closer to the real component. Unlike the default teleport stub, child components rendered inside `TeleportStub` are not unmounted and remounted when the parent re-renders.
+
+**Usage:**
+
+```js
+import { mount, TeleportStub } from '@vue/test-utils'
+
+const wrapper = mount(Component, {
+  global: {
+    stubs: {
+      Teleport: TeleportStub
+    }
+  }
+})
+
+expect(wrapper.findComponent(TeleportStub).exists()).toBe(true)
+```
+
+Any other component can be used as a built-in stub value the same way, e.g. `stubs: { Teleport: MyTeleportStub }`.
