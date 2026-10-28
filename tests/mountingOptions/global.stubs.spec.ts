@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import type { Directive } from 'vue'
-import { defineAsyncComponent, defineComponent, h } from 'vue'
+import { defineAsyncComponent, defineComponent, h, nextTick, ref } from 'vue'
 import { RouterLinkStub, config, flushPromises, mount } from '../../src'
 import Hello from '../components/Hello.vue'
 import ComponentWithoutName from '../components/ComponentWithoutName.vue'
@@ -1054,6 +1054,78 @@ describe('mounting options: stubs', () => {
     const stubAfterSecondRender = wrapper.findComponent({ name: 'FooBar' })
 
     expect(stub.vm).toBe(stubAfterSecondRender.vm)
+  })
+
+  it('does not scan setup state on every re-render when nothing is stubbed', async () => {
+    let ownKeysCalls = 0
+
+    const Badge = defineComponent({
+      name: 'Badge',
+      props: { n: Number },
+      render() {
+        return h('span', this.n)
+      }
+    })
+
+    const Parent = defineComponent({
+      setup() {
+        // Written like a compiled `<script setup>` in dev mode: the bindings
+        // are returned from `setup` and end up in `setupState`.
+        const bindings: Record<string, unknown> = { Badge, tick: ref(0) }
+        for (let i = 0; i < 40; i++) {
+          bindings[`helper${i}`] = () => i
+        }
+
+        return new Proxy(bindings, {
+          ownKeys(target) {
+            ownKeysCalls++
+            return Reflect.ownKeys(target)
+          }
+        })
+      },
+      render() {
+        return h(
+          'div',
+          Array.from({ length: 100 }, (_, i) =>
+            h(Badge, { key: i, n: (this as any).tick + i })
+          )
+        )
+      }
+    })
+
+    const wrapper = mount(Parent)
+    const callsAfterMount = ownKeysCalls
+
+    for (let i = 0; i < 10; i++) {
+      ;(wrapper.vm as any).tick++
+      await nextTick()
+    }
+
+    // the re-renders really happened
+    expect(wrapper.html()).toContain('<span>10</span>')
+    expect(ownKeysCalls).toBe(callsAfterMount)
+  })
+
+  it('keeps stubbing children on re-render with shallow', async () => {
+    const Badge = defineComponent({
+      name: 'Badge',
+      render: () => h('span', 'real badge')
+    })
+
+    const Parent = defineComponent({
+      data: () => ({ tick: 0 }),
+      render() {
+        return h('div', [String(this.tick), h(Badge)])
+      }
+    })
+
+    const wrapper = mount(Parent, { shallow: true })
+    expect(wrapper.html()).toContain('badge-stub')
+
+    await wrapper.setData({ tick: 1 })
+
+    expect(wrapper.html()).toContain('badge-stub')
+    expect(wrapper.html()).not.toContain('real badge')
   })
 
   describe('directives', () => {
