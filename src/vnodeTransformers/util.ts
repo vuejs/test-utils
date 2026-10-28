@@ -106,7 +106,11 @@ export const createVNodeTransformer = ({
       // https://github.com/vuejs/test-utils/issues/1829 & https://github.com/vuejs/test-utils/issues/1888
       // Teleport/KeepAlive should return child nodes as a function
       if (isTeleport(originalType) || isKeepAlive(originalType)) {
-        return [transformedType, props, () => children, ...restVNodeArgs]
+        // the patch flag was compiled for Teleport/KeepAlive, not for a stub
+        // rendering the children as a slot: bail out of optimized patching so
+        // the stub updates them on re-render
+        const [, ...rest] = restVNodeArgs
+        return [transformedType, props, () => children, -2 /* BAIL */, ...rest]
       }
     }
     return [transformedType, props, children, ...restVNodeArgs]

@@ -183,6 +183,56 @@ describe('teleport', () => {
     expect(wrapper.find('#count').text()).toBe('2')
   })
 
+  it('updates the content of a teleport stubbed with a component', async () => {
+    const Child = defineComponent({
+      props: { count: Number },
+      template: '<span id="child">{{ count }}</span>'
+    })
+    const Comp = defineComponent({
+      components: { Child },
+      props: { count: Number },
+      template: `
+        <div>
+          <teleport to="body">
+            <div id="count">{{ count }}</div>
+            <Child :count="count" />
+          </teleport>
+        </div>`
+    })
+
+    for (const stub of [TeleportStub, { template: '<div><slot /></div>' }]) {
+      const wrapper = mount(Comp, {
+        props: { count: 1 },
+        global: { stubs: { Teleport: stub } }
+      })
+
+      await wrapper.setProps({ count: 2 })
+
+      expect(wrapper.find('#count').text()).toBe('2')
+      expect(wrapper.find('#child').text()).toBe('2')
+    }
+  })
+
+  it('updates the props of a teleport stub in a render function', async () => {
+    const CustomTeleportStub = defineComponent({
+      props: { to: String },
+      template: '<div :id="to"><slot /></div>'
+    })
+    const Comp = defineComponent({
+      props: { to: String },
+      setup: props => () =>
+        h('div', [h(Teleport, { to: props.to }, [h('span')])])
+    })
+    const wrapper = mount(Comp, {
+      props: { to: 'a' },
+      global: { stubs: { Teleport: CustomTeleportStub } }
+    })
+
+    await wrapper.setProps({ to: 'b' })
+
+    expect(wrapper.find('#b').exists()).toBe(true)
+  })
+
   // https://github.com/vuejs/test-utils/issues/2628
   it('keeps children mounted across re-renders when using TeleportStub', async () => {
     const lifecycleEvents: string[] = []
