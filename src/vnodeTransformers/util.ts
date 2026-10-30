@@ -103,11 +103,20 @@ export const createVNodeTransformer = ({
       transformationCache.set(originalType, transformedType)
 
       registerStub({ source: originalType, stub: transformedType })
+    }
+
+    if (isTeleport(originalType) || isKeepAlive(originalType)) {
       // https://github.com/vuejs/test-utils/issues/1829 & https://github.com/vuejs/test-utils/issues/1888
       // Teleport/KeepAlive should return child nodes as a function
-      if (isTeleport(originalType) || isKeepAlive(originalType)) {
-        return [transformedType, props, () => children, ...restVNodeArgs]
-      }
+      const [, /* patchFlag */ dynamicProps, ...restRest] = restVNodeArgs
+      return [
+        transformedType,
+        props,
+        () => children,
+        -2 /* Bail out of optimized patching */,
+        dynamicProps,
+        ...restRest
+      ]
     }
     return [transformedType, props, children, ...restVNodeArgs]
   }
