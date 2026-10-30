@@ -4,7 +4,7 @@ import vue from '@vitejs/plugin-vue'
 import jsx from '@vitejs/plugin-vue-jsx'
 import Components from 'unplugin-vue-components/vite'
 
-export default defineConfig({
+export default defineConfig(({ mode }) => ({
   plugins: [
     vue(),
     jsx(),
@@ -18,7 +18,7 @@ export default defineConfig({
     })
   ],
   define: {
-    __USE_BUILD__: process.env.NODE_ENV !== 'test-build',
+    __USE_BUILD__: mode !== 'test-build',
     __BROWSER__: true,
     __USE_PREFIX_IDENTIFIERS__: true
   },
@@ -46,4 +46,4 @@ export default defineConfig({
       '@vue/compat': '@vue/compat/dist/vue.esm-bundler.js'
     }
   }
-})
+}))
