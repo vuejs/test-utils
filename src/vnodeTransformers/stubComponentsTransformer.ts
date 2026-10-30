@@ -17,7 +17,7 @@ import {
   defineComponent,
   h
 } from 'vue'
-import { camelize, hyphenate } from '../utils/vueShared'
+import { camelize, capitalize, hyphenate } from '../utils/vueShared'
 import { matchName } from '../utils/matchName'
 import { isComponent, isFunctionalComponent } from '../utils'
 import { unwrapLegacyVueExtendComponent } from '../utils/vueCompatSupport'
@@ -211,6 +211,30 @@ export function createStubComponentsTransformer({
   shallow = false,
   renderStubDefaultSlot = false
 }: CreateStubComponentsTransformerConfig): VTUVNodeTypeTransformer {
+  // `app.component()` registrations (e.g. from a plugin) can use a key that
+  // differs from the component name, like naive-ui's `NButton` (name `Button`)
+  const globalStubKeys = new WeakMap<object, Map<unknown, string>>()
+  const getGlobalStubKey = (
+    registry: Record<string, Component>,
+    type: VNodeTypes
+  ) => {
+    let stubKeys = globalStubKeys.get(registry)
+    if (!stubKeys) {
+      stubKeys = new Map()
+      for (const stubKey in stubs) {
+        for (const key of [
+          stubKey,
+          capitalize(camelize(stubKey)),
+          hyphenate(stubKey)
+        ]) {
+          stubKeys.set(registry[key], stubKey)
+        }
+      }
+      globalStubKeys.set(registry, stubKeys)
+    }
+    return stubKeys.get(type)
+  }
+
   return function componentsTransformer(type, instance) {
     for (const tag in DEFAULT_STUBS) {
       const predicate = DEFAULT_STUBS[tag as keyof typeof DEFAULT_STUBS]
@@ -237,8 +261,20 @@ export function createStubComponentsTransformer({
       }
     }
 
-    // Prio 2 using the name attribute in the component
-    if (!stub && componentName) {
+    // Prio 2 using the key in globally registered components
+    if (stub == null && instance) {
+      const globalStubKey = getGlobalStubKey(
+        instance.appContext.components,
+        type
+      )
+      if (globalStubKey) {
+        stub = stubs[globalStubKey]
+        name = globalStubKey
+      }
+    }
+
+    // Prio 3 using the name attribute in the component
+    if (stub == null && componentName) {
       stub = resolveComponentStubByName(componentName, stubs)
       if (stub) {
         name = componentName
