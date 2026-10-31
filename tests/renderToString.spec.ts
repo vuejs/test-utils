@@ -4,7 +4,16 @@
  */
 
 import { describe, expect, it, vi } from 'vitest'
-import { defineComponent, onMounted, onServerPrefetch, ref } from 'vue'
+import {
+  Transition,
+  createSSRApp,
+  defineComponent,
+  h,
+  onMounted,
+  onServerPrefetch,
+  ref
+} from 'vue'
+import { renderToString as baseRenderToString } from '@vue/server-renderer'
 import { renderToString } from '../src'
 
 describe('renderToString', () => {
@@ -94,5 +103,18 @@ describe('renderToString', () => {
     })
 
     expect(contents).toBe('<div>mocked</div>')
+  })
+
+  it('does not stub a later render of another app', async () => {
+    const Component = defineComponent({
+      setup() {
+        const transition = h(Transition, () => h('p', 'hi'))
+        return () => transition
+      }
+    })
+
+    await renderToString(Component)
+
+    expect(await baseRenderToString(createSSRApp(Component))).toBe('<p>hi</p>')
   })
 })
