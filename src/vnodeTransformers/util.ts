@@ -1,6 +1,7 @@
 import { isComponent } from '../utils'
 import { registerStub } from '../stubs'
-import type { Component, ConcreteComponent, transformVNodeArgs } from 'vue'
+import { getCurrentInstance, transformVNodeArgs } from 'vue'
+import type { App, Component, ConcreteComponent } from 'vue'
 
 type VNodeArgsTransformerFn = NonNullable<
   Parameters<typeof transformVNodeArgs>[0]
@@ -23,27 +24,39 @@ export type VTUVNodeTypeTransformer = (
 export const isTeleport = (type: any): boolean => type.__isTeleport
 export const isKeepAlive = (type: any): boolean => type.__isKeepAlive
 
+// `transformVNodeArgs` is global and keeps only the last transformer, which would
+// also apply to wrappers mounted earlier and to apps not created by VTU (e.g. a
+// plain `createApp` or `createSSRApp` later in the same test file). Instead, a
+// single dispatcher applies the transformer of the app being rendered.
+// See https://github.com/vuejs/test-utils/issues/2675
+const appTransformers = new WeakMap<App, VNodeArgsTransformerFn>()
+let lastTransformer: VNodeArgsTransformerFn | undefined
+const dispatchVNodeTransformer: VNodeArgsTransformerFn = (args, instance) => {
+  // vnodes created in `setup` have no rendering instance
+  const owner = instance ?? getCurrentInstance()
+  // vnodes created outside of any component (event handlers, async callbacks)
+  // still go through the transformer of the last mounted wrapper
+  const transformer = owner
+    ? owner.appContext.app && appTransformers.get(owner.appContext.app)
+    : lastTransformer
+  return transformer ? transformer(args, instance) : args
+}
+
+export const installVNodeTransformer = (
+  app: App,
+  transformer: VNodeArgsTransformerFn
+): void => {
+  appTransformers.set(app, transformer)
+  lastTransformer = transformer
+  transformVNodeArgs(dispatchVNodeTransformer)
+}
+
 export interface RootComponents {
   // Component which has been passed to mount. For functional components it contains a wrapper
   component?: Component
   // If component is functional then contains the original component otherwise empty
   functional?: Component
 }
-// `transformVNodeArgs` is a global, last-call-wins Vue API, so when several
-// wrappers are mounted the active transformer only knows about the most
-// recently mounted root component. Track every mounted root component globally
-// so that re-rendering an earlier wrapper (e.g. via `setProps`) doesn't stub
-// its root just because another wrapper was mounted afterwards.
-// See https://github.com/vuejs/test-utils/issues/2675
-const mountedRootComponents = new WeakSet<object>()
-const registerRootComponent = (type?: Component): void => {
-  // WeakSet keys must be objects/functions; component definitions always are,
-  // but `Component` also allows a string name which we simply ignore.
-  if (type && typeof type !== 'string') {
-    mountedRootComponents.add(type)
-  }
-}
-
 export const isRootComponent = (
   rootComponents: RootComponents,
   type: VNodeTransformerInputComponentType,
@@ -52,9 +65,7 @@ export const isRootComponent = (
   !!(
     !instance ||
     // Don't stub mounted component on root level
-    ((rootComponents.component === type ||
-      mountedRootComponents.has(type as object)) &&
-      !instance?.parent) ||
+    (rootComponents.component === type && !instance?.parent) ||
     // Don't stub component with compat wrapper
     (rootComponents.functional && rootComponents.functional === type)
   )
@@ -70,9 +81,6 @@ export const createVNodeTransformer = ({
     VNodeTransformerInputComponentType,
     VNodeTransformerInputComponentType
   > = new WeakMap()
-
-  registerRootComponent(rootComponents.component)
-  registerRootComponent(rootComponents.functional)
 
   return (args: VNodeTransformerArgsType, instance: InstanceArgsType) => {
     const [originalType, props, children, ...restVNodeArgs] = args
