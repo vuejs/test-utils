@@ -272,4 +272,38 @@ describe('teleport', () => {
     // the child stays mounted: no unmount/remount cycle on re-render
     expect(lifecycleEvents).toEqual(['mounted'])
   })
+
+  it('stubs a teleport created in setup', () => {
+    const Comp = defineComponent({
+      setup() {
+        const teleport = h(Teleport, { to: 'body' }, h('div', 'content'))
+        return () => teleport
+      }
+    })
+
+    const wrapper = mount(Comp, { global: { stubs: { teleport: true } } })
+
+    expect(wrapper.html()).toBe(
+      '<teleport-stub to="body">\n' +
+        '  <div>content</div>\n' +
+        '</teleport-stub>'
+    )
+  })
+
+  it('stubs a teleport created in an event handler', async () => {
+    const Comp = defineComponent({
+      setup() {
+        const teleport = ref()
+        const open = () => {
+          teleport.value = h(Teleport, { to: 'body' }, h('div', 'content'))
+        }
+        return () => h('div', [h('button', { onClick: open }), teleport.value])
+      }
+    })
+
+    const wrapper = mount(Comp, { global: { stubs: { teleport: true } } })
+    await wrapper.find('button').trigger('click')
+
+    expect(wrapper.find('teleport-stub').exists()).toBe(true)
+  })
 })

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { defineAsyncComponent, defineComponent } from 'vue'
+import { createApp, defineAsyncComponent, defineComponent } from 'vue'
 import type { VueWrapper } from '../src'
 import { mount, shallowMount } from '../src'
 import ComponentWithChildren from './components/ComponentWithChildren.vue'
@@ -162,6 +162,37 @@ describe('shallowMount', () => {
     await wrapper.setProps({ msg: 'updated' })
 
     expect(wrapper.text()).toBe('updated')
+  })
+
+  it('keeps stubbing children after another wrapper is mounted', async () => {
+    const Child = defineComponent({ template: '<span>child</span>' })
+    const Parent = defineComponent({
+      props: { msg: String },
+      components: { Child },
+      template: '<div>{{ msg }}<Child /></div>'
+    })
+
+    const wrapper = shallowMount(Parent, { props: { msg: 'initial' } })
+    mount(Parent)
+
+    await wrapper.setProps({ msg: 'updated' })
+
+    expect(wrapper.text()).toBe('updated')
+    expect(wrapper.find('child-stub').exists()).toBe(true)
+  })
+
+  it('does not stub components of an app created with createApp', () => {
+    const Child = defineComponent({ template: '<span>child</span>' })
+    const Parent = defineComponent({
+      components: { Child },
+      template: '<div><Transition><Child /></Transition></div>'
+    })
+
+    shallowMount(Parent)
+    const el = document.createElement('div')
+    createApp(Parent).mount(el)
+
+    expect(el.innerHTML).toBe('<div><span>child</span></div>')
   })
 
   it('correctly renders slot content', () => {
