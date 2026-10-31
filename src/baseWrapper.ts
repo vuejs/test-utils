@@ -133,6 +133,10 @@ export default abstract class BaseWrapper<
       ? CreateComponentPublicInstance<Props, RawBindings, D, C, M>
       : VueWrapper<CreateComponentPublicInstance>
   >
+  // searching for component created via defineComponent results in VueWrapper of proper type
+  findComponent<T extends DefinedComponent>(
+    selector: T | Exclude<FindComponentSelector, FunctionalComponent<any>>
+  ): VueWrapper<InstanceType<T>>
   // Generic SFCs emitted by vue-tsc have a generic call signature instead of
   // the construct signature used by DefinedComponent. The discriminator is the
   // `__ctx` property on the return type that vue-tsc adds and ordinary generic
@@ -145,10 +149,6 @@ export default abstract class BaseWrapper<
     : '__ctx' extends keyof ReturnType<T>
       ? VueWrapper
       : DOMWrapper<Node>
-  // searching for component created via defineComponent results in VueWrapper of proper type
-  findComponent<T extends DefinedComponent>(
-    selector: T | Exclude<FindComponentSelector, FunctionalComponent<any>>
-  ): VueWrapper<InstanceType<T>>
   // searching for functional component results in DOMWrapper
   findComponent<T extends FunctionalComponent<any>>(
     selector: T
