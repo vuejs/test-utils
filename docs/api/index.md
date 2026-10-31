@@ -927,6 +927,56 @@ test('classes', () => {
 })
 ```
 
+### emit
+
+Emits a custom event from the component, as if the component called `$emit` itself.
+
+**Signature:**
+
+```ts
+emit(eventName: string, ...args: unknown[]): Promise<void>
+```
+
+**Details:**
+
+`trigger` only dispatches DOM events, so it cannot simulate a custom event emitted by a child component, for example one stubbed by `shallowMount`. Use `emit` instead. Event names and payloads are type-checked against the component's `emits`.
+
+`Component.vue`:
+
+```vue
+<template>
+  <DataGrid @ready="api = $event" />
+  <p v-if="api">Grid is ready</p>
+</template>
+
+<script setup>
+import { ref } from 'vue'
+import DataGrid from './DataGrid.vue'
+
+const api = ref(null)
+</script>
+```
+
+`Component.spec.js`:
+
+```js
+import { shallowMount } from '@vue/test-utils'
+import Component from './Component.vue'
+import DataGrid from './DataGrid.vue'
+
+test('emit', async () => {
+  const wrapper = shallowMount(Component)
+
+  await wrapper.findComponent(DataGrid).emit('ready', { refresh() {} })
+
+  expect(wrapper.find('p').exists()).toBe(true)
+})
+```
+
+::: warning
+Prefer triggering the event like a user would, with `trigger` on the child's elements. Use `emit` when the child is stubbed or too heavy to mount.
+:::
+
 ### emitted
 
 Returns all the emitted events from the Component.

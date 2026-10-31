@@ -257,6 +257,15 @@ export class VueWrapper<
     return emitted(this.vm, eventName)
   }
 
+  emit<N extends EmittedEventName<T> | (string & {})>(
+    eventName: N,
+    ...args: EmittedArgs<T, N>
+  ): Promise<void>
+  emit(eventName: string, ...args: unknown[]): Promise<void> {
+    this.vm.$emit(eventName, ...args)
+    return nextTick()
+  }
+
   isVisible(): boolean {
     const domWrapper = createDOMWrapper(this.element)
     return domWrapper.isVisible()
