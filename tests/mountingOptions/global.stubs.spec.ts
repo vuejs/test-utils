@@ -823,6 +823,66 @@ describe('mounting options: stubs', () => {
     expect(wrapper.html()).toBe('<span>MyComponentKey stubbed</span>')
   })
 
+  it('stubs a component by the key it is globally registered with', () => {
+    const TestComponent = defineComponent({
+      template: '<div><n-button /><NButton /><n-icon /><nTag /></div>'
+    })
+
+    const wrapper = mount(TestComponent, {
+      global: {
+        plugins: [
+          {
+            install(app) {
+              app.component('NButton', {
+                name: 'Button',
+                template: '<button />'
+              })
+              app.component('n-icon', { name: 'Icon', template: '<i />' })
+              app.component('nTag', { name: 'Tag', template: '<b />' })
+            }
+          }
+        ],
+        stubs: { 'n-button': true, NIcon: true, nTag: true }
+      }
+    })
+
+    expect(wrapper.html()).toBe(
+      '<div>\n' +
+        '  <n-button-stub></n-button-stub>\n' +
+        '  <n-button-stub></n-button-stub>\n' +
+        '  <n-icon-stub></n-icon-stub>\n' +
+        '  <n-tag-stub></n-tag-stub>\n' +
+        '</div>'
+    )
+  })
+
+  it('opts out of stubbing a component by its registered key with shallow', () => {
+    const Button = defineComponent({
+      name: 'Button',
+      template: '<button>real button</button>'
+    })
+    const Card = defineComponent({
+      name: 'Card',
+      template: '<section>real card</section>'
+    })
+
+    const TestComponent = defineComponent({
+      components: { LocalCard: Card },
+      template: '<div><NButton /><LocalCard /></div>'
+    })
+
+    const wrapper = mount(TestComponent, {
+      shallow: true,
+      global: {
+        plugins: [{ install: app => app.component('NButton', Button) }],
+        stubs: { NButton: false, LocalCard: false }
+      }
+    })
+
+    expect(wrapper.html()).toContain('<button>real button</button>')
+    expect(wrapper.html()).toContain('<section>real card</section>')
+  })
+
   describe('stub async component', () => {
     const AsyncComponentWithoutName = defineAsyncComponent(async () => ({
       template: '<span>AsyncComponent</span>'
