@@ -10,7 +10,7 @@ import {
 import EmitsEventSFC from './components/EmitsEventSFC.vue'
 import EmitsEventScriptSetup from './components/EmitsEventScriptSetup.vue'
 
-import { mount } from '../src'
+import { mount, shallowMount } from '../src'
 
 describe('emitted', () => {
   it('captures events emitted via this.$emit', async () => {
@@ -531,5 +531,84 @@ describe('emitted', () => {
 
       expect(wrapper.emitted('hello')).toEqual([['world']])
     })
+  })
+})
+
+describe('emit', () => {
+  const Child = defineComponent({
+    name: 'Child',
+    emits: ['ready'],
+    template: '<div>child</div>'
+  })
+
+  it('emits a custom event from a child found with findComponent', async () => {
+    const onReady = vi.fn<(api: unknown, extra: unknown) => void>()
+    const Parent = defineComponent({
+      components: { Child },
+      data: () => ({ api: null as unknown }),
+      methods: {
+        handleReady(api: unknown, extra: unknown) {
+          onReady(api, extra)
+          this.api = api
+        }
+      },
+      template: '<Child @ready="handleReady" /><span>{{ api }}</span>'
+    })
+    const wrapper = mount(Parent)
+    const child = wrapper.findComponent(Child)
+
+    await child.emit('ready', 'grid-api', 2)
+
+    expect(onReady).toHaveBeenCalledWith('grid-api', 2)
+    expect(child.emitted('ready')).toEqual([['grid-api', 2]])
+    // the returned promise waits for the parent to re-render
+    expect(wrapper.find('span').text()).toBe('grid-api')
+  })
+
+  it('emits from a child stubbed by shallowMount', async () => {
+    const Parent = defineComponent({
+      components: { Child },
+      data: () => ({ isReady: false }),
+      template: '<Child @ready="isReady = true" /><p v-if="isReady">ready</p>'
+    })
+    const wrapper = shallowMount(Parent)
+
+    await wrapper.findComponent(Child).emit('ready')
+
+    expect(wrapper.find('p').exists()).toBe(true)
+  })
+
+  it('emits from a <script setup> component', async () => {
+    const onBar = vi.fn<(value: string) => void>()
+    const wrapper = mount(EmitsEventScriptSetup, {
+      props: { onBar }
+    })
+
+    await wrapper.emit('bar', 'manual')
+
+    expect(onBar).toHaveBeenLastCalledWith('manual')
+    expect(wrapper.emitted('bar')).toEqual([['mounted'], ['manual']])
+  })
+
+  it('emits from a mounted functional component', async () => {
+    const onChange = vi.fn<(value: number) => void>()
+    const Functional: FunctionalComponent = () => h('div')
+    const wrapper = mount(Functional, { props: { onChange } })
+
+    await wrapper.emit('change', 1)
+
+    expect(onChange).toHaveBeenCalledWith(1)
+    expect(wrapper.emitted('change')).toEqual([[1]])
+  })
+
+  it('does nothing once the component is unmounted', async () => {
+    const onReady = vi.fn<() => void>()
+    const wrapper = mount(Child, { props: { onReady } })
+    wrapper.unmount()
+
+    await wrapper.emit('ready')
+
+    expect(onReady).not.toHaveBeenCalled()
+    expect(wrapper.emitted('ready')).toBeUndefined()
   })
 })

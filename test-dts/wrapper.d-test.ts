@@ -2,6 +2,7 @@
 import { expectType } from './index'
 import { defineComponent } from 'vue'
 import { mount } from '../src'
+import type { VueWrapper } from '../src'
 import EmitsSfc from './EmitsSfc.vue'
 
 const AppWithDefine = defineComponent({
@@ -135,6 +136,37 @@ const FnEmitsComp = defineComponent(
 )
 const fnEmitsWrapper = mount(FnEmitsComp, { props: { msg: '' } })
 expectType<[number][] | undefined>(fnEmitsWrapper.emitted('change'))
+
+// emit
+expectType<Promise<void>>(emittedWrapper.emit('change', 'value'))
+emittedWrapper.emit('select', 1, 'label')
+emittedWrapper.emit('plain', 1, 2, 3)
+// @ts-expect-error wrong payload type for a declared event
+emittedWrapper.emit('change', 1)
+// @ts-expect-error missing argument for a declared event
+emittedWrapper.emit('select', 1)
+// an undeclared event name accepts any payload
+emittedWrapper.emit('undeclared', 1, 'two')
+arrayEmitsWrapper.emit('alpha', 1, 'two')
+sfcWrapper.emit('select', 1, 'label')
+sfcWrapper.emit('update:count', 2)
+// @ts-expect-error wrong payload type in <script setup>
+sfcWrapper.emit('select', 'label')
+fnEmitsWrapper.emit('change', 1)
+// @ts-expect-error wrong payload type with a setup function
+fnEmitsWrapper.emit('change', '1')
+// untyped wrappers accept any event
+wrapper.emit('anything', 1)
+declare const anyWrapper: VueWrapper<any>
+anyWrapper.emit('anything', 1)
+// findComponent results are typed too
+const foundEmitted = wrapper.findComponent(EmittedComp)
+foundEmitted.emit('change', 'value')
+// @ts-expect-error wrong payload type on a findComponent result
+foundEmitted.emit('change', 1)
+// a functional child is found as a DOMWrapper, which has no emit
+// @ts-expect-error
+wrapper.findComponent(() => null).emit('change')
 
 // get
 // HTML element selector
