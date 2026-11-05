@@ -17,6 +17,12 @@ import {
 } from './wrapperFactory'
 import { ShapeFlags } from './utils/vueShared'
 
+type ResolvedProps<T extends ComponentPublicInstance> = Pick<
+  T,
+  Extract<keyof T['$props'], keyof T>
+> &
+  Omit<T['$props'], keyof T>
+
 /**
  * Creates a proxy around the VM instance.
  * This proxy returns the value from the setupState if there is one, or the one from the VM if not.
@@ -235,14 +241,14 @@ export class VueWrapper<
     return this.componentVM
   }
 
-  props(): T['$props']
-  props<Selector extends keyof T['$props']>(
+  props(): ResolvedProps<T>
+  props<Selector extends keyof ResolvedProps<T>>(
     selector: Selector
-  ): T['$props'][Selector]
-  props<Selector extends keyof T['$props']>(
+  ): ResolvedProps<T>[Selector]
+  props<Selector extends keyof ResolvedProps<T>>(
     selector?: Selector
-  ): T['$props'] | T['$props'][Selector] {
-    const props = this.componentVM.$props as T['$props']
+  ): ResolvedProps<T> | ResolvedProps<T>[Selector] {
+    const props = this.componentVM.$props as ResolvedProps<T>
     return selector ? props[selector] : props
   }
 
