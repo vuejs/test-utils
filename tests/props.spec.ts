@@ -118,6 +118,18 @@ describe('props', () => {
     expect(wrapper.props('value')).toBe('default')
   })
 
+  it('keeps undefined for a Boolean prop with an undefined default', () => {
+    const Component = defineComponent({
+      props: { enabled: { type: Boolean, default: undefined } },
+      template: '<div />'
+    })
+    const wrapper = mount(Component)
+
+    expectTypeOf(wrapper.props('enabled')).toEqualTypeOf<boolean | undefined>()
+    expectTypeOf(wrapper.props().enabled).toEqualTypeOf<boolean | undefined>()
+    expect(wrapper.props('enabled')).toBeUndefined()
+  })
+
   it('returns a single prop applied to a component', () => {
     const wrapper = mount(WithProps, { props: { msg: 'ABC' } })
     expect(wrapper.props('msg')).toEqual('ABC')
