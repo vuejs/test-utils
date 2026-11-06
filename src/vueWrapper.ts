@@ -17,16 +17,21 @@ import {
 } from './wrapperFactory'
 import { ShapeFlags } from './utils/vueShared'
 
-// Prop types as resolved on the instance (defaults applied). An instance member
-// only narrows a prop when it is assignable to the prop's `$props` type, so a
-// same-named setup binding (e.g. `setup: () => ({ value: 123 })` for a String
-// prop) keeps the declared prop type.
+// Prop defaults declared by the component, read from its options metadata.
+type PropDefaults<T extends ComponentPublicInstance> = T['$options'] extends {
+  __defaults?: infer D
+}
+  ? 0 extends 1 & D
+    ? {}
+    : NonNullable<D>
+  : {}
+
+// Prop types as resolved on the instance: a prop with a declared default
+// (including Boolean props) is always set, so it is no longer optional. The
+// narrowing comes only from prop/default metadata, never from same-named
+// instance members such as setup bindings, which are independent of the prop.
 type ResolvedProps<T extends ComponentPublicInstance> = T['$props'] & {
-  [K in Extract<keyof T['$props'], keyof T>]-?: [T[K]] extends [never]
-    ? T['$props'][K]
-    : [T[K]] extends [T['$props'][K]]
-      ? T[K]
-      : T['$props'][K]
+  [K in Extract<keyof T['$props'], keyof PropDefaults<T>>]-?: PropDefaults<T>[K]
 }
 
 /**

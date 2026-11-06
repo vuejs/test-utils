@@ -92,6 +92,32 @@ describe('props', () => {
     expect(wrapper.props('value')).toBe('hello')
   })
 
+  it('does not narrow an optional prop shadowed by a setup binding', () => {
+    const Component = defineComponent({
+      props: { value: String },
+      setup: () => ({ value: 'local' }),
+      template: '<div />'
+    })
+    const wrapper = mount(Component)
+
+    expectTypeOf(wrapper.props('value')).toEqualTypeOf<string | undefined>()
+    expectTypeOf(wrapper.props().value).toEqualTypeOf<string | undefined>()
+    expect(wrapper.props('value')).toBeUndefined()
+  })
+
+  it('keeps defaulted props resolved when a setup binding shadows them', () => {
+    const Component = defineComponent({
+      props: { value: { type: String, default: 'default' } },
+      setup: () => ({ value: 123 }),
+      template: '<div />'
+    })
+    const wrapper = mount(Component)
+
+    expectTypeOf(wrapper.props('value')).toEqualTypeOf<string>()
+    expectTypeOf(wrapper.props().value).toEqualTypeOf<string>()
+    expect(wrapper.props('value')).toBe('default')
+  })
+
   it('returns a single prop applied to a component', () => {
     const wrapper = mount(WithProps, { props: { msg: 'ABC' } })
     expect(wrapper.props('msg')).toEqual('ABC')
