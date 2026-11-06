@@ -17,11 +17,17 @@ import {
 } from './wrapperFactory'
 import { ShapeFlags } from './utils/vueShared'
 
-type ResolvedProps<T extends ComponentPublicInstance> = Pick<
-  T,
-  Extract<keyof T['$props'], keyof T>
-> &
-  Omit<T['$props'], keyof T>
+// Prop types as resolved on the instance (defaults applied). An instance member
+// only narrows a prop when it is assignable to the prop's `$props` type, so a
+// same-named setup binding (e.g. `setup: () => ({ value: 123 })` for a String
+// prop) keeps the declared prop type.
+type ResolvedProps<T extends ComponentPublicInstance> = T['$props'] & {
+  [K in Extract<keyof T['$props'], keyof T>]-?: [T[K]] extends [never]
+    ? T['$props'][K]
+    : [T[K]] extends [T['$props'][K]]
+      ? T[K]
+      : T['$props'][K]
+}
 
 /**
  * Creates a proxy around the VM instance.
@@ -341,5 +347,5 @@ export class VueWrapper<
 
 registerFactory(
   WrapperType.VueWrapper,
-  (app, vm, setProps) => new VueWrapper(app, vm, setProps)
+  (app, vm, setProps) => new VueWrapper<typeof vm>(app, vm, setProps)
 )

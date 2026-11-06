@@ -79,6 +79,19 @@ describe('props', () => {
     expect(childWrapper.props('a')).toBe('default')
   })
 
+  it('keeps the prop type when a setup binding shadows a prop', () => {
+    const Component = defineComponent({
+      props: { value: { type: String, required: true } },
+      setup: () => ({ value: 123 }),
+      template: '<div />'
+    })
+    const wrapper = mount(Component, { props: { value: 'hello' } })
+
+    expectTypeOf(wrapper.props('value')).toEqualTypeOf<string>()
+    expectTypeOf(wrapper.props().value).toEqualTypeOf<string>()
+    expect(wrapper.props('value')).toBe('hello')
+  })
+
   it('returns a single prop applied to a component', () => {
     const wrapper = mount(WithProps, { props: { msg: 'ABC' } })
     expect(wrapper.props('msg')).toEqual('ABC')
