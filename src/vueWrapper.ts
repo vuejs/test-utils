@@ -17,6 +17,59 @@ import {
 } from './wrapperFactory'
 import { ShapeFlags } from './utils/vueShared'
 
+// Prop defaults declared by the component, read from its options metadata.
+type PropDefaults<T extends ComponentPublicInstance> = T['$options'] extends {
+  __defaults?: infer D
+}
+  ? 0 extends 1 & D
+    ? {}
+    : NonNullable<D>
+  : {}
+
+// Props as the component's setup() receives them, read from its options
+// metadata. Unlike the defaults metadata, which types a prop declared with
+// `default: undefined` as always set, these keep `undefined` for such a prop.
+// `$options` can intersect two setup signatures, one of them with untyped
+// (`any` or index-signature) props, so both are read and the typed one is kept.
+type TypedProps<P> = 0 extends 1 & P
+  ? never
+  : string extends keyof P
+    ? never
+    : P
+type SetupProps<T extends ComponentPublicInstance> =
+  NonNullable<T['$options']['setup']> extends {
+    (this: void, props: infer P1, ...args: any[]): any
+    (this: void, props: infer P2, ...args: any[]): any
+  }
+    ? [TypedProps<P1>] extends [never]
+      ? [TypedProps<P2>] extends [never]
+        ? {}
+        : P2
+      : P1
+    : {}
+
+// Defaulted props that are always set once resolved: every key with a declared
+// default (including Boolean props) unless setup() still sees it as possibly
+// `undefined`, as with `default: undefined`.
+type ResolvedDefaultKeys<T extends ComponentPublicInstance> = {
+  [
+    K in Extract<keyof T['$props'], keyof PropDefaults<T>>
+  ]-?: K extends keyof SetupProps<T>
+    ? undefined extends SetupProps<T>[K]
+      ? never
+      : K
+    : K
+}[Extract<keyof T['$props'], keyof PropDefaults<T>>]
+
+// Prop types as resolved on the instance: a prop with a declared default
+// (including Boolean props) is always set, so it is no longer optional, unless
+// its default is `undefined`. The narrowing comes only from prop/default
+// metadata, never from same-named instance members such as setup bindings,
+// which are independent of the prop.
+type ResolvedProps<T extends ComponentPublicInstance> = T['$props'] & {
+  [K in ResolvedDefaultKeys<T>]-?: PropDefaults<T>[K]
+}
+
 /**
  * Creates a proxy around the VM instance.
  * This proxy returns the value from the setupState if there is one, or the one from the VM if not.
@@ -235,14 +288,14 @@ export class VueWrapper<
     return this.componentVM
   }
 
-  props(): T['$props']
-  props<Selector extends keyof T['$props']>(
+  props(): ResolvedProps<T>
+  props<Selector extends keyof ResolvedProps<T>>(
     selector: Selector
-  ): T['$props'][Selector]
-  props<Selector extends keyof T['$props']>(
+  ): ResolvedProps<T>[Selector]
+  props<Selector extends keyof ResolvedProps<T>>(
     selector?: Selector
-  ): T['$props'] | T['$props'][Selector] {
-    const props = this.componentVM.$props as T['$props']
+  ): ResolvedProps<T> | ResolvedProps<T>[Selector] {
+    const props = this.componentVM.$props as ResolvedProps<T>
     return selector ? props[selector] : props
   }
 
@@ -344,5 +397,5 @@ export class VueWrapper<
 
 registerFactory(
   WrapperType.VueWrapper,
-  (app, vm, setProps) => new VueWrapper(app, vm, setProps)
+  (app, vm, setProps) => new VueWrapper<typeof vm>(app, vm, setProps)
 )

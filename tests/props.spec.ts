@@ -1,13 +1,135 @@
-import { describe, expect, it, vi } from 'vitest'
+import { describe, expect, expectTypeOf, it, vi } from 'vitest'
 import type { VueWrapper } from '../src'
 import { mount, shallowMount } from '../src'
 import WithProps from './components/WithProps.vue'
 import PropWithSymbol from './components/PropWithSymbol.vue'
 import Hello from './components/Hello.vue'
+import type { PropType } from 'vue'
 import { defineComponent, h, isRef, ref } from 'vue'
 import Title from './components/FunctionComponent'
 
 describe('props', () => {
+  it('infers resolved prop types while preserving optional props', async () => {
+    const Component = defineComponent({
+      props: {
+        a: { type: String, default: 'default' },
+        optional: String,
+        required: { type: String, required: true },
+        boolean: Boolean,
+        undefinedDefault: {
+          type: String as PropType<string | undefined>,
+          default: undefined
+        }
+      },
+      emits: ['change'],
+      template: '<div />'
+    })
+    const wrapper = mount(Component, { props: { required: 'required' } })
+
+    expectTypeOf(wrapper.props('a')).toEqualTypeOf<string>()
+    expectTypeOf(wrapper.props().a).toEqualTypeOf<string>()
+    expectTypeOf(wrapper.props('optional')).toEqualTypeOf<string | undefined>()
+    expectTypeOf(wrapper.props().optional).toEqualTypeOf<string | undefined>()
+    expectTypeOf(wrapper.props('required')).toEqualTypeOf<string>()
+    expectTypeOf(wrapper.props().required).toEqualTypeOf<string>()
+    expectTypeOf(wrapper.props('boolean')).toEqualTypeOf<boolean>()
+    expectTypeOf(wrapper.props().boolean).toEqualTypeOf<boolean>()
+    expectTypeOf(wrapper.props('undefinedDefault')).toEqualTypeOf<
+      string | undefined
+    >()
+    expectTypeOf(wrapper.props().undefinedDefault).toEqualTypeOf<
+      string | undefined
+    >()
+    expectTypeOf(wrapper.props('onChange')).toEqualTypeOf<
+      typeof wrapper.vm.$props.onChange
+    >()
+    expectTypeOf(wrapper.props().onChange).toEqualTypeOf<
+      typeof wrapper.vm.$props.onChange
+    >()
+    expectTypeOf(wrapper.props('key')).toEqualTypeOf<
+      typeof wrapper.vm.$props.key
+    >()
+    expectTypeOf(wrapper.props().key).toEqualTypeOf<
+      typeof wrapper.vm.$props.key
+    >()
+    // @ts-expect-error :: non-existent prop
+    expect(wrapper.props('missing')).toBeUndefined()
+    expectTypeOf(wrapper.setProps).toBeCallableWith({ a: undefined })
+    // @ts-expect-error :: should require string
+    expectTypeOf(wrapper.setProps).toBeCallableWith({ a: 123 })
+
+    expect(wrapper.props('a')).toBe('default')
+    await wrapper.setProps({ a: 'override' })
+    expect(wrapper.props('a')).toBe('override')
+    await wrapper.setProps({ a: undefined })
+    expect(wrapper.props('a')).toBe('default')
+
+    const shallowWrapper = shallowMount(Component, {
+      props: { required: 'required' }
+    })
+    expectTypeOf(shallowWrapper.props('a')).toEqualTypeOf<string>()
+    expectTypeOf(shallowWrapper.props().a).toEqualTypeOf<string>()
+    expect(shallowWrapper.props('a')).toBe('default')
+
+    const childWrapper = mount({
+      render: () => h(Component, { required: 'required' })
+    }).findComponent(Component)
+    expectTypeOf(childWrapper.props('a')).toEqualTypeOf<string>()
+    expectTypeOf(childWrapper.props().a).toEqualTypeOf<string>()
+    expect(childWrapper.props('a')).toBe('default')
+  })
+
+  it('keeps the prop type when a setup binding shadows a prop', () => {
+    const Component = defineComponent({
+      props: { value: { type: String, required: true } },
+      setup: () => ({ value: 123 }),
+      template: '<div />'
+    })
+    const wrapper = mount(Component, { props: { value: 'hello' } })
+
+    expectTypeOf(wrapper.props('value')).toEqualTypeOf<string>()
+    expectTypeOf(wrapper.props().value).toEqualTypeOf<string>()
+    expect(wrapper.props('value')).toBe('hello')
+  })
+
+  it('does not narrow an optional prop shadowed by a setup binding', () => {
+    const Component = defineComponent({
+      props: { value: String },
+      setup: () => ({ value: 'local' }),
+      template: '<div />'
+    })
+    const wrapper = mount(Component)
+
+    expectTypeOf(wrapper.props('value')).toEqualTypeOf<string | undefined>()
+    expectTypeOf(wrapper.props().value).toEqualTypeOf<string | undefined>()
+    expect(wrapper.props('value')).toBeUndefined()
+  })
+
+  it('keeps defaulted props resolved when a setup binding shadows them', () => {
+    const Component = defineComponent({
+      props: { value: { type: String, default: 'default' } },
+      setup: () => ({ value: 123 }),
+      template: '<div />'
+    })
+    const wrapper = mount(Component)
+
+    expectTypeOf(wrapper.props('value')).toEqualTypeOf<string>()
+    expectTypeOf(wrapper.props().value).toEqualTypeOf<string>()
+    expect(wrapper.props('value')).toBe('default')
+  })
+
+  it('keeps undefined for a Boolean prop with an undefined default', () => {
+    const Component = defineComponent({
+      props: { enabled: { type: Boolean, default: undefined } },
+      template: '<div />'
+    })
+    const wrapper = mount(Component)
+
+    expectTypeOf(wrapper.props('enabled')).toEqualTypeOf<boolean | undefined>()
+    expectTypeOf(wrapper.props().enabled).toEqualTypeOf<boolean | undefined>()
+    expect(wrapper.props('enabled')).toBeUndefined()
+  })
+
   it('returns a single prop applied to a component', () => {
     const wrapper = mount(WithProps, { props: { msg: 'ABC' } })
     expect(wrapper.props('msg')).toEqual('ABC')
