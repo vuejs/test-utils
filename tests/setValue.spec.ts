@@ -284,6 +284,122 @@ describe('setValue', () => {
     expect(fn).toThrowError(message)
   })
 
+  describe('on contenteditable element', () => {
+    it('sets innerHTML of a contenteditable="true" element', async () => {
+      const wrapper = mount({
+        template: '<div contenteditable="true"></div>'
+      })
+      const div = wrapper.find('div')
+      await div.setValue('<b>foo</b>')
+
+      expect(div.element.innerHTML).toBe('<b>foo</b>')
+    })
+
+    it('sets innerHTML of a bare contenteditable element', async () => {
+      const wrapper = mount({
+        template: '<div contenteditable></div>'
+      })
+      const div = wrapper.find('div')
+      await div.setValue('foo')
+
+      expect(div.element.innerHTML).toBe('foo')
+    })
+
+    it('triggers input and change events on a contenteditable element', async () => {
+      const onInput = vi.fn()
+      const onChange = vi.fn()
+      const Comp = defineComponent({
+        setup() {
+          return () => h('div', { contenteditable: 'true', onInput, onChange })
+        }
+      })
+
+      await mount(Comp).find('div').setValue('foo')
+
+      expect(onInput).toHaveBeenCalledTimes(1)
+      expect(onChange).toHaveBeenCalledTimes(1)
+    })
+
+    it('throws error if contenteditable is explicitly false', () => {
+      const message = 'wrapper.setValue() cannot be called on DIV'
+      const wrapper = mount({
+        template: '<div contenteditable="false"></div>'
+      })
+      const div = wrapper.find('div')
+
+      const fn = () => div.setValue('foo')
+      expect(fn).toThrowError(message)
+    })
+
+    it('sets innerHTML of a contenteditable="plaintext-only" element', async () => {
+      const wrapper = mount({
+        template: '<div contenteditable="plaintext-only"></div>'
+      })
+      const div = wrapper.find('div')
+      await div.setValue('foo')
+
+      expect(div.element.innerHTML).toBe('foo')
+    })
+
+    it('works on elements other than div, such as span and p', async () => {
+      const wrapper = mount({
+        template:
+          '<span contenteditable="true"></span><p contenteditable="true"></p>'
+      })
+
+      const span = wrapper.find('span')
+      await span.setValue('foo')
+      expect(span.element.innerHTML).toBe('foo')
+
+      const paragraph = wrapper.find('p')
+      await paragraph.setValue('bar')
+      expect(paragraph.element.innerHTML).toBe('bar')
+    })
+
+    it('sets innerHTML of a child with no contenteditable attribute of its own, inherited from an editable ancestor', async () => {
+      const wrapper = mount({
+        template: '<div contenteditable="true"><span id="child"></span></div>'
+      })
+      const child = wrapper.find('#child')
+      await child.setValue('foo')
+
+      expect(child.element.innerHTML).toBe('foo')
+    })
+
+    it('throws for a child with no contenteditable attribute of its own and no editable ancestor', () => {
+      const message = 'wrapper.setValue() cannot be called on SPAN'
+      const wrapper = mount({
+        template: '<div><span id="child"></span></div>'
+      })
+      const child = wrapper.find('#child')
+
+      const fn = () => child.setValue('foo')
+      expect(fn).toThrowError(message)
+    })
+
+    it('throws for a child with no contenteditable attribute of its own inside a contenteditable="false" ancestor', () => {
+      const message = 'wrapper.setValue() cannot be called on SPAN'
+      const wrapper = mount({
+        template: '<div contenteditable="false"><span id="child"></span></div>'
+      })
+      const child = wrapper.find('#child')
+
+      const fn = () => child.setValue('foo')
+      expect(fn).toThrowError(message)
+    })
+
+    it("a non-editable ancestor's contenteditable=false does not leak past a nearer editable ancestor", async () => {
+      const wrapper = mount({
+        template:
+          '<div contenteditable="false"><div contenteditable="true"><span id="child"></span></div></div>'
+      })
+      const child = wrapper.find('#child')
+      await child.setValue('foo')
+
+      expect(child.element.innerHTML).toBe('foo')
+    })
+  })
+
   describe('on component instance', () => {
     const PlainInputComponent = defineComponent({
       props: ['modelValue', 'onUpdate:modelValue'],

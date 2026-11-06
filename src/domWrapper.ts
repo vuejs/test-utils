@@ -13,6 +13,21 @@ import { createWrapperError } from './errorWrapper'
 import { getRootNodes } from './utils/getRootNodes'
 import { isElement } from './utils/isElement'
 
+// `contenteditable` is a global attribute: it can appear on any element, and
+// an element without one inherits editability from its nearest ancestor that
+// has one (`<div contenteditable><span></span></div>` is editable throughout).
+// `Element.isContentEditable` reflects that, but it is not implemented by
+// jsdom (the environment most consumers run their tests in), so it would
+// never report true in practice. This mirrors the same inheritance algorithm
+// directly off attributes, which jsdom supports.
+function isEditable(element: Element): boolean {
+  const host = element.closest('[contenteditable]')
+  return (
+    host !== null &&
+    host.getAttribute('contenteditable')!.toLowerCase() !== 'false'
+  )
+}
+
 export class DOMWrapper<NodeType extends Node> extends BaseWrapper<NodeType> {
   protected readonly subTree: VNode | null | undefined = null
 
@@ -160,6 +175,12 @@ export class DOMWrapper<NodeType extends Node> extends BaseWrapper<NodeType> {
       return this.trigger('change')
     } else if (tagName === 'INPUT' || tagName === 'TEXTAREA') {
       element.value = value
+
+      this.trigger('input')
+      // trigger `change` for `v-model.lazy`
+      return this.trigger('change')
+    } else if (isEditable(element)) {
+      element.innerHTML = value
 
       this.trigger('input')
       // trigger `change` for `v-model.lazy`
