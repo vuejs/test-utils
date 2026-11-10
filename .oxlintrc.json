@@ -53,7 +53,7 @@
       }
     },
     {
-      "files": ["rolldown.config.ts", "vitest.config.ts"],
+      "files": ["rolldown.config.ts", "vitest.config.ts", "scripts/**"],
       "rules": {
         "no-console": "off"
       }

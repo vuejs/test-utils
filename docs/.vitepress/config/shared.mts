@@ -101,12 +101,15 @@ export const sharedConfig = defineConfig({
       text: 'Suggest changes'
     },
 
-    algolia: {
-      appId: 'BH4D9OD16A',
-      apiKey: 'ee1b8516c9e5a5be9b6c25684eafc42f',
-      indexName: 'vue_test_utils',
-      searchParameters: {
-        facetFilters: ['tags:next']
+    search: {
+      provider: 'algolia',
+      options: {
+        appId: 'BH4D9OD16A',
+        apiKey: 'ee1b8516c9e5a5be9b6c25684eafc42f',
+        indexName: 'vue_test_utils',
+        searchParameters: {
+          facetFilters: ['tags:next']
+        }
       }
     }
   }
