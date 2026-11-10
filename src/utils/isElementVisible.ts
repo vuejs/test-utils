@@ -9,7 +9,13 @@ function isStyleVisible<T extends Element>(element: T) {
     return false
   }
 
-  const { display, visibility, opacity } = getComputedStyle(element)
+  const computed = getComputedStyle(element)
+  // Per spec, elements that are not connected to a document have no computed
+  // style (jsdom >= 31 returns empty values), which is the case when mounting
+  // without `attachTo`. Fall back to the inline style for those properties.
+  const display = computed.display || element.style.display
+  const visibility = computed.visibility || element.style.visibility
+  const opacity = computed.opacity || element.style.opacity
 
   return (
     display !== 'none' &&

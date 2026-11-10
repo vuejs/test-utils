@@ -117,18 +117,35 @@ describe('isVisible', () => {
     expect(wrapper.html()).not.toContain('Item: 2')
   })
 
+  it.each(['display: none', 'visibility: hidden', 'opacity: 0'])(
+    'returns false for inline "%s" when not attached to the document',
+    style => {
+      const wrapper = mount({
+        template: `<div><span id="target" style="${style}" /></div>`
+      })
+
+      expect(wrapper.element.isConnected).toBe(false)
+      expect(wrapper.get('#target').isVisible()).toBe(false)
+    }
+  )
+
   it('should take css into account', async () => {
     const style = document.createElement('style')
     style.type = 'text/css'
     document.head.appendChild(style)
     style.sheet!.insertRule('.opacity-0 { opacity: 0; }')
 
-    const wrapper = mount({
-      template: '<div id="my-div" class="opacity-0" />'
-    })
+    // stylesheets only apply to elements connected to the document
+    const wrapper = mount(
+      {
+        template: '<div id="my-div" class="opacity-0" />'
+      },
+      { attachTo: document.body }
+    )
 
     expect(wrapper.get('#my-div').isVisible()).toBe(false)
 
+    wrapper.unmount()
     document.head.removeChild(style)
   })
 
