@@ -51,17 +51,23 @@ const normalizeStubProps = (props: ComponentPropsOptions) => {
     if (typeof value === 'function') {
       return { ...acc, [key]: ['[Function]'] }
     }
-    if (value !== null && typeof value === 'object') {
+    if (value !== null && typeof value === 'object' && !canStringify(value)) {
       // objects like component instances or `Object.create(null)`
       // can't be converted to a string by `setAttribute`
-      try {
-        String(value)
-      } catch (e) {
-        return { ...acc, [key]: Object.prototype.toString.call(value) }
-      }
+      return { ...acc, [key]: Object.prototype.toString.call(value) }
     }
     return { ...acc, [key]: value }
   }, {})
+}
+
+// The result of `String()` must be used: bundlers treat an unused `String(x)`
+// call as side-effect free and remove it, together with the throw it probes for.
+const canStringify = (value: object): boolean => {
+  try {
+    return typeof String(value) === 'string'
+  } catch (e) {
+    return false
+  }
 }
 
 // Collect props from `extends` and `mixins` too, with the same precedence as Vue
