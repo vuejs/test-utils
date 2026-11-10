@@ -9,3 +9,11 @@ allowBuilds:
   esbuild: false
   # hooks are installed explicitly by the "prepare" script
   simple-git-hooks: false
+
+overrides:
+  # TODO: remove once js-beautify releases https://github.com/beautifier/js-beautify/pull/2561
+  #       (glob ^13 -> ^14; fixes GHSA-3g3m-2fjr-6pw4 and the minimatch/brace-expansion chain),
+  #       then bump js-beautify in package.json and drop these overrides.
+  #       Only affects this repo: overrides don't apply to users installing @vue/test-utils.
+  js-beautify>glob: ^14.0.4
+  editorconfig>minimatch: ^11.0.5

@@ -31,6 +31,9 @@ import type { DOMWrapper } from './domWrapper'
 import { createDOMWrapper, createVueWrapper } from './wrapperFactory'
 import { stringifyNode } from './utils/stringifyNode'
 import type { HTMLBeautifyOptions } from 'js-beautify'
+// TODO: js-beautify 2.0.3 depends on glob ^13 (GHSA-3g3m-2fjr-6pw4, plus minimatch/brace-expansion).
+// Bump js-beautify once https://github.com/beautifier/js-beautify/pull/2561 is released, and remove
+// the temporary overrides in pnpm-workspace.yaml. The vulnerable code is only used by the js-beautify CLI.
 import beautify from 'js-beautify'
 
 export default abstract class BaseWrapper<
