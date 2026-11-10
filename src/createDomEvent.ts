@@ -2,10 +2,10 @@ import type {
   DomEvent,
   DomEventName,
   DomEventNameWithModifier,
+  KeyName,
   Modifier
 } from './constants/dom-events'
 import domEvents, {
-  KeyName,
   codesByKeyName,
   ignorableKeyModifiers,
   keyCodesByKeyName,
