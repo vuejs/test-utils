@@ -7,3 +7,5 @@ peerDependencyRules:
 
 allowBuilds:
   esbuild: false
+  # hooks are installed explicitly by the "prepare" script
+  simple-git-hooks: false
