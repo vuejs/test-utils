@@ -14,31 +14,50 @@ const getComponentNameInSetup = (
       Object.getOwnPropertyDescriptor(instance.setupState, key)?.value === type
   )
 
+const getNamesInRegistry = (
+  registry: Record<string, unknown> | undefined,
+  type: VNodeTypes
+): string[] => {
+  const names: string[] = []
+  for (const key in registry) {
+    if (registry[key] === type) {
+      names.push(key)
+    }
+  }
+  return names
+}
+
+export const getComponentRegisteredNames = (
+  instance: ComponentInternalInstance | null,
+  type: VNodeTypes
+): string[] => {
+  if (!instance || !instance.parent) return []
+
+  // try to infer the names based on local resolution
+  const names = getNamesInRegistry((instance.type as any).components, type)
+
+  // try to retrieve name imported in script setup
+  const nameInSetup = getComponentNameInSetup(instance.parent, type)
+  if (nameInSetup) {
+    names.push(nameInSetup)
+  }
+
+  // try to infer the name based on global resolution, as a last resort
+  // so that local registration always wins over global registration
+  names.push(
+    ...getNamesInRegistry(
+      instance.appContext.components as Record<string, unknown>,
+      type
+    )
+  )
+
+  return [...new Set(names)]
+}
+
 export const getComponentRegisteredName = (
   instance: ComponentInternalInstance | null,
   type: VNodeTypes
-): string | null => {
-  if (!instance || !instance.parent) return null
-
-  // try to infer the name based on local resolution
-  const registry = (instance.type as any).components
-  for (const key in registry) {
-    if (registry[key] === type) {
-      return key
-    }
-  }
-
-  // try to infer the name based on global resolution
-  const globalRegistry = instance.appContext.components
-  for (const key in globalRegistry) {
-    if (globalRegistry[key] === type) {
-      return key
-    }
-  }
-
-  // try to retrieve name imported in script setup
-  return getComponentNameInSetup(instance.parent, type) || null
-}
+): string | null => getComponentRegisteredNames(instance, type)[0] ?? null
 
 export const getComponentName = (
   instance: any | null,

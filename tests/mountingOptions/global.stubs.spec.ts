@@ -397,6 +397,68 @@ describe('mounting options: stubs', () => {
     )
   })
 
+  it('stubs a globally registered component by any of its registration names', () => {
+    const LibraryComponent = defineComponent({
+      name: 'LibraryInternalName',
+      template: '<span>real library component</span>'
+    })
+
+    const Plugin = {
+      install(app: any) {
+        app.component('FirstAlias', LibraryComponent)
+        app.component('SecondAlias', LibraryComponent)
+      }
+    }
+
+    const Component = defineComponent({
+      template: '<div><SecondAlias /></div>'
+    })
+
+    const wrapper = mount(Component, {
+      global: {
+        plugins: [Plugin],
+        stubs: {
+          SecondAlias: true
+        }
+      }
+    })
+
+    expect(wrapper.html()).toBe(
+      '<div>\n' + '  <second-alias-stub></second-alias-stub>\n' + '</div>'
+    )
+  })
+
+  it('prefers local registration over global registration', () => {
+    const LibraryComponent = defineComponent({
+      name: 'LibraryInternalName',
+      template: '<span>real library component</span>'
+    })
+
+    const Plugin = {
+      install(app: any) {
+        app.component('GlobalAlias', LibraryComponent)
+      }
+    }
+
+    const Component = defineComponent({
+      components: { LocalAlias: LibraryComponent },
+      template: '<div><LocalAlias /></div>'
+    })
+
+    const wrapper = mount(Component, {
+      global: {
+        plugins: [Plugin],
+        stubs: {
+          LocalAlias: true
+        }
+      }
+    })
+
+    expect(wrapper.html()).toBe(
+      '<div>\n' + '  <local-alias-stub></local-alias-stub>\n' + '</div>'
+    )
+  })
+
   it('stubs components within script setup', () => {
     const wrapper = mount(ScriptSetupWithChildren as any, {
       global: {

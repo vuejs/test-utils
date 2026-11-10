@@ -23,7 +23,7 @@ import { isComponent, isFunctionalComponent } from '../utils'
 import { unwrapLegacyVueExtendComponent } from '../utils/vueCompatSupport'
 import {
   getComponentName,
-  getComponentRegisteredName
+  getComponentRegisteredNames
 } from '../utils/componentName'
 import { config } from '../config'
 import { registerStub } from '../stubs'
@@ -181,17 +181,21 @@ export function createStubComponentsTransformer({
       return type
     }
 
-    const registeredName = getComponentRegisteredName(instance, type)
+    const registeredNames = getComponentRegisteredNames(instance, type)
     const componentName = getComponentName(instance, type)
 
     let stub = null
     let name = null
 
-    // Prio 1 using the key in locally registered components in the parent
-    if (registeredName) {
+    // Prio 1 using the keys the component is registered under in the parent:
+    // local registration first, then script setup, then global registration.
+    // Every matching name is checked so a component registered under several
+    // aliases (e.g. by a plugin) can be stubbed by any of them.
+    for (const registeredName of registeredNames) {
       stub = resolveComponentStubByName(registeredName, stubs)
       if (stub) {
         name = registeredName
+        break
       }
     }
 
@@ -231,7 +235,7 @@ export function createStubComponentsTransformer({
     // case 1: default stub
     if (stub === true || shallow) {
       // Set name when using shallow without stub
-      const stubName = name || registeredName || componentName
+      const stubName = name || registeredNames[0] || componentName
 
       return (
         config.plugins.createStubs?.({
