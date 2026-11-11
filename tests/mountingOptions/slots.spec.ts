@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from 'vitest'
-import { defineComponent, h } from 'vue'
+import { defineComponent, h, onBeforeUpdate } from 'vue'
 
 import { flushPromises, mount } from '../../src'
 import Hello from '../components/Hello.vue'
@@ -274,5 +274,34 @@ describe('slots', () => {
 
     // @ts-expect-error
     expect(wrapper.vm.$slots.default()).toHaveLength(2)
+  })
+
+  it('does not warn when a slot is called outside the render function (#2135)', async () => {
+    const spy = vi.spyOn(console, 'warn').mockImplementation(() => {})
+    const Comp = defineComponent({
+      props: { count: Number },
+      setup(props, { slots }) {
+        // e.g. checking if the slot has content
+        onBeforeUpdate(() => slots.default?.({ count: props.count }))
+        return () => h('div', slots.default?.({ count: props.count }))
+      }
+    })
+
+    for (const slot of [
+      '<span>foo</span>',
+      '<template #default="{ count }">{{ count }}</template>',
+      () => h('span', 'foo'),
+      h('span', 'foo'),
+      Hello
+    ]) {
+      const wrapper = mount(Comp, {
+        props: { count: 1 },
+        slots: { default: slot }
+      })
+      await wrapper.setProps({ count: 2 })
+    }
+
+    expect(spy).not.toHaveBeenCalled()
+    spy.mockRestore()
   })
 })

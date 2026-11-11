@@ -4,13 +4,21 @@ import type {
   ConcreteComponent,
   DefineComponent
 } from 'vue'
+import type { VNode } from 'vue'
 import {
+  Comment,
+  Fragment,
+  Text,
+  cloneVNode,
   createApp,
+  createVNode,
   defineComponent,
   h,
+  isVNode,
   proxyRefs,
   ref,
-  shallowReactive
+  shallowReactive,
+  withCtx
 } from 'vue'
 
 import type { MountingOptions, Slot } from './types'
@@ -201,7 +209,11 @@ export function createInstance(
       }
     },
     render() {
-      return h(component as ComponentOptions, props, slots)
+      return h(
+        component as ComponentOptions,
+        props,
+        slots && toCompiledSlots(slots)
+      )
     }
   })
 
@@ -365,4 +377,41 @@ export function createInstance(
     props,
     componentRef
   }
+}
+
+// Same normalization Vue applies to raw slot functions (normalizeSlot in
+// runtime-core/componentSlots.ts), minus the dev-only "invoked outside of the
+// render function" warning. Mounting-option slots act like compiled template
+// slots, which Vue never warns about (#2135).
+function normalizeSlotChild(child: unknown): VNode {
+  if (child == null || typeof child === 'boolean') return createVNode(Comment)
+  if (Array.isArray(child)) return createVNode(Fragment, null, child.slice())
+  if (isVNode(child)) {
+    return (child.el === null && child.patchFlag !== -1) ||
+      (child as { memo?: unknown }).memo
+      ? child
+      : cloneVNode(child)
+  }
+  return createVNode(Text, null, String(child))
+}
+
+function toCompiledSlots(
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
+  slots: Record<string, Function>
+) {
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
+  return Object.entries(slots).reduce<Record<string, Function>>(
+    (acc, [name, fn]) => {
+      const normalized = withCtx((...args: unknown[]) => {
+        const value = fn(...args)
+        return Array.isArray(value)
+          ? value.map(normalizeSlotChild)
+          : [normalizeSlotChild(value)]
+      })
+      ;(normalized as { _c?: boolean })._c = false
+      acc[name] = normalized
+      return acc
+    },
+    {}
+  )
 }
