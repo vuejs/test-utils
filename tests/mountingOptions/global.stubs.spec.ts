@@ -459,6 +459,38 @@ describe('mounting options: stubs', () => {
     )
   })
 
+  it('does not stub when a local alias opts out even if the component is also globally registered', () => {
+    // anonymous component: the fallback to the component name cannot rescue the opt-out
+    const LibraryComponent = defineComponent({
+      template: '<span>real library component</span>'
+    })
+
+    const Plugin = {
+      install(app: any) {
+        app.component('GlobalAlias', LibraryComponent)
+      }
+    }
+
+    const Component = defineComponent({
+      components: { LocalAlias: LibraryComponent },
+      template: '<div><LocalAlias /></div>'
+    })
+
+    const wrapper = mount(Component, {
+      shallow: true,
+      global: {
+        plugins: [Plugin],
+        stubs: {
+          LocalAlias: false
+        }
+      }
+    })
+
+    expect(wrapper.html()).toBe(
+      '<div><span>real library component</span></div>'
+    )
+  })
+
   it('stubs components within script setup', () => {
     const wrapper = mount(ScriptSetupWithChildren as any, {
       global: {

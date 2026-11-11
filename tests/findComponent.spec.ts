@@ -238,6 +238,31 @@ describe('findComponent', () => {
     ).toBe(true)
   })
 
+  it('finds an anonymous component by its local alias even if it is also globally registered', () => {
+    const Child = defineComponent({
+      template: '<span>child</span>'
+    })
+
+    const Plugin = {
+      install(app: any) {
+        app.component('GlobalAlias', Child)
+      }
+    }
+
+    const Component = defineComponent({
+      components: { LocalAlias: Child },
+      template: '<div><LocalAlias /></div>'
+    })
+
+    const wrapper = mount(Component, {
+      global: {
+        plugins: [Plugin]
+      }
+    })
+
+    expect(wrapper.findComponent({ name: 'LocalAlias' }).exists()).toBe(true)
+  })
+
   it('finds component by imported SFC file', () => {
     const wrapper = mount(compA)
     expect(wrapper.findComponent(Hello).text()).toBe('Hello world')

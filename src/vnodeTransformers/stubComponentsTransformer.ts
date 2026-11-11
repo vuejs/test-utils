@@ -181,28 +181,32 @@ export function createStubComponentsTransformer({
       return type
     }
 
-    const registeredNames = getComponentRegisteredNames(instance, type)
+    const registeredNames = getComponentRegisteredNames(instance, type, true)
     const componentName = getComponentName(instance, type)
 
-    let stub = null
-    let name = null
+    let stub: Component | boolean | undefined
+    let name: string | null = null
 
     // Prio 1 using the keys the component is registered under in the parent:
     // local registration first, then script setup, then global registration.
     // Every matching name is checked so a component registered under several
     // aliases (e.g. by a plugin) can be stubbed by any of them.
     for (const registeredName of registeredNames) {
-      stub = resolveComponentStubByName(registeredName, stubs)
-      if (stub) {
+      const registeredStub = resolveComponentStubByName(registeredName, stubs)
+      // an explicit opt-out (`false`) is a decision too, so don't let a later
+      // alias overwrite it
+      if (registeredStub !== undefined) {
+        stub = registeredStub
         name = registeredName
         break
       }
     }
 
     // Prio 2 using the name attribute in the component
-    if (!stub && componentName) {
-      stub = resolveComponentStubByName(componentName, stubs)
-      if (stub) {
+    if (stub === undefined && componentName) {
+      const nameStub = resolveComponentStubByName(componentName, stubs)
+      if (nameStub !== undefined) {
+        stub = nameStub
         name = componentName
       }
     }

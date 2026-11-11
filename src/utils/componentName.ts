@@ -29,7 +29,8 @@ const getNamesInRegistry = (
 
 export const getComponentRegisteredNames = (
   instance: ComponentInternalInstance | null,
-  type: VNodeTypes
+  type: VNodeTypes,
+  includeGlobal = false
 ): string[] => {
   if (!instance || !instance.parent) return []
 
@@ -43,13 +44,17 @@ export const getComponentRegisteredNames = (
   }
 
   // try to infer the name based on global resolution, as a last resort
-  // so that local registration always wins over global registration
-  names.push(
-    ...getNamesInRegistry(
-      instance.appContext.components as Record<string, unknown>,
-      type
+  // so that local registration always wins over global registration.
+  // This is opt-in: `find()` relies on the local names only so that it can
+  // still fall back to the parent registry for anonymous components.
+  if (includeGlobal) {
+    names.push(
+      ...getNamesInRegistry(
+        instance.appContext.components as Record<string, unknown>,
+        type
+      )
     )
-  )
+  }
 
   return [...new Set(names)]
 }
