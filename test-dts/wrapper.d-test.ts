@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-expressions */
 import { expectType } from './index'
-import { defineComponent } from 'vue'
-import { mount } from '../src'
+import { defineComponent, h } from 'vue'
+import { mount, shallowMount } from '../src'
 import EmitsSfc from './EmitsSfc.vue'
 
 const AppWithDefine = defineComponent({
@@ -226,3 +226,72 @@ requiredPropsWrapper.setProps({
   // @ts-expect-error wrong type
   foo: 1
 })
+
+// props resolved from defaults
+const ComponentWithDefaults = defineComponent({
+  props: {
+    a: { type: String, default: 'default' },
+    optional: String,
+    required: { type: String, required: true },
+    boolean: Boolean,
+    undefinedDefault: { type: Boolean, default: undefined }
+  },
+  emits: ['change'],
+  template: '<div />'
+})
+const defaultsWrapper = mount(ComponentWithDefaults, {
+  props: { required: 'required' }
+})
+
+expectType<string>(defaultsWrapper.props('a'))
+expectType<string>(defaultsWrapper.props().a)
+expectType<string | undefined>(defaultsWrapper.props('optional'))
+expectType<string | undefined>(defaultsWrapper.props().optional)
+expectType<string>(defaultsWrapper.props('required'))
+expectType<string>(defaultsWrapper.props().required)
+expectType<boolean>(defaultsWrapper.props('boolean'))
+expectType<boolean>(defaultsWrapper.props().boolean)
+expectType<boolean | undefined>(defaultsWrapper.props('undefinedDefault'))
+expectType<boolean | undefined>(defaultsWrapper.props().undefinedDefault)
+expectType<typeof defaultsWrapper.vm.$props.onChange>(
+  defaultsWrapper.props('onChange')
+)
+expectType<typeof defaultsWrapper.vm.$props.key>(defaultsWrapper.props('key'))
+// @ts-expect-error :: unknown prop
+defaultsWrapper.props('missing')
+defaultsWrapper.setProps({ a: undefined })
+// @ts-expect-error :: should require string
+defaultsWrapper.setProps({ a: 123 })
+
+const shallowDefaultsWrapper = shallowMount(ComponentWithDefaults, {
+  props: { required: 'required' }
+})
+expectType<string>(shallowDefaultsWrapper.props('a'))
+expectType<string>(shallowDefaultsWrapper.props().a)
+
+const childWithDefaults = mount({
+  render: () => h(ComponentWithDefaults, { required: 'required' })
+}).findComponent(ComponentWithDefaults)
+expectType<string>(childWithDefaults.props('a'))
+expectType<string>(childWithDefaults.props().a)
+
+// a setup binding shadowing a prop does not change the prop type
+const shadowedPropsWrapper = mount(
+  defineComponent({
+    props: {
+      required: { type: String, required: true },
+      optional: String,
+      defaulted: { type: String, default: 'default' }
+    },
+    setup: () => ({ required: 123, optional: 'local', defaulted: 123 }),
+    template: '<div />'
+  }),
+  { props: { required: 'required' } }
+)
+
+expectType<string>(shadowedPropsWrapper.props('required'))
+expectType<string>(shadowedPropsWrapper.props().required)
+expectType<string | undefined>(shadowedPropsWrapper.props('optional'))
+expectType<string | undefined>(shadowedPropsWrapper.props().optional)
+expectType<string>(shadowedPropsWrapper.props('defaulted'))
+expectType<string>(shadowedPropsWrapper.props().defaulted)

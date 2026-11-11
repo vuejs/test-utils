@@ -17,18 +17,9 @@ import {
 } from './wrapperFactory'
 import { ShapeFlags } from './utils/vueShared'
 
-// Prop defaults declared by the component, read from its options metadata.
-type PropDefaults<T extends ComponentPublicInstance> = T['$options'] extends {
-  __defaults?: infer D
-}
-  ? 0 extends 1 & D
-    ? {}
-    : NonNullable<D>
-  : {}
-
 // Props as the component's setup() receives them, read from its options
-// metadata. Unlike the defaults metadata, which types a prop declared with
-// `default: undefined` as always set, these keep `undefined` for such a prop.
+// metadata: defaulted and Boolean props are always set, while a prop declared
+// with `default: undefined` keeps `undefined`.
 // `$options` can intersect two setup signatures, one of them with untyped
 // (`any` or index-signature) props, so both are read and the typed one is kept.
 type TypedProps<P> = 0 extends 1 & P
@@ -48,26 +39,19 @@ type SetupProps<T extends ComponentPublicInstance> =
       : P1
     : {}
 
-// Defaulted props that are always set once resolved: every key with a declared
-// default (including Boolean props) unless setup() still sees it as possibly
-// `undefined`, as with `default: undefined`.
-type ResolvedDefaultKeys<T extends ComponentPublicInstance> = {
-  [
-    K in Extract<keyof T['$props'], keyof PropDefaults<T>>
-  ]-?: K extends keyof SetupProps<T>
-    ? undefined extends SetupProps<T>[K]
-      ? never
-      : K
-    : K
-}[Extract<keyof T['$props'], keyof PropDefaults<T>>]
-
-// Prop types as resolved on the instance: a prop with a declared default
-// (including Boolean props) is always set, so it is no longer optional, unless
-// its default is `undefined`. The narrowing comes only from prop/default
-// metadata, never from same-named instance members such as setup bindings,
-// which are independent of the prop.
+// Prop types as resolved on the instance: a prop that setup() receives as
+// always set (a required prop, a Boolean prop, or one with a defined default)
+// is no longer optional. Props that can still be `undefined`, and public-only
+// keys such as `key`, keep their original types. The narrowing comes only from
+// prop metadata, never from same-named instance members such as setup
+// bindings, which are independent of the prop.
 type ResolvedProps<T extends ComponentPublicInstance> = T['$props'] & {
-  [K in ResolvedDefaultKeys<T>]-?: PropDefaults<T>[K]
+  [
+    K in Extract<
+      keyof T['$props'],
+      keyof SetupProps<T>
+    > as undefined extends SetupProps<T>[K] ? never : K
+  ]-?: SetupProps<T>[K]
 }
 
 /**
