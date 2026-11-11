@@ -10,8 +10,7 @@ import {
   h,
   proxyRefs,
   ref,
-  shallowReactive,
-  transformVNodeArgs
+  shallowReactive
 } from 'vue'
 
 import type { MountingOptions, Slot } from './types'
@@ -32,7 +31,10 @@ import {
   isLegacyFunctionalComponent,
   unwrapLegacyVueExtendComponent
 } from './utils/vueCompatSupport'
-import { createVNodeTransformer } from './vnodeTransformers/util'
+import {
+  createVNodeTransformer,
+  installVNodeTransformer
+} from './vnodeTransformers/util'
 import type { CreateStubComponentsTransformerConfig } from './vnodeTransformers/stubComponentsTransformer'
 import { createStubComponentsTransformer } from './vnodeTransformers/stubComponentsTransformer'
 import { createStubDirectivesTransformer } from './vnodeTransformers/stubDirectivesTransformer'
@@ -322,7 +324,8 @@ export function createInstance(
   // stubs
   // even if we are using `mount`, we will still
   // stub out Transition and Transition Group by default.
-  transformVNodeArgs(
+  installVNodeTransformer(
+    app,
     createVNodeTransformer({
       rootComponents,
       transformers: [

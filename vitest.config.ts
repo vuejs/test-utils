@@ -24,7 +24,7 @@ export default defineConfig(({ mode }) => ({
   },
   test: {
     environment: 'jsdom',
-    pool: 'threads',
+    pool: 'vmThreads',
     setupFiles: [path.resolve(__dirname, './setup.js')],
     include: ['tests/**/*.spec.ts'],
     coverage: {
