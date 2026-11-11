@@ -1,4 +1,4 @@
-import { isComponent } from '../utils'
+import { isComponent, isObject } from '../utils'
 import { registerStub } from '../stubs'
 import { getCurrentInstance, transformVNodeArgs } from 'vue'
 import type { App, Component, ConcreteComponent } from 'vue'
@@ -134,7 +134,14 @@ export const createVNodeTransformer = ({
         // rendering the children as a slot: bail out of optimized patching so
         // the stub updates them on re-render
         const [, ...rest] = restVNodeArgs
-        return [transformedType, props, () => children, -2 /* BAIL */, ...rest]
+        // slots compiled from JSX or written as `h(Teleport, props, { default })`
+        // are passed as they are
+        const slots =
+          typeof children === 'function' ||
+          (isObject(children) && !Array.isArray(children))
+            ? children
+            : () => children
+        return [transformedType, props, slots, -2 /* BAIL */, ...rest]
       }
     } else if (instance) {
       let untransformed = untransformedCache.get(instance)

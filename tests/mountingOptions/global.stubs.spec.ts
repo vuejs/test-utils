@@ -1,6 +1,13 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import type { Directive } from 'vue'
-import { defineAsyncComponent, defineComponent, h, nextTick, ref } from 'vue'
+import {
+  KeepAlive,
+  defineAsyncComponent,
+  defineComponent,
+  h,
+  nextTick,
+  ref
+} from 'vue'
 import {
   RouterLinkStub,
   TeleportStub,
@@ -791,6 +798,23 @@ describe('mounting options: stubs', () => {
       })
 
       expect(wrapper.html()).toBe('<div id="content"></div>')
+    })
+
+    it('renders slots passed to a stubbed keep-alive', () => {
+      const content = () => h('div', { id: 'content' })
+
+      for (const slots of [{ default: content }, content]) {
+        const wrapper = mount(
+          { render: () => h(KeepAlive, null, slots) },
+          { global: { stubs: { 'keep-alive': true } } }
+        )
+
+        expect(wrapper.html()).toBe(
+          '<keep-alive-stub>\n' +
+            '  <div id="content"></div>\n' +
+            '</keep-alive-stub>'
+        )
+      }
     })
   })
 

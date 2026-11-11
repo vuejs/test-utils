@@ -145,6 +145,31 @@ describe('teleport', () => {
     expect(withProps.emitted().greet[0]).toEqual(['Hey!'])
   })
 
+  it('renders slots passed to a stubbed teleport', () => {
+    const spy = vi.spyOn(console, 'warn')
+    // as @vue/babel-plugin-jsx compiles <Teleport to="body"><div id="content" /></Teleport>
+    const Comp = defineComponent({
+      render: () =>
+        h(
+          Teleport,
+          { to: 'body' },
+          { default: () => [h('div', { id: 'content' })] }
+        )
+    })
+
+    for (const stub of [true, TeleportStub]) {
+      const wrapper = mount(Comp, { global: { stubs: { teleport: stub } } })
+
+      expect(wrapper.find('#content').exists()).toBe(true)
+    }
+    // text is still passed as a slot function (#1829)
+    mount(
+      { render: () => h(Teleport, { to: 'body' }, 'content') },
+      { global: { stubs: { teleport: true } } }
+    )
+    expect(spy).not.toHaveBeenCalled()
+  })
+
   it('should reactively update content with teleport', async () => {
     const wrapper = mount(
       defineComponent({
