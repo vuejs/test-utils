@@ -74,6 +74,4 @@ describe('options.attachTo', () => {
       'Unable to find the element matching the selector #unknown given as the `attachTo` option'
     )
   })
-
-  it.todo('correctly hydrates markup')
 })
