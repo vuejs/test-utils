@@ -235,7 +235,7 @@ describe('element', () => {
     const wrapper = mount(Root)
     expect(wrapper.element.innerHTML).toBe('<div>foo</div><div>bar</div>')
     // we're expecting a warning from Vue as we're using non-function slots
-    expect(spy.mock.calls[0][0]).toContain(
+    expect(spy.mock.calls[0]![0]).toContain(
       'Non-function value encountered for default slot'
     )
   })

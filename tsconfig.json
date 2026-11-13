@@ -6,6 +6,7 @@
     "module": "esnext",
     "lib": ["DOM", "ES2019"],
     "strict": true,
+    "noUncheckedIndexedAccess": true,
     "jsx": "preserve",
     "jsxImportSource": "vue",
     "moduleResolution": "bundler",

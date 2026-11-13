@@ -363,9 +363,9 @@ describe('findComponent', () => {
     })
 
     const compB = wrapper.findAllComponents(ComponentB)
-    expect(compB[0].find('.content').text()).toBe('1')
-    expect(compB[0].vm.$el.querySelector('.content').innerHTML).toBe('1')
-    expect(compB[0].vm.$el.querySelector('.content').textContent).toBe('1')
+    expect(compB[0]!.find('.content').text()).toBe('1')
+    expect(compB[0]!.vm.$el.querySelector('.content').innerHTML).toBe('1')
+    expect(compB[0]!.vm.$el.querySelector('.content').textContent).toBe('1')
   })
 
   it('finds single by ref in v-for', () => {

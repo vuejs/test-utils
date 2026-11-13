@@ -26,10 +26,10 @@ describe('emitted', () => {
     expect(wrapper.emitted().hello).toEqual(undefined)
 
     await wrapper.find('button').trigger('click')
-    expect(wrapper.emitted().hello[0]).toEqual(['foo', 'bar'])
+    expect(wrapper.emitted().hello![0]).toEqual(['foo', 'bar'])
 
     wrapper.find('button').trigger('click')
-    expect(wrapper.emitted().hello[1]).toEqual(['foo', 'bar'])
+    expect(wrapper.emitted().hello![1]).toEqual(['foo', 'bar'])
   })
 
   it('captures events emitted via ctx.emit', () => {
@@ -48,10 +48,10 @@ describe('emitted', () => {
     expect(wrapper.emitted().hello).toEqual(undefined)
 
     wrapper.find('button').trigger('click')
-    expect(wrapper.emitted().hello[0]).toEqual(['foo', 'bar'])
+    expect(wrapper.emitted().hello![0]).toEqual(['foo', 'bar'])
 
     wrapper.find('button').trigger('click')
-    expect(wrapper.emitted().hello[1]).toEqual(['foo', 'bar'])
+    expect(wrapper.emitted().hello![1]).toEqual(['foo', 'bar'])
   })
 
   it('captures events emitted via destructured emit', () => {
@@ -70,10 +70,10 @@ describe('emitted', () => {
     expect(wrapper.emitted().hello).toEqual(undefined)
 
     wrapper.find('button').trigger('click')
-    expect(wrapper.emitted().hello[0]).toEqual(['foo', 'bar'])
+    expect(wrapper.emitted().hello![0]).toEqual(['foo', 'bar'])
 
     wrapper.find('button').trigger('click')
-    expect(wrapper.emitted().hello[1]).toEqual(['foo', 'bar'])
+    expect(wrapper.emitted().hello![1]).toEqual(['foo', 'bar'])
   })
 
   it('should propagate child native events', async () => {
@@ -157,16 +157,16 @@ describe('emitted', () => {
     wrapper.find('button').trigger('click')
 
     // Parent should emit custom event 'hello' but not 'hi'
-    expect(wrapper.emitted().hello[0]).toEqual(['foo', 'bar'])
+    expect(wrapper.emitted().hello![0]).toEqual(['foo', 'bar'])
     expect(wrapper.emitted().hi).toEqual(undefined)
     // Child should emit custom event 'hi'
-    expect(childWrapper.emitted().hi[0]).toEqual(['foo', 'bar'])
+    expect(childWrapper.emitted().hi![0]).toEqual(['foo', 'bar'])
 
     // Additional events should accumulate in the same format
     wrapper.find('button').trigger('click')
-    expect(wrapper.emitted().hello[1]).toEqual(['foo', 'bar'])
+    expect(wrapper.emitted().hello![1]).toEqual(['foo', 'bar'])
     expect(wrapper.emitted().hi).toEqual(undefined)
-    expect(childWrapper.emitted().hi[1]).toEqual(['foo', 'bar'])
+    expect(childWrapper.emitted().hi![1]).toEqual(['foo', 'bar'])
   })
 
   it('should not propagate native events defined in emits', () => {
@@ -185,7 +185,7 @@ describe('emitted', () => {
 
     wrapper.find('button').trigger('click')
 
-    expect(wrapper.emitted().hi[0]).toEqual(['foo', 'bar'])
+    expect(wrapper.emitted().hi![0]).toEqual(['foo', 'bar'])
     expect(wrapper.emitted().click).toEqual(undefined)
   })
 
@@ -324,8 +324,8 @@ describe('emitted', () => {
 
     expect(wrapper.emitted().click).toHaveLength(1)
     expect(wrapper.emitted().bar).toHaveLength(2)
-    expect(wrapper.emitted().bar[0]).toEqual(['mounted'])
-    expect(wrapper.emitted().bar[1]).toEqual(['click'])
+    expect(wrapper.emitted().bar![0]).toEqual(['mounted'])
+    expect(wrapper.emitted().bar![1]).toEqual(['click'])
   })
 
   it('captures emitted events in script setup', async () => {
@@ -334,8 +334,8 @@ describe('emitted', () => {
 
     expect(wrapper.emitted().click).toHaveLength(1)
     expect(wrapper.emitted().bar).toHaveLength(2)
-    expect(wrapper.emitted().bar[0]).toEqual(['mounted'])
-    expect(wrapper.emitted().bar[1]).toEqual(['click'])
+    expect(wrapper.emitted().bar![0]).toEqual(['mounted'])
+    expect(wrapper.emitted().bar![1]).toEqual(['click'])
   })
 
   it('does not clear all emitted event history on mount/unmount', async () => {

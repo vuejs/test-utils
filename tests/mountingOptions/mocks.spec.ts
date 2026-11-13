@@ -70,7 +70,7 @@ describe('mocks', () => {
           return `/posts/${this.$route.params.id}`
         },
         id(): string | string[] {
-          return this.$route.params.id
+          return this.$route.params.id!
         }
       },
       methods: {

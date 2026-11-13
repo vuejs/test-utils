@@ -40,16 +40,16 @@ const twoLayersCountObjectValue = computed(
   () => props.twoLayersCountObject.oneLayerCountObject.count.value
 )
 
-const countArrayValue = computed(() => props.countArray[0].value)
-const countMatrixValue = computed(() => props.countMatrix[0][0].value)
+const countArrayValue = computed(() => props.countArray[0]!.value)
+const countMatrixValue = computed(() => props.countMatrix[0]![0]!.value)
 
 const oneLayerCountObjectArrayValue = computed(
-  () => props.oneLayerCountObjectArray[0].count.value
+  () => props.oneLayerCountObjectArray[0]!.count.value
 )
 const oneLayerCountArrayObjectValue = computed(
-  () => props.oneLayerCountArrayObject.count[0].value
+  () => props.oneLayerCountArrayObject.count[0]!.value
 )
 const oneLayerCountObjectMatrixValue = computed(
-  () => props.oneLayerCountObjectMatrix[0][0].count.value
+  () => props.oneLayerCountObjectMatrix[0]![0]!.count.value
 )
 </script>

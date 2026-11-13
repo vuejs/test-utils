@@ -2,6 +2,8 @@
   "extends": "../../tsconfig.json",
   "compilerOptions": {
     "skipLibCheck": true,
+    // vitepress-translation-helper ships Vue source with unchecked label lookups.
+    "noUncheckedIndexedAccess": false,
     "noEmit": true,
     "allowImportingTsExtensions": true,
     "resolveJsonModule": true

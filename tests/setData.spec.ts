@@ -252,15 +252,17 @@ describe('setData', () => {
   })
 
   it('should keep Set objects on setData for data returned from setup()', async () => {
-    const wrapper = mount({
-      template: '<div>{{ selected.size }}</div>',
-      setup() {
-        return {
-          selected: ref(new Set([1])),
-          tags: ref<Set<string> | null>(null)
+    const wrapper = mount(
+      defineComponent({
+        template: '<div>{{ selected.size }}</div>',
+        setup() {
+          return {
+            selected: ref(new Set([1])),
+            tags: ref<Set<string> | null>(null)
+          }
         }
-      }
-    })
+      })
+    )
 
     await wrapper.setData({ selected: new Set([2, 3]), tags: new Set(['a']) })
 

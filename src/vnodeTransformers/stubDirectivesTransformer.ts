@@ -36,7 +36,7 @@ export function createStubDirectivesTransformer({
 
       const replacementDirectives = Object.fromEntries(
         directivesToPatch.map(([name, stubName]) => {
-          const directive = directives[stubName]
+          const directive = directives[stubName]!
 
           return [name, typeof directive === 'boolean' ? noop : directive]
         })

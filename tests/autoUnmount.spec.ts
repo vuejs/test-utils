@@ -18,7 +18,7 @@ describe('enableAutoUnmount', () => {
     const hookMock = vi.fn()
 
     enableAutoUnmount(hookMock)
-    const [unmountFn] = hookMock.mock.calls[0]
+    const [unmountFn] = hookMock.mock.calls[0]!
 
     const wrapper = mount({ template: '<p>test</p>' })
     vi.spyOn(wrapper, 'unmount')
@@ -32,7 +32,7 @@ describe('enableAutoUnmount', () => {
     const hookMock = vi.fn()
 
     enableAutoUnmount(hookMock)
-    const [unmountFn] = hookMock.mock.calls[0]
+    const [unmountFn] = hookMock.mock.calls[0]!
 
     const wrapper = mount(
       {

@@ -142,7 +142,7 @@ describe('teleport', () => {
     const withProps = wrapper.getComponent(EmitsEvent)
     withProps.trigger('click')
 
-    expect(withProps.emitted().greet[0]).toEqual(['Hey!'])
+    expect(withProps.emitted().greet![0]).toEqual(['Hey!'])
   })
 
   it('renders slots passed to a stubbed teleport', () => {
