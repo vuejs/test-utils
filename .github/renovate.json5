@@ -24,6 +24,25 @@
       groupSlug: 'all-minor-patch',
       schedule: ['after 1am on Wednesday'],
       matchPackageNames: ['*']
+    },
+    // keep Playwright packages and the browser image in sync
+    {
+      matchDatasources: ['npm', 'docker'],
+      matchPackageNames: [
+        'playwright',
+        '@playwright/**',
+        'mcr.microsoft.com/playwright'
+      ],
+      groupName: 'playwright',
+      groupSlug: 'playwright',
+      prCreation: 'not-pending'
+    },
+    // wait for the npm cooldown before opening the grouped image update
+    {
+      matchDatasources: ['npm'],
+      matchPackageNames: ['playwright', '@playwright/**'],
+      minimumReleaseAge: '3 days',
+      internalChecksFilter: 'none'
     }
   ]
 }
