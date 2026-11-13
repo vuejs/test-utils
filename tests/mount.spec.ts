@@ -104,23 +104,26 @@ describe('mount: general tests', () => {
   })
 
   it('should remove wrapper div when unmount', () => {
-    expect(document.body.firstChild, 'Container should be empty').toBeNull()
+    const originalChildren = Array.from(document.body.childNodes)
 
     const wrapper = mount(Hello, {
       props: { msg: 'Hello world' },
       attachTo: document.body
     })
     expect(
-      document.body.firstChild,
+      document.body.lastChild,
       'Container should have mounted component wrapper'
     ).toBeInstanceOf(HTMLDivElement)
+    expect(document.body.lastChild).toBe(wrapper.element.parentElement)
 
     wrapper.unmount()
-    expect(document.body.firstChild, 'Container should be empty').toBeNull()
+    expect(Array.from(document.body.childNodes)).toEqual(originalChildren)
   })
 
   // app.onUnmount only exists since Vue 3.5
   it('supports attachTo without app.onUnmount', () => {
+    const originalChildren = Array.from(document.body.childNodes)
+
     const wrapper = mount(Hello, {
       props: { msg: 'Hello world' },
       attachTo: document.body,
@@ -134,9 +137,10 @@ describe('mount: general tests', () => {
         ]
       }
     })
-    expect(document.body.firstChild).toBeInstanceOf(HTMLDivElement)
+    expect(document.body.lastChild).toBeInstanceOf(HTMLDivElement)
+    expect(document.body.lastChild).toBe(wrapper.element.parentElement)
 
     wrapper.unmount()
-    expect(document.body.firstChild).toBeNull()
+    expect(Array.from(document.body.childNodes)).toEqual(originalChildren)
   })
 })

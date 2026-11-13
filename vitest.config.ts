@@ -58,9 +58,7 @@ export default defineConfig(({ mode }) => ({
           include: ['tests/**/*.spec.ts'],
           exclude: [
             // SSR requires the Node environment.
-            'tests/renderToString.spec.ts',
-            // These tests assume document.body starts empty, unlike the browser runner.
-            'tests/mount.spec.ts'
+            'tests/renderToString.spec.ts'
           ],
           browser: {
             enabled: true,
