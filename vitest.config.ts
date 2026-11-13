@@ -32,7 +32,7 @@ export default defineConfig(({ mode }) => ({
         test: {
           name: 'jsdom',
           pool: 'vmThreads',
-          include: ['tests/**/*.spec.ts']
+          include: ['tests/**/*.spec.ts?(x)']
         }
       },
       {
@@ -55,7 +55,7 @@ export default defineConfig(({ mode }) => ({
         },
         test: {
           name: 'browser',
-          include: ['tests/**/*.spec.ts'],
+          include: ['tests/**/*.spec.ts?(x)'],
           exclude: [
             // SSR requires the Node environment.
             'tests/renderToString.spec.ts'
