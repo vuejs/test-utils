@@ -60,9 +60,7 @@ export default defineConfig(({ mode }) => ({
             // SSR requires the Node environment.
             'tests/renderToString.spec.ts',
             // These tests assume document.body starts empty, unlike the browser runner.
-            'tests/mount.spec.ts',
-            // Legacy compat cases currently fail in Browser Mode.
-            'tests/features/compat.spec.ts'
+            'tests/mount.spec.ts'
           ],
           browser: {
             enabled: true,
