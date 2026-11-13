@@ -246,7 +246,7 @@ export class VueWrapper<
     if (elementRoots.length !== 1) {
       return
     }
-    const [element] = elementRoots
+    const element = elementRoots[0]!
     for (const eventName of Object.keys(domEvents)) {
       // if a component includes events in 'emits' with the same name as native
       // events, the native events with that name should be ignored

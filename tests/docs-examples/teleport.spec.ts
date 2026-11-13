@@ -22,5 +22,5 @@ test('teleport', async () => {
   await signup.get('input').setValue('valid_username')
   await signup.get('form').trigger('submit.prevent')
 
-  expect(signup.emitted().signup[0]).toEqual(['valid_username'])
+  expect(signup.emitted().signup![0]).toEqual(['valid_username'])
 })

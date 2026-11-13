@@ -80,15 +80,11 @@ export const recordEvent = (
   }
   recordedUidsByRoot.get(rootCid)!.add(cid)
 
-  if (!(cid in events)) {
-    events[cid] = {}
-  }
-  if (!(event in events[cid])) {
-    events[cid][event] = []
-  }
+  const vmEvents = (events[cid] ??= {})
+  const eventHistory = (vmEvents[event] ??= [])
 
   // Record the event message sent by the emit
-  events[cid][event].push(args)
+  eventHistory.push(args)
 }
 
 export const removeEventHistory = (vm: ComponentPublicInstance): void => {

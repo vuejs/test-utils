@@ -91,9 +91,9 @@ export default abstract class BaseWrapper<
       }
     }
 
-    const elements = this.findAll(selector)
-    if (elements.length > 0) {
-      return elements[0]
+    const [element] = this.findAll(selector)
+    if (element) {
+      return element
     }
 
     return createWrapperError('DOMWrapper')

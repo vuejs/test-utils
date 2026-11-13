@@ -279,8 +279,8 @@ describe('isVisible', () => {
         })
         const summaries = wrapper.findAll('summary')
 
-        expect(summaries[0].isVisible()).toBe(true)
-        expect(summaries[1].isVisible()).toBe(false)
+        expect(summaries[0]!.isVisible()).toBe(true)
+        expect(summaries[1]!.isVisible()).toBe(false)
       })
       it('should consider a summary as visible when nested inside open details content', () => {
         const NestedSummaryInOpenDetails = defineComponent({
@@ -300,8 +300,8 @@ describe('isVisible', () => {
         })
         const summaries = wrapper.findAll('summary')
 
-        expect(summaries[0].isVisible()).toBe(true)
-        expect(summaries[1].isVisible()).toBe(true)
+        expect(summaries[0]!.isVisible()).toBe(true)
+        expect(summaries[1]!.isVisible()).toBe(true)
       })
       it('should consider a 1st summary as visible and 2nd as hidden when nested inside closed details content which is applied display: none', () => {
         const NestedSummaryInOpenDetails = defineComponent({
@@ -321,8 +321,8 @@ describe('isVisible', () => {
         })
         const summaries = wrapper.findAll('summary')
 
-        expect(summaries[0].isVisible()).toBe(true)
-        expect(summaries[1].isVisible()).toBe(false)
+        expect(summaries[0]!.isVisible()).toBe(true)
+        expect(summaries[1]!.isVisible()).toBe(false)
       })
     })
   })

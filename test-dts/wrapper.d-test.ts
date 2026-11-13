@@ -51,28 +51,28 @@ expectType<Element | undefined>(byClassMaybe.element)
 // findAll
 // HTML element selector
 let inputArray = wrapper.findAll('input')
-expectType<HTMLInputElement | undefined>(inputArray[0].element)
+expectType<HTMLInputElement | undefined>(inputArray[0]?.element)
 
 // SVG element selector
 let lineArray = wrapper.findAll('line')
-expectType<SVGLineElement | undefined>(lineArray[0].element)
+expectType<SVGLineElement | undefined>(lineArray[0]?.element)
 
 // string selector
 let byClassArray = wrapper.findAll('.todo')
-expectType<Element | undefined>(byClassArray[0].element)
+expectType<Element | undefined>(byClassArray[0]?.element)
 
 // findAll DOM wrapper
 // HTML element selector
 inputArray = domWrapper.findAll('input')
-expectType<HTMLInputElement | undefined>(inputArray[0].element)
+expectType<HTMLInputElement | undefined>(inputArray[0]?.element)
 
 // SVG element selector
 lineArray = domWrapper.findAll('line')
-expectType<SVGLineElement | undefined>(lineArray[0].element)
+expectType<SVGLineElement | undefined>(lineArray[0]?.element)
 
 // string selector
 byClassArray = domWrapper.findAll('.todo')
-expectType<Element | undefined>(byClassArray[0].element)
+expectType<Element | undefined>(byClassArray[0]?.element)
 
 // emitted
 
@@ -83,7 +83,7 @@ expectType<unknown[][] | undefined>(incrementEventWithoutType)
 // event name
 const incrementEvent = wrapper.emitted<{ count: number }>('increment')
 expectType<{ count: number }[] | undefined>(incrementEvent)
-expectType<{ count: number }>(incrementEvent![0])
+expectType<{ count: number } | undefined>(incrementEvent![0])
 
 // without event name
 const allEvents = wrapper.emitted()
@@ -102,11 +102,11 @@ const emittedWrapper = mount(EmittedComp)
 
 const changeEvent = emittedWrapper.emitted('change')
 expectType<[string][] | undefined>(changeEvent)
-expectType<[string]>(changeEvent![0])
+expectType<[string] | undefined>(changeEvent![0])
 
 const selectEvent = emittedWrapper.emitted('select')
 expectType<[number, string][] | undefined>(selectEvent)
-expectType<[number, string]>(selectEvent![0])
+expectType<[number, string] | undefined>(selectEvent![0])
 
 const plainEvent = emittedWrapper.emitted('plain')
 expectType<any[][] | undefined>(plainEvent)

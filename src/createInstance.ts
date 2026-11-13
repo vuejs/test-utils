@@ -308,17 +308,17 @@ export function createInstance(
   }
 
   if (global.components) {
-    for (const key of Object.keys(global.components)) {
+    for (const [key, component] of Object.entries(global.components)) {
       // avoid registering components that are stubbed twice
       if (!(key in global.stubs)) {
-        app.component(key, global.components[key])
+        app.component(key, component)
       }
     }
   }
 
   if (global.directives) {
-    for (const key of Object.keys(global.directives))
-      app.directive(key, global.directives[key])
+    for (const [key, directive] of Object.entries(global.directives))
+      app.directive(key, directive)
   }
 
   // stubs

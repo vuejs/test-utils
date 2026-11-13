@@ -33,9 +33,7 @@ function generateModifiers(modifiers: KeyName[], isOnClick: boolean) {
   const keyModifiers: KeyName[] = []
   const systemModifiers: Modifier[] = []
 
-  for (let i = 0; i < modifiers.length; i++) {
-    const modifier: KeyName | Modifier = modifiers[i]
-
+  for (const modifier of modifiers) {
     // addEventListener() options, e.g. .passive & .capture, that we dont need to handle
     if (ignorableKeyModifiers.includes(modifier)) {
       continue
@@ -103,8 +101,9 @@ function getEventProperties(eventParams: EventParams) {
   )
 
   // get the keyCode for backwards compat
+  const [keyModifier] = keyModifiers
   const keyCode =
-    keyCodesByKeyName[keyModifiers[0]] ||
+    (keyModifier && keyCodesByKeyName[keyModifier]) ||
     (options && (options.keyCode || options.code))
 
   const eventProperties = {
@@ -114,9 +113,10 @@ function getEventProperties(eventParams: EventParams) {
     cancelable: meta.cancelable,
     // Any derived options should go here
     keyCode,
-    code: options.code || codesByKeyName[keyModifiers[0]] || keyCode,
+    code:
+      options.code || (keyModifier && codesByKeyName[keyModifier]) || keyCode,
     // if we have a `key`, use it, otherwise dont set anything (allows user to pass custom key)
-    ...(keyModifiers[0] ? { key: keyModifiers[0] } : {})
+    ...(keyModifier ? { key: keyModifier } : {})
   }
 
   return {

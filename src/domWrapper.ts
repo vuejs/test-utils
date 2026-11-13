@@ -148,8 +148,7 @@ export class DOMWrapper<NodeType extends Node> extends BaseWrapper<NodeType> {
     } else if (tagName === 'SELECT') {
       if (Array.isArray(value)) {
         const selectElement = element as unknown as HTMLSelectElement
-        for (let i = 0; i < selectElement.options.length; i++) {
-          const option = selectElement.options[i]
+        for (const option of selectElement.options) {
           option.selected = value.includes(option.value)
         }
       } else {

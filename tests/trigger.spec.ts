@@ -62,8 +62,8 @@ describe('trigger', () => {
       await wrapper.trigger('click.right')
 
       expect(handler).toHaveBeenCalledTimes(1)
-      expect(handler.mock.calls[0][0].type).toBe('contextmenu')
-      expect(handler.mock.calls[0][0].button).toBe(2)
+      expect(handler.mock.calls[0]![0].type).toBe('contextmenu')
+      expect(handler.mock.calls[0]![0].button).toBe(2)
     })
 
     it('works with middle modifier', async () => {
@@ -76,8 +76,8 @@ describe('trigger', () => {
       await wrapper.trigger('click.middle')
 
       expect(handler).toHaveBeenCalledTimes(1)
-      expect(handler.mock.calls[0][0].button).toBe(1)
-      expect(handler.mock.calls[0][0].type).toBe('mouseup')
+      expect(handler.mock.calls[0]![0].button).toBe(1)
+      expect(handler.mock.calls[0]![0].type).toBe('mouseup')
     })
 
     it('works with meta and key modifiers', async () => {
@@ -90,8 +90,8 @@ describe('trigger', () => {
       await wrapper.trigger('click.meta.right')
 
       expect(handler).toHaveBeenCalledTimes(1)
-      expect(handler.mock.calls[0][0].metaKey).toBe(true)
-      expect(handler.mock.calls[0][0].button).toBe(2)
+      expect(handler.mock.calls[0]![0].metaKey).toBe(true)
+      expect(handler.mock.calls[0]![0].button).toBe(2)
     })
 
     it('causes DOM to update after a click handler method that changes components data is called', async () => {
@@ -166,17 +166,17 @@ describe('trigger', () => {
       // is called when key is lowercase 'enter'
       await wrapper.trigger('keydown', { key: 'enter' })
       expect(keydownHandler).toHaveBeenCalledTimes(1)
-      expect(keydownHandler.mock.calls[0][0].key).toBe('enter')
+      expect(keydownHandler.mock.calls[0]![0].key).toBe('enter')
 
       // is called when key is titlecase 'Enter'
       await wrapper.trigger('keydown', { key: 'Enter' })
       expect(keydownHandler).toHaveBeenCalledTimes(2)
-      expect(keydownHandler.mock.calls[1][0].key).toBe('Enter')
+      expect(keydownHandler.mock.calls[1]![0].key).toBe('Enter')
 
       // is correctly parsed when using modifier
       await wrapper.trigger('keydown.enter')
       expect(keydownHandler).toHaveBeenCalledTimes(3)
-      expect(keydownHandler.mock.calls[2][0].key).toBe('enter')
+      expect(keydownHandler.mock.calls[2]![0].key).toBe('enter')
     })
 
     it('overwrites key if passed as a modifier', async () => {
@@ -190,8 +190,8 @@ describe('trigger', () => {
       // is called when key is lowercase 'enter'
       await wrapper.trigger('keydown.enter', { key: 'up' })
       expect(keydownHandler).toHaveBeenCalledTimes(1)
-      expect(keydownHandler.mock.calls[0][0].key).toBe('enter')
-      expect(keydownHandler.mock.calls[0][0].keyCode).toBe(13)
+      expect(keydownHandler.mock.calls[0]![0].key).toBe('enter')
+      expect(keydownHandler.mock.calls[0]![0].keyCode).toBe(13)
     })
 
     it('causes keydown handler to fire with multiple modifiers', async () => {
@@ -206,7 +206,7 @@ describe('trigger', () => {
 
       expect(keydownHandler).toHaveBeenCalledTimes(1)
 
-      const event = keydownHandler.mock.calls[0][0]
+      const event = keydownHandler.mock.calls[0]![0]
       expect(event.key).toBe('left')
       expect(event.shiftKey).toBe(true)
       expect(event.ctrlKey).toBe(true)
@@ -223,7 +223,7 @@ describe('trigger', () => {
       await wrapper.trigger('keydown', { keyCode: 65 })
 
       expect(keydownHandler).toHaveBeenCalledTimes(1)
-      expect(keydownHandler.mock.calls[0][0].keyCode).toBe(65)
+      expect(keydownHandler.mock.calls[0]![0].keyCode).toBe(65)
     })
 
     it('causes keydown handler to fire with the appropriate code when wrapper.trigger("keydown", { code: "Space" }) is fired', async () => {
@@ -236,9 +236,9 @@ describe('trigger', () => {
       await wrapper.trigger('keydown', { code: 'Space', key: ' ', keyCode: 32 })
 
       expect(keydownHandler).toHaveBeenCalledTimes(1)
-      expect(keydownHandler.mock.calls[0][0].key).toBe(' ')
-      expect(keydownHandler.mock.calls[0][0].code).toBe('Space')
-      expect(keydownHandler.mock.calls[0][0].keyCode).toBe(32)
+      expect(keydownHandler.mock.calls[0]![0].key).toBe(' ')
+      expect(keydownHandler.mock.calls[0]![0].code).toBe('Space')
+      expect(keydownHandler.mock.calls[0]![0].keyCode).toBe(32)
     })
 
     it('causes keydown handler to fire converting keyName in an appropriate keyCode when wrapper.trigger("keydown.${keyName}") is fired', async () => {
@@ -255,7 +255,7 @@ describe('trigger', () => {
         wrapper.trigger(`keydown.${keyName}`)
 
         const calls = keydownHandler.mock.calls
-        const currentCall = calls[calls.length - 1][0]
+        const currentCall = calls[calls.length - 1]![0]
 
         expect(currentCall.keyCode).toBe(keyCode)
       }
@@ -275,7 +275,7 @@ describe('trigger', () => {
         await wrapper.trigger(`keydown.${keyName}`)
 
         const calls = keydownHandler.mock.calls
-        const currentCall = calls[calls.length - 1][0]
+        const currentCall = calls[calls.length - 1]![0]
 
         expect(currentCall.code).toBe(code)
       }
@@ -360,7 +360,7 @@ describe('trigger', () => {
 
       wrapper.trigger('update', { customData: 123 })
       expect(updateHandler).toHaveBeenCalledTimes(1)
-      expect(updateHandler.mock.calls[0][0].customData).toBe(123)
+      expect(updateHandler.mock.calls[0]![0].customData).toBe(123)
     })
   })
 

@@ -94,7 +94,7 @@ describe('find', () => {
 
     const wrapper = mount(ComponentA)
     const firstCompB = wrapper.findComponent({ name: 'ComponentB' })
-    const lastCompB = wrapper.findAllComponents({ name: 'ComponentB' })[1]
+    const lastCompB = wrapper.findAllComponents({ name: 'ComponentB' })[1]!
 
     expect(firstCompB.find('input').element.value).toBe('1')
     expect(lastCompB.find('input').element.value).toBe('2')
@@ -219,10 +219,10 @@ describe('findAll', () => {
 
     const wrapper = mount(ComponentA)
     const firstCompB = wrapper.findComponent({ name: 'ComponentB' })
-    const lastCompB = wrapper.findAllComponents({ name: 'ComponentB' })[1]
+    const lastCompB = wrapper.findAllComponents({ name: 'ComponentB' })[1]!
 
-    expect(firstCompB.findAll('input')[0].element.value).toBe('1')
-    expect(lastCompB.findAll('input')[0].element.value).toBe('2')
+    expect(firstCompB.findAll('input')[0]!.element.value).toBe('1')
+    expect(lastCompB.findAll('input')[0]!.element.value).toBe('2')
   })
 
   it('works with suspense', async () => {

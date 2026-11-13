@@ -15,9 +15,10 @@ export function getRootNodes(vnode: VNode): Node[] {
     (ShapeFlags.TEXT_CHILDREN | ShapeFlags.TELEPORT)
   ) {
     // static node optimization, subTree.children will be static string and will not help us
-    const result = [vnode.el as Node]
+    const root = vnode.el as Node
+    const result = [root]
     if (vnode.anchor) {
-      let currentNode: Node | null = result[0].nextSibling
+      let currentNode: Node | null = root.nextSibling
       while (currentNode && currentNode.previousSibling !== vnode.anchor) {
         result.push(currentNode)
         currentNode = currentNode.nextSibling

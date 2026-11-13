@@ -22,10 +22,10 @@ describe('findAllComponents', () => {
     const wrapper = mount(compA)
     // find by DOM selector
     expect(wrapper.findAllComponents('.C')).toHaveLength(2)
-    expect(wrapper.findAllComponents({ name: 'Hello' })[0].text()).toBe(
+    expect(wrapper.findAllComponents({ name: 'Hello' })[0]!.text()).toBe(
       'Hello world'
     )
-    expect(wrapper.findAllComponents(Hello)[0].text()).toBe('Hello world')
+    expect(wrapper.findAllComponents(Hello)[0]!.text()).toBe('Hello world')
   })
 
   it('finds all deeply nested vue components when chained from dom wrapper', () => {
@@ -69,7 +69,8 @@ describe('findAllComponents', () => {
 
     expect(wrapper.findAllComponents('.in-root')).toHaveLength(1)
     expect(
-      wrapper.findAllComponents<DefineComponent>('.in-root')[0].vm.$options.name
+      wrapper.findAllComponents<DefineComponent>('.in-root')[0]!.vm.$options
+        .name
     ).toEqual('NestedChild')
 
     expect(wrapper.findAllComponents('.in-child')).toHaveLength(1)
@@ -77,7 +78,7 @@ describe('findAllComponents', () => {
     // someone might expect DeepNestedChild here, but
     // we always return TOP component matching DOM element
     expect(
-      wrapper.findAllComponents<DefineComponent>('.in-child')[0].vm.$options
+      wrapper.findAllComponents<DefineComponent>('.in-child')[0]!.vm.$options
         .name
     ).toEqual('NestedChild')
   })
@@ -122,7 +123,7 @@ describe('findAllComponents', () => {
     expect(wrapper.findAll('span')).toHaveLength(3)
     expect(wrapper.findAllComponents(ComponentB)).toHaveLength(3)
     // we're expecting a warning from Vue as we're using non-function slots
-    expect(spy.mock.calls[0][0]).toContain(
+    expect(spy.mock.calls[0]![0]).toContain(
       'Non-function value encountered for default slot'
     )
   })

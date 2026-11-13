@@ -147,16 +147,16 @@ describe('props', () => {
     })
 
     const [fooCmp1, barCmp1] = wrapper.findAllComponents({ name: 'Foo' })
-    expect(fooCmp1.props()).toEqual({ foo: 'old value' })
-    expect(barCmp1.props()).toEqual({ foo: 'foo2 value' })
+    expect(fooCmp1!.props()).toEqual({ foo: 'old value' })
+    expect(barCmp1!.props()).toEqual({ foo: 'foo2 value' })
     expect(wrapper.find('#foo1').attributes().foo).toBe('old value')
     expect(wrapper.find('#foo2').attributes().foo).toBe('foo2 value')
 
     await wrapper.find('button').trigger('click')
 
     const [fooCmp2, barCmp2] = wrapper.findAllComponents({ name: 'Foo' })
-    expect(fooCmp2.props()).toEqual({ foo: 'new value' })
-    expect(barCmp2.props()).toEqual({ foo: 'foo2 value' })
+    expect(fooCmp2!.props()).toEqual({ foo: 'new value' })
+    expect(barCmp2!.props()).toEqual({ foo: 'foo2 value' })
     expect(wrapper.find('#foo1').attributes().foo).toBe('new value')
     expect(wrapper.find('#foo2').attributes().foo).toBe('foo2 value')
   })
