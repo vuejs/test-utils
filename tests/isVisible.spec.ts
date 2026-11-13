@@ -1,8 +1,10 @@
-import { describe, expect, it } from 'vitest'
-import { mount } from '../src'
+import { afterEach, describe, expect, it } from 'vitest'
+import { enableAutoUnmount, mount } from '../src'
 import { defineComponent, ref } from 'vue'
 
 describe('isVisible', () => {
+  enableAutoUnmount(afterEach)
+
   const Comp = {
     template: `<div><span v-show="show" /></div>`,
     props: {
@@ -14,6 +16,7 @@ describe('isVisible', () => {
 
   it('returns false when element hidden via v-show', () => {
     const wrapper = mount(Comp, {
+      attachTo: document.body,
       props: {
         show: false
       }
@@ -24,6 +27,7 @@ describe('isVisible', () => {
 
   it('returns true when element is visible via v-show', () => {
     const wrapper = mount(Comp, {
+      attachTo: document.body,
       props: {
         show: true
       }
@@ -36,7 +40,7 @@ describe('isVisible', () => {
     const Comp = {
       template: `<div v-show="false"><span /></div>`
     }
-    const wrapper = mount(Comp)
+    const wrapper = mount(Comp, { attachTo: document.body })
 
     expect(wrapper.find('span').isVisible()).toBe(false)
   })
@@ -50,9 +54,6 @@ describe('isVisible', () => {
         }
       }
     }
-    // TODO: attachTo can be removed when https://github.com/jsdom/jsdom/issues/3502 is fixed
-    // with jsdom v21.1, getComputedStyle is cached and not updated for elements not in the DOM
-    // so the test fails (because the element is checked a first time)
     const wrapper = mount(Comp, { attachTo: document.body })
 
     expect(wrapper.find('span').isVisible()).toBe(true)
@@ -76,9 +77,6 @@ describe('isVisible', () => {
         }
       }
     }
-    // TODO: attachTo can be removed when https://github.com/jsdom/jsdom/issues/3502 is fixed
-    // with jsdom v21.1, getComputedStyle is cached and not updated for elements not in the DOM
-    // so the test fails (because the element is checked a first time)
     const wrapper = mount(Comp, { attachTo: document.body })
 
     expect(wrapper.find('span').isVisible()).toBe(true)
@@ -123,9 +121,10 @@ describe('isVisible', () => {
     document.head.appendChild(style)
     style.sheet!.insertRule('.opacity-0 { opacity: 0; }')
 
-    const wrapper = mount({
-      template: '<div id="my-div" class="opacity-0" />'
-    })
+    const wrapper = mount(
+      { template: '<div id="my-div" class="opacity-0" />' },
+      { attachTo: document.body }
+    )
 
     expect(wrapper.get('#my-div').isVisible()).toBe(false)
 
@@ -151,7 +150,7 @@ describe('isVisible', () => {
       })
 
       it('mount: returns false when root has v-show=false', () => {
-        const wrapper = mount(Root)
+        const wrapper = mount(Root, { attachTo: document.body })
         const hidden = wrapper.findComponent(Hidden)
         const show = wrapper.findComponent(Show)
         expect(hidden.isVisible()).toBe(false)
@@ -160,6 +159,7 @@ describe('isVisible', () => {
 
       it('shallowMount: returns false when root has v-show=false', () => {
         const wrapper = mount(Root, {
+          attachTo: document.body,
           shallow: true
         })
         const hidden = wrapper.findComponent(Hidden)
@@ -187,7 +187,7 @@ describe('isVisible', () => {
       })
 
       it('mount: returns false when child has v-show=false', () => {
-        const wrapper = mount(Root)
+        const wrapper = mount(Root, { attachTo: document.body })
         const hidden = wrapper.findComponent(Hidden)
         const show = wrapper.findComponent(Show)
         expect(hidden.isVisible()).toBe(false)
@@ -196,6 +196,7 @@ describe('isVisible', () => {
 
       it('shallowMount: returns true when child has v-show=false, because of shallow mount', () => {
         const wrapper = mount(Root, {
+          attachTo: document.body,
           shallow: true
         })
         const hidden = wrapper.findComponent(Hidden)
@@ -218,12 +219,13 @@ describe('isVisible', () => {
       })
 
       it('mount: returns false', () => {
-        const wrapper = mount(Root)
+        const wrapper = mount(Root, { attachTo: document.body })
         expect(wrapper.isVisible()).toBe(false)
       })
 
       it('shallowMount: return false', () => {
         const wrapper = mount(Root, {
+          attachTo: document.body,
           shallow: true
         })
         expect(wrapper.isVisible()).toBe(false)
@@ -237,7 +239,7 @@ describe('isVisible', () => {
             '<div id="my-div" style="display: none;"><details><summary>Summary</summary></details></div>'
         })
 
-        const wrapper = mount(DetailContent)
+        const wrapper = mount(DetailContent, { attachTo: document.body })
         expect(wrapper.get('#my-div').isVisible()).toBe(false)
         expect(wrapper.find('summary').isVisible()).toBe(false)
         expect(wrapper.find('details').isVisible()).toBe(false)
@@ -247,7 +249,7 @@ describe('isVisible', () => {
           template: `<details><summary>Summary</summary><div>Content</div></details>`
         })
 
-        const wrapper = mount(DetailContent)
+        const wrapper = mount(DetailContent, { attachTo: document.body })
         expect(wrapper.find('details').isVisible()).toBe(true)
         expect(wrapper.find('summary').isVisible()).toBe(true)
         expect(wrapper.find('div').isVisible()).toBe(false)
@@ -256,7 +258,7 @@ describe('isVisible', () => {
         const childContent = defineComponent({
           template: `<details><summary><span>Summary</span></summary></details>`
         })
-        const wrapper = mount(childContent)
+        const wrapper = mount(childContent, { attachTo: document.body })
         expect(wrapper.find('summary span').isVisible()).toBe(true)
       })
       it('should consider a summary as hidden when nested inside closed details content', () => {
@@ -272,7 +274,9 @@ describe('isVisible', () => {
             </details>
           `
         })
-        const wrapper = mount(NestedSummaryInClosedDetails)
+        const wrapper = mount(NestedSummaryInClosedDetails, {
+          attachTo: document.body
+        })
         const summaries = wrapper.findAll('summary')
 
         expect(summaries[0].isVisible()).toBe(true)
@@ -291,7 +295,9 @@ describe('isVisible', () => {
             </details>
           `
         })
-        const wrapper = mount(NestedSummaryInOpenDetails)
+        const wrapper = mount(NestedSummaryInOpenDetails, {
+          attachTo: document.body
+        })
         const summaries = wrapper.findAll('summary')
 
         expect(summaries[0].isVisible()).toBe(true)
@@ -310,7 +316,9 @@ describe('isVisible', () => {
             </details>
           `
         })
-        const wrapper = mount(NestedSummaryInOpenDetails)
+        const wrapper = mount(NestedSummaryInOpenDetails, {
+          attachTo: document.body
+        })
         const summaries = wrapper.findAll('summary')
 
         expect(summaries[0].isVisible()).toBe(true)
