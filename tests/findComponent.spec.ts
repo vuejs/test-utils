@@ -4,6 +4,7 @@ import { DOMWrapper, mount } from '../src'
 import Hello from './components/Hello.vue'
 import ComponentWithoutName from './components/ComponentWithoutName.vue'
 import ScriptSetupWithChildren from './components/ScriptSetupWithChildren.vue'
+import ScriptSetupWithSlottedChild from './components/ScriptSetupWithSlottedChild.vue'
 
 const compC = defineComponent({
   name: 'ComponentC',
@@ -245,6 +246,44 @@ describe('findComponent', () => {
     expect(
       wrapper.findComponent({ name: 'ComponentWithoutName' }).exists()
     ).toBe(true)
+  })
+
+  it('finds a component without a name by its locally assigned name in a slot', () => {
+    const Item = { render: () => h('li', 'item') }
+    const List = defineComponent({
+      render() {
+        return h('ul', [this.$slots.default?.(), this.$slots.footer?.()])
+      }
+    })
+    const Component = {
+      template: `
+        <List><Item class="default" /></List>
+        <List><template #footer><Item class="footer" /></template></List>
+        <transition><Item class="transition" /></transition>
+      `,
+      components: { Item, List }
+    }
+    const wrapper = mount(Component)
+    expect(
+      wrapper.findAllComponents({ name: 'Item' }).map(w => w.classes())
+    ).toEqual([['default'], ['footer'], ['transition']])
+  })
+
+  it('finds a component without a name by its script setup import in a slot', () => {
+    const wrapper = mount(ScriptSetupWithSlottedChild)
+    expect(wrapper.findComponent({ name: 'TemplateOnly' }).exists()).toBe(true)
+  })
+
+  it('finds a component without a name registered by the mounted component in a slot from mounting options', () => {
+    const Item = { render: () => h('li', 'item') }
+    const List = defineComponent({
+      components: { Item },
+      render() {
+        return h('ul', this.$slots.default?.())
+      }
+    })
+    const wrapper = mount(List, { slots: { default: () => h(Item) } })
+    expect(wrapper.findComponent({ name: 'Item' }).exists()).toBe(true)
   })
 
   it('finds component by imported SFC file', () => {

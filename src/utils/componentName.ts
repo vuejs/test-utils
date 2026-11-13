@@ -5,7 +5,7 @@ import {
   unwrapLegacyVueExtendComponent
 } from './vueCompatSupport'
 
-const getComponentNameInSetup = (
+export const getComponentNameInSetup = (
   instance: any | null,
   type: VNodeTypes
 ): string | undefined =>
