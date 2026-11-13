@@ -34,6 +34,7 @@
   "scripts": {
     "test": "vitest --project jsdom",
     "test:browser": "vitest --project browser",
+    "test:browser:build": "vitest --project browser --mode test-build",
     "test:coverage": "vitest --project jsdom --coverage",
     "test:watch": "vitest --project jsdom --watch",
     "test:build": "vitest --project jsdom --mode test-build",
