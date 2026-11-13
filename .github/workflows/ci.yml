@@ -37,6 +37,12 @@ jobs:
         env:
           CI: true
       - run: pnpm run test:build
+      - name: Install Chromium
+        if: matrix.node == 26
+        run: pnpm exec playwright install --with-deps chromium
+      - name: Test in Chromium
+        if: matrix.node == 26
+        run: pnpm run test:browser --run
       - run: pnpm run tsd
       - run: pnpm run vue-tsc
       - run: pnpm run tsc:docs
