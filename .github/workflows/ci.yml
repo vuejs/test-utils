@@ -61,3 +61,5 @@ jobs:
       - run: pnpm install
       - name: Test in Chromium
         run: pnpm run test:browser --run
+      - name: Test build in Chromium
+        run: pnpm run test:browser:build --run
