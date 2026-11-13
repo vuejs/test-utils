@@ -42,15 +42,17 @@ function createEntry(options: {
       isEsmBrowser
         ? '@vue/compiler-dom/dist/compiler-dom.esm-browser'
         : '@vue/compiler-dom',
-      isEsmBrowser
-        ? '@vue/server-renderer/dist/compiler-dom.esm-browser'
-        : '@vue/server-renderer'
+      '@vue/server-renderer'
     ],
+    // renderToString is not available in the browser builds (see __SSR__),
+    // so they must not keep an import of @vue/server-renderer
+    treeshake: { moduleSideEffects: 'no-external' },
     transform: {
       target: 'es2015',
       define: {
         'process.env.NODE_ENV': 'true',
         __BROWSER__: String(isEsmBrowser),
+        __SSR__: String(!isBrowser),
         __USE_PREFIX_IDENTIFIERS__: String(isEsmBrowser || format === 'cjs')
       }
     },

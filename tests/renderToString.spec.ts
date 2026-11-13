@@ -117,4 +117,15 @@ describe('renderToString', () => {
 
     expect(await baseRenderToString(createSSRApp(Component))).toBe('<p>hi</p>')
   })
+
+  it('is not available in the esm-browser build', async () => {
+    // @ts-expect-error the esm-browser build has no type declarations
+    const browserBuild = await import('../dist/vue-test-utils.esm-browser.js')
+
+    expect(() =>
+      browserBuild.renderToString(defineComponent({ render: () => h('div') }))
+    ).toThrow(
+      'renderToString is not available in the browser builds of @vue/test-utils'
+    )
+  })
 })
