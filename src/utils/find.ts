@@ -11,7 +11,11 @@ import type { FindAllComponentsSelector } from '../types'
 import { isComponent } from '../utils'
 import { matchName } from './matchName'
 import { unwrapLegacyVueExtendComponent } from './vueCompatSupport'
-import { getComponentName, getComponentRegisteredName } from './componentName'
+import {
+  getComponentName,
+  getComponentNameInSetup,
+  getComponentRegisteredName
+} from './componentName'
 
 /**
  * Detect whether a selector matches a VNode
@@ -66,9 +70,12 @@ export function matches(
   componentName =
     getComponentRegisteredName(node.component, nodeType) || undefined
 
-  // if a name is missing, then check the locally registered components in the parent
-  if (node.component.parent) {
-    const registry = (node.component.parent as any).type.components
+  // if a name is missing, then check the locally registered components in the
+  // component which rendered the vnode (for slot content, it is not the parent)
+  // and in the parent
+  const owner = (node as any).ctx
+  for (const instance of [owner, node.component.parent]) {
+    const registry = instance?.type.components
     for (const key in registry) {
       // is it the selector
       if (!selectorName && registry[key] === selector) {
@@ -79,6 +86,12 @@ export function matches(
         componentName = key
       }
     }
+  }
+
+  // or imported in the script setup of the component which rendered it
+  // (the parent one was already checked above)
+  if (!componentName && owner !== node.component.parent) {
+    componentName = getComponentNameInSetup(owner, nodeType)
   }
 
   if (selectorName && componentName) {
