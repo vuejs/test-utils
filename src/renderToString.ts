@@ -22,6 +22,12 @@ export function renderToString<
 ): Promise<string>
 
 export function renderToString(component: any, options?: any): Promise<string> {
+  if (!__SSR__) {
+    throw new Error(
+      'renderToString is not available in the browser builds of @vue/test-utils'
+    )
+  }
+
   if (options?.attachTo) {
     console.warn('attachTo option is not available for renderToString')
   }

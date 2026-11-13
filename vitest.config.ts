@@ -21,6 +21,7 @@ export default defineConfig(({ mode }) => ({
   define: {
     __USE_BUILD__: mode !== 'test-build',
     __BROWSER__: true,
+    __SSR__: true,
     __USE_PREFIX_IDENTIFIERS__: true
   },
   test: {
