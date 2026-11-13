@@ -269,6 +269,25 @@ test('props', () => {
 })
 ```
 
+::: warning Object and array props
+Props are passed to the component as they are, without being made reactive:
+`wrapper.vm.items` is the same array that was given to `mount`. Mutating such
+a prop in place, from the test or from the component itself, does not
+re-render the component, as in a Vue app where a parent passes a plain object.
+Passing the same mutated object to `setProps` does not re-render either.
+
+Pass a new value to `setProps`, or wrap the value in `reactive()` if the test
+relies on in-place mutations:
+
+```js
+const items = reactive(['a'])
+const wrapper = mount(Component, { props: { items } })
+
+items.push('b')
+await nextTick()
+```
+:::
+
 ### slots
 
 Sets values for slots on a component.

@@ -268,6 +268,24 @@ test('props', () => {
 })
 ```
 
+::: warning 对象和数组类型的 props
+props 会按原样传递给组件，不会被转换为响应式：`wrapper.vm.items` 就是传给
+`mount` 的同一个数组。在测试中或组件内部直接修改这类 prop 不会触发组件
+重新渲染，这与 Vue 应用中父组件传入普通（非响应式）对象时的行为一致。
+将同一个被修改过的对象传给 `setProps` 也不会触发重新渲染。
+
+请改为向 `setProps` 传入新值；如果测试依赖于直接修改，可以用 `reactive()`
+包裹该值：
+
+```js
+const items = reactive(['a'])
+const wrapper = mount(Component, { props: { items } })
+
+items.push('b')
+await nextTick()
+```
+:::
+
 ### slots
 
 为组件的插槽设置值。

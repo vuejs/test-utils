@@ -265,6 +265,26 @@ test('props', () => {
 });
 ```
 
+::: warning Props de type objet ou tableau
+Les props sont transmises au composant telles quelles, sans être rendues
+réactives : `wrapper.vm.items` est le même tableau que celui passé à `mount`.
+Modifier une telle prop sur place, depuis le test ou depuis le composant
+lui-même, ne déclenche pas de nouveau rendu du composant, comme dans une
+application Vue où un parent transmet un objet non réactif. Passer le même
+objet modifié à `setProps` ne déclenche pas non plus de nouveau rendu.
+
+Passez plutôt une nouvelle valeur à `setProps`, ou enveloppez la valeur avec
+`reactive()` si le test repose sur des modifications sur place :
+
+```js
+const items = reactive(['a'])
+const wrapper = mount(Component, { props: { items } })
+
+items.push('b')
+await nextTick()
+```
+:::
+
 ### slots
 
 Définie les valeurs des slots sur un composant.
