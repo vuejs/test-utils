@@ -6,9 +6,7 @@
     "lib": ["DOM", "ES2019"],
     "types": ["node"],
     "skipLibCheck": true,
-    "experimentalDecorators": true,
-    "noUncheckedIndexedAccess": true,
-    "strictNullChecks": false
+    "experimentalDecorators": true
   },
   "exclude": ["../src"],
   "include": ["../dist", "../test-dts"]
