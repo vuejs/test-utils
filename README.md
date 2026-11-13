@@ -23,7 +23,9 @@ See the [docs](https://test-utils.vuejs.org/).
 
 ## Development
 
-Get started by running `pnpm install`. You can run the tests with `pnpm test`. That's it!
+Get started by running `pnpm install`. You can run the jsdom tests (including Node-only SSR tests) with `pnpm test`.
+
+To run tests in Chromium using Vitest Browser Mode, install Chromium with `pnpm exec playwright install chromium`, then run `pnpm test:browser`. Add `--run` to either test command for a single run instead of watch mode.
 
 ## Releasing
 
