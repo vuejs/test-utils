@@ -163,6 +163,9 @@ export class DOMWrapper<NodeType extends Node> extends BaseWrapper<NodeType> {
       this.trigger('input')
       // trigger `change` for `v-model.lazy`
       return this.trigger('change')
+    } else if (isContentEditable(element)) {
+      element.innerHTML = value
+      return this.trigger('input')
     } else {
       throw Error(`wrapper.setValue() cannot be called on ${tagName}`)
     }
@@ -188,6 +191,25 @@ export class DOMWrapper<NodeType extends Node> extends BaseWrapper<NodeType> {
     parentWrapper.trigger('input')
     return parentWrapper.trigger('change')
   }
+}
+
+// jsdom does not implement `isContentEditable`: fall back to the closest
+// valid `contenteditable` attribute, as an invalid value is inherited
+function isContentEditable(node: Node): boolean {
+  const { isContentEditable } = node as HTMLElement
+  if (typeof isContentEditable === 'boolean') {
+    return isContentEditable
+  }
+  for (let el = isElement(node) ? node : null; el; el = el.parentElement) {
+    const value = el.getAttribute('contenteditable')?.toLowerCase()
+    if (value === '' || value === 'true' || value === 'plaintext-only') {
+      return true
+    }
+    if (value === 'false') {
+      return false
+    }
+  }
+  return false
 }
 
 registerFactory(
