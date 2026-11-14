@@ -1657,6 +1657,8 @@ Définit une valeur sur un élément du DOM. Incluant&nbsp;:
   - `type="checkbox"` et `type="radio"` sont détectés et auront `element.checked` de coché.
 - `<select>`
   - `<option>` est détecté et aura `element.selected` de coché.
+- Les éléments éditables via `contenteditable`, y compris par un ancêtre
+  - `element.innerHTML` est défini et, comme dans un navigateur, seul un événement `input` est déclenché.
 
 **Signature&nbsp;:**
 

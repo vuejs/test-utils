@@ -1654,6 +1654,8 @@ test('updates prop', async () => {
   - 会检测 `type="checkbox"` 和 `type="radio"`，并将 `element.checked` 设置为相应的值。
 - `<select>`
   - 会检测 `<option>`，并将 `element.selected` 设置为相应的值。
+- 通过 `contenteditable`（包括祖先元素上的 `contenteditable`）可编辑的元素
+  - 会设置 `element.innerHTML`，并且与浏览器中一样只触发 `input` 事件。
 
 **签名：**
 

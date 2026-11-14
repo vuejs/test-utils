@@ -1712,6 +1712,8 @@ Sets a value on DOM element. Including:
   - `type="checkbox"` and `type="radio"` are detected and will have `element.checked` set.
 - `<select>`
   - `<option>` is detected and will have `element.selected` set.
+- Elements editable through `contenteditable`, including through an ancestor
+  - `element.innerHTML` is set and, as in a browser, only an `input` event is triggered.
 
 **Signature:**
 
