@@ -275,6 +275,100 @@ describe('setValue', () => {
     })
   })
 
+  describe('on contenteditable element', () => {
+    it('sets innerHTML and triggers only input, like typing in a browser', async () => {
+      const Editor = defineComponent({
+        props: ['modelValue'],
+        emits: ['update:modelValue', 'change'],
+        template: `<div contenteditable="true" @input="$emit('update:modelValue', $event.target.innerHTML)" @change="$emit('change')"></div>`
+      })
+      const wrapper = mount(Editor)
+      const editor = wrapper.find('div')
+      await editor.setValue('<b>foo</b>')
+
+      expect(editor.element.innerHTML).toBe('<b>foo</b>')
+      expect(wrapper.emitted('update:modelValue')).toEqual([['<b>foo</b>']])
+      expect(wrapper.emitted('change')).toBeUndefined()
+    })
+
+    it.each([
+      ['div', ''],
+      ['span', 'true'],
+      ['p', 'TRUE'],
+      ['h1', 'plaintext-only']
+    ])('sets the content of <%s contenteditable="%s">', async (tag, value) => {
+      const wrapper = mount({
+        template: `<${tag} contenteditable="${value}"></${tag}>`
+      })
+      const editable = wrapper.find(tag)
+      await editable.setValue('foo')
+
+      expect(editable.text()).toBe('foo')
+    })
+
+    it.each([
+      [
+        'an editable ancestor',
+        '<div contenteditable><p id="target"></p></div>'
+      ],
+      [
+        'an editable ancestor inside a non editable one',
+        '<div contenteditable="false"><div contenteditable><p id="target"></p></div></div>'
+      ],
+      [
+        'an editable ancestor and an invalid value',
+        '<div contenteditable><p id="target" contenteditable="invalid"></p></div>'
+      ]
+    ])('sets the content of an element with %s', async (_, template) => {
+      const wrapper = mount({ template })
+      const target = wrapper.find('#target')
+      await target.setValue('foo')
+
+      expect(target.text()).toBe('foo')
+    })
+
+    it.each([
+      [
+        'contenteditable="false"',
+        '<p id="target" contenteditable="false"></p>'
+      ],
+      [
+        'a non editable ancestor',
+        '<div contenteditable="false"><p id="target"></p></div>'
+      ],
+      [
+        'contenteditable="false" inside an editable ancestor',
+        '<div contenteditable><p id="target" contenteditable="false"></p></div>'
+      ],
+      ['an invalid value', '<p id="target" contenteditable="invalid"></p>']
+    ])('throws error if element has %s', (_, template) => {
+      const wrapper = mount({ template })
+
+      const fn = () => wrapper.find('#target').setValue('foo')
+      expect(fn).toThrowError('wrapper.setValue() cannot be called on P')
+    })
+
+    it('relies on isContentEditable when the environment implements it', async () => {
+      const wrapper = mount({
+        template: '<p id="native"></p><p id="attribute" contenteditable></p>'
+      })
+      const native = wrapper.find('#native')
+      const attribute = wrapper.find('#attribute')
+      Object.defineProperty(native.element, 'isContentEditable', {
+        value: true
+      })
+      Object.defineProperty(attribute.element, 'isContentEditable', {
+        value: false
+      })
+
+      await native.setValue('foo')
+      expect(native.text()).toBe('foo')
+      expect(() => attribute.setValue('foo')).toThrowError(
+        'wrapper.setValue() cannot be called on P'
+      )
+    })
+  })
+
   it('throws error if element is not valid', () => {
     const message = 'wrapper.setValue() cannot be called on LABEL'
     const wrapper = mount(ComponentWithInput)
