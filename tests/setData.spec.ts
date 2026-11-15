@@ -112,6 +112,35 @@ describe('setData', () => {
     )
   })
 
+  // test:build only covers the esm-bundler build, the cjs and iife builds
+  // must be in strict mode too
+  it('does not set new properties in the cjs and iife builds', async () => {
+    const Vue = await import('vue')
+    // @ts-expect-error raw imports have no type declarations
+    const { default: cjs } = await import('../dist/vue-test-utils.cjs.js?raw')
+    const { default: iife } =
+      // @ts-expect-error raw imports have no type declarations
+      await import('../dist/vue-test-utils.browser.js?raw')
+
+    const cjsBuild: any = {}
+    new Function('exports', 'require', cjs)(cjsBuild, (id: string) =>
+      id === 'vue' ? Vue : {}
+    )
+    const iifeBuild = new Function(
+      'Vue',
+      'VueCompilerDOM',
+      'VueServerRenderer',
+      `${iife}\nreturn VueTestUtils`
+    )(Vue, {}, {})
+
+    for (const build of [cjsBuild, iifeBuild]) {
+      const wrapper = build.mount({ render: () => Vue.h('div') })
+      expect(() => wrapper.setData({ foo: 'bar' })).toThrowError(
+        'Cannot add property foo'
+      )
+    }
+  })
+
   // https://github.com/vuejs/test-utils/issues/538
   it('updates data set via data mounting option using setData', async () => {
     const Comp = defineComponent({

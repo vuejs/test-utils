@@ -59,6 +59,8 @@ function createEntry(options: {
       name: 'VueTestUtils',
       file,
       format,
+      // emit 'use strict' in the cjs and iife builds, as rollup did by default
+      strict: true,
       globals: {
         vue: 'Vue',
         '@vue/compiler-dom': 'VueCompilerDOM',
