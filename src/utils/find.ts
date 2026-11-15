@@ -164,7 +164,7 @@ export function find(
   if (typeof selector === 'string') {
     // When searching by CSS selector we want only one (topmost) vnode for each el`
     matchingVNodes = matchingVNodes.filter(
-      (vnode: VNode) => vnode.component!.parent?.vnode.el !== vnode.el
+      (vnode: VNode) => vnode.component!.parent?.vnode?.el !== vnode.el
     )
   }
 
