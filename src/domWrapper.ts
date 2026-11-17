@@ -1,4 +1,4 @@
-import { Fragment, type VNode } from 'vue'
+import { type ComponentInternalInstance, Fragment, type VNode } from 'vue'
 import { config } from './config'
 import BaseWrapper from './baseWrapper'
 import type WrapperLike from './interfaces/wrapperLike'
@@ -40,7 +40,8 @@ export class DOMWrapper<NodeType extends Node> extends BaseWrapper<NodeType> {
       | undefined
     let component = rootElement?.__vueParentComponent
     while (component && component.subTree.el !== this.element) {
-      component = component.parent ?? undefined
+      component =
+        (component.parent as ComponentInternalInstance | null) ?? undefined
     }
     return component
   }
@@ -58,8 +59,8 @@ export class DOMWrapper<NodeType extends Node> extends BaseWrapper<NodeType> {
       return this.getFragmentComponent()
     }
     let component = this.element.__vueParentComponent
-    while (component?.parent?.vnode.el === this.element) {
-      component = component.parent
+    while (component?.parent?.vnode?.el === this.element) {
+      component = component.parent as ComponentInternalInstance
     }
     return component
   }
