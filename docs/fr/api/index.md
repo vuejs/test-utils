@@ -1402,7 +1402,7 @@ test('getComponent', () => {
 
 Renvoie le HTML d'un élément.
 
-Par défaut, la sortie est formatée avec [`js-beautify`](https://github.com/beautify-web/js-beautify) pour rendre les `snapshots` plus lisibles. Utilisez l'option `raw: true` pour recevoir la chaîne HTML non formatée.
+Par défaut, la sortie est formatée (indentée, un élément de type bloc par ligne) pour rendre les `snapshots` plus lisibles. Utilisez l'option `raw: true` pour recevoir la chaîne HTML non formatée.
 
 **Signature&nbsp;:**
 
