@@ -9,6 +9,7 @@ import domEvents, {
   codesByKeyName,
   ignorableKeyModifiers,
   keyCodesByKeyName,
+  keysByKeyName,
   mouseKeyModifiers,
   systemKeyModifiers
 } from './constants/dom-events'
@@ -116,7 +117,7 @@ function getEventProperties(eventParams: EventParams) {
     code:
       options.code || (keyModifier && codesByKeyName[keyModifier]) || keyCode,
     // if we have a `key`, use it, otherwise dont set anything (allows user to pass custom key)
-    ...(keyModifier ? { key: keyModifier } : {})
+    ...(keyModifier ? { key: keysByKeyName[keyModifier] || keyModifier } : {})
   }
 
   return {
