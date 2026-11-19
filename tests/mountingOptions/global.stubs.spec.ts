@@ -934,6 +934,7 @@ describe('mounting options: stubs', () => {
     await wrapper.find('button').trigger('click')
 
     expect(container.innerHTML).toBe('<span>content</span>')
+    render(null, container)
   })
 
   describe('stub async component', () => {
