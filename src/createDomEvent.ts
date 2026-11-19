@@ -12,6 +12,12 @@ import domEvents, {
   mouseKeyModifiers,
   systemKeyModifiers
 } from './constants/dom-events'
+import { isObject } from './utils'
+
+// plain objects and arrays, not elements, windows or wrappers
+const isPlainObject = (value: unknown) =>
+  Array.isArray(value) ||
+  (isObject(value) && Object.getPrototypeOf(value) === Object.prototype)
 
 interface TriggerOptions {
   code?: string
@@ -136,12 +142,32 @@ function createEvent(eventParams: EventParams) {
   const SupportedEventInterface =
     typeof metaEventInterface === 'function' ? metaEventInterface : window.Event
 
-  return new SupportedEventInterface(
-    eventType,
-    // event properties can only be added when the event is instantiated
-    // custom properties must be added after the event has been instantiated
-    eventProperties
-  )
+  try {
+    return new SupportedEventInterface(
+      eventType,
+      // event properties can only be added when the event is instantiated
+      // custom properties must be added after the event has been instantiated
+      eventProperties
+    )
+  } catch {
+    // browsers reject plain objects for some properties, like `dataTransfer`
+    // or `touches`: create the event without them and define them afterwards
+    const init: Record<string, unknown> = { ...eventProperties }
+    const objects = Object.entries(init).filter(([, value]) =>
+      isPlainObject(value)
+    )
+    objects.forEach(([key]) => delete init[key])
+    const event = new SupportedEventInterface(eventType, init)
+    objects.forEach(([key, value]) =>
+      Object.defineProperty(event, key, {
+        value,
+        configurable: true,
+        enumerable: true,
+        writable: true
+      })
+    )
+    return event
+  }
 }
 
 function createDOMEvent(
