@@ -73,6 +73,38 @@ describe('global.components', () => {
     expect(wrapper.text()).toBe('Global')
   })
 
+  it.each([false, true])(
+    'allows global stubs to be deactivated in nested components (shallow: %s)',
+    shallow => {
+      const GlobalComponent = {
+        template: '<div>Global</div>'
+      }
+      const Child = {
+        template: '<global-component/>'
+      }
+      const spy = vi.spyOn(console, 'warn')
+      const wrapper = mount(
+        {
+          components: { Child },
+          template: '<div><Child /></div>'
+        },
+        {
+          shallow,
+          global: {
+            components: {
+              GlobalComponent
+            },
+            stubs: { Child: false, GlobalComponent: false }
+          }
+        }
+      )
+
+      expect(spy).not.toHaveBeenCalled()
+      spy.mockRestore()
+      expect(wrapper.text()).toBe('Global')
+    }
+  )
+
   it('render children with shallow and renderStubDefaultSlot', () => {
     const Child = defineComponent({
       template: '<div><p>child</p><slot /></div>'

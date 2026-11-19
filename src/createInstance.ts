@@ -320,9 +320,10 @@ export function createInstance(
   }
 
   if (global.components) {
+    const stubs = getComponentsFromStubs(global.stubs)
     for (const [key, component] of Object.entries(global.components)) {
       // avoid registering components that are stubbed twice
-      if (!(key in global.stubs)) {
+      if (!stubs[key]) {
         app.component(key, component)
       }
     }
