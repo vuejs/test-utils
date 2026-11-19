@@ -150,15 +150,23 @@ function createEvent(eventParams: EventParams) {
       eventProperties
     )
   } catch {
-    // browsers reject plain objects for some properties, like `dataTransfer`
-    // or `touches`: create the event without them and define them afterwards
+    // event constructors reject plain objects for some properties, like
+    // `dataTransfer`, `touches` or `relatedTarget`: create the event without
+    // the rejected ones and define them afterwards
     const init: Record<string, unknown> = { ...eventProperties }
-    const objects = Object.entries(init).filter(([, value]) =>
-      isPlainObject(value)
+    const isRejected = (key: string, value: unknown) => {
+      try {
+        return !new SupportedEventInterface(eventType, { [key]: value })
+      } catch {
+        return true
+      }
+    }
+    const rejected = Object.entries(init).filter(
+      ([key, value]) => isPlainObject(value) && isRejected(key, value)
     )
-    objects.forEach(([key]) => delete init[key])
+    rejected.forEach(([key]) => delete init[key])
     const event = new SupportedEventInterface(eventType, init)
-    objects.forEach(([key, value]) =>
+    rejected.forEach(([key, value]) =>
       Object.defineProperty(event, key, {
         value,
         configurable: true,

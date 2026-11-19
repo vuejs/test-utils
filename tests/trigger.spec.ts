@@ -386,6 +386,17 @@ describe('trigger', () => {
       expect(events.focusout.relatedTarget.tagName).toBe('BUTTON')
     })
 
+    it('only defines the properties the event rejects', async () => {
+      const wrapper = mount({ template: '<div />' })
+
+      await expect(
+        wrapper.trigger('focusout', {
+          relatedTarget: { tagName: 'BUTTON' },
+          currentTarget: {}
+        })
+      ).rejects.toThrow(TypeError)
+    })
+
     it('still rejects a wrapper as relatedTarget', async () => {
       const wrapper = mount({ template: '<div><input /><button /></div>' })
       const relatedTarget = wrapper.find('button')
