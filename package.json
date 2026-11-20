@@ -73,7 +73,7 @@
     "jsdom": "31.0.1",
     "jsdom-global": "3.0.2",
     "lint-staged": "17.6.1",
-    "oxfmt": "0.78.0",
+    "oxfmt": "0.79.0",
     "oxlint": "1.93.0",
     "pkg-pr-new": "0.0.94",
     "playwright": "1.65.1",
