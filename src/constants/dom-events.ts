@@ -111,6 +111,10 @@ export const codesByKeyName = {
   delete: 'Delete'
 } as const
 
+// Maps each supported key modifier to the W3C UI Events `KeyboardEvent.key`
+// value, which only differs from `code` for the space key.
+export const keysByKeyName = { ...codesByKeyName, space: ' ' } as const
+
 export type KeyName = keyof typeof keyCodesByKeyName
 export type Modifier =
   | (typeof systemKeyModifiers)[number]

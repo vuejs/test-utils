@@ -176,7 +176,7 @@ describe('trigger', () => {
       // is correctly parsed when using modifier
       await wrapper.trigger('keydown.enter')
       expect(keydownHandler).toHaveBeenCalledTimes(3)
-      expect(keydownHandler.mock.calls[2]![0].key).toBe('enter')
+      expect(keydownHandler.mock.calls[2]![0].key).toBe('Enter')
     })
 
     it('overwrites key if passed as a modifier', async () => {
@@ -187,10 +187,10 @@ describe('trigger', () => {
       }
       const wrapper = mount(Component)
 
-      // is called when key is lowercase 'enter'
+      // the modifier wins over `options.key`
       await wrapper.trigger('keydown.enter', { key: 'up' })
       expect(keydownHandler).toHaveBeenCalledTimes(1)
-      expect(keydownHandler.mock.calls[0]![0].key).toBe('enter')
+      expect(keydownHandler.mock.calls[0]![0].key).toBe('Enter')
       expect(keydownHandler.mock.calls[0]![0].keyCode).toBe(13)
     })
 
@@ -207,7 +207,7 @@ describe('trigger', () => {
       expect(keydownHandler).toHaveBeenCalledTimes(1)
 
       const event = keydownHandler.mock.calls[0]![0]
-      expect(event.key).toBe('left')
+      expect(event.key).toBe('ArrowLeft')
       expect(event.shiftKey).toBe(true)
       expect(event.ctrlKey).toBe(true)
       expect(event.ctrlKey).toBe(true)
@@ -279,6 +279,37 @@ describe('trigger', () => {
 
         expect(currentCall.code).toBe(code)
       }
+    })
+
+    it('sets the standard `key` value for key modifiers', async () => {
+      const onEscape = vi.fn()
+      const onArrowLeft = vi.fn()
+      const onPageDown = vi.fn()
+      const onSpace = vi.fn()
+      const Component = {
+        template: `<input
+          @keydown.escape="onEscape"
+          @keydown.arrow-left="onArrowLeft"
+          @keydown.page-down="onPageDown"
+          @keydown.space="onSpace"
+        />`,
+        methods: { onEscape, onArrowLeft, onPageDown, onSpace }
+      }
+      const wrapper = mount(Component)
+
+      await wrapper.trigger('keydown.esc')
+      await wrapper.trigger('keydown.left')
+      await wrapper.trigger('keydown.pagedown')
+      await wrapper.trigger('keydown.space')
+
+      expect(onEscape).toHaveBeenCalledTimes(1)
+      expect(onEscape.mock.calls[0]![0].key).toBe('Escape')
+      expect(onArrowLeft).toHaveBeenCalledTimes(1)
+      expect(onArrowLeft.mock.calls[0]![0].key).toBe('ArrowLeft')
+      expect(onPageDown).toHaveBeenCalledTimes(1)
+      expect(onPageDown.mock.calls[0]![0].key).toBe('PageDown')
+      expect(onSpace).toHaveBeenCalledTimes(1)
+      expect(onSpace.mock.calls[0]![0].key).toBe(' ')
     })
   })
 
