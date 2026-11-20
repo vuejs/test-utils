@@ -362,6 +362,49 @@ describe('trigger', () => {
       expect(updateHandler).toHaveBeenCalledTimes(1)
       expect(updateHandler.mock.calls[0]![0].customData).toBe(123)
     })
+
+    it('adds plain objects as typed event properties', async () => {
+      const events: Record<string, any> = {}
+      const Component = {
+        template:
+          '<div @drop="save" @paste="save" @touchstart="save" @focusout="save" />',
+        methods: { save: (event: Event) => (events[event.type] = event) }
+      }
+      const wrapper = mount(Component)
+      const files = [new File(['content'], 'file.txt')]
+
+      await wrapper.trigger('drop', { dataTransfer: { files } })
+      await wrapper.trigger('paste', { clipboardData: { getData: () => 'a' } })
+      await wrapper.trigger('touchstart', { touches: [{ clientX: 10 }] })
+      await wrapper.trigger('focusout', {
+        relatedTarget: { tagName: 'BUTTON' }
+      })
+
+      expect(events.drop.dataTransfer.files).toBe(files)
+      expect(events.paste.clipboardData.getData()).toBe('a')
+      expect(events.touchstart.touches[0].clientX).toBe(10)
+      expect(events.focusout.relatedTarget.tagName).toBe('BUTTON')
+    })
+
+    it('only defines the properties the event rejects', async () => {
+      const wrapper = mount({ template: '<div />' })
+
+      await expect(
+        wrapper.trigger('focusout', {
+          relatedTarget: { tagName: 'BUTTON' },
+          currentTarget: {}
+        })
+      ).rejects.toThrow(TypeError)
+    })
+
+    it('still rejects a wrapper as relatedTarget', async () => {
+      const wrapper = mount({ template: '<div><input /><button /></div>' })
+      const relatedTarget = wrapper.find('button')
+
+      await expect(
+        wrapper.find('input').trigger('blur', { relatedTarget })
+      ).rejects.toThrow(TypeError)
+    })
   })
 
   describe('errors', () => {

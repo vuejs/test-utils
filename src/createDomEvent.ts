@@ -12,6 +12,12 @@ import domEvents, {
   mouseKeyModifiers,
   systemKeyModifiers
 } from './constants/dom-events'
+import { isObject } from './utils'
+
+// plain objects and arrays, not elements, windows or wrappers
+const isPlainObject = (value: unknown) =>
+  Array.isArray(value) ||
+  (isObject(value) && Object.getPrototypeOf(value) === Object.prototype)
 
 interface TriggerOptions {
   code?: string
@@ -136,12 +142,40 @@ function createEvent(eventParams: EventParams) {
   const SupportedEventInterface =
     typeof metaEventInterface === 'function' ? metaEventInterface : window.Event
 
-  return new SupportedEventInterface(
-    eventType,
-    // event properties can only be added when the event is instantiated
-    // custom properties must be added after the event has been instantiated
-    eventProperties
-  )
+  try {
+    return new SupportedEventInterface(
+      eventType,
+      // event properties can only be added when the event is instantiated
+      // custom properties must be added after the event has been instantiated
+      eventProperties
+    )
+  } catch {
+    // event constructors reject plain objects for some properties, like
+    // `dataTransfer`, `touches` or `relatedTarget`: create the event without
+    // the rejected ones and define them afterwards
+    const init: Record<string, unknown> = { ...eventProperties }
+    const isRejected = (key: string, value: unknown) => {
+      try {
+        return !new SupportedEventInterface(eventType, { [key]: value })
+      } catch {
+        return true
+      }
+    }
+    const rejected = Object.entries(init).filter(
+      ([key, value]) => isPlainObject(value) && isRejected(key, value)
+    )
+    rejected.forEach(([key]) => delete init[key])
+    const event = new SupportedEventInterface(eventType, init)
+    rejected.forEach(([key, value]) =>
+      Object.defineProperty(event, key, {
+        value,
+        configurable: true,
+        enumerable: true,
+        writable: true
+      })
+    )
+    return event
+  }
 }
 
 function createDOMEvent(
