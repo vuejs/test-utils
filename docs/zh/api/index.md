@@ -1403,7 +1403,7 @@ test('getComponent', () => {
 
 返回元素的 HTML 内容。
 
-默认情况下，输出会使用 [`js-beautify`](https://github.com/beautify-web/js-beautify) 进行格式化，以使快照更易读。如果需要未格式化的 HTML 字符串，可以使用 `raw: true` 选项。
+默认情况下，输出会进行格式化（缩进，每个块级元素占一行），以使快照更易读。如果需要未格式化的 HTML 字符串，可以使用 `raw: true` 选项。
 
 **签名：**
 

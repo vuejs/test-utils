@@ -30,8 +30,7 @@ import { isElement } from './utils/isElement'
 import type { DOMWrapper } from './domWrapper'
 import { createDOMWrapper, createVueWrapper } from './wrapperFactory'
 import { stringifyNode } from './utils/stringifyNode'
-import type { HTMLBeautifyOptions } from 'js-beautify'
-import beautify from 'js-beautify'
+import { formatHtml } from './utils/formatHtml'
 
 export default abstract class BaseWrapper<
   ElementType extends Node
@@ -255,19 +254,14 @@ export default abstract class BaseWrapper<
   abstract setValue(value?: any): Promise<void>
 
   html(options?: { raw?: boolean }): string {
-    const stringNodes = this.getRootNodes().map(node => stringifyNode(node))
-    if (options?.raw) return stringNodes.join('')
+    if (options?.raw) {
+      return this.getRootNodes()
+        .map(node => stringifyNode(node))
+        .join('')
+    }
 
-    return stringNodes
-      .map(node =>
-        beautify.html(node, {
-          unformatted: ['code', 'pre', 'em', 'strong', 'span'],
-          indent_inner_html: true,
-          indent_size: 2,
-          inline_custom_elements: false
-          // TODO the cast can be removed when @types/js-beautify will be up-to-date
-        } as HTMLBeautifyOptions)
-      )
+    return this.getRootNodes()
+      .map(node => formatHtml(node))
       .join('\n')
   }
 

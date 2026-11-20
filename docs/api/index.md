@@ -1456,7 +1456,7 @@ test('getComponent', () => {
 
 Returns the HTML of an element.
 
-By default the output is formatted with [`js-beautify`](https://github.com/beautify-web/js-beautify)
+By default the output is formatted (indented, one block element per line)
 to make snapshots more readable. Use `raw: true` option to receive the unformatted html string.
 
 **Signature:**

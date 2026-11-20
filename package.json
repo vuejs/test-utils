@@ -55,11 +55,9 @@
     "prepublishOnly": "pnpm run build"
   },
   "dependencies": {
-    "js-beautify": "^2.0.0",
     "vue-component-type-helpers": "^3.0.0"
   },
   "devDependencies": {
-    "@types/js-beautify": "1.14.3",
     "@types/node": "26.6.6",
     "@vitejs/plugin-vue": "6.0.11",
     "@vitejs/plugin-vue-jsx": "5.1.6",
