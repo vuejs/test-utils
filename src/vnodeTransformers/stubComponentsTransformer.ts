@@ -268,7 +268,8 @@ export function createStubComponentsTransformer({
     }
 
     // Prio 2 using the key in globally registered components
-    if (stub == null && instance) {
+    // (an app context built by hand can lack the registry, which Vue tolerates)
+    if (stub == null && instance?.appContext.components) {
       const globalStubKey = getGlobalStubKey(
         instance.appContext.components,
         type

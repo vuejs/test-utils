@@ -4,9 +4,11 @@ import {
   KeepAlive,
   defineAsyncComponent,
   defineComponent,
+  getCurrentInstance,
   h,
   nextTick,
-  ref
+  ref,
+  render
 } from 'vue'
 import {
   RouterLinkStub,
@@ -905,6 +907,34 @@ describe('mounting options: stubs', () => {
 
     expect(wrapper.html()).toContain('<button>real button</button>')
     expect(wrapper.html()).toContain('<section>real card</section>')
+  })
+
+  it('renders a component under an app context without a component registry', async () => {
+    // like element-plus' table overflow tooltip: spreading the table instance
+    // into the app context replaces `components` with the instance's `null`.
+    // `Table` must not be the mounted root, which gets its own `components`
+    const Content = defineComponent({ render: () => h('span', 'content') })
+    const Tooltip = defineComponent({ render: () => h(Content) })
+    const container = document.createElement('div')
+    const Table = defineComponent({
+      setup() {
+        const table = getCurrentInstance()!
+        return () =>
+          h('button', {
+            onClick: () => {
+              const vnode = h(Tooltip)
+              vnode.appContext = { ...table.appContext, ...table }
+              render(vnode, container)
+            }
+          })
+      }
+    })
+
+    const wrapper = mount({ render: () => h(Table) })
+    await wrapper.find('button').trigger('click')
+
+    expect(container.innerHTML).toBe('<span>content</span>')
+    render(null, container)
   })
 
   describe('stub async component', () => {
