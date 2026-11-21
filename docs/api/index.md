@@ -651,7 +651,7 @@ test('global.provide', () => {
 })
 ```
 
-If you are using a ES6 `Symbol` for your provide key, you can use it as a dynamic key:
+If you are using an ES6 `Symbol` for your provide key, you can use it as a dynamic key:
 
 `Component.spec.js`:
 

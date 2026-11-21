@@ -66,7 +66,7 @@ test('modelValue should be updated', async () => {
 
 In some situations we can have multiple `v-model` targeting specific properties.
 
-Example an Money Editor, we can have `currency` and `modelValue` properties.
+Example a Money Editor, we can have `currency` and `modelValue` properties.
 
 ```js
 const MoneyEditor = {
