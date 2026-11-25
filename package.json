@@ -55,7 +55,7 @@
     "prepublishOnly": "pnpm run build"
   },
   "dependencies": {
-    "vue-component-type-helpers": "^3.3.14"
+    "vue-component-type-helpers": "^3.0.0"
   },
   "devDependencies": {
     "@types/js-beautify": "1.14.3",
