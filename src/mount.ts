@@ -34,17 +34,21 @@ export type ComponentMountingOptions<
   }
 } & Record<string, unknown>
 
+export type MountComponent<T> = T extends
+  | ((...args: any) => any)
+  | (new (...args: any) => any)
+  ? T
+  : T extends { props?: infer Props }
+    ? DefineComponent<
+        Props extends Readonly<(infer PropNames)[]> | (infer PropNames)[]
+          ? { [key in PropNames extends string ? PropNames : string]?: any }
+          : Props
+      >
+    : DefineComponent
+
 export function mount<
   T,
-  C = T extends ((...args: any) => any) | (new (...args: any) => any)
-    ? T
-    : T extends { props?: infer Props }
-      ? DefineComponent<
-          Props extends Readonly<(infer PropNames)[]> | (infer PropNames)[]
-            ? { [key in PropNames extends string ? PropNames : string]?: any }
-            : Props
-        >
-      : DefineComponent,
+  C = MountComponent<T>,
   P extends ComponentProps<C> = ComponentProps<C>
 >(
   originalComponent: T,

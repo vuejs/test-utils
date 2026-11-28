@@ -1,21 +1,9 @@
 import { renderToString as baseRenderToString } from '@vue/server-renderer'
-import type { DefineComponent } from 'vue'
 import { createInstance } from './createInstance'
-import type { ComponentMountingOptions } from './mount'
+import type { ComponentMountingOptions, MountComponent } from './mount'
 import type { RenderMountingOptions } from './types'
 
-export function renderToString<
-  T,
-  C = T extends ((...args: any) => any) | (new (...args: any) => any)
-    ? T
-    : T extends { props?: infer Props }
-      ? DefineComponent<
-          Props extends Readonly<(infer PropNames)[]> | (infer PropNames)[]
-            ? { [key in PropNames extends string ? PropNames : string]?: any }
-            : Props
-        >
-      : DefineComponent
->(
+export function renderToString<T, C = MountComponent<T>>(
   originalComponent: T,
   options?: ComponentMountingOptions<C> &
     Pick<RenderMountingOptions<any>, 'attachTo'>
