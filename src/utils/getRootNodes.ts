@@ -2,12 +2,36 @@ import { isNotNullOrUndefined } from '../utils'
 import type { VNode, VNodeArrayChildren } from 'vue'
 import { ShapeFlags } from './vueShared'
 
+// Keep the boundary structural so declarations remain usable with Vue 3.5.
+interface VaporInstance {
+  vapor: true
+  block: VaporBlock
+}
+
+type VaporBlock = Node | VaporInstance | { nodes: VaporBlock } | VaporBlock[]
+
+// Vapor instances render a block instead of a VDOM subTree.
+export function isVaporInstance(
+  instance: object | null | undefined
+): instance is VaporInstance {
+  return !!instance && 'vapor' in instance
+}
+
+export function getVaporRootNodes(block: VaporBlock): Node[] {
+  if (block instanceof Node) return [block]
+  if (Array.isArray(block)) return block.flatMap(getVaporRootNodes)
+  return getVaporRootNodes('vapor' in block ? block.block : block.nodes)
+}
+
 export function getRootNodes(vnode: VNode): Node[] {
   if (vnode.shapeFlag & ShapeFlags.ELEMENT) {
     return [vnode.el as Node]
   } else if (vnode.shapeFlag & ShapeFlags.COMPONENT) {
-    const { subTree } = vnode.component!
-    return getRootNodes(subTree)
+    const component = vnode.component!
+    if (isVaporInstance(component)) {
+      return getVaporRootNodes(component)
+    }
+    return getRootNodes(component.subTree)
   } else if (vnode.shapeFlag & ShapeFlags.SUSPENSE) {
     return getRootNodes(vnode.suspense!.activeBranch!)
   } else if (

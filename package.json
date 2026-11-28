@@ -32,12 +32,12 @@
     "./package.json": "./package.json"
   },
   "scripts": {
-    "test": "vitest --project jsdom",
+    "test": "vitest --project jsdom --project vapor",
     "test:browser": "vitest --project browser",
     "test:browser:build": "vitest --project browser --mode test-build",
-    "test:coverage": "vitest --project jsdom --coverage",
-    "test:watch": "vitest --project jsdom --watch",
-    "test:build": "vitest --project jsdom --mode test-build",
+    "test:coverage": "vitest --project jsdom --project vapor --coverage",
+    "test:watch": "vitest --project jsdom --project vapor --watch",
+    "test:build": "vitest --project jsdom --project vapor --mode test-build",
     "tsd": "vue-tsc --noEmit -p test-dts/tsconfig.tsd.json",
     "tsc:docs": "vue-tsc -p docs/.vitepress/tsconfig.vitepress.json",
     "build": "rolldown -c rolldown.config.ts && tsc -p tsconfig.build.json",

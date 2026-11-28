@@ -1,5 +1,6 @@
 import { DOMWrapper } from './domWrapper'
 import { VueWrapper } from './vueWrapper'
+import { VaporWrapper } from './vaporWrapper'
 import BaseWrapper from './baseWrapper'
 import { mount, shallowMount } from './mount'
 import { renderToString } from './renderToString'
@@ -21,6 +22,7 @@ export {
   RouterLinkStub,
   TeleportStub,
   VueWrapper,
+  VaporWrapper,
   DOMWrapper,
   BaseWrapper,
   config,

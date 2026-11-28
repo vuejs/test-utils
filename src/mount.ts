@@ -1,14 +1,20 @@
-import type { ComponentPublicInstance, DefineComponent, VNode } from 'vue'
+import type {
+  ComponentPublicInstance,
+  DefineComponent,
+  DirectiveModifiers,
+  VNode
+} from 'vue'
 import type {
   ComponentExposed,
   ComponentProps,
   ComponentSlots
 } from 'vue-component-type-helpers'
 import { createInstance } from './createInstance'
-import type { MountingOptions } from './types'
+import type { GlobalMountOptions, MountingOptions } from './types'
 import { trackInstance } from './utils/autoUnmount'
 import type { VueWrapper } from './vueWrapper'
 import { createVueWrapper } from './wrapperFactory'
+import { VaporWrapper } from './vaporWrapper'
 
 type ShimSlotReturnType<T> = T extends (...args: infer P) => any
   ? (...args: P) => any
@@ -19,10 +25,19 @@ type WithArray<T> = T | T[]
 // eslint-disable-next-line @typescript-eslint/no-empty-object-type
 type ComponentData<T> = T extends { data?(...args: any): infer D } ? D : {}
 
+// Keep the Vapor directive signature structural for Vue 3.5 consumers.
+type VaporDirective = (
+  el: any,
+  getter?: () => any,
+  arg?: () => any,
+  modifiers?: DirectiveModifiers
+) => (() => void) | void
+
 export type ComponentMountingOptions<
   T,
   P extends ComponentProps<T> = ComponentProps<T>
 > = Omit<MountingOptions<P, ComponentData<T>>, 'slots'> & {
+  experimentalVapor?: false
   slots?: {
     [K in keyof ComponentSlots<T>]?: WithArray<
       | ShimSlotReturnType<ComponentSlots<T>[K]>
@@ -33,6 +48,29 @@ export type ComponentMountingOptions<
     >
   }
 } & Record<string, unknown>
+
+type VaporMountingOptions<P> = Pick<
+  MountingOptions<P>,
+  'attachTo' | 'attrs' | 'props' | 'propsData'
+> & {
+  experimentalVapor: true
+  shallow?: false
+  slots?: never
+  global?: Pick<
+    GlobalMountOptions,
+    'plugins' | 'config' | 'provide' | 'components'
+  > & {
+    directives?: Record<string, VaporDirective>
+  }
+}
+
+// A Vapor wrapper's vm only holds defineExpose() bindings. DefineComponent and
+// defineVaporComponent types resolve to instance types instead, so fall back to
+// an untyped record for them (checked structurally to support Vue 3.5 types).
+type VaporExposed<C> =
+  ComponentExposed<C> extends { $props: any } | { vapor: true }
+    ? Record<string, unknown>
+    : ComponentExposed<C>
 
 export type MountComponent<T> = T extends
   | ((...args: any) => any)
@@ -52,6 +90,14 @@ export function mount<
   P extends ComponentProps<C> = ComponentProps<C>
 >(
   originalComponent: T,
+  options: VaporMountingOptions<P> & { props?: P | null }
+): VaporWrapper<VaporExposed<C>, ComponentProps<C>>
+export function mount<
+  T,
+  C = MountComponent<T>,
+  P extends ComponentProps<C> = ComponentProps<C>
+>(
+  originalComponent: T,
   // the bare `P` lets TypeScript infer a union of props objects as a whole
   options?: ComponentMountingOptions<C, P> & { props?: P | null }
 ): VueWrapper<
@@ -65,9 +111,13 @@ export function mount<
 // implementation
 export function mount(
   inputComponent: any,
-  options?: MountingOptions<any> & Record<string, any>
-): VueWrapper<any> {
-  const { app, props, componentRef } = createInstance(inputComponent, options)
+  options?: ComponentMountingOptions<any, any> | VaporMountingOptions<any>
+): VueWrapper<any> | VaporWrapper<any, any> {
+  // Registration treats directives opaquely; Vue invokes their renderer-specific signature.
+  const { app, props, componentRef } = createInstance(
+    inputComponent,
+    options as MountingOptions<any> | undefined
+  )
 
   const setProps = (newProps: Record<string, unknown>) => {
     for (const [k, v] of Object.entries(newProps)) {
@@ -124,8 +174,9 @@ export function mount(
     return originalErrorHandler?.(err, instance, info)
   }
 
+  let vm: ReturnType<typeof app.mount>
   try {
-    app.mount(el)
+    vm = app.mount(el)
   } catch (error) {
     el.remove()
     throw error
@@ -145,6 +196,12 @@ export function mount(
     throw errorsOnMount[0]
   }
 
+  if (!componentRef) {
+    const wrapper = new VaporWrapper(app, vm, el, setProps)
+    trackInstance(wrapper)
+    return wrapper
+  }
+
   const appRef = componentRef.value! as ComponentPublicInstance
   // we add `hasOwnProperty` so Jest can spy on the proxied vm without throwing
   // note that this is not necessary with Jest v27+ or Vitest, but is kept for compatibility with older Jest versions
@@ -158,6 +215,13 @@ export function mount(
   return wrapper
 }
 
-export const shallowMount: typeof mount = (component: any, options?: any) => {
-  return mount(component, { ...options, shallow: true })
+export function shallowMount<
+  T,
+  C = MountComponent<T>,
+  P extends ComponentProps<C> = ComponentProps<C>
+>(
+  component: T,
+  options?: ComponentMountingOptions<C, P> & { props?: P | null }
+) {
+  return mount<T, C, P>(component, { ...options, shallow: true })
 }

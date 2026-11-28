@@ -5,6 +5,7 @@ import type {
   ConcreteComponent,
   DefineComponent
 } from 'vue'
+import * as Vue from 'vue'
 import type { VNode } from 'vue'
 import {
   Comment,
@@ -48,14 +49,17 @@ import type { CreateStubComponentsTransformerConfig } from './vnodeTransformers/
 import { createStubComponentsTransformer } from './vnodeTransformers/stubComponentsTransformer'
 import { createStubDirectivesTransformer } from './vnodeTransformers/stubDirectivesTransformer'
 
-const MOUNT_OPTIONS: ReadonlyArray<keyof MountingOptions<any>> = [
+const MOUNT_OPTIONS: ReadonlyArray<
+  keyof MountingOptions<any> | 'experimentalVapor'
+> = [
   'attachTo',
   'attrs',
   'data',
   'props',
   'slots',
   'global',
-  'shallow'
+  'shallow',
+  'experimentalVapor'
 ] as const
 
 function getInstanceOptions(
@@ -77,14 +81,102 @@ function getInstanceOptions(
   return resultOptions
 }
 
-// implementation
+function createMountProps(options?: MountingOptions<any>) {
+  return shallowReactive<Record<string, unknown>>({
+    ...options?.attrs,
+    ...options?.propsData,
+    ...options?.props
+  })
+}
+
+function validateVaporMountOptions(
+  options: MountingOptions<any> & Record<string, any>
+) {
+  // Validate only explicit options; Vapor ignores inherited VDOM-only defaults.
+  const mountGlobal = options.global ?? {}
+  const unsupported = [
+    ...Object.keys(options).filter(
+      key =>
+        options[key] !== undefined &&
+        ![
+          'experimentalVapor',
+          'attachTo',
+          'attrs',
+          'props',
+          'propsData',
+          'global',
+          'shallow'
+        ].includes(key)
+    ),
+    options.shallow && 'shallow',
+    mountGlobal.mixins?.length && 'global.mixins',
+    Object.keys(mountGlobal.mocks ?? {}).length && 'global.mocks',
+    mountGlobal.renderStubDefaultSlot && 'global.renderStubDefaultSlot',
+    // Vapor directives are functions; VDOM object directives would be skipped.
+    Object.values(mountGlobal.directives ?? {}).some(
+      directive => typeof directive !== 'function'
+    ) && 'global.directives',
+    mountGlobal.stubs &&
+      Object.values(mountGlobal.stubs).some(Boolean) &&
+      'global.stubs'
+  ].filter(Boolean)
+  if (unsupported.length) {
+    throw new Error(
+      `Vapor mounting does not support: ${unsupported.join(', ')}`
+    )
+  }
+}
+
+function createVaporInstance(
+  originalComponent: ConcreteComponent,
+  options: MountingOptions<any> & Record<string, any>
+) {
+  const setup =
+    typeof originalComponent === 'function'
+      ? originalComponent
+      : originalComponent.setup
+  // Vapor crashes when mounting an async setup without <Suspense>. As for
+  // VDOM, async setup must be mounted inside a <Suspense> parent instead.
+  if (setup?.constructor.name === 'AsyncFunction') {
+    throw new Error(
+      'Async Vapor setup is not supported by mount(); mount it inside <Suspense> instead'
+    )
+  }
+  validateVaporMountOptions(options)
+
+  // Vue 3.5 and Node builds have no native Vapor renderer.
+  const createVaporApp = Reflect.get(Vue, 'createVaporApp') as
+    | ((root: object, props: object) => App)
+    | undefined
+  if (!createVaporApp)
+    throw new Error(
+      'experimentalVapor requires a Vue 3.6 ESM build exporting createVaporApp'
+    )
+
+  const props = createMountProps(options)
+  // As in a compiled v-bind="props", one dynamic source tracks both new keys
+  // and existing values, without treating listener props as getters.
+  const app = createVaporApp(originalComponent, { $: [() => props] })
+  attachEmitListener()
+  const global = mergeGlobalProperties(options.global)
+  configureApp(app, { ...global, mixins: [], stubs: {} })
+  return { app, props, componentRef: null }
+}
+
 export function createInstance(
   // eslint-disable-next-line @typescript-eslint/no-empty-object-type
   inputComponent: DefineComponent<{}, {}, any, any, any, any>,
   options?: MountingOptions<any> & Record<string, any>
 ) {
-  // normalize the incoming component
   const originalComponent = unwrapLegacyVueExtendComponent(inputComponent)
+  const isVapor = !!(originalComponent as any).__vapor
+  const useVapor = !!options?.experimentalVapor
+  if (isVapor !== useVapor) {
+    throw new Error('Mount Vapor components with experimentalVapor: true')
+  }
+  if (useVapor) {
+    return createVaporInstance(originalComponent, options)
+  }
   let component: ConcreteComponent
   const instanceOptions = getInstanceOptions(options ?? {})
 
@@ -186,14 +278,8 @@ export function createInstance(
   }
 
   const MOUNT_COMPONENT_REF = 'VTU_COMPONENT'
-  // we define props as reactive so that way when we update them with `setProps`
-  // Vue's reactivity system will cause a rerender.
-  const props = shallowReactive<Record<string, unknown>>({
-    ...options?.attrs,
-    ...options?.propsData,
-    ...options?.props,
-    ref: MOUNT_COMPONENT_REF
-  })
+  const props = createMountProps(options)
+  props.ref = MOUNT_COMPONENT_REF
 
   const global = mergeGlobalProperties(options?.global)
   if (isObjectComponent(component)) {

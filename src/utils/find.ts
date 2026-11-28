@@ -10,6 +10,7 @@ import { getOriginalComponentFromStub } from '../stubs'
 import type { FindAllComponentsSelector } from '../types'
 import { isComponent } from '../utils'
 import { matchName } from './matchName'
+import { isVaporInstance } from './getRootNodes'
 import { unwrapLegacyVueExtendComponent } from './vueCompatSupport'
 import {
   getComponentName,
@@ -168,5 +169,10 @@ export function find(
     )
   }
 
-  return matchingVNodes.map((vnode: VNode) => vnode.component!)
+  return matchingVNodes.map((vnode: VNode) => {
+    if (isVaporInstance(vnode.component)) {
+      throw new Error('Component discovery is not supported for Vapor')
+    }
+    return vnode.component!
+  })
 }

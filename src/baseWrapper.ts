@@ -27,6 +27,7 @@ import { find, matches } from './utils/find'
 import { createWrapperError } from './errorWrapper'
 import { isElementVisible } from './utils/isElementVisible'
 import { isElement } from './utils/isElement'
+import { isVaporInstance } from './utils/getRootNodes'
 import type { DOMWrapper } from './domWrapper'
 import { createDOMWrapper, createVueWrapper } from './wrapperFactory'
 import { stringifyNode } from './utils/stringifyNode'
@@ -179,6 +180,10 @@ export default abstract class BaseWrapper<
       }
 
       if (result && !(result instanceof Node)) {
+        // Vapor refs expose bindings without the public instance VueWrapper needs.
+        if (!(result as ComponentPublicInstance).$) {
+          throw new Error('Component discovery is not supported for Vapor')
+        }
         return createVueWrapper(null, result as ComponentPublicInstance)
       } else {
         return createWrapperError('VueWrapper')
@@ -190,9 +195,10 @@ export default abstract class BaseWrapper<
       this.element.contains(currentComponent.vnode.el as Node)
     ) {
       // Only CSS selectors can resolve to the component rendered at the root.
+      const rootComponent = currentComponent.subTree.component
       const component =
-        typeof selector === 'string'
-          ? (currentComponent.subTree.component ?? currentComponent)
+        typeof selector === 'string' && !isVaporInstance(rootComponent)
+          ? (rootComponent ?? currentComponent)
           : currentComponent
       return component.proxy
         ? createVueWrapper(null, component.proxy)

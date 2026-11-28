@@ -298,36 +298,36 @@ mount(SetupComponentWithSlots, {
 })
 
 // extra slots
+// @ts-expect-error extraSlot doesn't exist on the component.
 mount(SetupComponentWithSlots, {
   slots: {
-    // @ts-expect-error - This slot doesn't exist in the component and it should be reported.
     extraSlot: 'nonExistentSlot'
   }
 })
 
+// @ts-expect-error extraSlot doesn't exist on the component.
 mount(SetupComponentWithSlots, {
   slots: {
     foo: 'foo',
-    // @ts-expect-error - This slot doesn't exist in the component and it should be reported.
     extraSlot: 'nonExistentSlot'
   }
 })
 
+// @ts-expect-error extraSlot doesn't exist on the component.
 mount(SetupComponentWithSlots, {
   slots: {
     foo: 'foo',
     bar: 'bar',
-    // @ts-expect-error - This slot doesn't exist in the component and it should be reported.
     extraSlot: 'nonExistentSlot'
   }
 })
 
+// @ts-expect-error extraSlot doesn't exist on the component.
 mount(SetupComponentWithSlots, {
   slots: {
     foo: 'foo',
     bar: 'bar',
     baz: 'baz',
-    // @ts-expect-error - This slot doesn't exist in the component and it should be reported.
     extraSlot: 'nonExistentSlot'
   }
 })
