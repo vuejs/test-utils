@@ -73,8 +73,6 @@ export function mount(
     for (const [k, v] of Object.entries(newProps)) {
       props[k] = v
     }
-
-    return vm.$nextTick()
   }
 
   // mount the app!
@@ -126,9 +124,8 @@ export function mount(
     return originalErrorHandler?.(err, instance, info)
   }
 
-  let vm: ReturnType<typeof app.mount>
   try {
-    vm = app.mount(el)
+    app.mount(el)
   } catch (error) {
     el.remove()
     throw error
