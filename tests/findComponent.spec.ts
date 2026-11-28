@@ -134,6 +134,29 @@ describe('findComponent', () => {
     expect(wrapper.html()).toContain('bar')
   })
 
+  it('finds the matched instance when a component renders another as its root', () => {
+    const Child = defineComponent({
+      name: 'Child',
+      props: { label: String },
+      render: () => h('div')
+    })
+    const Parent = defineComponent({
+      name: 'Parent',
+      props: { label: String },
+      render: () => h(Child, { label: 'child' })
+    })
+    const wrapper = mount(Parent, { props: { label: 'parent' } })
+
+    expect(wrapper.findComponent(Parent).props('label')).toBe('parent')
+    expect(wrapper.findComponent({ name: 'Parent' }).props('label')).toBe(
+      'parent'
+    )
+    expect(wrapper.findComponent(Child).props('label')).toBe('child')
+    expect(wrapper.findComponent({ name: 'Child' }).props('label')).toBe(
+      'child'
+    )
+  })
+
   it('finds root component when recursion is used', async () => {
     const Comp = defineComponent({
       props: ['depth'],
