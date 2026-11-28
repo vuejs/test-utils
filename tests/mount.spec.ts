@@ -1,5 +1,12 @@
 import { describe, expect, it, vi } from 'vitest'
-import { defineComponent, ref } from 'vue'
+import {
+  defineComponent,
+  h,
+  nextTick,
+  onUnmounted,
+  ref,
+  watchEffect
+} from 'vue'
 import { mount } from '../src'
 import DefinePropsAndDefineEmits from './components/DefinePropsAndDefineEmits.vue'
 import WithDeepRef from './components/WithDeepRef.vue'
@@ -37,6 +44,29 @@ describe('mount: general tests', () => {
     })
 
     expect(() => mount(ThrowingComponent)).toThrowError('Boom!')
+  })
+
+  it('stops setup effects and calls unmount hooks when mounting fails', async () => {
+    const count = ref(0)
+    const effect = vi.fn<(value: number) => void>()
+    const unmounted = vi.fn<() => void>()
+    const error = new Error('setup failed')
+    const ThrowingComponent = defineComponent({
+      setup() {
+        watchEffect(() => effect(count.value))
+        onUnmounted(unmounted)
+        throw error
+      },
+      render: () => h('div')
+    })
+
+    expect(() => mount(ThrowingComponent)).toThrow(error)
+
+    count.value++
+    await nextTick()
+
+    expect(effect.mock.calls).toEqual([[0]])
+    expect(unmounted).toHaveBeenCalledTimes(1)
   })
 
   it('should not warn on readonly hasOwnProperty when mounting a component', () => {
