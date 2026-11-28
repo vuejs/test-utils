@@ -77,16 +77,6 @@ export function mount(
     return vm.$nextTick()
   }
 
-  // Workaround for https://github.com/vuejs/core/issues/7020
-  const originalErrorHandler = app.config.errorHandler
-
-  const errorsOnMount: unknown[] = []
-  app.config.errorHandler = (err, instance, info) => {
-    errorsOnMount.push(err)
-
-    return originalErrorHandler?.(err, instance, info)
-  }
-
   // mount the app!
   const el = document.createElement('div')
 
@@ -125,12 +115,30 @@ export function mount(
       }
     }
   }
-  const vm = app.mount(el)
-  if (errorsOnMount.length) {
-    // If several errors are thrown during mount, then throw the first one
-    throw errorsOnMount[0]
+
+  // Workaround for https://github.com/vuejs/core/issues/7020
+  const originalErrorHandler = app.config.errorHandler
+
+  const errorsOnMount: unknown[] = []
+  app.config.errorHandler = (err, instance, info) => {
+    errorsOnMount.push(err)
+
+    return originalErrorHandler?.(err, instance, info)
   }
-  app.config.errorHandler = originalErrorHandler
+
+  let vm: ReturnType<typeof app.mount>
+  try {
+    vm = app.mount(el)
+    if (errorsOnMount.length) {
+      // If several errors are thrown during mount, then throw the first one
+      throw errorsOnMount[0]
+    }
+  } catch (error) {
+    el.remove()
+    throw error
+  } finally {
+    app.config.errorHandler = originalErrorHandler
+  }
 
   const appRef = componentRef.value! as ComponentPublicInstance
   // we add `hasOwnProperty` so Jest can spy on the proxied vm without throwing

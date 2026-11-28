@@ -65,6 +65,33 @@ describe('options.attachTo', () => {
     expect(document.getElementById('attach-to')).toBeNull()
   })
 
+  it('leaves only the existing sibling when setup throws', () => {
+    const host = document.createElement('div')
+    const sibling = document.createElement('span')
+    sibling.textContent = 'Keep me'
+    host.appendChild(sibling)
+    const error = new Error('setup failed')
+
+    let thrown: unknown
+    try {
+      mount(
+        {
+          ...TestComponent,
+          setup() {
+            throw error
+          }
+        },
+        { attachTo: host }
+      )
+    } catch (err) {
+      thrown = err
+    }
+
+    expect(thrown).toBe(error)
+    expect(host.innerHTML).toBe('<span>Keep me</span>')
+    expect(host.firstChild).toBe(sibling)
+  })
+
   it('throws if the provided CSS selector string can not be find', () => {
     expect(() =>
       mount(TestComponent, {
