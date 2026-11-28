@@ -2,11 +2,7 @@ import { Fragment, type VNode } from 'vue'
 import { config } from './config'
 import BaseWrapper from './baseWrapper'
 import type WrapperLike from './interfaces/wrapperLike'
-import {
-  WrapperType,
-  createDOMWrapper,
-  registerFactory
-} from './wrapperFactory'
+import { WrapperType, registerFactory } from './wrapperFactory'
 import type { RefSelector, VueElement } from './types'
 import { isRefSelector } from './utils'
 import { createWrapperError } from './errorWrapper'
@@ -83,23 +79,13 @@ export class DOMWrapper<NodeType extends Node> extends BaseWrapper<NodeType> {
     return result
   }
 
-  findAll<K extends keyof HTMLElementTagNameMap>(
-    selector: K
-  ): DOMWrapper<HTMLElementTagNameMap[K]>[]
-  findAll<K extends keyof SVGElementTagNameMap>(
-    selector: K
-  ): DOMWrapper<SVGElementTagNameMap[K]>[]
-  findAll<T extends Element>(selector: string): DOMWrapper<T>[]
-  findAll(selector: string): DOMWrapper<Element>[] {
+  protected findAllDOMElements(selector: string): Element[] {
     if (this.hasFragmentRoot) {
-      return this.findAllDOMElements(selector).map(e => createDOMWrapper(e))
+      return super.findAllDOMElements(selector)
     }
-    if (!(this.wrapperElement instanceof Element)) {
-      return []
-    }
-    return Array.from(this.wrapperElement.querySelectorAll(selector), element =>
-      createDOMWrapper(element)
-    )
+    return isElement(this.wrapperElement)
+      ? Array.from(this.wrapperElement.querySelectorAll(selector))
+      : []
   }
 
   findAllComponents(selector: any): any {
