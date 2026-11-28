@@ -1,8 +1,5 @@
-import type { ComponentPublicInstance } from 'vue'
-import type { VueWrapper } from '../vueWrapper'
-
 let isEnabled = false
-const wrapperInstances: VueWrapper<ComponentPublicInstance>[] = []
+const wrapperInstances: { unmount(): void }[] = []
 
 export function disableAutoUnmount() {
   isEnabled = false
@@ -17,7 +14,7 @@ export function enableAutoUnmount(hook: (callback: () => void) => void) {
   isEnabled = true
 
   hook(() => {
-    wrapperInstances.forEach((wrapper: VueWrapper<ComponentPublicInstance>) => {
+    wrapperInstances.forEach(wrapper => {
       wrapper.unmount()
     })
 
@@ -25,7 +22,7 @@ export function enableAutoUnmount(hook: (callback: () => void) => void) {
   })
 }
 
-export function trackInstance(wrapper: VueWrapper<ComponentPublicInstance>) {
+export function trackInstance(wrapper: { unmount(): void }) {
   if (!isEnabled) return
 
   wrapperInstances.push(wrapper)

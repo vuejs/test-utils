@@ -68,9 +68,13 @@ export const recordEvent = (
   event: string,
   args: unknown[]
 ): void => {
+  // Native Vapor mounts have no VTU event history, including VDOM children.
+  if ('vapor' in vm || 'vapor' in vm.root) return
+
   // Functional component wrapper creates a parent component
   let wrapperVm = vm
-  while (typeof wrapperVm?.type === 'function') wrapperVm = wrapperVm.parent!
+  while (typeof wrapperVm?.type === 'function')
+    wrapperVm = wrapperVm.parent as ComponentInternalInstance
 
   const cid = wrapperVm.uid
   const rootCid = wrapperVm.root.uid

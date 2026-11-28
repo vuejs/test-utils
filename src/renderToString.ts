@@ -16,6 +16,12 @@ export function renderToString(component: any, options?: any): Promise<string> {
     )
   }
 
+  if (component.__vapor || options?.experimentalVapor) {
+    throw new Error(
+      'renderToString is not supported for experimental Vapor mounting'
+    )
+  }
+
   if (options?.attachTo) {
     console.warn('attachTo option is not available for renderToString')
   }

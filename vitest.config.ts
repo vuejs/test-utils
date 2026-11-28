@@ -33,7 +33,25 @@ export default defineConfig(({ mode }) => ({
         test: {
           name: 'jsdom',
           pool: 'vmThreads',
-          include: ['tests/**/*.spec.ts?(x)']
+          include: ['tests/**/*.spec.ts?(x)'],
+          exclude: ['tests/vapor/**']
+        }
+      },
+      {
+        extends: true,
+        resolve: {
+          alias: [
+            // Vue's Node build has no Vapor runtime: use the ESM bundler builds.
+            { find: /^vue$/, replacement: 'vue/dist/vue.esm-bundler.js' },
+            {
+              find: /^@vue\/(runtime-dom|runtime-core|reactivity|shared)$/,
+              replacement: '@vue/$1/dist/$1.esm-bundler.js'
+            }
+          ]
+        },
+        test: {
+          name: 'vapor',
+          include: ['tests/vapor/**/*.spec.ts']
         }
       },
       {
