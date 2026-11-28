@@ -129,15 +129,23 @@ export function mount(
   let vm: ReturnType<typeof app.mount>
   try {
     vm = app.mount(el)
-    if (errorsOnMount.length) {
-      // If several errors are thrown during mount, then throw the first one
-      throw errorsOnMount[0]
-    }
   } catch (error) {
     el.remove()
     throw error
   } finally {
     app.config.errorHandler = originalErrorHandler
+  }
+
+  if (errorsOnMount.length) {
+    // Vue finished mounting despite the captured error, so tear down the app.
+    try {
+      app.unmount()
+    } catch {
+      // A teardown error must not replace the original mount error.
+    } finally {
+      el.remove()
+    }
+    throw errorsOnMount[0]
   }
 
   const appRef = componentRef.value! as ComponentPublicInstance
