@@ -48,16 +48,12 @@ export default abstract class BaseWrapper<
   }
 
   protected findAllDOMElements(selector: string): Element[] {
-    const elementRootNodes = this.getRootNodes().filter(isElement)
-    if (elementRootNodes.length === 0) return []
-
-    const result: Element[] = [
-      ...elementRootNodes.filter(node => node.matches(selector))
-    ]
-
-    elementRootNodes.forEach(rootNode => {
+    const result: Element[] = []
+    for (const rootNode of this.getRootNodes()) {
+      if (!isElement(rootNode)) continue
+      if (rootNode.matches(selector)) result.push(rootNode)
       result.push(...Array.from(rootNode.querySelectorAll(selector)))
-    })
+    }
 
     return result
   }

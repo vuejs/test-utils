@@ -316,6 +316,25 @@ describe('findAll', () => {
       expect(wrapper.find('#my-span').exists()).toBe(true)
     })
 
+    it('finds the first match in rendered order across root nodes', () => {
+      const wrapper = mount({
+        render: () => [h('p', [h('b', 'first')]), h('b', 'second')]
+      })
+
+      expect(wrapper.find('b').text()).toBe('first')
+    })
+
+    it('finds all matches in rendered order across root nodes', () => {
+      const wrapper = mount({
+        render: () => [h('p', [h('b', 'first')]), h('b', 'second')]
+      })
+
+      expect(wrapper.findAll('b').map(node => node.text())).toEqual([
+        'first',
+        'second'
+      ])
+    })
+
     it('finds second root node when component is not mount root', () => {
       const wrapper = mount(WrapperComponent)
       expect(
