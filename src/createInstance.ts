@@ -1,4 +1,5 @@
 import type {
+  App,
   AppConfig,
   ComponentOptions,
   ConcreteComponent,
@@ -280,6 +281,58 @@ export function createInstance(
     app.mixin(mixin)
   }
 
+  configureApp(app, global)
+
+  // stubs
+  // even if we are using `mount`, we will still
+  // stub out Transition and Transition Group by default.
+  installVNodeTransformer(
+    app,
+    createVNodeTransformer({
+      rootComponents,
+      transformers: [
+        createStubComponentsTransformer({
+          rootComponents,
+          stubs: getComponentsFromStubs(global.stubs),
+          shallow: options?.shallow,
+          renderStubDefaultSlot: global.renderStubDefaultSlot
+        }),
+        createStubDirectivesTransformer({
+          directives: getDirectivesFromStubs(global.stubs)
+        })
+      ]
+    })
+  )
+
+  // users expect stubs to work with globally registered
+  // components so we register stubs as global components to avoid
+  // warning about not being able to resolve component
+  //
+  // component implementation provided here will never be called
+  // but we need name to make sure that stubComponents will
+  // properly stub this later by matching stub name
+  //
+  // ref: https://github.com/vuejs/test-utils/issues/249
+  // ref: https://github.com/vuejs/test-utils/issues/425
+  if (global?.stubs) {
+    for (const name of Object.keys(getComponentsFromStubs(global.stubs))) {
+      if (!app.component(name)) {
+        app.component(name, { name })
+      }
+    }
+  }
+
+  return {
+    app,
+    props,
+    componentRef
+  }
+}
+
+function configureApp(
+  app: App,
+  global: ReturnType<typeof mergeGlobalProperties>
+) {
   // AppConfig
   if (global.config) {
     for (const [k, v] of Object.entries(global.config) as [
@@ -332,51 +385,6 @@ export function createInstance(
   if (global.directives) {
     for (const [key, directive] of Object.entries(global.directives))
       app.directive(key, directive)
-  }
-
-  // stubs
-  // even if we are using `mount`, we will still
-  // stub out Transition and Transition Group by default.
-  installVNodeTransformer(
-    app,
-    createVNodeTransformer({
-      rootComponents,
-      transformers: [
-        createStubComponentsTransformer({
-          rootComponents,
-          stubs: getComponentsFromStubs(global.stubs),
-          shallow: options?.shallow,
-          renderStubDefaultSlot: global.renderStubDefaultSlot
-        }),
-        createStubDirectivesTransformer({
-          directives: getDirectivesFromStubs(global.stubs)
-        })
-      ]
-    })
-  )
-
-  // users expect stubs to work with globally registered
-  // components so we register stubs as global components to avoid
-  // warning about not being able to resolve component
-  //
-  // component implementation provided here will never be called
-  // but we need name to make sure that stubComponents will
-  // properly stub this later by matching stub name
-  //
-  // ref: https://github.com/vuejs/test-utils/issues/249
-  // ref: https://github.com/vuejs/test-utils/issues/425
-  if (global?.stubs) {
-    for (const name of Object.keys(getComponentsFromStubs(global.stubs))) {
-      if (!app.component(name)) {
-        app.component(name, { name })
-      }
-    }
-  }
-
-  return {
-    app,
-    props,
-    componentRef
   }
 }
 
