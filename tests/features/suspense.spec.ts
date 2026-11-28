@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, test, vi } from 'vitest'
 import SuspenseComponent from '../components/Suspense.vue'
 import { flushPromises, mount } from '../../src'
-import { defineComponent } from 'vue'
+import { Fragment, defineComponent, h } from 'vue'
 
 let mockShouldError = false
 vi.mock('../utils', () => ({
@@ -39,7 +39,7 @@ describe('suspense', () => {
     expect(wrapper.html()).toContain('Error!')
   })
 
-  test('returns the element if it is a multi root element inside Suspense', () => {
+  test('returns the container for multiple roots inside Suspense', () => {
     const Async = defineComponent({
       template: '<h1>Hello</h1><span id="my-span">There</span>'
     })
@@ -49,10 +49,10 @@ describe('suspense', () => {
     })
 
     const wrapper = mount(Component)
-    expect(wrapper.get('#my-span')).not.toBeNull()
+    expect(wrapper.element).toBe(wrapper.get('#my-span').element.parentElement)
   })
 
-  test('returns the element if it is a root element inside Suspense', () => {
+  test('returns the root element inside Suspense', () => {
     const Async = defineComponent({
       template: '<div><h1>Hello</h1><span id="my-span">There</span></div>'
     })
@@ -62,6 +62,28 @@ describe('suspense', () => {
     })
 
     const wrapper = mount(Component)
-    expect(wrapper.get('#my-span')).not.toBeNull()
+    expect(wrapper.element).toBe(wrapper.get('div').element)
+  })
+
+  test('updates element when a single-root fallback resolves to a one-child fragment', async () => {
+    const Async = defineComponent({
+      setup: () => Promise.resolve(() => h(Fragment, [h('p', 'Resolved')]))
+    })
+    const Component = defineComponent({
+      components: { Async },
+      template: `
+        <Suspense>
+          <Async />
+          <template #fallback><h1>Loading</h1></template>
+        </Suspense>
+      `
+    })
+
+    const wrapper = mount(Component)
+    expect(wrapper.element).toBe(wrapper.get('h1').element)
+
+    await flushPromises()
+
+    expect(wrapper.element).toBe(wrapper.get('p').element.parentElement)
   })
 })

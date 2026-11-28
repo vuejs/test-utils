@@ -177,6 +177,9 @@ export class VueWrapper<
     const checkTree = (subTree: VNode): boolean => {
       // if the subtree is an array of children, we have multiple root nodes
       if (subTree.shapeFlag === ShapeFlags.ARRAY_CHILDREN) return true
+      if (subTree.suspense?.activeBranch) {
+        return checkTree(subTree.suspense.activeBranch)
+      }
       if (
         subTree.shapeFlag & ShapeFlags.STATEFUL_COMPONENT ||
         subTree.shapeFlag & ShapeFlags.FUNCTIONAL_COMPONENT
