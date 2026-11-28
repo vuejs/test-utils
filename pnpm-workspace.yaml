@@ -7,3 +7,18 @@ peerDependencyRules:
 
 allowBuilds:
   esbuild: false
+
+minimumReleaseAgeExclude:
+  - '@vue/compat@3.6.0-rc.17'
+  - '@vue/compiler-core@3.6.0-rc.17'
+  - '@vue/compiler-dom@3.6.0-rc.17'
+  - '@vue/compiler-sfc@3.6.0-rc.17'
+  - '@vue/compiler-ssr@3.6.0-rc.17'
+  - '@vue/compiler-vapor@3.6.0-rc.17'
+  - '@vue/reactivity@3.6.0-rc.17'
+  - '@vue/runtime-core@3.6.0-rc.17'
+  - '@vue/runtime-dom@3.6.0-rc.17'
+  - '@vue/runtime-vapor@3.6.0-rc.17'
+  - '@vue/server-renderer@3.6.0-rc.17'
+  - '@vue/shared@3.6.0-rc.17'
+  - vue@3.6.0-rc.17

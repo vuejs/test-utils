@@ -70,7 +70,8 @@ export const recordEvent = (
 ): void => {
   // Functional component wrapper creates a parent component
   let wrapperVm = vm
-  while (typeof wrapperVm?.type === 'function') wrapperVm = wrapperVm.parent!
+  while (typeof wrapperVm?.type === 'function')
+    wrapperVm = wrapperVm.parent as ComponentInternalInstance
 
   const cid = wrapperVm.uid
   const rootCid = wrapperVm.root.uid
