@@ -14,7 +14,7 @@ type DOMWrapperFactory = <T extends Node>(
 type VueWrapperFactory = <T extends ComponentPublicInstance>(
   app: App | null,
   vm: T,
-  setProps?: (props: Record<string, unknown>) => Promise<void>
+  setProps?: (props: Record<string, unknown>) => void
 ) => VueWrapperType<T>
 
 const factories: {
